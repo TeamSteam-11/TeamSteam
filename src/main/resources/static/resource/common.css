@@ -14,3 +14,38 @@ html > body {
 html > body .label-text {
     font-size: 1rem;
 }
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1F2227;
+    font-family: GmarketSansMedium;
+}
+
+.navbar__logo {
+    font-size: larger;
+    font-weight: bold;
+    justify-content: center;
+    color: white;
+}
+
+.navbar__menu {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    font-family: GmarketSansMedium;
+}
+
+.navbar__menu li {
+    margin-right: 10px;
+}
+
+.navbar__menu li a {
+    color: white;
+    text-decoration: none;
+}
+
+.navbar__logo a:visited {
+    color: white;
+}
