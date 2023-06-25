@@ -1,7 +1,7 @@
-<html data-theme="light">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-theme="light">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charSet="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -22,6 +22,13 @@
     <!-- 공통 CSS 불러오기 -->
     <link rel="stylesheet" href="/resource/common.css">
 
+    <!-- 채팅방 CSS -->
+    <link href="/starboot/css/style.css" rel="stylesheet">
+    <link href="/starboot/css/styles.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+
     <title layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE">TeamSteam</title>
 
     <script>
@@ -37,22 +44,23 @@
 <!-- 테일윈드 불러오기 -->
 <script src="https://cdn.tailwindcss.com"></script>
 
-<div class="min-h-screen flex flex-col pb-10">
-    <header class="navbar" layout:fragment="header">
-        <div class="navbar__logo">
+<div className="d-flex flex-column">
+    <header className="navbar" layout:fragment="header">
+        <div className="navbar__logo">
             <a href="/">TeamSteam</a>
         </div>
 
-        <ul class="navbar__menu">
-            <li><a>명예의 전당</a></li>
-            <li><a>매칭</a></li>
-            <li><a>프로필</a></li>
-            <li><a>미니게임</a></li>
-            <li><a>로그인</a></li>
+        <ul className="navbar__menu">
+            <li><a href="/">명예의 전당</a></li>
+            <li><a href="/matching/list">매칭</a></li>
+            <li><a href="/">프로필</a></li>
+            <li><a href="/">미니게임</a></li>
+            <li><a href="/">로그인</a></li>
         </ul>
     </header>
+    <br>
 
-    <main layout:fragment="main"></main>
+    <div layout:fragment="content"></div>
 </div>
 
 <script th:inline="javascript">
@@ -85,7 +93,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jdenticon@3.2.0/dist/jdenticon.min.js" async
         integrity="sha384-yBhgDqxM50qJV5JPdayci8wCfooqvhFYbIKhv0hTtLvfeeyJMJCscRfFNKIxt43M"
-        crossorigin="anonymous">
+        crossOrigin="anonymous">
 </script>
 
 </body>

@@ -12,7 +12,7 @@ public class MatchingController {
 
     @GetMapping("/list")
     public String matchigList() {
-        return "/matching/list";
+        return "matching/list";
     }
 
 
