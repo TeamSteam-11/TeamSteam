@@ -20,8 +20,6 @@ import static jakarta.persistence.FetchType.LAZY;
 @SuperBuilder
 public class Matching extends BaseEntity {
 
-    private String username;
-
     private String title;
 
     private String content;
