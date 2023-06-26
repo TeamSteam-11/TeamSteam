@@ -24,7 +24,9 @@ public class Matching extends BaseEntity {
 
     private String content;
 
-    private int capacity;
+    private Long capacity; // 모집 인원
+
+    private Long participant; // 참가자 수
 
     @OneToOne(mappedBy = "matching")
     private ChatRoom chatRoom;
