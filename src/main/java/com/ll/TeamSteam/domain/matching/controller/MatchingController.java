@@ -1,5 +1,8 @@
 package com.ll.TeamSteam.domain.matching.controller;
 
+import com.ll.TeamSteam.domain.matching.entity.Matching;
+import com.ll.TeamSteam.domain.matching.service.MatchingService;
+import com.ll.TeamSteam.global.rsData.RsData;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @RequestMapping("/match")
 public class MatchingController {
+    private final MatchingService matchingService;
 
     @GetMapping("/list")
     public String matchingList() {
@@ -55,6 +59,13 @@ public class MatchingController {
         }
 
         // 서비스에서 추가 기능 구현
+        RsData<Matching> createRsData = matchingService.create(
+                createForm.getTitle(),
+                createForm.getContent(),
+                createForm.getCapacity()
+        );
+
+        // 매칭 등록 실패 시
 
 
         // 등록 게시글 작성 후 매칭 목록 페이지로 이동
