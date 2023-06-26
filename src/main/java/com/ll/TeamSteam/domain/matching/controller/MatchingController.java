@@ -2,6 +2,7 @@ package com.ll.TeamSteam.domain.matching.controller;
 
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
+import com.ll.TeamSteam.global.rq.Rq;
 import com.ll.TeamSteam.global.rsData.RsData;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @RequestMapping("/match")
 public class MatchingController {
+    private final Rq rq;
     private final MatchingService matchingService;
 
     @GetMapping("/list")
@@ -66,7 +68,9 @@ public class MatchingController {
         );
 
         // 매칭 등록 실패 시
-
+        if (createRsData.isFail()) {
+            return rq.historyBack(createRsData);
+        }
 
         // 등록 게시글 작성 후 매칭 목록 페이지로 이동
         return "matching/list";
