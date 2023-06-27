@@ -1,31 +1,38 @@
 package com.ll.TeamSteam.domain.user.controller;
 
-import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.*;
-
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.ll.TeamSteam.domain.user.service.UserService;
+import com.ll.TeamSteam.global.security.SecurityUser;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.ll.TeamSteam.global.security.SecurityUser;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import jakarta.servlet.http.HttpSession;
+import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
 @Controller
+@RequiredArgsConstructor
+@Slf4j
 public class SteamLoginController {
 
-    @GetMapping("/login")
+    private final UserService userService;
+
+    @GetMapping("/user/login")
     public String login() {
-        return "login";
+        return "/user/login";
     }
 
     @GetMapping("/login/check")
@@ -40,7 +47,8 @@ public class SteamLoginController {
             @RequestParam(value = "openid.assoc_handle") String openidAssocHandle,
             @RequestParam(value = "openid.signed") String openidSigned,
             @RequestParam(value = "openid.sig") String openidSig,
-            HttpSession session
+            HttpSession session,
+            Model model
     ) {
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("https://steamcommunity.com/openid/login")
@@ -80,9 +88,11 @@ public class SteamLoginController {
 
         boolean isTrue = Objects.requireNonNull(block).contains("true");
 
-        // 1. findBySteamId(steamId)
-        // 2. 없으면 회원가입 Member or 로그인
-        // security 객체를 만들고 session에 저장
+        // 회원가입
+            // 1. findBySteamId(steamId)
+            // 2. 없으면 회원가입 Member or 로그인
+        // 회원가입 안 할 때
+            // security 객체를 만들고 session에 저장
 
 
         Pattern pattern = Pattern.compile("\\d+");
@@ -105,14 +115,26 @@ public class SteamLoginController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // SPRING_SECURITY_CONTEXT_KEY = "SPRING_SECURITY_CONTEXT"
         session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
-        return "redirect:/check";
+
+        // model에 넣기
+        model.addAttribute("username", username);
+        log.info("username = {}", username);
+        log.info("openidIdentity = {}", openidIdentity);
+        return "main/home";
     }
 
-    @GetMapping("/check")
+    @GetMapping("/user/check")
+    @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public String check() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SecurityUser user = (SecurityUser) authentication.getPrincipal();
         return user.getUsername();
+    }
+
+    @GetMapping("/user/isLogin")
+    @PreAuthorize("isAuthenticated()")
+    public String isLogin() {
+        return "user/isLogin";
     }
 }
