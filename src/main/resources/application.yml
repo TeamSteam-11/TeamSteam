@@ -1,7 +1,10 @@
 spring:
   mvc:
-    hidden-method:
+    hiddenmethod:
       filter:
         enabled: true
   profiles:
     active: local
+    include: secret
+
+

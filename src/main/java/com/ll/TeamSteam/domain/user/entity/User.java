@@ -7,10 +7,10 @@ import jakarta.persistence.*;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
 import java.util.List;
 
 import java.util.ArrayList;
+
 
 @Entity
 @Getter
@@ -21,7 +21,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String username;
 
-    private String serialNumber;
+    private String steamId;
 
     private int temperature;
 
@@ -29,4 +29,5 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Matching> matchingList = new ArrayList<>();
+
 }
