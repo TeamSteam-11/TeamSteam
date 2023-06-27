@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
 import java.util.Date;
+import java.util.Map;
 
 @Component
 @RequestScope
@@ -22,7 +23,7 @@ public class Rq {
     public String historyBack(String msg) {
         String referer = request.getHeader("referer");
         String key = "historyBackErrorMsg___" + referer;
-        request.setAttribute("localStorageKeyAboutHitoryBackErrorMsg", key);
+        request.setAttribute("localStorageKeyAboutHistoryBackErrorMsg", key);
         request.setAttribute("historyBackErrorMsg", msg);
         return "common/js";
     }
@@ -47,4 +48,9 @@ public class Rq {
         return Ut.url.encode(msg) + ";ttl=" + new Date().getTime();
     }
 
+    public String getParamsJsonStr() {
+        Map<String, String[]> parameterMap = request.getParameterMap();
+
+        return Ut.json.toStr(parameterMap);
+    }
 }

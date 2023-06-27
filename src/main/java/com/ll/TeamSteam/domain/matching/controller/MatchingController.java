@@ -57,7 +57,7 @@ public class MatchingController {
     public String matchingCreate(@Valid CreateForm createForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             // 유효성 검사 오류가 있을 시 등록 페이지로 다시 이동
-            return "matching/create";
+            return "match/create";
         }
 
         // 서비스에서 추가 기능 구현
@@ -73,7 +73,7 @@ public class MatchingController {
         }
 
         // 등록 게시글 작성 후 매칭 목록 페이지로 이동
-        return "matching/list";
+        return rq.redirectWithMsg("/match/list", createRsData);
     }
 
 
