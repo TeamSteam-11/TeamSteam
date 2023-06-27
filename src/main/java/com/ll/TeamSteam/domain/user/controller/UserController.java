@@ -1,12 +1,16 @@
 package com.ll.TeamSteam.domain.user.controller;
 
+
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.security.SecurityUser;
+import com.ll.TeamSteam.global.security.SteamClient;
+import com.ll.TeamSteam.global.security.UserInfoResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
@@ -26,9 +30,13 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class SteamLoginController {
+public class UserController {
 
     private final UserService userService;
+
+    private final SteamClient steamClient;
+
+
 
     @GetMapping("/user/login")
     public String login() {
@@ -115,13 +123,18 @@ public class SteamLoginController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // SPRING_SECURITY_CONTEXT_KEY = "SPRING_SECURITY_CONTEXT"
         session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
-
-        // model에 넣기
-        model.addAttribute("username", username);
-        log.info("username = {}", username);
-        log.info("openidIdentity = {}", openidIdentity);
-        return "main/home";
+        UserInfoResponse userInfo = getUserInfo(session);
+        session.setAttribute("userInfo", userInfo);
+        return "redirect:/user/checkFirstVisit";
+//        model에 넣기
+//        model.addAttribute("username", username);
+//        log.info("username = {}", username);
+//        log.info("openidIdentity = {}", openidIdentity);
+//        return "main/home";
     }
+
+
+
 
     @GetMapping("/user/check")
     @PreAuthorize("isAuthenticated()")
@@ -136,5 +149,39 @@ public class SteamLoginController {
     @PreAuthorize("isAuthenticated()")
     public String isLogin() {
         return "user/isLogin";
+    }
+
+    @GetMapping("/user/info")
+    public UserInfoResponse getUserInfo(HttpSession session) {
+        //UserInfoResponse 객체를 사용
+        SecurityContext securityContext = (SecurityContext) session.getAttribute(SPRING_SECURITY_CONTEXT_KEY);
+        if (securityContext != null) {
+            Authentication authentication = securityContext.getAuthentication();
+            if (authentication != null && authentication.getPrincipal() instanceof SecurityUser) {
+                SecurityUser user = (SecurityUser) authentication.getPrincipal();
+                String steamId = extractSteamIdFromUsername(user.getUsername());
+                return steamClient.getUserInfo(steamId);
+            }
+        }
+        throw new IllegalStateException("User not authenticated");
+
+
+    }
+
+    @GetMapping("/user/checkFirstVisit")
+    public String checkLogin(HttpSession session){
+        //처음일 때 create 아닐 때 바로넘기기
+        userService.create(getUserInfo(session));
+
+        return "redirect:/home/main";
+    }
+
+
+    private String extractSteamIdFromUsername(String username) {
+        if (username.startsWith("steam_")) {
+            return username.substring(6);
+        } else {
+            throw new IllegalArgumentException("Invalid username format");
+        }
     }
 }
