@@ -38,3 +38,6 @@ out/
 
 ### local.yml
 application-local.yml
+
+### secret.yml
+application-secret.yml
