@@ -2,7 +2,7 @@ package com.ll.TeamSteam.global.rq;
 
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
-import com.ll.TeamSteam.global.rsdata.RsData;
+import com.ll.TeamSteam.global.rsData.RsData;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import com.ll.TeamSteam.standard.Ut;
 import jakarta.servlet.http.HttpServletRequest;
