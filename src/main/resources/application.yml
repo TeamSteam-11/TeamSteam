@@ -6,20 +6,5 @@ spring:
   profiles:
     active: local
     include: secret
-  security:
-    oauth2:
-      client:
-        registration:
-          steam:
-            client-id: ${steam.apiKey}
-            client-name: Steam
-            authorization-grant-type: authorization_code
-            scope:
-              - openid
-            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
-        provider:
-          steam:
-            authorization-uri: https://steamcommunity.com/openid/login
-            token-uri: https://steamcommunity.com/openid/login
-            user-info-uri: https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/
-            user-name-attribute: response.players.[0].personaname
+
+
