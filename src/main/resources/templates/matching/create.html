@@ -1,0 +1,37 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{common/layout}">
+
+<head>
+    <title>매칭 등록</title>
+    <style>
+        input[type="text"], textarea {
+            border: 1px solid gray;
+        }
+
+        input[type="number"], textarea {
+            border: 1px solid gray;
+        }
+    </style>
+</head>
+<body layout:fragment="content">
+<!--<h1>상품 등록</h1>-->
+<form th:object="${createForm}" th:action="@{/match/create}" method="POST" style="margin: 10px 40px">
+    <label for="title">제목 :</label><br>
+    <input type="text" id="title" th:field="*{title}"><br><br>
+
+    <label for="content">내용 :</label><br>
+    <input type="text" id="content" th:field="*{content}"><br><br>
+
+    <label for="capacity">매칭 인원 :</label><br>
+    <input type="number" id="capacity" th:field="*{capacity}"><br><br>
+
+    <button type="submit" onclick="showSuccessMessage()" style="background-color: #1F2227; color: white; font-size: 1.2em; padding: 10px 20px; border-radius: 10px">등록</button>
+</form>
+
+<script>
+    function showSuccessMessage() {
+        toastNotice("입력하신 매칭이 등록되었습니다.")
+    }
+</script>
+
+</body>
+</html>
