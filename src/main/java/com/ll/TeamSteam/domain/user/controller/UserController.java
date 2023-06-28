@@ -1,9 +1,10 @@
 package com.ll.TeamSteam.domain.user.controller;
 
 
+
+import com.ll.TeamSteam.domain.steam.service.SteamService;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.security.SecurityUser;
-import com.ll.TeamSteam.global.security.SteamClient;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class UserController {
 
     private final UserService userService;
 
-    private final SteamClient steamClient;
+    private final SteamService steamService;
 
 
 
@@ -55,8 +56,7 @@ public class UserController {
             @RequestParam(value = "openid.assoc_handle") String openidAssocHandle,
             @RequestParam(value = "openid.signed") String openidSigned,
             @RequestParam(value = "openid.sig") String openidSig,
-            HttpSession session,
-            Model model
+            HttpSession session
     ) {
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("https://steamcommunity.com/openid/login")
@@ -126,11 +126,7 @@ public class UserController {
         UserInfoResponse userInfo = getUserInfo(session);
         session.setAttribute("userInfo", userInfo);
         return "redirect:/user/checkFirstVisit";
-//        model에 넣기
-//        model.addAttribute("username", username);
-//        log.info("username = {}", username);
-//        log.info("openidIdentity = {}", openidIdentity);
-//        return "main/home";
+
     }
 
 
@@ -160,7 +156,7 @@ public class UserController {
             if (authentication != null && authentication.getPrincipal() instanceof SecurityUser) {
                 SecurityUser user = (SecurityUser) authentication.getPrincipal();
                 String steamId = extractSteamIdFromUsername(user.getUsername());
-                return steamClient.getUserInfo(steamId);
+                return steamService.getUserInformation(steamId);
             }
         }
         throw new IllegalStateException("User not authenticated");
@@ -173,7 +169,7 @@ public class UserController {
         //처음일 때 create 아닐 때 바로넘기기
         userService.create(getUserInfo(session));
 
-        return "redirect:/home/main";
+        return "redirect:/main/home";
     }
 
 
