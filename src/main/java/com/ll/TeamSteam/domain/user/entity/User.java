@@ -1,6 +1,7 @@
 package com.ll.TeamSteam.domain.user.entity;
 
 import com.ll.TeamSteam.domain.matching.entity.Matching;
+import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
 
 import jakarta.persistence.*;
@@ -8,14 +9,13 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import java.util.List;
-import static jakarta.persistence.EnumType.STRING;
 import java.util.ArrayList;
 
 
 @Entity
 @Getter
 @SuperBuilder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 public class User extends BaseEntity {
 
 
@@ -33,15 +33,18 @@ public class User extends BaseEntity {
 
     private int temperature;
 
+    private String avatar;
+
+    private String gameNameTag;
+
     @Enumerated(EnumType.STRING)
     private Gender type;
 
-    private String avatar;
+    @Enumerated(EnumType.STRING)
+    private GenreTagType genreTagType;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Matching> matchingList = new ArrayList<>();
-
-
 
     public void setTemperature(int temperature) {
         this.temperature = temperature;
@@ -49,4 +52,5 @@ public class User extends BaseEntity {
     public void setType(Gender type) {
         this.type = type;
     }
+
 }
