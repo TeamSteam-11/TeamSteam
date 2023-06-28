@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>폼 예시</title>
+</head>
+<body>
+<form th:action="@{/user/createGenre}" method ="Post">
+    <label>
+        <input type="radio" name="gender" value="남성">
+        남자
+    </label>
+    <br>
+    <label>
+        <input type="radio" name="gender" value="여성">
+        여자
+    </label>
+    <br><br>
+    <label>
+        <input type="checkbox" name="gameGenre" value="일인칭슈팅">
+        일인칭슈팅
+    </label>
+    <br>
+    <label>
+        <input type="checkbox" name="gameGenre" value="삼인칭슈팅">
+        삼인칭슈팅
+    </label>
+    <br>
+    <label>
+        <input type="checkbox" name="gameGenre" value="핵앤슬래시">
+        핵앤슬래시
+    </label>
+    <br>
+    <label>
+        <input type="checkbox" name="gameGenre" value="로그라이크">
+        로그라이크
+    </label>
+    <br>
+    <label>
+        <input type="checkbox" name="gameGenre" value="낚시">
+        낚시
+    </label>
+    <br><br>
+    <input type="submit" value="제출">
+</form>
+</body>
+</html>

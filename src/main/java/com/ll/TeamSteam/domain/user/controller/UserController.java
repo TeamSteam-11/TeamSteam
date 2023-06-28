@@ -11,11 +11,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -45,9 +47,9 @@ public class UserController {
 
         Pattern pattern = Pattern.compile("\\d+");
         Matcher matcher = pattern.matcher(openidIdentity);
-        String username;
+        String steamId;
         if (matcher.find()) {
-            username = matcher.group();
+            steamId = matcher.group();
         } else {
             throw new IllegalArgumentException();
         }
@@ -55,7 +57,7 @@ public class UserController {
         // member저장
 
         SecurityUser user = SecurityUser.builder()
-                .username("steam_" + username)
+                .steamId("steam_" + steamId)
                 .build();
 
         Authentication authentication =
@@ -65,6 +67,7 @@ public class UserController {
         session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
         UserInfoResponse userInfo = getUserInfo(session);
         session.setAttribute("userInfo", userInfo);
+        session.setAttribute("steamId", steamId);
         return "redirect:/user/checkFirstVisit";
 
     }
@@ -78,7 +81,7 @@ public class UserController {
     public String check() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SecurityUser user = (SecurityUser) authentication.getPrincipal();
-        return user.getUsername();
+        return user.getSteamId();
     }
 
     @GetMapping("/user/isLogin")
@@ -95,21 +98,30 @@ public class UserController {
             Authentication authentication = securityContext.getAuthentication();
             if (authentication != null && authentication.getPrincipal() instanceof SecurityUser) {
                 SecurityUser user = (SecurityUser) authentication.getPrincipal();
-                String steamId = extractSteamIdFromUsername(user.getUsername());
+                String steamId = extractSteamIdFromUsername(user.getSteamId());
                 return steamService.getUserInformation(steamId);
             }
         }
         throw new IllegalStateException("User not authenticated");
 
-
     }
 
     @GetMapping("/user/checkFirstVisit")
     public String checkLogin(HttpSession session){
-        //처음일 때 create 아닐 때 바로넘기기
-        userService.create(getUserInfo(session));
+
+        String steamId = (String)session.getAttribute("steamId");
+        if(!userService.findBySteamId(steamId).isPresent()){
+            userService.create(getUserInfo(session));
+            return "user/createGenre";
+        }
 
         return "redirect:/main/home";
+    }
+
+    @PostMapping("/user/createGenre")
+    @ResponseBody
+    public String genreFormPost(){
+        return "성공";
     }
 
 

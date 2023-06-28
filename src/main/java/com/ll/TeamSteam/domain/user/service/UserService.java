@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,31 +26,32 @@ import java.util.regex.Pattern;
 public class UserService {
 
     private final UserRepository userRepository;
-
-    public Optional<User> findByUsername(String username) {
-        return null;
+    @Transactional(readOnly = true)
+    public Optional<User> findBySteamId(String steamId) {
+        return userRepository.findBySteamId(steamId);
     }
 
 
 
     @Transactional
     public void create(UserInfoResponse userInfo) {
-        String steamId = userInfo.getResponse().getPlayers().get(0).getSteamid();
-        if (userRepository.findBySteamId(steamId).isPresent()) {
-            return;
-        }
+
         User createdUser = createUser(userInfo);
         userRepository.save(createdUser);
     }
+
 
     private User createUser(UserInfoResponse userInfo) {
         String username = userInfo.getResponse().getPlayers().get(0).getPersonaname();
         String steamId = userInfo.getResponse().getPlayers().get(0).getSteamid();
         String avatar = userInfo.getResponse().getPlayers().get(0).getAvatarmedium();
 
+
+
         User user = new User(username,steamId,avatar);
                 user.setTemperature(36);
-                user.setType(Gender.남성);
+                user.setType(Gender.Wait);
+
 
         return user;
     }

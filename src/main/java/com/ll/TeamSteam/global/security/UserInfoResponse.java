@@ -18,8 +18,6 @@ public class UserInfoResponse {
         private String steamid;
         private String personaname;
         private int profilestate;
-        private String avatarfull;
-
         private String avatarmedium;
 
 //        private int lastlogoff;  최근에 한 게임 유닉스 시간기준으로 볼수있음

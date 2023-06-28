@@ -77,7 +77,7 @@ public class Rq {
 
         // 데이터가 없는지 체크
         if (user == null) {
-            user = userService.findByUsername(securityUser.getUsername()).orElseThrow();
+            user = userService.findBySteamId(securityUser.getSteamId()).orElseThrow();
         }
 
         return user;
