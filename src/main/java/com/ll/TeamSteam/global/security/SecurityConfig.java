@@ -6,8 +6,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.client.RestTemplate;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -49,5 +49,9 @@ public class SecurityConfig {
         /* 스프링 시큐리티의 HTTP 필터 체인을 반환. 이 필터 체인은 요청이 웹 애플리케이션에 들어오면 실행(필터 체인은 요청이 보안 요구 사항을 충족하는지 확인하는 데 사용)
            build : 필터 체인을 구성하는데 사용
            http : 필터 체인을 구성하는 데 사용(http는 스프링 시큐리티의 HTTP 필터 체인을 나타냄) */
+    }
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 }

@@ -12,10 +12,10 @@ import lombok.Getter;
 @Getter
 @Builder
 public class SecurityUser implements SecurityUserAdapter {
-    private String username;
+    private String steamId;
 
     public SecurityUser(String username) {
-        this.username = username;
+        this.steamId = username;
     }
 
     @Override
@@ -25,6 +25,6 @@ public class SecurityUser implements SecurityUserAdapter {
 
     @Override
     public String getName() {
-        return username;
+        return steamId;
     }
 }
