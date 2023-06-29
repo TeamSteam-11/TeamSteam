@@ -25,12 +25,17 @@
     <a th:each="matching : ${matchingList}" th:href="@{|/matching/detail/${matching.id}|}"
        class="card w-96 bg-base-100 shadow-xl"
        style="background-color: #E0E0E0; color: #333333; box-shadow: 3px 3px 5px #C0C0C0; margin: 30px;">
-        <div class="card-body">
+        <div class="card-body" style="margin: 10px">
             <div>
                 <span class="badge badge-secondary" th:text="${matching.title}"></span>
                 <span class="badge badge-outline" th:text="|${matching.participant} / ${matching.capacity}|"></span>
             </div>
-            <h1 class="card-title" th:text="${matching.content}"></h1>
+            <h3 class="card-title" th:text="${matching.content}"></h3><br><br>
+            <div>
+                원하는 시간대 :
+                <span th:text="${matching.startTime}"></span> : 00 ~
+                <span th:text="${matching.endTime}"></span> : 00
+            </div><br><br>
 <!--            <div>-->
 <!--                <i class="fa-solid fa-calendar-days" style="margin-right: 6px"></i>-->
 <!--                <span th:text="|${meeting.date}, ${meeting.time}|"></span>-->
