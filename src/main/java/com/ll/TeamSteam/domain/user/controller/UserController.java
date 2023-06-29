@@ -7,17 +7,18 @@ import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.rq.Rq;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,39 +50,43 @@ public class UserController {
 
     @GetMapping("/login/check")
     public String startSession( @RequestParam(value = "openid.ns") String openidNs,
-        @RequestParam(value = "openid.mode") String openidMode,
-        @RequestParam(value = "openid.op_endpoint") String openidOpEndpoint,
-        @RequestParam(value = "openid.claimed_id") String openidClaimedId,
-        @RequestParam(value = "openid.identity") String openidIdentity,
-        @RequestParam(value = "openid.return_to") String openidReturnTo,
-        @RequestParam(value = "openid.response_nonce") String openidResponseNonce,
-        @RequestParam(value = "openid.assoc_handle") String openidAssocHandle,
-        @RequestParam(value = "openid.signed") String openidSigned,
-        @RequestParam(value = "openid.sig") String openidSig,
-        HttpSession session ) {
+                                @RequestParam(value = "openid.mode") String openidMode,
+                                @RequestParam(value = "openid.op_endpoint") String openidOpEndpoint,
+                                @RequestParam(value = "openid.claimed_id") String openidClaimedId,
+                                @RequestParam(value = "openid.identity") String openidIdentity,
+                                @RequestParam(value = "openid.return_to") String openidReturnTo,
+                                @RequestParam(value = "openid.response_nonce") String openidResponseNonce,
+                                @RequestParam(value = "openid.assoc_handle") String openidAssocHandle,
+                                @RequestParam(value = "openid.signed") String openidSigned,
+                                @RequestParam(value = "openid.sig") String openidSig,
+                                HttpServletRequest request,
+                                HttpServletResponse response ) {
 
 
-        ResponseEntity block = WebClient.create("https://steamcommunity.com")
-            .get()
-            .uri(uriBuilder -> uriBuilder
-                .path("/openid/login")
-                .queryParam("openid.ns", openidNs)
-                .queryParam("openid.mode", "check_authentication")
-                .queryParam("openid.op_endpoint", openidOpEndpoint)
-                .queryParam("openid.claimed_id", openidClaimedId)
-                .queryParam("openid.identity", openidIdentity)
-                .queryParam("openid.return_to", openidReturnTo)
-                .queryParam("openid.response_nonce", openidResponseNonce)
-                .queryParam("openid.assoc_handle", openidAssocHandle)
-                .queryParam("openid.signed", openidSigned)
-                .queryParam("openid.sig", openidSig)
-                .build()
-            )
-            .retrieve()
-            .toEntity(String.class)
-            .block();
+
+        ResponseEntity<String> block = WebClient.create("https://steamcommunity.com")
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/openid/login")
+                        .queryParam("openid.ns", openidNs)
+                        .queryParam("openid.mode", "check_authentication")
+                        .queryParam("openid.op_endpoint", openidOpEndpoint)
+                        .queryParam("openid.claimed_id", openidClaimedId)
+                        .queryParam("openid.identity", openidIdentity)
+                        .queryParam("openid.return_to", openidReturnTo)
+                        .queryParam("openid.response_nonce", openidResponseNonce)
+                        .queryParam("openid.assoc_handle", openidAssocHandle)
+                        .queryParam("openid.signed", openidSigned)
+                        .queryParam("openid.sig", openidSig)
+                        .build()
+                )
+                .retrieve()
+                .toEntity(String.class)
+                .block();
+
         log.info("block = {} ", block);
-        boolean isTrue = Objects.requireNonNull(block).getStatusCode().is2xxSuccessful();
+        //200이 나오지않아도 트루가 뜰 수 있음
+        boolean isTrue = Objects.requireNonNull(block).getBody().contains("true");
 
         log.info("isTrue = {} ", isTrue);
         if(!isTrue){
@@ -103,10 +108,10 @@ public class UserController {
         }
 
         SecurityUser user = SecurityUser.builder()
-            .id(userService.findBySteamId(steamId).get().getId())
-            .username(userService.findBySteamId(steamId).get().getUsername())
-            .steamId(steamId)
-            .build();
+                .id(userService.findBySteamId(steamId).get().getId())
+                .username(userService.findBySteamId(steamId).get().getUsername())
+                .steamId(steamId)
+                .build();
 
         log.info("user.getId() = {} ", user.getId());
         log.info("user.getUsername() = {}", user.getUsername());
@@ -115,11 +120,22 @@ public class UserController {
 
         Authentication authentication = new OAuth2AuthenticationToken(user, user.getAuthorities(), "steam");
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        // SPRING_SECURITY_CONTEXT_KEY = "SPRING_SECURITY_CONTEXT"
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        // 새로운 세션 생성
+        session = request.getSession(true);
         session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
 
+        // 세션 ID를 쿠키에 설정
+        Cookie cookie = new Cookie("JSESSIONID", session.getId());
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        response.addCookie(cookie);
 
-        return "redirect:/user/check";
+        return "redirect:/user/checkFirstVisit";
 
     }
 
