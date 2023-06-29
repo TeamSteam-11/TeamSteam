@@ -49,11 +49,15 @@ public class MatchingController {
         private String title;
         private String content;
         private Long capacity;
+        private int startTime;
+        private int endTime;
 
         public CreateForm() {
             this.title = "제목";
             this.content = "내용";
             this.capacity = 1L;
+            this.startTime = 0;
+            this.endTime = 24;
         }
     }
 
@@ -69,7 +73,9 @@ public class MatchingController {
         RsData<Matching> createRsData = matchingService.create(
                 createForm.getTitle(),
                 createForm.getContent(),
-                createForm.getCapacity()
+                createForm.getCapacity(),
+                createForm.getStartTime(),
+                createForm.getEndTime()
         );
 
         // 매칭 등록 실패 시

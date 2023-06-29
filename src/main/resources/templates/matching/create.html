@@ -24,6 +24,19 @@
     <label for="capacity">매칭 인원 :</label><br>
     <input type="number" id="capacity" th:field="*{capacity}"><br><br>
 
+    <div>
+        <label for="startTime">시작 시간</label><br>
+        <select id="startTime" th:field="*{startTime}">
+            <option th:each="hour : ${#numbers.sequence(0, 24)}" th:value="${hour}" th:text="${hour}"></option>
+        </select><br><br>
+    </div>
+    <div>
+        <label for="endTime">끝나는 시간</label><br>
+        <select id="endTime" th:field="*{endTime}">
+            <option th:each="hour : ${#numbers.sequence(0, 24)}" th:value="${hour}" th:text="${hour}"></option>
+        </select><br><br>
+    </div>
+
     <button type="submit" onclick="showSuccessMessage()" style="background-color: #1F2227; color: white; font-size: 1.2em; padding: 10px 20px; border-radius: 10px">등록</button>
 </form>
 

@@ -28,6 +28,10 @@ public class Matching extends BaseEntity {
 
     private Long participant; // 참가자 수
 
+    private int startTime;
+
+    private int endTime;
+
     @OneToOne(mappedBy = "matching")
     private ChatRoom chatRoom;
 

@@ -14,12 +14,14 @@ public class MatchingService {
     public final MatchingRepository matchingRepository;
 
     // 매칭 등록 기능
-    public RsData<Matching> create(String title, String content, Long capacity) {
+    public RsData<Matching> create(String title, String content, Long capacity, int startTime, int endTime) {
         Matching matching = Matching
                 .builder()
                 .title(title)
                 .content(content)
                 .capacity(capacity)
+                .startTime(startTime)
+                .endTime(endTime)
                 .build();
 
         matchingRepository.save(matching);
