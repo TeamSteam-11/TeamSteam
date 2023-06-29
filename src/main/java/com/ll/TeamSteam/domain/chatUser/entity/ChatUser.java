@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.COMMON;
+import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.*;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
@@ -36,4 +36,24 @@ public class ChatUser extends BaseEntity {
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ChatMessage> chatMessages = new ArrayList<>();
+
+
+    @Builder
+    public ChatUser(User user, ChatRoom chatRoom, ChatUserType type) {
+        this.user = user;
+        this.chatRoom = chatRoom;
+        this.type = type;
+    }
+
+    public void changeType() {
+        this.type = KICKED;
+    }
+
+    public void exitType() {
+        this.type = EXIT;
+    }
+
+    public void changeUserCommonType() {
+        this.type = COMMON;
+    }
 }

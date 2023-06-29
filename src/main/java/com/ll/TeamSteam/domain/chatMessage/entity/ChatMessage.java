@@ -6,9 +6,11 @@ import com.ll.TeamSteam.global.baseEntity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToOne;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.util.Assert;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
@@ -29,4 +31,43 @@ public class ChatMessage extends BaseEntity {
 
     @Enumerated(STRING)
     private ChatMessageType type;
+
+    @Builder
+    public ChatMessage(String content, ChatUser sender, ChatRoom chatRoom, ChatMessageType type) {
+
+        Assert.notNull(content, "content는 널일 수 없습니다.");
+        Assert.notNull(sender, "sender는 널일 수 없습니다.");
+        Assert.notNull(chatRoom, "chatRoom는 널일 수 없습니다.");
+
+        this.content = content;
+        this.sender = sender;
+        this.chatRoom = chatRoom;
+    }
+
+    public static ChatMessage create(String content, ChatUser chatUser, ChatMessageType chatMessageType, ChatRoom chatRoom) {
+
+        ChatMessage chatMessage = ChatMessage.builder()
+                .content(content)
+                .sender(chatUser)
+                .type(chatMessageType)
+                .chatRoom(chatRoom)
+                .build();
+
+        return chatMessage;
+    }
+
+    public static ChatMessage create(String content,ChatRoom chatRoom) {
+
+        ChatMessage chatMessage = ChatMessage.builder()
+                .content(content)
+                .chatRoom(chatRoom)
+                .build();
+
+        return chatMessage;
+    }
+
+    public void removeChatMessages(String content){
+        this.content = content;
+    }
 }
+
