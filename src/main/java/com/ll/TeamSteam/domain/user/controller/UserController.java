@@ -4,23 +4,28 @@ package com.ll.TeamSteam.domain.user.controller;
 
 import com.ll.TeamSteam.domain.steam.service.SteamService;
 import com.ll.TeamSteam.domain.user.service.UserService;
+import com.ll.TeamSteam.global.rq.Rq;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.reactive.function.client.WebClient;
 
+
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,7 +40,7 @@ public class UserController {
 
     private final SteamService steamService;
 
-
+    private final Rq rq;
 
     @GetMapping("/user/login")
     public String login() {
@@ -43,32 +48,78 @@ public class UserController {
     }
 
     @GetMapping("/login/check")
-    public String startSession( @RequestParam(value = "openid.identity") String openidIdentity, HttpSession session ) {
+    public String startSession( @RequestParam(value = "openid.ns") String openidNs,
+        @RequestParam(value = "openid.mode") String openidMode,
+        @RequestParam(value = "openid.op_endpoint") String openidOpEndpoint,
+        @RequestParam(value = "openid.claimed_id") String openidClaimedId,
+        @RequestParam(value = "openid.identity") String openidIdentity,
+        @RequestParam(value = "openid.return_to") String openidReturnTo,
+        @RequestParam(value = "openid.response_nonce") String openidResponseNonce,
+        @RequestParam(value = "openid.assoc_handle") String openidAssocHandle,
+        @RequestParam(value = "openid.signed") String openidSigned,
+        @RequestParam(value = "openid.sig") String openidSig,
+        HttpSession session ) {
+
+
+        ResponseEntity block = WebClient.create("https://steamcommunity.com")
+            .get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/openid/login")
+                .queryParam("openid.ns", openidNs)
+                .queryParam("openid.mode", "check_authentication")
+                .queryParam("openid.op_endpoint", openidOpEndpoint)
+                .queryParam("openid.claimed_id", openidClaimedId)
+                .queryParam("openid.identity", openidIdentity)
+                .queryParam("openid.return_to", openidReturnTo)
+                .queryParam("openid.response_nonce", openidResponseNonce)
+                .queryParam("openid.assoc_handle", openidAssocHandle)
+                .queryParam("openid.signed", openidSigned)
+                .queryParam("openid.sig", openidSig)
+                .build()
+            )
+            .retrieve()
+            .toEntity(String.class)
+            .block();
+        log.info("block = {} ", block);
+        boolean isTrue = Objects.requireNonNull(block).getStatusCode().is2xxSuccessful();
+
+        log.info("isTrue = {} ", isTrue);
+        if(!isTrue){
+            return rq.redirectWithMsg("/main/home", "로그인을 실패했습니다.");
+        }
 
         Pattern pattern = Pattern.compile("\\d+");
         Matcher matcher = pattern.matcher(openidIdentity);
         String steamId;
+
         if (matcher.find()) {
             steamId = matcher.group();
         } else {
             throw new IllegalArgumentException();
         }
 
-        // member저장
+        if(!userService.findBySteamId(steamId).isPresent()){
+            userService.create(getUserInfo(steamId));
+        }
 
         SecurityUser user = SecurityUser.builder()
-                .steamId("steam_" + steamId)
-                .build();
+            .id(userService.findBySteamId(steamId).get().getId())
+            .username(userService.findBySteamId(steamId).get().getUsername())
+            .steamId(steamId)
+            .build();
 
-        Authentication authentication =
-                new OAuth2AuthenticationToken(user, user.getAuthorities(), "steam");
+        log.info("user.getId() = {} ", user.getId());
+        log.info("user.getUsername() = {}", user.getUsername());
+        log.info("user.getSteamId() = {} ", user.getSteamId());
+        log.info("user.getAuthorities() = {}", user.getAuthorities());
+
+        Authentication authentication = new OAuth2AuthenticationToken(user, user.getAuthorities(), "steam");
         SecurityContextHolder.getContext().setAuthentication(authentication);
         // SPRING_SECURITY_CONTEXT_KEY = "SPRING_SECURITY_CONTEXT"
         session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
-        UserInfoResponse userInfo = getUserInfo(session);
-        session.setAttribute("userInfo", userInfo);
-        session.setAttribute("steamId", steamId);
-        return "redirect:/user/checkFirstVisit";
+
+
+        return "redirect:/user/check";
 
     }
 
@@ -78,7 +129,7 @@ public class UserController {
     @GetMapping("/user/check")
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
-    public String check() {
+    public String check(HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SecurityUser user = (SecurityUser) authentication.getPrincipal();
         return user.getSteamId();
@@ -90,28 +141,21 @@ public class UserController {
         return "user/isLogin";
     }
 
-    @GetMapping("/user/info")
-    public UserInfoResponse getUserInfo(HttpSession session) {
-        //UserInfoResponse 객체를 사용
-        SecurityContext securityContext = (SecurityContext) session.getAttribute(SPRING_SECURITY_CONTEXT_KEY);
-        if (securityContext != null) {
-            Authentication authentication = securityContext.getAuthentication();
-            if (authentication != null && authentication.getPrincipal() instanceof SecurityUser) {
-                SecurityUser user = (SecurityUser) authentication.getPrincipal();
-                String steamId = extractSteamIdFromUsername(user.getSteamId());
-                return steamService.getUserInformation(steamId);
-            }
-        }
-        throw new IllegalStateException("User not authenticated");
 
+    public UserInfoResponse getUserInfo(String steamId) {
+        //UserInfoResponse 객체를 사용
+
+        return steamService.getUserInformation(steamId);
     }
+
+
 
     @GetMapping("/user/checkFirstVisit")
     public String checkLogin(HttpSession session){
 
         String steamId = (String)session.getAttribute("steamId");
         if(!userService.findBySteamId(steamId).isPresent()){
-            userService.create(getUserInfo(session));
+            userService.create(getUserInfo(steamId));
             return "user/createGenre";
         }
 
@@ -120,16 +164,8 @@ public class UserController {
 
     @PostMapping("/user/createGenre")
     @ResponseBody
-    public String genreFormPost(){
-        return "성공";
-    }
+    public String[] genreFormPost(@RequestParam String gender, @RequestParam("gameGenre") String[] gameGenres){
 
-
-    private String extractSteamIdFromUsername(String username) {
-        if (username.startsWith("steam_")) {
-            return username.substring(6);
-        } else {
-            throw new IllegalArgumentException("Invalid username format");
-        }
+        return gameGenres;
     }
 }
