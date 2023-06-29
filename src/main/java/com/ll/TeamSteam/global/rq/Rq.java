@@ -72,12 +72,12 @@ public class Rq {
     }
 
     // 로그인 된 회원의 객체
-    public User getMember() {
+    public User getUser() {
         if (isLogout()) return null;
 
         // 데이터가 없는지 체크
         if (user == null) {
-            user = userService.findBySteamId(securityUser.getSteamId()).orElseThrow();
+            user = userService.findByIdElseThrow(securityUser.getId());
         }
 
         return user;
