@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/match")
@@ -24,7 +26,10 @@ public class MatchingController {
     private final MatchingService matchingService;
 
     @GetMapping("/list")
-    public String matchingList() {
+    public String matchingList(Model model) {
+        List<Matching> matchingList = matchingService.getMachingList();
+        model.addAttribute("matchingList", matchingList);
+
         return "matching/list";
     }
 

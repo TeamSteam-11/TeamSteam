@@ -6,6 +6,8 @@ import com.ll.TeamSteam.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MatchingService {
@@ -23,6 +25,10 @@ public class MatchingService {
         matchingRepository.save(matching);
 
         return RsData.of("S-1", "입력하신 매칭이 등록되었습니다.");
+    }
+
+    public List<Matching> getMachingList() {
+        return matchingRepository.findAll();
     }
 
 }

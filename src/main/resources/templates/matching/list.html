@@ -21,5 +21,26 @@
 
 <h1>매칭 목록 페이지</h1>
 
+<div style="display: flex; justify-content: center; flex-wrap: wrap; width: 100%">
+    <a th:each="matching : ${matchingList}" th:href="@{|/matching/detail/${matching.id}|}"
+       class="card w-96 bg-base-100 shadow-xl"
+       style="background-color: #E0E0E0; color: #333333; box-shadow: 3px 3px 5px #C0C0C0; margin: 30px;">
+        <div class="card-body">
+            <div>
+                <span class="badge badge-secondary" th:text="${matching.title}"></span>
+                <span class="badge badge-outline" th:text="|${matching.participant} / ${matching.capacity}|"></span>
+            </div>
+            <h1 class="card-title" th:text="${matching.content}"></h1>
+<!--            <div>-->
+<!--                <i class="fa-solid fa-calendar-days" style="margin-right: 6px"></i>-->
+<!--                <span th:text="|${meeting.date}, ${meeting.time}|"></span>-->
+<!--            </div>-->
+<!--            <div class="card-actions justify-end">-->
+<!--                <div class="badge badge-outline" th:text="${meeting.member.username}"></div>-->
+<!--            </div>-->
+        </div>
+    </a>
+</div>
+
 </body>
 </html>
