@@ -8,8 +8,7 @@ import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUserType;
 import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
-import com.ll.TeamSteam.domain.notification.entity.Notification;
-import com.ll.TeamSteam.domain.notification.repository.NotificationRepository;
+import com.ll.TeamSteam.domain.notification.service.NotificationService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.event.EventAfterInvite;
@@ -38,8 +37,8 @@ public class ChatRoomService {
     private final UserService userService;
     private final ChatUserService chatUserService;
     private final SimpMessageSendingOperations template;
-    private final NotificationRepository notificationRepository;
     private final ApplicationEventPublisher publisher;
+    private final NotificationService notificationService;
 
 
     @Transactional
@@ -271,19 +270,7 @@ public class ChatRoomService {
 
         User invitedUser = userService.findByIdElseThrow(userId);
 
-        // 알림 저장
-        Notification notification = Notification.builder()
-                .invitedUser(invitedUser)
-                .invitingUser(currentUser)
-                .matchingName(chatRoom.getName())
-                .build();
-
-        log.info("notification = {} ", notification);
-
-        notificationRepository.save(notification);
-
-        log.info("notification = {} ", notification);
-        // TODO: 멤버 초대 알림 로직 ( eventListener 추가 )
+        notificationService.createAndSaveNotification(invitedUser, currentUser, chatRoom.getName());
 
         publisher.publishEvent(new EventAfterInvite(this, invitedUser));
 

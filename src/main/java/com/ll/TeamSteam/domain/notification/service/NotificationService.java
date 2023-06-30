@@ -27,4 +27,14 @@ public class NotificationService {
                 .filter(notification -> !notification.isRead())
                 .forEach(Notification::markAsRead);
     }
+
+    public void createAndSaveNotification(User invitedUser, User currentUser, String roomName) {
+        Notification notification = Notification.builder()
+                .invitedUser(invitedUser)
+                .invitingUser(currentUser)
+                .matchingName(roomName)
+                .build();
+
+        notificationRepository.save(notification);
+    }
 }
