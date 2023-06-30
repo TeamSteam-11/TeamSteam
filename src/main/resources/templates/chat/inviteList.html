@@ -1,7 +1,7 @@
 <html layout:decorate="~{common/layout.html}" xmlns:layout="">
 
 <head>
-  <title>참여자 목록</title>
+  <title>유저 목록</title>
   <style>
     .table {
       display: flex;
@@ -18,18 +18,17 @@
     <table class="table">
       <thead class="table-dark">
       <tr>
-        <th>아이디</th>
-        <th>입장일시</th>
-        <th>방장</th>
+        <th>회원 번호</th>
+        <th>회원 이름</th>
+        <th>초대</th>
       </tr>
       </thead>
       <tbody>
-      <tr th:each="chatUser, loop : ${chatUserList}" th:if="${chatUser.type == COMMON}">
-        <td th:text="${chatUser.user.name}"></td>
-        <td th:text="${#temporals.format(chatUser.createDate, 'yyyy/MM/dd hh:mm')}"></td>
-        <td>
-          <span th:if="${chatUser.user.id == chatRoom.owner.id}">방장</span>
-        </td>
+      <tr th:each="user, loop : ${userList}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.username}"></td>
+        <td><a th:href="@{/chat/{roomId}/inviteUser/{userId}(roomId=${roomId}, userId=${user.id})}"
+               class="border p-2">초대</a></td>
       </tr>
       </tbody>
     </table>
