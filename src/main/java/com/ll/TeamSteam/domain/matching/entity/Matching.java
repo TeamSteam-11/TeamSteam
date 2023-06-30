@@ -28,9 +28,9 @@ public class Matching extends BaseEntity {
 
     private Long participant; // 참가자 수
 
-    private int startTime;
+    private int startTime; // 원하는 시간대 시작
 
-    private int endTime;
+    private int endTime; // 원하는 시간대 끝
 
     @OneToOne(mappedBy = "matching")
     private ChatRoom chatRoom;
