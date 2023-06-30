@@ -32,12 +32,15 @@
                             <strong>매칭 이름:</strong> <span th:text="${notification.matchingName}"></span>
                         </div>
                         <div>
+                            <strong>초대 시간:</strong>
+                            <span th:text="${#temporals.format(notification.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+                        </div>
+                        <div>
                             <strong>읽음 여부:</strong> <span th:if="${notification.readDate != null}">읽음</span><span th:unless="${notification.readDate != null}">읽지 않음</span>
                         </div>
                         <div class="flex justify-center">
-                            <!--하드코딩 됨-->
-                            <a href="/chat/rooms/2" class="border p-3 m-3">수락</a>
-                            <a href="#" class="border p-3 m-3">거절</a>
+                            <a th:href="@{'/notification/' + ${notification.id} + '/accept'}" class="border p-3 m-3">수락</a>
+                            <a th:href="@{'/notification/' + ${notification.id} + '/reject'}" class="border p-3 m-3">거절</a>
                         </div>
 
                     </div>

@@ -23,6 +23,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,8 +40,8 @@ public class ChatRoomService {
     private final UserService userService;
     private final ChatUserService chatUserService;
     private final SimpMessageSendingOperations template;
-    private final NotificationRepository notificationRepository;
     private final ApplicationEventPublisher publisher;
+    private final NotificationRepository notificationRepository;
 
 
     @Transactional
@@ -252,7 +254,6 @@ public class ChatRoomService {
 //        chatRoom.getMatching().setParticipantsCount(commonParticipantsCount);
     }
 
-    @Transactional
     public RsData<User> inviteUser(Long roomId, SecurityUser user, Long userId) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
@@ -260,9 +261,9 @@ public class ChatRoomService {
         log.info("chatRoom = {} ", chatRoom);
 
         // 현재 로그인된 사용자가 방에 있는지 확인하는 로직
-        Long currentUserId = user.getId();
-        User currentUser = userService.findByIdElseThrow(currentUserId);
-        ChatUser chatUserByUserId = findChatUserByUserId(chatRoom, currentUserId);
+        Long invitingUserId = user.getId();
+        User invitingUser = userService.findByIdElseThrow(invitingUserId);
+        ChatUser chatUserByUserId = findChatUserByUserId(chatRoom, invitingUserId);
 
         // return 값 바꿀 거면 수정하기
         if (chatUserByUserId == null){
@@ -271,21 +272,23 @@ public class ChatRoomService {
 
         User invitedUser = userService.findByIdElseThrow(userId);
 
-        // 알림 저장
-        Notification notification = Notification.builder()
-                .invitedUser(invitedUser)
-                .invitingUser(currentUser)
-                .matchingName(chatRoom.getName())
-                .build();
+        if (invitingUser.getId() == invitedUser.getId()) {
+            return RsData.of("F-2", "본인을 초대할 수 없습니다");
+        }
 
-        log.info("notification = {} ", notification);
+        //TODO : 리팩토링 필요
+        Optional<Notification> optionalLastNotification = notificationRepository.findFirstByInvitingUserAndInvitedUserOrderByCreateDateDesc(invitingUser, invitedUser);
 
-        notificationRepository.save(notification);
+        if (optionalLastNotification.isPresent()) {
+            LocalDateTime lastInvitationTime = optionalLastNotification.get().getCreateDate();
+            Duration durationSinceLastInvitation = Duration.between(lastInvitationTime, LocalDateTime.now());
 
-        log.info("notification = {} ", notification);
-        // TODO: 멤버 초대 알림 로직 ( eventListener 추가 )
+            if (durationSinceLastInvitation.toMinutes() < 1) {
+                return RsData.of("F-3", "1분 내에는 다시 초대할 수 없습니다");
+            }
+        }
 
-        publisher.publishEvent(new EventAfterInvite(this, invitedUser));
+        publisher.publishEvent(new EventAfterInvite(this, invitingUser, invitedUser, chatRoom));
 
         return RsData.of("S-1", "%s 님에게 초대를 보냈습니다".formatted(invitedUser.getUsername()));
     }
