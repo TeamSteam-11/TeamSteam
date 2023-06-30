@@ -52,10 +52,10 @@ public class NotProd {
                 log.info("user1 = {}", user1);
 
                 Matching matching1 = matchingService.create("오늘 한강에서 러닝하실 분 구합니다!!",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", 8L).getData();
+                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", 8L, 8, 10).getData();
 
                 Matching matching2 = matchingService.create("오늘 한강에서 러닝하실 분 구합니다!!",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", 4L).getData();
+                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", 4L, 7, 9).getData();
 
                 log.info("matching1 = {}", matching1);
                 log.info("matching2 = {}", matching2);
