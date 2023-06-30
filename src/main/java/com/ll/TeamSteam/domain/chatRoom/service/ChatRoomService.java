@@ -8,7 +8,8 @@ import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUserType;
 import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
-import com.ll.TeamSteam.domain.notification.service.NotificationService;
+import com.ll.TeamSteam.domain.notification.entity.Notification;
+import com.ll.TeamSteam.domain.notification.repository.NotificationRepository;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.event.EventAfterInvite;
@@ -22,6 +23,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +41,7 @@ public class ChatRoomService {
     private final ChatUserService chatUserService;
     private final SimpMessageSendingOperations template;
     private final ApplicationEventPublisher publisher;
-    private final NotificationService notificationService;
+    private final NotificationRepository notificationRepository;
 
 
     @Transactional
@@ -273,13 +276,20 @@ public class ChatRoomService {
             return RsData.of("F-2", "본인을 초대할 수 없습니다");
         }
 
+        //TODO : 리팩토링 필요
+        Optional<Notification> optionalLastNotification = notificationRepository.findFirstByInvitingUserAndInvitedUserOrderByCreateDateDesc(invitingUser, invitedUser);
+
+        if (optionalLastNotification.isPresent()) {
+            LocalDateTime lastInvitationTime = optionalLastNotification.get().getCreateDate();
+            Duration durationSinceLastInvitation = Duration.between(lastInvitationTime, LocalDateTime.now());
+
+            if (durationSinceLastInvitation.toMinutes() < 1) {
+                return RsData.of("F-3", "1분 내에는 다시 초대할 수 없습니다");
+            }
+        }
+
         publisher.publishEvent(new EventAfterInvite(this, invitingUser, invitedUser, chatRoom));
 
         return RsData.of("S-1", "%s 님에게 초대를 보냈습니다".formatted(invitedUser.getUsername()));
-    }
-
-    @Transactional
-    public RsData<User> acceptAndRejectInvitation() {
-        return null;
     }
 }

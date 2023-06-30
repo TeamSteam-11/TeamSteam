@@ -63,4 +63,7 @@ public class NotificationService {
         return notificationRepository.findById(notificationId).orElseThrow();
     }
 
+    public boolean countUnreadNotificationsByInvitedUser(User user) {
+        return notificationRepository.countByInvitedUserAndReadDateIsNull(user) > 0;
+    }
 }
