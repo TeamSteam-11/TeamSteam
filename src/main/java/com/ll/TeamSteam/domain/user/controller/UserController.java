@@ -2,7 +2,12 @@ package com.ll.TeamSteam.domain.user.controller;
 
 
 
+import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.steam.service.SteamService;
+import com.ll.TeamSteam.domain.user.entity.Gender;
+import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
+import com.ll.TeamSteam.domain.userTag.genreTag.GenreTagRepository;
+import com.ll.TeamSteam.domain.userTag.UserTagRepository;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.rq.Rq;
 import com.ll.TeamSteam.global.security.SecurityUser;
@@ -13,9 +18,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.ParseException;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
@@ -26,9 +35,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.reactive.function.client.WebClient;
 
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
@@ -40,6 +53,12 @@ public class UserController {
     private final UserService userService;
 
     private final SteamService steamService;
+
+    private final GameTagRepository gameTagRepository;
+
+    private final GenreTagRepository genreTagRepository;
+
+    private final UserTagRepository userTagRepository;
 
     private final Rq rq;
 
@@ -139,7 +158,14 @@ public class UserController {
 
     }
 
+    @GetMapping(value ="/save", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void userGameListSave(@AuthenticationPrincipal SecurityUser user) throws ParseException {
+        //데이터가 이미 있는지 검증은 나중에.. 일단 세이브만 시키겠습니다.
+        String steamId = user.getSteamId();
+        Map<Integer, String> haveGameList = steamService.getUserGameList(steamId);
 
+        userService.saveGameList(haveGameList, user.getId());
+    }
 
 
     @GetMapping("/user/check")
@@ -164,24 +190,38 @@ public class UserController {
         return steamService.getUserInformation(steamId);
     }
 
+    @GetMapping("user/createGenre")
+    public String test(){
+        return "user/createGenre";
+    }
 
 
     @GetMapping("/user/checkFirstVisit")
-    public String checkLogin(HttpSession session){
+    public String checkLogin(@AuthenticationPrincipal SecurityUser user){
 
-        String steamId = (String)session.getAttribute("steamId");
-        if(!userService.findBySteamId(steamId).isPresent()){
-            userService.create(getUserInfo(steamId));
-            return "user/createGenre";
+
+        String steamId = user.getSteamId();
+        log.info("userService.findBySteamId() = {}", userService.findBySteamId(steamId));
+        if(userService.findBySteamId(steamId).get().getType().equals(Gender.Wait)){
+            log.info("userService.findBySteamId() = {}", userService.findBySteamId(steamId));
+            return "redirect:/user/createGenre";
         }
 
         return "redirect:/main/home";
     }
 
     @PostMapping("/user/createGenre")
-    @ResponseBody
-    public String[] genreFormPost(@RequestParam String gender, @RequestParam("gameGenre") String[] gameGenres){
+    public String genreFormPost(@RequestParam String gender, @RequestParam("gameGenre") String[] gameGenres,
+                                  @AuthenticationPrincipal SecurityUser user){
+        Long id = user.getId();
 
-        return gameGenres;
+        // GenreTagType enum으로 변환하여 리스트로 저장
+        List<GenreTagType> genreTagTypes = Arrays.stream(gameGenres)
+                .map(GenreTagType::valueOf)
+                .collect(Collectors.toList());
+
+        // DB에 저장
+        userService.updateUserData(gender, genreTagTypes, id);
+        return "redirect:/main/home";
     }
 }

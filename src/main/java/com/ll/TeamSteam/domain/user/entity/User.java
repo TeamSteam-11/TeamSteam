@@ -53,6 +53,7 @@ public class User extends BaseEntity {
     public void setType(Gender type) {
         this.type = type;
     }
+    public void setUserTag(UserTag userTag){ this.userTag = userTag; }
 
 
     public List<? extends GrantedAuthority> getGrantedAuthorities() {
