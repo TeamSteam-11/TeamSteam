@@ -173,4 +173,25 @@ public class ChatRoomController {
         model.addAttribute("COMMON", COMMON);
         return "chat/userList";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{roomId}/inviteList")
+    public String inviteList(Model model, @PathVariable Long roomId) {
+        List<User> userList = userService.findAll();
+        log.info("userList = {}", userList);
+        model.addAttribute("roomId", roomId);
+        model.addAttribute("userList", userList);
+
+        return "chat/inviteList";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{roomId}/inviteUser/{userId}")
+    public String inviteUser(@PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user,
+                             @PathVariable Long userId){
+        chatRoomService.inviteUser(roomId, user, userId);
+
+        return "redirect:/chat/{roomId}/inviteList";
+    }
+
 }
