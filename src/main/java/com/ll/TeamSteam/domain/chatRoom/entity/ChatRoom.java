@@ -14,6 +14,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -43,4 +44,36 @@ public class ChatRoom extends BaseEntity {
 
     @OneToMany(mappedBy = "chatRoom",  cascade = PERSIST)
     private List<ChatMessage> chatMessages = new ArrayList<>();
+
+    public static ChatRoom create(String name, Matching matching, User owner) {
+
+        Assert.notNull(name, "name는 널일 수 없습니다.");
+        Assert.notNull(owner, "owner는 널일 수 없습니다.");
+
+        ChatRoom chatRoom = ChatRoom.builder()
+                .name(name)
+                .matching(matching)
+                .owner(owner)
+                .build();
+
+        return chatRoom;
+    }
+
+    public void addChatUser(User owner) {
+        ChatUser chatUser = ChatUser.builder()
+                .user(owner)
+                .chatRoom(this)
+                .build();
+
+        chatUsers.add(chatUser);
+    }
+
+    public void removeChatUser(ChatUser chatUser) {
+        chatUsers.remove(chatUser);
+    }
+
+    public void updateName(String name){
+        this.name = name;
+    }
+
 }
