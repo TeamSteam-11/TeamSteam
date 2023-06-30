@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,11 +28,16 @@ public class MatchingService {
 
         matchingRepository.save(matching);
 
-        return RsData.of("S-1", "입력하신 매칭이 등록되었습니다.");
+        return RsData.of("S-1", "입력하신 매칭이 등록되었습니다.", matching);
     }
 
     public List<Matching> getMachingList() {
         return matchingRepository.findAll();
     }
 
+    public Matching getMatching(Long id) {
+        Optional<Matching> matching = matchingRepository.findById(id);
+
+        return matching.get();
+    }
 }

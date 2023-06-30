@@ -13,9 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -85,6 +87,15 @@ public class MatchingController {
 
         // 등록 게시글 작성 후 매칭 목록 페이지로 이동
         return rq.redirectWithMsg("/match/list", createRsData);
+    }
+
+    @GetMapping("/detail/{id}")
+    public String matchingDetail(Model model, @PathVariable("id") Long id) {
+        Matching matching = matchingService.getMatching(id);
+
+        model.addAttribute("matching", matching);
+
+        return "matching/detail";
     }
 
 
