@@ -251,7 +251,6 @@ public class ChatRoomService {
 //        chatRoom.getMatching().setParticipantsCount(commonParticipantsCount);
     }
 
-    @Transactional
     public RsData<User> inviteUser(Long roomId, SecurityUser user, Long userId) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
@@ -259,9 +258,9 @@ public class ChatRoomService {
         log.info("chatRoom = {} ", chatRoom);
 
         // 현재 로그인된 사용자가 방에 있는지 확인하는 로직
-        Long currentUserId = user.getId();
-        User currentUser = userService.findByIdElseThrow(currentUserId);
-        ChatUser chatUserByUserId = findChatUserByUserId(chatRoom, currentUserId);
+        Long invitingUserId = user.getId();
+        User invitingUser = userService.findByIdElseThrow(invitingUserId);
+        ChatUser chatUserByUserId = findChatUserByUserId(chatRoom, invitingUserId);
 
         // return 값 바꿀 거면 수정하기
         if (chatUserByUserId == null){
@@ -270,10 +269,17 @@ public class ChatRoomService {
 
         User invitedUser = userService.findByIdElseThrow(userId);
 
-        notificationService.createAndSaveNotification(invitedUser, currentUser, chatRoom.getName());
+        if (invitingUser.getId() == invitedUser.getId()) {
+            return RsData.of("F-2", "본인을 초대할 수 없습니다");
+        }
 
-        publisher.publishEvent(new EventAfterInvite(this, invitedUser));
+        publisher.publishEvent(new EventAfterInvite(this, invitingUser, invitedUser, chatRoom));
 
         return RsData.of("S-1", "%s 님에게 초대를 보냈습니다".formatted(invitedUser.getUsername()));
+    }
+
+    @Transactional
+    public RsData<User> acceptAndRejectInvitation() {
+        return null;
     }
 }

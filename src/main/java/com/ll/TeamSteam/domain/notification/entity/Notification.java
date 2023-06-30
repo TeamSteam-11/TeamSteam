@@ -1,5 +1,6 @@
 package com.ll.TeamSteam.domain.notification.entity;
 
+import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -24,6 +25,7 @@ public class Notification extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private User invitingUser; // 초대를 보낸 사람
 
+    private Long roomId;
     private String matchingName;
     private LocalDateTime readDate;
 

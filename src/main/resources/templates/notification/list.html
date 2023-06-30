@@ -36,8 +36,8 @@
                         </div>
                         <div class="flex justify-center">
                             <!--하드코딩 됨-->
-                            <a href="/chat/rooms/2" class="border p-3 m-3">수락</a>
-                            <a href="#" class="border p-3 m-3">거절</a>
+                            <a th:href="@{'/notification/' + ${notification.id} + '/accept'}" class="border p-3 m-3">수락</a>
+                            <a th:href="@{'/notification/' + ${notification.id} + '/reject'}" class="border p-3 m-3">거절</a>
                         </div>
 
                     </div>
