@@ -32,7 +32,7 @@ public class ChatUser extends BaseEntity {
 
     @Builder.Default
     @Enumerated(STRING)
-    private ChatUserType type = COMMON;
+    private ChatUserType type = ROOMIN;
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ChatMessage> chatMessages = new ArrayList<>();

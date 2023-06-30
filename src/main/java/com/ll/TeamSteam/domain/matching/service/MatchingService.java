@@ -22,7 +22,7 @@ public class MatchingService {
 
         matchingRepository.save(matching);
 
-        return RsData.of("S-1", "입력하신 매칭이 등록되었습니다.");
+        return RsData.of("S-1", "입력하신 매칭이 등록되었습니다.", matching);
     }
 
 }
