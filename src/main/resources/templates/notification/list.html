@@ -1,0 +1,57 @@
+<html layout:decorate="~{common/layout.html}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>알림</title>
+</head>
+
+<body>
+
+<main layout:fragment="main" class="flex-grow flex items-center justify-center">
+    <div class="max-w-2xl w-full px-4">
+        <h1 class="mb-4">
+            <i class="fa-regular fa-bell"></i>
+            알림
+        </h1>
+
+        <div class="text-center mt-10" th:if="${notifications.empty}">
+            <i class="fa-regular fa-face-laugh"></i> 최근에 받은 알림이 없습니다.
+        </div>
+
+        <div class="flex flex-col gap-4" th:if="${not notifications.empty}">
+            <div class="card bg-base-100 shadow-xl" th:each="notification : ${notifications}">
+                <div class="card-body">
+                    <div class="flex flex-col gap-2">
+                        <div>
+                            <i class="fa-regular fa-clock"></i>
+                            알림
+                        </div>
+                        <div>
+                            <strong>보낸 사람:</strong> <span th:text="${notification.invitingUser.username}"></span>
+                        </div>
+                        <div>
+                            <strong>매칭 이름:</strong> <span th:text="${notification.matchingName}"></span>
+                        </div>
+                        <div>
+                            <strong>초대 시간:</strong>
+                            <span th:text="${#temporals.format(notification.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+                        </div>
+                        <div>
+                            <strong>읽음 여부:</strong> <span th:if="${notification.readDate != null}">읽음</span><span th:unless="${notification.readDate != null}">읽지 않음</span>
+                        </div>
+                        <div class="flex justify-center">
+                            <a th:href="@{'/notification/' + ${notification.id} + '/accept'}" class="border p-3 m-3">수락</a>
+                            <a th:href="@{'/notification/' + ${notification.id} + '/reject'}" class="border p-3 m-3">거절</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+
+</body>
+
+</html>

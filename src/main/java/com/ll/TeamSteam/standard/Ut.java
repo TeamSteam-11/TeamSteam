@@ -28,7 +28,6 @@ public class Ut {
         }
     }
 
-    // 사용하지는 않지만 강사님 코드 일단 복사해 놓았다.
     public static class time {
         public static String diffFormat1Human(LocalDateTime time1, LocalDateTime time2) {
             String suffix = time1.isAfter(time2) ? "전" : "후";

@@ -1,5 +1,6 @@
 package com.ll.TeamSteam.global.rq;
 
+import com.ll.TeamSteam.domain.notification.service.NotificationService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.rsData.RsData;
@@ -31,12 +32,14 @@ public class Rq {
     private final HttpServletResponse resp;
     private final HttpSession session;
     private final SecurityUser securityUser;
+    private final NotificationService notificationService;
     private User user = null; // 레이지 로딩, 처음부터 넣지 않고, 요청이 들어올 때 넣는다.
 
 
-    public Rq(UserService userService, MessageSource messageSource, LocaleResolver localeResolver, HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
+    public Rq(UserService userService, NotificationService notificationService, MessageSource messageSource, LocaleResolver localeResolver, HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
         this.userService = userService;
         this.messageSource = messageSource;
+        this.notificationService = notificationService;
         this.localeResolver = localeResolver;
         this.req = req;
         this.resp = resp;
@@ -130,6 +133,14 @@ public class Rq {
         }
 
         return defaultValue;
+    }
+
+    public boolean hasUnreadNotifications() {
+        if (isLogout()) return false;
+
+        User user = getUser();
+
+        return notificationService.countUnreadNotificationsByInvitedUser(getUser());
     }
 
     public void removeSessionAttr(String name) {
