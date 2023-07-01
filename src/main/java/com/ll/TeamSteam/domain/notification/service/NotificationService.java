@@ -6,14 +6,19 @@ import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class NotificationService {
 
     private final UserService userService;
@@ -66,4 +71,9 @@ public class NotificationService {
     public boolean countUnreadNotificationsByInvitedUser(User user) {
         return notificationRepository.countByInvitedUserAndReadDateIsNull(user) > 0;
     }
+
+    public Optional<Notification> inviteCoolTime1Minute(User invitingUser, User invitedUser, Long roomId) {
+        return notificationRepository.findFirstByInvitingUserAndInvitedUserAndRoomIdOrderByCreateDateDesc(invitingUser, invitedUser, roomId);
+    }
+
 }

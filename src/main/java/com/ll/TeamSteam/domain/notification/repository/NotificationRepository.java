@@ -13,5 +13,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     int countByInvitedUserAndReadDateIsNull(User user);
 
-    Optional<Notification> findFirstByInvitingUserAndInvitedUserOrderByCreateDateDesc(User invitingUser, User invitedUser);
+    Optional<Notification> findFirstByInvitingUserAndInvitedUserAndRoomIdOrderByCreateDateDesc(User invitingUser, User invitedUser, Long roomId);
 }

@@ -10,6 +10,7 @@ import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.notification.entity.Notification;
 import com.ll.TeamSteam.domain.notification.repository.NotificationRepository;
+import com.ll.TeamSteam.domain.notification.service.NotificationService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.event.EventAfterInvite;
@@ -41,7 +42,7 @@ public class ChatRoomService {
     private final ChatUserService chatUserService;
     private final SimpMessageSendingOperations template;
     private final ApplicationEventPublisher publisher;
-    private final NotificationRepository notificationRepository;
+    private final NotificationService notificationService;
 
 
     @Transactional
@@ -276,11 +277,13 @@ public class ChatRoomService {
             return RsData.of("F-2", "본인을 초대할 수 없습니다");
         }
 
-        //TODO : 리팩토링 필요
-        Optional<Notification> optionalLastNotification = notificationRepository.findFirstByInvitingUserAndInvitedUserOrderByCreateDateDesc(invitingUser, invitedUser);
+        Optional<Notification> optionalLastNotification = notificationService.inviteCoolTime1Minute(invitingUser, invitedUser, chatRoom.getId());
+
+        log.info("optionalLastNotification = {} ", optionalLastNotification);
 
         if (optionalLastNotification.isPresent()) {
             LocalDateTime lastInvitationTime = optionalLastNotification.get().getCreateDate();
+            log.info("lastInvitationTime = {} ", lastInvitationTime);
             Duration durationSinceLastInvitation = Duration.between(lastInvitationTime, LocalDateTime.now());
 
             if (durationSinceLastInvitation.toMinutes() < 1) {
