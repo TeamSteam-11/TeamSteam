@@ -1,8 +1,9 @@
 package com.ll.TeamSteam.domain.user.entity;
 
 import com.ll.TeamSteam.domain.matching.entity.Matching;
-import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
+import com.ll.TeamSteam.domain.userTag.UserTag;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
+import org.springframework.security.core.GrantedAuthority;
 
 import jakarta.persistence.*;
 
@@ -35,16 +36,16 @@ public class User extends BaseEntity {
 
     private String avatar;
 
-    private String gameNameTag;
-
     @Enumerated(EnumType.STRING)
     private Gender type;
 
-    @Enumerated(EnumType.STRING)
-    private GenreTagType genreTagType;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Matching> matchingList = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user")
+    private UserTag userTag;
+
+
 
     public void setTemperature(int temperature) {
         this.temperature = temperature;
@@ -52,5 +53,13 @@ public class User extends BaseEntity {
     public void setType(Gender type) {
         this.type = type;
     }
+    public void setUserTag(UserTag userTag){ this.userTag = userTag; }
 
+
+    public List<? extends GrantedAuthority> getGrantedAuthorities() {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+
+
+        return grantedAuthorities;
+    }
 }
