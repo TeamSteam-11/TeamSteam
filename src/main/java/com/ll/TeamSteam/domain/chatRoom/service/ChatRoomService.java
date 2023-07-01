@@ -255,6 +255,7 @@ public class ChatRoomService {
 //        chatRoom.getMatching().setParticipantsCount(commonParticipantsCount);
     }
 
+    @Transactional
     public RsData<User> inviteUser(Long roomId, SecurityUser user, Long userId) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
@@ -278,14 +279,18 @@ public class ChatRoomService {
         }
 
         Optional<Notification> optionalLastNotification = notificationService.inviteCoolTime1Minute(invitingUser, invitedUser, chatRoom.getId());
-
         log.info("optionalLastNotification = {} ", optionalLastNotification);
 
         if (optionalLastNotification.isPresent()) {
             LocalDateTime lastInvitationTime = optionalLastNotification.get().getCreateDate();
             log.info("lastInvitationTime = {} ", lastInvitationTime);
-            Duration durationSinceLastInvitation = Duration.between(lastInvitationTime, LocalDateTime.now());
 
+            //TODO : 리팩토링
+            LocalDateTime unlockCoolTime = LocalDateTime.now().plusMinutes(1);
+            chatRoom.updateCoolTime(unlockCoolTime);
+            log.info("unlockCoolTime = {} ", unlockCoolTime);
+
+            Duration durationSinceLastInvitation = Duration.between(lastInvitationTime, LocalDateTime.now());
             if (durationSinceLastInvitation.toMinutes() < 1) {
                 return RsData.of("F-3", "1분 내에는 다시 초대할 수 없습니다");
             }

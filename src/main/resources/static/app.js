@@ -35,6 +35,7 @@ function drawMessages(messages) {
         console.log(message);
         console.log("userId : " + userId);
         console.log("userName : " + userName);
+        console.log("message.sender" + message.sender);
 
         if (message.sender.user_id === userId) {
             newItem.classList.add("sender");
@@ -72,7 +73,15 @@ function drawMessages(messages) {
             if (message.sender.user_id === userId) {
                 newItem.innerHTML = `<div><div class="message-content">${message.content}</div><span class="message-time">${formattedTime}</span></div> `;
             } else {
-                newItem.innerHTML = `<div><div class="message-username mt-5 mb-1">${message.sender.username}</div><div class="message-content">${message.content}</div> <span class="message-time">${formattedTime}</span></div>`;
+                newItem.innerHTML = `
+                <div>
+                    <div class="message-username mt-5 mb-1 flex items-center">
+                        <img src="${message.sender.avatar}" alt="${message.sender.username}'s avatar" style="width: 35px; height: 35px;" class="mr-1 rounded">
+                        ${message.sender.username}
+                    </div>
+                    <div class="message-content">${message.content}</div> 
+                    <span class="message-time">${formattedTime}</span>
+                </div>`;
 
                 if ( lastChatMessageUser == message.sender.user_id ) {
                     $(newItem).find('.message-username').remove();

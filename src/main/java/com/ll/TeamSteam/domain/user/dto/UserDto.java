@@ -22,6 +22,9 @@ public class UserDto implements Serializable {
     @JsonProperty("username")
     private String username;
 
+    @JsonProperty("avatar")
+    private String avatar;
+
     @JsonProperty("created_at")
     private LocalDateTime createDate;
 
@@ -32,6 +35,7 @@ public class UserDto implements Serializable {
         UserDto userDto = UserDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
+                .avatar(user.getAvatar())
                 .createDate(user.getCreateDate())
                 .modifyDate(user.getModifyDate())
                 .build();
