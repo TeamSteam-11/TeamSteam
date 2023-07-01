@@ -27,8 +27,8 @@
       <tr th:each="user, loop : ${userList}">
         <td th:text="${user.id}"></td>
         <td th:text="${user.username}"></td>
-        <td><a th:href="@{/chat/{roomId}/inviteUser/{userId}(roomId=${roomId}, userId=${user.id})}"
-               class="border p-2">초대</a></td>
+        <td><a th:href="@{/chat/{roomId}/inviteUser/{userId}(roomId=${chatRoom.id}, userId=${user.id})}"
+               class="btn btn-sm btn-outline" th:classappend="${!chatRoom.modifyUnlocked ? 'btn-disabled' : ''}">초대</a></td>
       </tr>
       </tbody>
     </table>

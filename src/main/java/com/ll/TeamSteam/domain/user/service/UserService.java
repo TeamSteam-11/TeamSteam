@@ -167,4 +167,9 @@ public class UserService {
         gameTagRepository.saveAll(gameTags);
 
     }
+
+    // 임시로 사용하고있습니다.
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
 }

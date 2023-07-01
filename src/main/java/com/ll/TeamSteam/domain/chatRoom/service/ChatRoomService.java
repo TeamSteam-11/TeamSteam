@@ -10,6 +10,7 @@ import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.notification.entity.Notification;
 import com.ll.TeamSteam.domain.notification.repository.NotificationRepository;
+import com.ll.TeamSteam.domain.notification.service.NotificationService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.event.EventAfterInvite;
@@ -41,7 +42,7 @@ public class ChatRoomService {
     private final ChatUserService chatUserService;
     private final SimpMessageSendingOperations template;
     private final ApplicationEventPublisher publisher;
-    private final NotificationRepository notificationRepository;
+    private final NotificationService notificationService;
 
 
     @Transactional
@@ -254,6 +255,7 @@ public class ChatRoomService {
 //        chatRoom.getMatching().setParticipantsCount(commonParticipantsCount);
     }
 
+    @Transactional
     public RsData<User> inviteUser(Long roomId, SecurityUser user, Long userId) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
@@ -276,13 +278,19 @@ public class ChatRoomService {
             return RsData.of("F-2", "본인을 초대할 수 없습니다");
         }
 
-        //TODO : 리팩토링 필요
-        Optional<Notification> optionalLastNotification = notificationRepository.findFirstByInvitingUserAndInvitedUserOrderByCreateDateDesc(invitingUser, invitedUser);
+        Optional<Notification> optionalLastNotification = notificationService.inviteCoolTime1Minute(invitingUser, invitedUser, chatRoom.getId());
+        log.info("optionalLastNotification = {} ", optionalLastNotification);
 
         if (optionalLastNotification.isPresent()) {
             LocalDateTime lastInvitationTime = optionalLastNotification.get().getCreateDate();
-            Duration durationSinceLastInvitation = Duration.between(lastInvitationTime, LocalDateTime.now());
+            log.info("lastInvitationTime = {} ", lastInvitationTime);
 
+            //TODO : 리팩토링
+            LocalDateTime unlockCoolTime = LocalDateTime.now().plusMinutes(1);
+            chatRoom.updateCoolTime(unlockCoolTime);
+            log.info("unlockCoolTime = {} ", unlockCoolTime);
+
+            Duration durationSinceLastInvitation = Duration.between(lastInvitationTime, LocalDateTime.now());
             if (durationSinceLastInvitation.toMinutes() < 1) {
                 return RsData.of("F-3", "1분 내에는 다시 초대할 수 없습니다");
             }

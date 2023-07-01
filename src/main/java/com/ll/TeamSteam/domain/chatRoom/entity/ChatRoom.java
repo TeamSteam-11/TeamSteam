@@ -10,12 +10,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +29,9 @@ import static jakarta.persistence.FetchType.LAZY;
 @RequiredArgsConstructor
 @Entity
 @SuperBuilder
+@Slf4j
 public class ChatRoom extends BaseEntity {
+
 
     private String name;
 
@@ -44,6 +47,22 @@ public class ChatRoom extends BaseEntity {
 
     @OneToMany(mappedBy = "chatRoom",  cascade = PERSIST)
     private List<ChatMessage> chatMessages = new ArrayList<>();
+
+    private LocalDateTime isUnlockCoolTime;
+
+    //TODO : 리팩토링
+    public boolean isModifyUnlocked() {
+        if (isUnlockCoolTime == null) {
+            return true;  // or false, depending on your business requirements
+        }
+        boolean whatIsTrueFalse = isUnlockCoolTime.isBefore(LocalDateTime.now());
+        log.info("whatIsTrueFalse = {} ", whatIsTrueFalse);
+        return whatIsTrueFalse;
+    }
+
+    public void updateCoolTime(LocalDateTime unLockCoolTime){
+        this.isUnlockCoolTime = unLockCoolTime;
+    }
 
     public static ChatRoom create(String name, Matching matching, User owner) {
 

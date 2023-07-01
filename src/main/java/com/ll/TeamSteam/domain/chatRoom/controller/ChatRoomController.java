@@ -179,6 +179,7 @@ public class ChatRoomController {
     @GetMapping("/{roomId}/inviteList")
     public String inviteList(Model model, @PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user) {
         List<User> userList = userService.findAll();
+        ChatRoom chatRoom = chatRoomService.findById(roomId);
 
         // 친구 목록으로 불러올 때는 없어도 되는 로직(전체 유저에서 본인을 제외한 목록)
         List<User> filteredUserList = new ArrayList<>();
@@ -189,7 +190,7 @@ public class ChatRoomController {
         }
 
         log.info("userList = {}", userList);
-        model.addAttribute("roomId", roomId);
+        model.addAttribute("chatRoom", chatRoom);
         model.addAttribute("userList", filteredUserList);
 
         return "chat/inviteList";
@@ -203,19 +204,4 @@ public class ChatRoomController {
 
         return "redirect:/chat/{roomId}/inviteList";
     }
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/{roomId}/inviteUser/{userId}/accept")
-    public String acceptInvitation(Model model, @PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user, @PathVariable Long userId, @PathVariable String intention) {
-
-        if (!intention.equals("accept")) {
-            return "redirect:/notification/list";
-        }
-
-        model.addAttribute("roomId", roomId);
-        model.addAttribute("userId", userId);
-
-        return "redirect:/chat/rooms/{roomId}";
-    }
-
 }
