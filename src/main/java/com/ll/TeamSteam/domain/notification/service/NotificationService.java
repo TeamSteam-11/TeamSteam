@@ -72,8 +72,7 @@ public class NotificationService {
         return notificationRepository.countByInvitedUserAndReadDateIsNull(user) > 0;
     }
 
-    public Optional<Notification> inviteCoolTime1Minute(User invitingUser, User invitedUser, Long roomId) {
-        return notificationRepository.findFirstByInvitingUserAndInvitedUserAndRoomIdOrderByCreateDateDesc(invitingUser, invitedUser, roomId);
+    public boolean checkDuplicateInvite(User invitingUser, User invitedUser, Long roomId) {
+        return notificationRepository.existsByInvitingUserAndInvitedUserAndRoomId(invitingUser, invitedUser, roomId);
     }
-
 }
