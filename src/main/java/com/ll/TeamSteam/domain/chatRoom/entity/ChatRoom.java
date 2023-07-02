@@ -48,6 +48,13 @@ public class ChatRoom extends BaseEntity {
     @OneToMany(mappedBy = "chatRoom",  cascade = PERSIST)
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
+    private boolean alreadyInviteUser;
+
+    public void updateState(boolean alreadyInviteUser) {
+        log.info("alreadyInviteUser = {} ", alreadyInviteUser);
+        this.alreadyInviteUser = alreadyInviteUser;
+    }
+
     public static ChatRoom create(String name, Matching matching, User owner) {
 
         Assert.notNull(name, "name는 널일 수 없습니다.");

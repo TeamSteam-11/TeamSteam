@@ -280,6 +280,7 @@ public class ChatRoomService {
 
         // 현재 DB에 정보가 있으면 더 이상 저장이 되지 않게
         boolean isDuplicateInvite = notificationService.checkDuplicateInvite(invitingUser, invitedUser, roomId);
+        chatRoom.updateState(isDuplicateInvite);
         if (isDuplicateInvite) {
             return RsData.of("F-3", "이미 초대된 사용자입니다.");
         }

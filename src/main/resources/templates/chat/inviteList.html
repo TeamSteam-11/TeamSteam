@@ -26,12 +26,39 @@
       <tr th:each="user, loop : ${userList}">
         <td th:text="${user.id}"></td>
         <td th:text="${user.username}"></td>
-        <td><a th:href="@{/chat/{roomId}/inviteUser/{userId}(roomId=${chatRoom.id}, userId=${user.id})}"
-               class="btn btn-sm btn-outline">초대</a></td>
+        <td>
+          <a th:href="@{/chat/{roomId}/inviteUser/{userId}(roomId=${chatRoom.id}, userId=${user.id})}"
+             class="btn btn-sm btn-outline invite">초대</a>
+        </td>
       </tr>
       </tbody>
     </table>
   </div>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.invite').on('click', function(e) {
+        e.preventDefault(); // Avoids redirecting
+
+        var btn = $(this); // 클릭된 초대 버튼
+
+        // AJAX를 사용하여 서버에 초대 요청 보내기
+        $.ajax({
+          url: btn.attr('href'),
+          type: 'GET',
+          success: function(response) {
+            if (response.success) {
+              toastr.error("이미 초대한 사람입니다.");
+            } else {
+              toastr.success("초대가 발송되었습니다.");
+            }
+          },
+          error: function() {
+            toastr.success('초대 요청에 실패했습니다');
+          }
+        });
+      });
+    });
+  </script>
 </main>
 </body>
 </html>
