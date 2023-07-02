@@ -1,6 +1,7 @@
 package com.ll.TeamSteam.domain.user.entity;
 
 import com.ll.TeamSteam.domain.matching.entity.Matching;
+import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
 import com.ll.TeamSteam.domain.userTag.UserTag;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
 import org.springframework.security.core.GrantedAuthority;
@@ -42,6 +43,9 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Matching> matchingList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<SteamGameLibrary> steamGameLibrary = new ArrayList<>();
+
     @OneToOne(mappedBy = "user")
     private UserTag userTag;
 
@@ -55,11 +59,4 @@ public class User extends BaseEntity {
     }
     public void setUserTag(UserTag userTag){ this.userTag = userTag; }
 
-
-    public List<? extends GrantedAuthority> getGrantedAuthorities() {
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-
-
-        return grantedAuthorities;
-    }
 }

@@ -1,6 +1,8 @@
 package com.ll.TeamSteam.domain.user.service;
 
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
+import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
+import com.ll.TeamSteam.domain.steam.repository.SteamGameLibraryRepository;
 import com.ll.TeamSteam.domain.user.entity.Gender;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
@@ -34,6 +36,8 @@ public class UserService {
 
     private final GenreTagRepository genreTagRepository;
 
+    private final SteamGameLibraryRepository steamGameLibraryRepository;
+
 
     @Transactional(readOnly = true)
     public Optional<User> findBySteamId(String steamId) {
@@ -55,7 +59,10 @@ public class UserService {
         genreTagRepository.save(genreTag);
 
         GameTag gameTag = GameTag.builder().userTag(userTag).build();
-        genreTagRepository.save(genreTag);
+        gameTagRepository.save(gameTag);
+
+        SteamGameLibrary steamGameLibrary =SteamGameLibrary.builder().user(createdUser).build();
+        steamGameLibraryRepository.save(steamGameLibrary);
     }
 
     @Transactional
@@ -106,69 +113,27 @@ public class UserService {
 
     }
 
-
-//        genreTag = genreTagRepository.findByUserTagId(userTag.getId());
-//
-//
-//
-//
-//        List<GenreTag> genreTags = new ArrayList<>();
-//        log.info("genreTag = {}", genreTag);
-//        System.out.println(genreTag);
-//
-//        for(int i = 0; i < genreTag.size(); i++){
-//            GenreTag modifiedGenreTag = genreTag.get(i).builder()
-//                    .genre(GenreTagType.valueOf(gameGenres[0]))
-//                    .build();
-//            genreTags.add(modifiedGenreTag);
-//        }
-//
-//        log.info("genreTag = {}", genreTag);
-//        System.out.println(genreTag);
-//
-////        genreTag = genreTag.builder()
-////                .genre(GenreTagType.valueOf(gameGenres[0]))
-////                .build();
-//        userTag = userTag.builder()
-//                .genreTag(genreTag)
-//                .build();
-//        user = user.builder()
-//                .type(Gender.valueOf(gender))//여기 서별저장이안됨
-//                .userTag(userTag)
-//                .build();
-//
-//
-//
-//
-//        userRepository.save(user);
-//        userTagRepository.save(userTag);
-//        for(GenreTag gt : genreTag) {
-//            genreTagRepository.save(gt);
-
-
-
     public Optional<User> findById(Long id){
         return userRepository.findById(id);
     }
 
 
-    public void saveGameList(Map<Integer, String> userGameList, Long userId) {
-        UserTag userTag = userTagRepository.findByUserId(userId).orElseThrow();
-        List<GameTag> gameTags = new ArrayList<>();
+    public void saveGameList(List<SteamGameLibrary> gameList, String steamId) {
+        List<SteamGameLibrary> gameLibraries = new ArrayList<>();
 
-        for (String gameName : userGameList.values()) {
-            GameTag gameTag = GameTag.builder()
-                    .gameName(gameName)
-                    .userTag(userTag)
-                    .build();
-            gameTags.add(gameTag);
+        for (SteamGameLibrary game : gameList) {
+            SteamGameLibrary newGameLibrary = SteamGameLibrary.builder()
+                .appid(game.getAppid())
+                .name(game.getName())
+                .imageUrl(game.getImageUrl())
+                .user(userRepository.findBySteamId(steamId).orElseThrow())
+                .build();
+            gameLibraries.add(newGameLibrary);
         }
 
-        gameTagRepository.saveAll(gameTags);
-
+        steamGameLibraryRepository.saveAll(gameLibraries);
     }
 
-    // 임시로 사용하고있습니다.
     public List<User> findAll() {
         return userRepository.findAll();
     }

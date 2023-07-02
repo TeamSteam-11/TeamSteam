@@ -1,3 +1,12 @@
+server:
+  servlet:
+    session:
+      timeout: 43200m      # 60m * 24h * 30d
+      cookie:
+        max-age: 43200m    # 60m * 24h * 30d
+        name: JSESSIONID
+        http-only: true
+        secure: true
 spring:
   mvc:
     hiddenmethod:

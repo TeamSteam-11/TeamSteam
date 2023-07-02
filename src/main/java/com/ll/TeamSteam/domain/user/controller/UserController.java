@@ -3,6 +3,7 @@ package com.ll.TeamSteam.domain.user.controller;
 
 
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
+import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
 import com.ll.TeamSteam.domain.steam.service.SteamService;
 import com.ll.TeamSteam.domain.user.entity.Gender;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
@@ -10,6 +11,7 @@ import com.ll.TeamSteam.domain.userTag.genreTag.GenreTagRepository;
 import com.ll.TeamSteam.domain.userTag.UserTagRepository;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.rq.Rq;
+import com.ll.TeamSteam.global.rsData.RsData;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
 import jakarta.servlet.http.Cookie;
@@ -28,14 +30,16 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.reactive.function.client.WebClient;
 
-
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -83,7 +87,9 @@ public class UserController {
 
 
 
+
         ResponseEntity<String> block = WebClient.create("https://steamcommunity.com")
+
                 .get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/openid/login")
@@ -102,6 +108,7 @@ public class UserController {
                 .retrieve()
                 .toEntity(String.class)
                 .block();
+
 
         log.info("block = {} ", block);
         //200이 나오지않아도 트루가 뜰 수 있음
@@ -158,14 +165,26 @@ public class UserController {
 
     }
 
-    @GetMapping(value ="/save", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void userGameListSave(@AuthenticationPrincipal SecurityUser user) throws ParseException {
-        //데이터가 이미 있는지 검증은 나중에.. 일단 세이브만 시키겠습니다.
+    @GetMapping(value = "/user/profile", produces = MediaType.TEXT_HTML_VALUE)
+    public String userGameListSave(@AuthenticationPrincipal SecurityUser user, Model model) throws ParseException {
         String steamId = user.getSteamId();
-        Map<Integer, String> haveGameList = steamService.getUserGameList(steamId);
+        RsData<List<SteamGameLibrary>> haveGameListData = steamService.getUserGameList(steamId);
 
-        userService.saveGameList(haveGameList, user.getId());
+        if (haveGameListData.isSuccess()) {
+            List<SteamGameLibrary> haveGameList = haveGameListData.getData();
+            userService.saveGameList(haveGameList, steamId);
+
+            model.addAttribute("gameList", haveGameList);
+
+            return "user/profile";
+        } else {
+            String errorMessage = haveGameListData.getMsg();
+
+            model.addAttribute("error", errorMessage);
+            return "error";
+        }
     }
+
 
 
     @GetMapping("/user/check")

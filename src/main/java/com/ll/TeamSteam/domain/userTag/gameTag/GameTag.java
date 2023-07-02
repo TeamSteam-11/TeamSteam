@@ -14,7 +14,6 @@ public class GameTag extends BaseEntity {
 
     private String gameName;
 
-    private TagOn tagOn; // On Off로 조절
     @ManyToOne
     private UserTag userTag;
 
