@@ -54,8 +54,20 @@ public class NotProd {
                 Matching matching1 = matchingService.create("오늘 한강에서 러닝하실 분 구합니다!!",
                         "한강에서 2시간 정도 같이 달리실 분 구합니다!", 8L, 8, 10, null).getData();
 
+<<<<<<< HEAD
                 Matching matching2 = matchingService.create("오늘 한강에서 러닝하실 분 구합니다!!",
                         "한강에서 2시간 정도 같이 달리실 분 구합니다!", 4L, 7, 9, null).getData();
+=======
+                Matching matching2 = matchingService.create("도림천에서 자전거 고고",
+                        "도림천에서 자전거 고고", 4L).getData();
+
+                Matching matching3 = matchingService.create("도ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ",
+                        "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ", 5L).getData();
+                Matching matching4 = matchingService.create("ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ",
+                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", 4L).getData();
+                Matching matching5 = matchingService.create("코코코콬코코코코코코콬",
+                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", 4L).getData();
+>>>>>>> 243ea3fb89484a19e58b30ad80ed8c1fac06324c
 
                 log.info("matching1 = {}", matching1);
                 log.info("matching2 = {}", matching2);
@@ -63,6 +75,12 @@ public class NotProd {
 
                 ChatRoom chatRoom1 = chatRoomService.createAndConnect(matching1.getTitle(), matching1, user1.getId());
                 ChatRoom chatRoom2 = chatRoomService.createAndConnect(matching2.getTitle(), matching2, user2.getId());
+                ChatRoom chatRoom3 = chatRoomService.createAndConnect(matching3.getTitle(), matching3, user2.getId());
+                ChatRoom chatRoom4 = chatRoomService.createAndConnect(matching4.getTitle(), matching4, user2.getId());
+                ChatRoom chatRoom5 = chatRoomService.createAndConnect(matching5.getTitle(), matching5, user2.getId());
+
+
+
             }
         };
     }

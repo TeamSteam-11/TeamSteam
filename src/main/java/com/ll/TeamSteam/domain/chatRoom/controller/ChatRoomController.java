@@ -24,6 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.ll.TeamSteam.domain.chatMessage.dto.response.SignalType.NEW_MESSAGE;
@@ -172,5 +173,35 @@ public class ChatRoomController {
         model.addAttribute("chatRoom", chatRoom);
         model.addAttribute("COMMON", COMMON);
         return "chat/userList";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{roomId}/inviteList")
+    public String inviteList(Model model, @PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user) {
+        List<User> userList = userService.findAll();
+        ChatRoom chatRoom = chatRoomService.findById(roomId);
+
+        // 친구 목록으로 불러올 때는 없어도 되는 로직(전체 유저에서 본인을 제외한 목록)
+        List<User> filteredUserList = new ArrayList<>();
+        for (User userForList : userList) {
+            if (!user.getId().equals(userForList.getId())) {
+                filteredUserList.add(userForList);
+            }
+        }
+
+        log.info("userList = {}", userList);
+        model.addAttribute("chatRoom", chatRoom);
+        model.addAttribute("userList", filteredUserList);
+
+        return "chat/inviteList";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{roomId}/inviteUser/{userId}")
+    public String inviteUser(@PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user,
+                             @PathVariable Long userId){
+        chatRoomService.inviteUser(roomId, user, userId);
+
+        return "redirect:/chat/{roomId}/inviteList";
     }
 }

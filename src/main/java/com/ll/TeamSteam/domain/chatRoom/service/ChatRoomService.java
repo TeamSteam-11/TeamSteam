@@ -8,18 +8,24 @@ import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUserType;
 import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
+import com.ll.TeamSteam.domain.notification.entity.Notification;
+import com.ll.TeamSteam.domain.notification.repository.NotificationRepository;
+import com.ll.TeamSteam.domain.notification.service.NotificationService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
+import com.ll.TeamSteam.global.event.EventAfterInvite;
 import com.ll.TeamSteam.global.rsData.RsData;
 import com.ll.TeamSteam.global.security.SecurityUser;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +41,8 @@ public class ChatRoomService {
     private final UserService userService;
     private final ChatUserService chatUserService;
     private final SimpMessageSendingOperations template;
+    private final ApplicationEventPublisher publisher;
+    private final NotificationService notificationService;
 
 
     @Transactional
@@ -245,5 +253,39 @@ public class ChatRoomService {
         Long commonParticipantsCount = getCommonParticipantsCount(chatRoom);
         log.info("commonParticipantsCount = {} ", commonParticipantsCount);
 //        chatRoom.getMatching().setParticipantsCount(commonParticipantsCount);
+    }
+
+    @Transactional
+    public RsData<User> inviteUser(Long roomId, SecurityUser user, Long userId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+
+        log.info("chatRoom = {} ", chatRoom);
+
+        // 현재 로그인된 사용자가 방에 있는지 확인하는 로직
+        Long invitingUserId = user.getId();
+        User invitingUser = userService.findByIdElseThrow(invitingUserId);
+        ChatUser chatUserByUserId = findChatUserByUserId(chatRoom, invitingUserId);
+
+        // return 값 바꿀 거면 수정하기
+        if (chatUserByUserId == null){
+            return RsData.of("F-1", "현재 당신은 %s 방에 들어있지 않습니다.".formatted(chatRoom.getName()));
+        }
+
+        User invitedUser = userService.findByIdElseThrow(userId);
+
+        if (invitingUser.getId() == invitedUser.getId()) {
+            return RsData.of("F-2", "본인을 초대할 수 없습니다");
+        }
+
+        // 현재 DB에 정보가 있으면 더 이상 저장이 되지 않게
+        boolean isDuplicateInvite = notificationService.checkDuplicateInvite(invitingUser, invitedUser, roomId);
+        if (isDuplicateInvite) {
+            return RsData.of("F-3", "이미 초대된 사용자입니다.");
+        }
+
+        publisher.publishEvent(new EventAfterInvite(this, invitingUser, invitedUser, chatRoom));
+
+        return RsData.of("S-1", "%s 님에게 초대를 보냈습니다".formatted(invitedUser.getUsername()));
     }
 }
