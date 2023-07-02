@@ -106,47 +106,6 @@ public class UserService {
 
     }
 
-
-//        genreTag = genreTagRepository.findByUserTagId(userTag.getId());
-//
-//
-//
-//
-//        List<GenreTag> genreTags = new ArrayList<>();
-//        log.info("genreTag = {}", genreTag);
-//        System.out.println(genreTag);
-//
-//        for(int i = 0; i < genreTag.size(); i++){
-//            GenreTag modifiedGenreTag = genreTag.get(i).builder()
-//                    .genre(GenreTagType.valueOf(gameGenres[0]))
-//                    .build();
-//            genreTags.add(modifiedGenreTag);
-//        }
-//
-//        log.info("genreTag = {}", genreTag);
-//        System.out.println(genreTag);
-//
-////        genreTag = genreTag.builder()
-////                .genre(GenreTagType.valueOf(gameGenres[0]))
-////                .build();
-//        userTag = userTag.builder()
-//                .genreTag(genreTag)
-//                .build();
-//        user = user.builder()
-//                .type(Gender.valueOf(gender))//여기 서별저장이안됨
-//                .userTag(userTag)
-//                .build();
-//
-//
-//
-//
-//        userRepository.save(user);
-//        userTagRepository.save(userTag);
-//        for(GenreTag gt : genreTag) {
-//            genreTagRepository.save(gt);
-
-
-
     public Optional<User> findById(Long id){
         return userRepository.findById(id);
     }
@@ -166,5 +125,11 @@ public class UserService {
 
         gameTagRepository.saveAll(gameTags);
 
+    }
+
+
+
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }

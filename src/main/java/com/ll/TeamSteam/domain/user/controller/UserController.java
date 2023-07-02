@@ -10,6 +10,7 @@ import com.ll.TeamSteam.domain.userTag.genreTag.GenreTagRepository;
 import com.ll.TeamSteam.domain.userTag.UserTagRepository;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.rq.Rq;
+import com.ll.TeamSteam.global.rsData.RsData;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
 import jakarta.servlet.http.Cookie;
@@ -24,17 +25,20 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.reactive.function.client.WebClient;
 
-
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -160,14 +164,34 @@ public class UserController {
 
     }
 
-    @GetMapping(value ="/save", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void userGameListSave(@AuthenticationPrincipal SecurityUser user) throws ParseException {
-        //데이터가 이미 있는지 검증은 나중에.. 일단 세이브만 시키겠습니다.
+    @GetMapping(value = "/user/profile", produces = MediaType.TEXT_HTML_VALUE)
+    public String userGameListSave(@AuthenticationPrincipal SecurityUser user, Model model) throws ParseException {
         String steamId = user.getSteamId();
-        Map<Integer, String> haveGameList = steamService.getUserGameList(steamId);
+        RsData<Map<Integer, String>> haveGameListData = steamService.getUserGameList(steamId);
 
-        userService.saveGameList(haveGameList, user.getId());
+        if (haveGameListData.isSuccess()) {
+            Map<Integer, String> haveGameList = haveGameListData.getData();
+            userService.saveGameList(haveGameList, user.getId());
+
+            // Pass the game list data to the HTML template
+            List<Map<String, Object>> gameList = new ArrayList<>();
+            for (Map.Entry<Integer, String> entry : haveGameList.entrySet()) {
+                Map<String, Object> game = new HashMap<>();
+                game.put("appid", entry.getKey());
+                game.put("name", entry.getValue());
+                gameList.add(game);
+            }
+            model.addAttribute("gameList", gameList);
+
+            return "user/profile"; // 변경된 템플릿 파일 이름으로 수정하세요.
+        } else {
+            String errorMessage = haveGameListData.getMsg();
+            // Add error handling logic
+            model.addAttribute("error", errorMessage);
+            return "error";
+        }
     }
+
 
 
     @GetMapping("/user/check")

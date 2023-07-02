@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>게임 목록</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="my-4">나의 게임 목록</h1>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>게임 이름</th>
+            <th>App ID</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="game : ${gameList}">
+            <td th:text="${game.name}"></td>
+            <td th:text="${game.appid}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

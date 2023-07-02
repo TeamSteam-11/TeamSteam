@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.ll.TeamSteam.global.rsData.RsData;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -46,10 +48,11 @@ public class SteamService {
         return response.getBody();
     }
 
-    public Map getUserGameList(String steamId) throws ParseException {
+    public RsData<Map<Integer, String>> getUserGameList(String steamId) throws ParseException {
         String url = baseUrl
                 + "/IPlayerService/GetOwnedGames/v1/?key={apiKey}&steamid={steam_id}" +
                 "&include_appinfo=1&include_played_free_games=1";
+
 
         UriComponents builder = UriComponentsBuilder
                 .fromHttpUrl(url)
@@ -68,6 +71,11 @@ public class SteamService {
 
         //필요한 필드만 추출
         JSONArray gamesArray = (JSONArray) ((JSONObject) jsonResponse.get("response")).get("games");
+
+        if(gamesArray.isEmpty()) {
+            return RsData.of("F-1","게임세부정보를 공개 설정해주세요");
+        }
+
         for (Object gameObj : gamesArray) {
             JSONObject game = (JSONObject) gameObj;
             String name = (String) game.get("name");
@@ -79,6 +87,6 @@ public class SteamService {
             System.out.println("App ID: " + appid);
         }
 
-        return haveGameList;
+        return RsData.of("S-1","게임라이브러리가 등록되었습니다.",haveGameList);
     }
 }
