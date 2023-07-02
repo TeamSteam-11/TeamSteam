@@ -2,6 +2,8 @@ package com.ll.TeamSteam.domain.matching.controller;
 
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
+import com.ll.TeamSteam.domain.user.entity.User;
+import com.ll.TeamSteam.domain.user.repository.UserRepository;
 import com.ll.TeamSteam.global.rq.Rq;
 import com.ll.TeamSteam.global.rsData.RsData;
 import jakarta.validation.Valid;
@@ -9,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +29,7 @@ import java.util.List;
 public class MatchingController {
     private final Rq rq;
     private final MatchingService matchingService;
+    private final UserRepository userRepository;
 
     @GetMapping("/list")
     public String matchingList(Model model) {
@@ -72,6 +76,10 @@ public class MatchingController {
             // 유효성 검사 오류가 있을 시 등록 페이지로 다시 이동
             return "match/create";
         }
+
+//        String username = user.getUsername();
+//
+//        User user1 = userRepository.findByUsername(username).orElse(null);
 
         // 사용자가 선택한 마감 시간을 설정하여 매칭 생성에 사용
         LocalDateTime deadlineDate;
