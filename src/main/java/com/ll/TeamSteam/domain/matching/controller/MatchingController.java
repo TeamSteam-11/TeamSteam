@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -53,6 +53,7 @@ public class MatchingController {
         private Long capacity;
         private int startTime;
         private int endTime;
+        private int selectedHours;
 
         public CreateForm() {
             this.title = "제목";
@@ -60,6 +61,7 @@ public class MatchingController {
             this.capacity = 1L;
             this.startTime = 0;
             this.endTime = 24;
+            this.selectedHours = 0;
         }
     }
 
@@ -71,13 +73,26 @@ public class MatchingController {
             return "match/create";
         }
 
+        // 사용자가 선택한 마감 시간을 설정하여 매칭 생성에 사용
+        LocalDateTime deadlineDate;
+        LocalDateTime modifyDate = LocalDateTime.now();
+        int selectedHours = createForm.getSelectedHours();
+        if (selectedHours > 0) {
+            deadlineDate = matchingService.setDeadline(modifyDate, selectedHours);
+        } else {
+            // 마감 시간을 '제한 없음'으로 선택 시 매칭 마감일이 30일 이후로 저장됨
+            deadlineDate = modifyDate.plusDays(30);
+        }
+
+
         // 서비스에서 추가 기능 구현
         RsData<Matching> createRsData = matchingService.create(
                 createForm.getTitle(),
                 createForm.getContent(),
                 createForm.getCapacity(),
                 createForm.getStartTime(),
-                createForm.getEndTime()
+                createForm.getEndTime(),
+                deadlineDate
         );
 
         // 매칭 등록 실패 시
