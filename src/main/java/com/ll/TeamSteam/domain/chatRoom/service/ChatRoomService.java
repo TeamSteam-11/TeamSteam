@@ -278,22 +278,10 @@ public class ChatRoomService {
             return RsData.of("F-2", "본인을 초대할 수 없습니다");
         }
 
-        Optional<Notification> optionalLastNotification = notificationService.inviteCoolTime1Minute(invitingUser, invitedUser, chatRoom.getId());
-        log.info("optionalLastNotification = {} ", optionalLastNotification);
-
-        if (optionalLastNotification.isPresent()) {
-            LocalDateTime lastInvitationTime = optionalLastNotification.get().getCreateDate();
-            log.info("lastInvitationTime = {} ", lastInvitationTime);
-
-            //TODO : 리팩토링
-            LocalDateTime unlockCoolTime = LocalDateTime.now().plusMinutes(1);
-            chatRoom.updateCoolTime(unlockCoolTime);
-            log.info("unlockCoolTime = {} ", unlockCoolTime);
-
-            Duration durationSinceLastInvitation = Duration.between(lastInvitationTime, LocalDateTime.now());
-            if (durationSinceLastInvitation.toMinutes() < 1) {
-                return RsData.of("F-3", "1분 내에는 다시 초대할 수 없습니다");
-            }
+        // 현재 DB에 정보가 있으면 더 이상 저장이 되지 않게
+        boolean isDuplicateInvite = notificationService.checkDuplicateInvite(invitingUser, invitedUser, roomId);
+        if (isDuplicateInvite) {
+            return RsData.of("F-3", "이미 초대된 사용자입니다.");
         }
 
         publisher.publishEvent(new EventAfterInvite(this, invitingUser, invitedUser, chatRoom));
