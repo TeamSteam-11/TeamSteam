@@ -3,6 +3,7 @@ package com.ll.TeamSteam.domain.user.controller;
 
 
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
+import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
 import com.ll.TeamSteam.domain.steam.service.SteamService;
 import com.ll.TeamSteam.domain.user.entity.Gender;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
@@ -167,26 +168,18 @@ public class UserController {
     @GetMapping(value = "/user/profile", produces = MediaType.TEXT_HTML_VALUE)
     public String userGameListSave(@AuthenticationPrincipal SecurityUser user, Model model) throws ParseException {
         String steamId = user.getSteamId();
-        RsData<Map<Integer, String>> haveGameListData = steamService.getUserGameList(steamId);
+        RsData<List<SteamGameLibrary>> haveGameListData = steamService.getUserGameList(steamId);
 
         if (haveGameListData.isSuccess()) {
-            Map<Integer, String> haveGameList = haveGameListData.getData();
-            userService.saveGameList(haveGameList, user.getId());
+            List<SteamGameLibrary> haveGameList = haveGameListData.getData();
+            userService.saveGameList(haveGameList, steamId);
 
-            // Pass the game list data to the HTML template
-            List<Map<String, Object>> gameList = new ArrayList<>();
-            for (Map.Entry<Integer, String> entry : haveGameList.entrySet()) {
-                Map<String, Object> game = new HashMap<>();
-                game.put("appid", entry.getKey());
-                game.put("name", entry.getValue());
-                gameList.add(game);
-            }
-            model.addAttribute("gameList", gameList);
+            model.addAttribute("gameList", haveGameList);
 
-            return "user/profile"; // 변경된 템플릿 파일 이름으로 수정하세요.
+            return "user/profile";
         } else {
             String errorMessage = haveGameListData.getMsg();
-            // Add error handling logic
+
             model.addAttribute("error", errorMessage);
             return "error";
         }

@@ -13,13 +13,18 @@
         <thead>
         <tr>
             <th>게임 이름</th>
-            <th>App ID</th>
+            <th>AppID</th>
+            <th>이미지</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="game : ${gameList}">
             <td th:text="${game.name}"></td>
             <td th:text="${game.appid}"></td>
+            <td>
+                <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${game.appid} + '/header.jpg'}"
+                     alt="게임 이미지" width="200" height="auto"/>
+            </td>
         </tr>
         </tbody>
     </table>

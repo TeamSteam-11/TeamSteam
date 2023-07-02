@@ -1,6 +1,8 @@
 package com.ll.TeamSteam.domain.user.service;
 
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
+import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
+import com.ll.TeamSteam.domain.steam.repository.SteamGameLibraryRepository;
 import com.ll.TeamSteam.domain.user.entity.Gender;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
@@ -34,6 +36,8 @@ public class UserService {
 
     private final GenreTagRepository genreTagRepository;
 
+    private final SteamGameLibraryRepository steamGameLibraryRepository;
+
 
     @Transactional(readOnly = true)
     public Optional<User> findBySteamId(String steamId) {
@@ -55,7 +59,10 @@ public class UserService {
         genreTagRepository.save(genreTag);
 
         GameTag gameTag = GameTag.builder().userTag(userTag).build();
-        genreTagRepository.save(genreTag);
+        gameTagRepository.save(gameTag);
+
+        SteamGameLibrary steamGameLibrary =SteamGameLibrary.builder().user(createdUser).build();
+        steamGameLibraryRepository.save(steamGameLibrary);
     }
 
     @Transactional
@@ -111,23 +118,21 @@ public class UserService {
     }
 
 
-    public void saveGameList(Map<Integer, String> userGameList, Long userId) {
-        UserTag userTag = userTagRepository.findByUserId(userId).orElseThrow();
-        List<GameTag> gameTags = new ArrayList<>();
+    public void saveGameList(List<SteamGameLibrary> gameList, String steamId) {
+        List<SteamGameLibrary> gameLibraries = new ArrayList<>();
 
-        for (String gameName : userGameList.values()) {
-            GameTag gameTag = GameTag.builder()
-                    .gameName(gameName)
-                    .userTag(userTag)
-                    .build();
-            gameTags.add(gameTag);
+        for (SteamGameLibrary game : gameList) {
+            SteamGameLibrary newGameLibrary = SteamGameLibrary.builder()
+                .appid(game.getAppid())
+                .name(game.getName())
+                .imageUrl(game.getImageUrl())
+                .user(userRepository.findBySteamId(steamId).orElseThrow())
+                .build();
+            gameLibraries.add(newGameLibrary);
         }
 
-        gameTagRepository.saveAll(gameTags);
-
+        steamGameLibraryRepository.saveAll(gameLibraries);
     }
-
-
 
     public List<User> findAll() {
         return userRepository.findAll();
