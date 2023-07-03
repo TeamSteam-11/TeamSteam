@@ -1,0 +1,35 @@
+<form action="/user/profile/save-gametag" method="post" th:action="@{/user/profile/save-gametag}" th:object="${selectedGamesForm}">
+    <div class="container">
+        <h1 class="my-4">나의 게임 목록</h1>
+        <div th:if="${message}">
+            <p th:text="${message}"></p>
+        </div>
+        <form action="/user/profile/save-gametag" method="post">
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>게임 이름</th>
+                <th>AppID</th>
+                <th>이미지</th>
+                <th>선택</th> <!-- Add a new column for selecting games -->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="game : ${gameList}">
+                <td th:text="${game.name}"></td>
+                <td th:text="${game.appid}"></td>
+                <td>
+                    <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${game.appid} + '/header.jpg'}"
+                         alt="게임 이미지" width="200" height="auto"/>
+                </td>
+                <td>
+                    <input type="checkbox" name="selectedGames" th:value="${game.appid}"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+            <button type="submit" class="btn btn-primary">게임 저장</button>
+        </form>
+    </div>
+</form>

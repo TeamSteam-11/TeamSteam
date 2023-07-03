@@ -40,6 +40,10 @@
         낚시
     </label>
     <br><br>
+    <label th:each="game : ${gameList}">
+        <input type="checkbox" name="games" th:value="${game.name}" th:text="${game.name}">
+    </label>
+    <br><br>
     <input type="submit" value="제출">
 </form>
 </body>

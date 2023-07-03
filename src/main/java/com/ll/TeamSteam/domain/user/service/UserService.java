@@ -12,6 +12,7 @@ import com.ll.TeamSteam.domain.userTag.UserTagRepository;
 import com.ll.TeamSteam.domain.userTag.UserTag;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTag;
 import com.ll.TeamSteam.domain.userTag.genreTag.GenreTag;
+import com.ll.TeamSteam.global.rsData.RsData;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -83,14 +87,15 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserData(String gender, List<GenreTagType> genreTagTypes, Long id){
+    public void updateUserData(String gender, List<GenreTagType> genreTagTypes,  Long id){
+
         User user = findById(id).orElseThrow();
         UserTag userTag = userTagRepository.findByUserId(id).orElseThrow();
         genreTagRepository.deleteAll(userTag.getGenreTag());
 
+        //장르태그
         List<GenreTag> genreTags = new ArrayList<>();
 
-        // GenreTagType enum 값을 이용하여 GenreTag 생성 후 리스트에 추가
         for (GenreTagType genreTagType : genreTagTypes) {
             GenreTag genreTag = GenreTag.builder()
                     .genre(genreTagType)
@@ -100,8 +105,6 @@ public class UserService {
         }
 
         genreTagRepository.saveAll(genreTags);
-
-
 
 
         // Gender 업데이트
@@ -134,7 +137,30 @@ public class UserService {
         steamGameLibraryRepository.saveAll(gameLibraries);
     }
 
+
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public void saveSelectedGames(List<Integer> selectedGames, String steamId) {
+
+        User user = userRepository.findBySteamId(steamId).orElseThrow();
+
+        gameTagRepository.deleteAll();
+
+
+        for (Integer appId : selectedGames) {
+            SteamGameLibrary gameLibrary = steamGameLibraryRepository.findByAppid(appId);
+            if (gameLibrary != null) {
+                GameTag gameTag = new GameTag();
+                gameTag.setAppid(gameLibrary.getAppid());
+                gameTag.setName(gameLibrary.getName());
+                gameTag.setImageUrl(gameLibrary.getImageUrl());
+                gameTag.setUserTag(user.getUserTag());
+
+
+                gameTagRepository.save(gameTag);
+            }
+        }
     }
 }

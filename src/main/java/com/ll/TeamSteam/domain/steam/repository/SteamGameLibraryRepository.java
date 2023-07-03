@@ -9,6 +9,7 @@ import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
 @Repository
 public interface SteamGameLibraryRepository extends JpaRepository<SteamGameLibrary, Long> {
 
+	SteamGameLibrary findByAppid(Integer appId);
 }
 
 

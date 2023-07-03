@@ -1,11 +1,8 @@
 package com.ll.TeamSteam.domain.steam.service;
 
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
+
 import net.minidev.json.parser.ParseException;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -22,9 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class SteamService {
@@ -93,6 +88,7 @@ public class SteamService {
 
         return new RsData<>("S-1", "Success", gameList);
     }
-
-
 }
+
+
+

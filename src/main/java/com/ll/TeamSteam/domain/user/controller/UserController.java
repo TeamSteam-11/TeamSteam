@@ -7,10 +7,7 @@ import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
 import com.ll.TeamSteam.domain.steam.service.SteamService;
 import com.ll.TeamSteam.domain.user.entity.Gender;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
-import com.ll.TeamSteam.domain.userTag.genreTag.GenreTagRepository;
-import com.ll.TeamSteam.domain.userTag.UserTagRepository;
 import com.ll.TeamSteam.domain.user.service.UserService;
-import com.ll.TeamSteam.global.rq.Rq;
 import com.ll.TeamSteam.global.rsData.RsData;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
@@ -20,8 +17,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONObject;
+
 import net.minidev.json.parser.ParseException;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,11 +35,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,11 +55,6 @@ public class UserController {
 
     private final GameTagRepository gameTagRepository;
 
-    private final GenreTagRepository genreTagRepository;
-
-    private final UserTagRepository userTagRepository;
-
-    private final Rq rq;
 
     @GetMapping("/user/login")
     public String login() {
@@ -72,51 +62,52 @@ public class UserController {
     }
 
     @GetMapping("/login/check")
-    public String startSession( @RequestParam(value = "openid.ns") String openidNs,
-                                @RequestParam(value = "openid.mode") String openidMode,
-                                @RequestParam(value = "openid.op_endpoint") String openidOpEndpoint,
-                                @RequestParam(value = "openid.claimed_id") String openidClaimedId,
-                                @RequestParam(value = "openid.identity") String openidIdentity,
-                                @RequestParam(value = "openid.return_to") String openidReturnTo,
-                                @RequestParam(value = "openid.response_nonce") String openidResponseNonce,
-                                @RequestParam(value = "openid.assoc_handle") String openidAssocHandle,
-                                @RequestParam(value = "openid.signed") String openidSigned,
-                                @RequestParam(value = "openid.sig") String openidSig,
-                                HttpServletRequest request,
-                                HttpServletResponse response ) {
+    public String startSession(@RequestParam(value = "openid.ns") String openidNs,
+        @RequestParam(value = "openid.mode") String openidMode,
+        @RequestParam(value = "openid.op_endpoint") String openidOpEndpoint,
+        @RequestParam(value = "openid.claimed_id") String openidClaimedId,
+        @RequestParam(value = "openid.identity") String openidIdentity,
+        @RequestParam(value = "openid.return_to") String openidReturnTo,
+        @RequestParam(value = "openid.response_nonce") String openidResponseNonce,
+        @RequestParam(value = "openid.assoc_handle") String openidAssocHandle,
+        @RequestParam(value = "openid.signed") String openidSigned,
+        @RequestParam(value = "openid.sig") String openidSig,
+        HttpServletRequest request,
+        HttpServletResponse response) throws InterruptedException {
 
 
-
+        log.info("openidResponseNonce = {} ",openidResponseNonce);
 
         ResponseEntity<String> block = WebClient.create("https://steamcommunity.com")
+            .get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/openid/login")
+                .queryParam("openid.ns", openidNs)
+                .queryParam("openid.mode", "check_authentication")
+                .queryParam("openid.op_endpoint", openidOpEndpoint)
+                .queryParam("openid.claimed_id", openidClaimedId)
+                .queryParam("openid.identity", openidIdentity)
+                .queryParam("openid.return_to", openidReturnTo)
+                .queryParam("openid.response_nonce", openidResponseNonce)
+                .queryParam("openid.assoc_handle", openidAssocHandle)
+                .queryParam("openid.signed", openidSigned)
+                .queryParam("openid.sig", openidSig)
+                .build()
+            )
+            .retrieve()
+            .toEntity(String.class)
+            .block();
 
-                .get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/openid/login")
-                        .queryParam("openid.ns", openidNs)
-                        .queryParam("openid.mode", "check_authentication")
-                        .queryParam("openid.op_endpoint", openidOpEndpoint)
-                        .queryParam("openid.claimed_id", openidClaimedId)
-                        .queryParam("openid.identity", openidIdentity)
-                        .queryParam("openid.return_to", openidReturnTo)
-                        .queryParam("openid.response_nonce", openidResponseNonce)
-                        .queryParam("openid.assoc_handle", openidAssocHandle)
-                        .queryParam("openid.signed", openidSigned)
-                        .queryParam("openid.sig", openidSig)
-                        .build()
-                )
-                .retrieve()
-                .toEntity(String.class)
-                .block();
 
 
         log.info("block = {} ", block);
+
         //200이 나오지않아도 트루가 뜰 수 있음
         boolean isTrue = Objects.requireNonNull(block).getBody().contains("true");
 
         log.info("isTrue = {} ", isTrue);
-        if(!isTrue){
-            return rq.redirectWithMsg("/main/home", "로그인을 실패했습니다.");
+        if (!isTrue) {
+            return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=http://localhost:8080/login/check&openid.realm=http://localhost:8080&openid.mode=checkid_setup";
         }
 
         Pattern pattern = Pattern.compile("\\d+");
@@ -129,15 +120,15 @@ public class UserController {
             throw new IllegalArgumentException();
         }
 
-        if(!userService.findBySteamId(steamId).isPresent()){
+        if (!userService.findBySteamId(steamId).isPresent()) {
             userService.create(getUserInfo(steamId));
         }
 
         SecurityUser user = SecurityUser.builder()
-                .id(userService.findBySteamId(steamId).get().getId())
-                .username(userService.findBySteamId(steamId).get().getUsername())
-                .steamId(steamId)
-                .build();
+            .id(userService.findBySteamId(steamId).get().getId())
+            .username(userService.findBySteamId(steamId).get().getUsername())
+            .steamId(steamId)
+            .build();
 
         log.info("user.getId() = {} ", user.getId());
         log.info("user.getUsername() = {}", user.getUsername());
@@ -176,7 +167,7 @@ public class UserController {
 
             model.addAttribute("gameList", haveGameList);
 
-            return "user/profile";
+            return "createGameTag";
         } else {
             String errorMessage = haveGameListData.getMsg();
 
@@ -185,14 +176,29 @@ public class UserController {
         }
     }
 
+    @PostMapping(value = "/user/profile/save-gametag")
+    public String saveGameTags(@RequestParam("selectedGames") List<Integer> selectedGames,
+        @AuthenticationPrincipal SecurityUser user,
+        Model model) {
+        String steamId = user.getSteamId();
+        userService.saveSelectedGames(selectedGames, steamId);
 
+        if (selectedGames.isEmpty()) {
+            model.addAttribute("message", "No games were selected.");
+            return "redirect:/user/createGameTag";
+        } else {
+            model.addAttribute("message", "Game tags saved successfully.");
+
+        }
+        return "redirect:/user/createGameTag";
+    }
 
     @GetMapping("/user/check")
     @PreAuthorize("isAuthenticated()")
     @ResponseBody
     public String check(HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecurityUser user = (SecurityUser) authentication.getPrincipal();
+        SecurityUser user = (SecurityUser)authentication.getPrincipal();
         return user.getSteamId();
     }
 
@@ -202,7 +208,6 @@ public class UserController {
         return "user/isLogin";
     }
 
-
     public UserInfoResponse getUserInfo(String steamId) {
         //UserInfoResponse 객체를 사용
 
@@ -210,18 +215,16 @@ public class UserController {
     }
 
     @GetMapping("user/createGenre")
-    public String test(){
+    public String test() {
         return "user/createGenre";
     }
 
-
     @GetMapping("/user/checkFirstVisit")
-    public String checkLogin(@AuthenticationPrincipal SecurityUser user){
-
+    public String checkLogin(@AuthenticationPrincipal SecurityUser user) {
 
         String steamId = user.getSteamId();
         log.info("userService.findBySteamId() = {}", userService.findBySteamId(steamId));
-        if(userService.findBySteamId(steamId).get().getType().equals(Gender.Wait)){
+        if (userService.findBySteamId(steamId).get().getType().equals(Gender.Wait)) {
             log.info("userService.findBySteamId() = {}", userService.findBySteamId(steamId));
             return "redirect:/user/createGenre";
         }
@@ -231,16 +234,17 @@ public class UserController {
 
     @PostMapping("/user/createGenre")
     public String genreFormPost(@RequestParam String gender, @RequestParam("gameGenre") String[] gameGenres,
-                                  @AuthenticationPrincipal SecurityUser user){
+        @AuthenticationPrincipal SecurityUser user){
         Long id = user.getId();
 
         // GenreTagType enum으로 변환하여 리스트로 저장
         List<GenreTagType> genreTagTypes = Arrays.stream(gameGenres)
-                .map(GenreTagType::valueOf)
-                .collect(Collectors.toList());
+            .map(GenreTagType::valueOf)
+            .collect(Collectors.toList());
 
-        // DB에 저장
-        userService.updateUserData(gender, genreTagTypes, id);
-        return "redirect:/main/home";
-    }
+            // DB에 저장
+            userService.updateUserData(gender, genreTagTypes, id);
+            return "redirect:/main/home";
+        }
 }
+
