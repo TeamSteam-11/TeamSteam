@@ -51,18 +51,16 @@ public class NotProd {
 
                 log.info("user1 = {}", user1);
 
-                Matching matching1 = matchingService.create("오늘 한강에서 러닝하실 분 구합니다!!",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", 8L).getData();
-
-                Matching matching2 = matchingService.create("도림천에서 자전거 고고",
-                        "도림천에서 자전거 고고", 4L).getData();
-
-                Matching matching3 = matchingService.create("도ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ",
-                        "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ", 5L).getData();
-                Matching matching4 = matchingService.create("ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", 4L).getData();
-                Matching matching5 = matchingService.create("코코코콬코코코코코코콬",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", 4L).getData();
+                Matching matching1 = matchingService.create(user1, "오늘 한강에서 러닝하실 분 구합니다!!",
+                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", 8L, 8, 10, null).getData();
+                Matching matching2 = matchingService.create(user2, "오늘 한강에서 러닝하실 분 구합니다!!",
+                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", 4L, 7, 9, null).getData();
+                Matching matching3 = matchingService.create(user1, "도ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ",
+                        "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ", 5L, 17, 19, null).getData();
+                Matching matching4 = matchingService.create(user2, "ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ",
+                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", 4L, 18, 20, null).getData();
+                Matching matching5 = matchingService.create(user2, "코코코콬코코코코코코콬",
+                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", 4L, 20, 22, null).getData();
 
                 log.info("matching1 = {}", matching1);
                 log.info("matching2 = {}", matching2);

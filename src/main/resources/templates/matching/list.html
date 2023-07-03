@@ -21,5 +21,39 @@
 
 <h1>매칭 목록 페이지</h1>
 
+<div style="display: flex; justify-content: center; flex-wrap: wrap; width: 100%">
+    <a th:each="matching : ${matchingList}" th:href="@{|/match/detail/${matching.id}|}"
+       class="card w-96 bg-base-100 shadow-xl"
+       style="background-color: #1F2227; color: white; box-shadow: 3px 3px 5px #C0C0C0; margin: 30px;">
+        <div class="card-body" style="margin: 10px">
+            <div>
+                <span class="badge badge-secondary" th:text="${matching.title}"></span>
+                <span class="badge badge-outline" th:text="|${matching.participant} / ${matching.capacity}|"></span>
+            </div>
+            <h3 class="card-title" th:text="${matching.content}"></h3><br>
+            <div style="background-color: #87F86A; color: #1F2227; height: 25px; border-radius: 20px;
+                 display: flex; justify-content: center; align-items: center; font-size: 15px">
+                태그
+            </div><br>
+            <div style="background-color: #59C3F0; color: #1F2227; height: 50px; border-radius: 10px;
+                 display: flex; justify-content: center; align-items: center">
+                게임
+            </div><br>
+            <div>
+                시간 :
+                <span th:text="${matching.startTime}"></span> : 00 ~
+                <span th:text="${matching.endTime}"></span> : 00
+            </div><br><br>
+<!--            <div>-->
+<!--                <i class="fa-solid fa-calendar-days" style="margin-right: 6px"></i>-->
+<!--                <span th:text="|${meeting.date}, ${meeting.time}|"></span>-->
+<!--            </div>-->
+<!--            <div class="card-actions justify-end">-->
+<!--                <div class="badge badge-outline" th:text="${meeting.member.username}"></div>-->
+<!--            </div>-->
+        </div>
+    </a>
+</div>
+
 </body>
 </html>
