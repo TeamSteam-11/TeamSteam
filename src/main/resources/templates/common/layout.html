@@ -1,5 +1,4 @@
-
-<html xmlns:layout="" data-theme="night">
+<html xmlns:layout="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -20,42 +19,119 @@
     <script src="/resource/common/common.js"></script>
     <!-- 공통 CSS 불러오기 -->
     <link rel="stylesheet" href="/resource/common/common.css">
+    <!-- 테일윈드 불러오기 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        .con {
+            max-width:var(--site-width);
+        }
+
+        /* 로고 */
+        .logo {
+            font-size:1.3rem;
+            font-weight:bold;
+            letter-spacing:0.025rem;
+        }
+
+        @media ( max-width:767px ) {
+            .logo {
+                font-size:1rem;
+            }
+        }
+
+        /* 탑바 */
+        .top-bar {
+            --color:white;
+            --inverse-color:black;
+            height:var(--top-bar__height);
+            background-color : #1F2227;
+            color:var(--color);
+            position:fixed;
+            top:0px;
+            left:0px;
+            width:100%
+        }
+
+        /* 메뉴 1 */
+        .menu-1__li-icon > a > span {
+            font-size:20px;
+        }
+
+        .menu-1 > li:not(.menu-1__li-icon) > a > span {
+            font-size:14px;
+        }
+
+        .menu-1__li-join > a > span {
+            background-color:var(--color, white);
+            color:var(--inverse-color, black);
+            padding:12px 12px 7px 12px;
+            margin-bottom:5px;
+            border-radius:20px;
+        }
+
+        .menu-1 > li:hover > a > span {
+            text-decoration:underline;
+        }
+    </style>
 </head>
+
 <body>
-<!-- 데이지 UI 불러오기 -->
-<link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.5/dist/full.css" rel="stylesheet" type="text/css"/>
-<!-- 테일윈드 불러오기 -->
-<script src="https://cdn.tailwindcss.com"></script>
-
 <!-- 공통 상단 -->
-<header style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-    <div style="display: flex; align-items: center;">
-        <a href="/main/home" style="margin-left: 80px; margin-right: 80px; width: 220px; height: 70px;">
-            <img src="https://i.ibb.co/VMKWxnS/image.png" alt="image" border="0">
-        </a>
-        <a href="/matching/list" style="text-decoration: none; margin-right: 50px; color: #f1f1f1;">모임</a>
-        <a href="/notification/list" class="btn btn-ghost btn-circle">
-            <div class="indicator">
-                <i class="fa-regular fa-bell"></i>
-                <span data-test="hasUnreadNotifications" th:if="${@rq.hasUnreadNotifications}"
-                      class="badge badge-xs badge-primary indicator-item"></span>
-            </div>
-        </a>
-    </div>
-    <div>
-        <a href="/user/login" th:if="${@rq.logout}" style="text-decoration: none; margin-right: 10px; color: #f1f1f1;" class="btn btn-link">로그인</a>
-        <a href="/user/join" th:if="${@rq.logout}" style="text-decoration: none; margin-right: 10px; color: #f1f1f1;" class="btn btn-link">회원가입</a>
-
-        <a th:if="${@rq.login}" href="javascript:" onclick="$(this).next().submit();"
-           style="text-decoration: none; margin-right: 10px; color: #f1f1f1;" class="btn btn-link">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i> 로그아웃
+<header class="top-bar">
+    <div class="con mx-auto pr-3 h-full flex">
+        <a href="/" class="logo flex items-center px-3">
+            TEAM
+            <br class="block md:hidden">
+            STEAM
         </a>
 
-        <form th:if="${@rq.login}" hidden th:action="|/user/logout|" method="POST"></form>
-        <span th:if="${@rq.login}" th:text="|${@rq.user.username}님 환영합니다!|"></span>
+        <div class="flex-grow"></div>
+
+        <ul class="flex menu-1">
+            <li>
+                <a href="#" class="h-full flex items-center px-2">
+                    <span>명예의 전당</span>
+                </a>
+            </li>
+            <li>
+                <!-- 매칭리스트랑 나중에 연결 필요 -->
+                <a href="/chat/rooms" class="h-full flex items-center px-2">
+                    <span>매칭</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="h-full flex items-center px-2">
+                    <span>미니게임</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="h-full flex items-center px-2">
+                    <span>프로필</span>
+                </a>
+            </li>
+            <li class="menu-1__li-icon">
+                <a href="/notification/list" class="h-full flex items-center px-2 btn btn-ghost btn-circle">
+                    <div class="indicator">
+                        <span><i class="far fa-envelope"></i></span>
+                        <span data-test="hasUnreadNotifications" th:if="${@rq.hasUnreadNotifications}"
+                              class="badge badge-xs badge-primary indicator-item"></span>
+                    </div>
+                </a>
+            </li>
+            <li class="menu-1__li-join">
+                <a href="https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=http://localhost:8080/login/check&openid.realm=http://localhost:8080&openid.mode=checkid_setup"
+                   class="h-full flex items-center px-2" th:if="${@rq.logout}">
+                    <span>로그인</span>
+                </a>
+                <a href="#"
+                   class="h-full flex items-center px-2" th:if="${@rq.login}">
+                    <span>로그아웃</span>
+                </a>
+            </li>
+        </ul>
     </div>
 </header>
-<hr style="color: #f1f1f1;">
 
 <main layout:fragment="main"></main>
 <script th:inline="javascript">

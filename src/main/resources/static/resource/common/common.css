@@ -9,4 +9,11 @@ html > body {
     font-family: "GmarketSansMedium";
     text-underline-position: under;
     word-break: keep-all;
+    background-color: #1D2939;
+    padding-top:var(--top-bar__height);
+}
+
+:root {
+    --site-width:1280px;
+    --top-bar__height:64px;
 }
