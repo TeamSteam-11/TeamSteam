@@ -128,7 +128,7 @@ public class MatchingController {
         return "matching/detail";
     }
 
-    @GetMapping("/detail/delete/{id}")
+    @PostMapping("/detail/delete/{id}")
     public String matchingDelete(@PathVariable("id") Long id, @AuthenticationPrincipal SecurityUser user) {
         Matching matching = matchingService.findById(id);
 
