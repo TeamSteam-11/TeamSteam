@@ -162,35 +162,35 @@
 
 <main layout:fragment="main">
 
-    <section class="container2">
-        <div class="room-info" >
+    <section class="container2 mt-5">
+        <div class="room-info flex items-center">
             <table>
                 <tbody>
-                <tr>
-                    <td th:text="${chatRoom.name}"></td>
-                    <div class="dropdown" style="display: flex; justify-content: flex-end; margin-right: 30px">
+                <tr class="flex">
+                    <td th:text="${chatRoom.name}" class="text-xl"></td>
+                    <div class="dropdown">
                         <label tabindex="0" class="btn btn-ghost btn-circle">
                             <i class="fa-solid fa-bars"></i>
                         </label>
-                        <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-64">
-                            <li>
+                        <ul tabindex="0" class="menu menu-compact dropdown-content ml-2 mt-3 shadow bg-base-100 rounded w-64" style="background-color: #1D2939">
+                            <li class="hover:bg-[#1F2227]">
                                 <a th:href="@{|/chat/${chatRoom.id}/userList|}" th:if="${@rq.login} and ${@rq.getUser().username} == ${user.username}">
                                     <span>참여자 목록</span>
                                 </a>
                             </li>
-                            <li>
+                            <li class="hover:bg-[#1F2227]">
                                 <a th:href="@{|/chat/${chatRoom.id}/inviteList|}" th:if="${@rq.login} and ${@rq.getUser().username} == ${user.username}">
                                     <span>초대 목록</span>
                                 </a>
                             </li>
-                            <li>
-                                <form th:action="@{/chat/rooms/{id}(id=${chatRoom.id})}" method="post" onsubmit="if ( !confirm('방을 나가시겠습니까?') ) return false; disconnect()">
+                            <li class="hover:bg-[#1F2227]">
+                                <form th:action="@{/chat/rooms/{id}(id=${chatRoom.id})}" method="post" onsubmit="if ( !confirm('방을 나가시겠습니까?') ) return false; disconnect()" class="p-0">
                                     <input type="hidden" name="_method" value="delete">
                                     <button>나가기</button>
                                 </form>
                             </li>
-                            <li th:if="${chatRoom.owner.id == #authentication.principal.id}">
-                                <form th:action="@{/chat/rooms/{id}(id=${chatRoom.id})}" method="post" onsubmit="return confirm('채팅방을 삭제하시겠습니까?\n채팅방을 삭제한다면 모임도 같이 삭제됩니다.')">
+                            <li th:if="${chatRoom.owner.id == #authentication.principal.id}" class="hover:bg-[#1F2227]">
+                                <form th:action="@{/chat/rooms/{id}(id=${chatRoom.id})}" method="post" onsubmit="return confirm('채팅방을 삭제하시겠습니까?\n채팅방을 삭제한다면 모임도 같이 삭제됩니다.')" class="p-0">
                                     <button type="submit">채팅방 삭제</button>
                                 </form>
                             </li>
