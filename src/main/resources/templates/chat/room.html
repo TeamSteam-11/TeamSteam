@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html layout:decorate="~{common/layout.html}" xmlns:layout="">
+<html layout:decorate="~{common/layout.html}">
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -15,19 +14,17 @@
 
     <style>
         .container {
-            max-width: 80%;
+            width: 100%;
             margin: 0 auto;
-            padding: 20px;
             border-radius: 8px;
             color: #f1f1f1;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .container2 {
-            max-width: 78%;
+            max-width: 95%;
             max-height: 700px;
             margin: 0 auto;
-            /*padding: 1px;*/
             border-radius: 8px;
             color: #f1f1f1;
             height: 80%;
@@ -36,15 +33,14 @@
 
         .room-info {
             flex: 0 0 auto;
-            max-width: 100%;
         }
 
         .chat-messages {
             flex: 1 1 auto;
             overflow-y: auto;
             border: 1px solid white;
-            border-radius: 15px;
-            height: calc(100vh - 400px);
+            border-radius: 5px;
+            height: calc(100vh - 350px);
         }
 
         .chat-input {
@@ -55,13 +51,11 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
         }
 
         th, td {
-            padding: 10px;
+            padding: 15px;
             text-align: center;
-            border-bottom: 1px solid #ddd;
         }
 
         .chat__write-message {
@@ -81,6 +75,7 @@
             padding: 10px;
             border-radius: 4px;
             border: 1px solid #ddd;
+            color: black;
         }
 
         .chat__write-message input[type="submit"] {
@@ -102,7 +97,6 @@
         }
 
         .chat__message-ul li {
-            /* margin-bottom: 10px; */
             padding: 3px;
             width: max-content;
             max-width: 45%;
@@ -116,7 +110,6 @@
         .chat__message-ul li .message-content {
             border-radius: 4px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border: 1px solid #fff;
             padding: 9px;
         }
 
@@ -148,41 +141,59 @@
             text-align: left;
             margin-top: 5px;
         }
+        .scroll {
+            overflow: auto;
+        }
+        .scroll::-webkit-scrollbar {
+            width: 10px;
+        }
+        .scroll::-webkit-scrollbar-thumb {
+            background-color: #2f3542;
+            border-radius: 15px;
+        }
+        .scroll::-webkit-scrollbar-track {
+            background-color: grey;
+            border-radius: 15px;
+            box-shadow: inset 0px 0px 5px white;
+        }
+        li:active a {
+            background-color: #1F2227;
+        }
     </style>
 </head>
 <body>
 
 <main layout:fragment="main">
 
-    <section class="container">
-        <div class="room-info">
+    <section class="container2 mt-5">
+        <div class="room-info flex items-center">
             <table>
                 <tbody>
-                <tr>
-                    <td th:text="${chatRoom.name}"></td>
+                <tr class="flex">
+                    <td th:text="${chatRoom.name}" class="text-xl"></td>
                     <div class="dropdown">
                         <label tabindex="0" class="btn btn-ghost btn-circle">
                             <i class="fa-solid fa-bars"></i>
                         </label>
-                        <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-64">
-                            <li>
+                        <ul tabindex="0" class="menu menu-compact dropdown-content ml-2 mt-3 shadow bg-base-100 rounded w-64 shadow-2xl" style="background-color: #1D2939">
+                            <li class="hover:bg-[#1F2227]">
                                 <a th:href="@{|/chat/${chatRoom.id}/userList|}" th:if="${@rq.login} and ${@rq.getUser().username} == ${user.username}">
                                     <span>참여자 목록</span>
                                 </a>
                             </li>
-                            <li>
+                            <li class="hover:bg-[#1F2227]">
                                 <a th:href="@{|/chat/${chatRoom.id}/inviteList|}" th:if="${@rq.login} and ${@rq.getUser().username} == ${user.username}">
                                     <span>초대 목록</span>
                                 </a>
                             </li>
-                            <li>
-                                <form th:action="@{/chat/rooms/{id}(id=${chatRoom.id})}" method="post" onsubmit="if ( !confirm('방을 나가시겠습니까?') ) return false; disconnect()">
+                            <li class="hover:bg-[#1F2227]">
+                                <form th:action="@{/chat/rooms/{id}(id=${chatRoom.id})}" method="post" onsubmit="if ( !confirm('방을 나가시겠습니까?') ) return false; disconnect()" class="p-0">
                                     <input type="hidden" name="_method" value="delete">
                                     <button>나가기</button>
                                 </form>
                             </li>
-                            <li th:if="${chatRoom.owner.id == #authentication.principal.id}">
-                                <form th:action="@{/chat/rooms/{id}(id=${chatRoom.id})}" method="post" onsubmit="return confirm('채팅방을 삭제하시겠습니까?\n채팅방을 삭제한다면 모임도 같이 삭제됩니다.')">
+                            <li th:if="${chatRoom.owner.id == #authentication.principal.id}" class="hover:bg-[#1F2227]">
+                                <form th:action="@{/chat/rooms/{id}(id=${chatRoom.id})}" method="post" onsubmit="return confirm('채팅방을 삭제하시겠습니까?\n채팅방을 삭제한다면 모임도 같이 삭제됩니다.')" class="p-0">
                                     <button type="submit">채팅방 삭제</button>
                                 </form>
                             </li>
@@ -195,7 +206,7 @@
     </section>
 
     <section class="container2">
-        <section class="chat-messages">
+        <section class="chat-messages scroll">
             <div>
                 <ul class="chat__message-ul px-5 py-5"></ul>
             </div>
