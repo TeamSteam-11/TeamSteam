@@ -16,6 +16,7 @@ import com.ll.TeamSteam.global.security.SecurityUser;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -198,10 +199,22 @@ public class ChatRoomController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{roomId}/inviteUser/{userId}")
-    public String inviteUser(@PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user,
-                             @PathVariable Long userId){
+    public ResponseEntity<Boolean> inviteUser(@PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user,
+                                              @PathVariable Long userId, Model model){
+        // DB에서 이미 정보가 있는지 없는지 조회
+        ChatRoom chatRoom = chatRoomService.findById(roomId);
+        boolean alreadyInvited = chatRoomService.isDuplicateInvite(chatRoom.getId(), user.getId(), userId);
+        log.info("alreadyInvited = {} ", alreadyInvited);
+
+        model.addAttribute("alreadyInvited", alreadyInvited);
+
+        if (alreadyInvited){
+            return ResponseEntity.ok(alreadyInvited);
+        }
+
+        // DB 저장
         chatRoomService.inviteUser(roomId, user, userId);
 
-        return "redirect:/chat/{roomId}/inviteList";
+        return ResponseEntity.ok(alreadyInvited);
     }
 }
