@@ -1,5 +1,6 @@
 package com.ll.TeamSteam.domain.matching.controller;
 
+import com.fasterxml.jackson.databind.deser.DataFormatReaders;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
@@ -127,5 +128,17 @@ public class MatchingController {
         return "matching/detail";
     }
 
+    @GetMapping("/detail/delete/{id}")
+    public String matchingDelete(@PathVariable("id") Long id, @AuthenticationPrincipal SecurityUser user) {
+        Matching matching = matchingService.findById(id);
+
+        if (matching.getUser().getId() != user.getId()) {
+            return rq.historyBack("삭제할 수 있는 권한이 없습니다.");
+        }
+
+        matchingService.deleteById(id);
+
+        return rq.redirectWithMsg("/match/list", "매칭 게시글이 삭제되었습니다.");
+    }
 
 }

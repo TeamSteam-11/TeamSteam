@@ -7,6 +7,7 @@ import com.ll.TeamSteam.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.sql.model.jdbc.OptionalTableUpdateOperation;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -53,4 +54,10 @@ public class MatchingService {
 
         return matching.get();
     }
+
+    @Transactional
+    public void deleteById(Long id) {
+        matchingRepository.deleteById(id);
+    }
+
 }
