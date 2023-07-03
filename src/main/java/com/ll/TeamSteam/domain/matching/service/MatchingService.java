@@ -17,9 +17,10 @@ public class MatchingService {
     public final MatchingRepository matchingRepository;
 
     // 매칭 등록 기능
-    public RsData<Matching> create(String title, String content, Long capacity, int startTime, int endTime, LocalDateTime deadlineDate) {
+    public RsData<Matching> create(User user, String title, String content, Long capacity, int startTime, int endTime, LocalDateTime deadlineDate) {
         Matching matching = Matching
                 .builder()
+                .user(user)
                 .title(title)
                 .content(content)
                 .capacity(capacity)

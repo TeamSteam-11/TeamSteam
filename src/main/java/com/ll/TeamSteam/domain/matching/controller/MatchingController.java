@@ -6,6 +6,7 @@ import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
 import com.ll.TeamSteam.global.rq.Rq;
 import com.ll.TeamSteam.global.rsData.RsData;
+import com.ll.TeamSteam.global.security.SecurityUser;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -71,15 +72,17 @@ public class MatchingController {
 
     // 매칭 등록 기능 구현
     @PostMapping("/create")
-    public String matchingCreate(@Valid CreateForm createForm, BindingResult bindingResult) {
+    public String matchingCreate(@Valid CreateForm createForm, BindingResult bindingResult,
+                                 @AuthenticationPrincipal SecurityUser user) {
+
         if (bindingResult.hasErrors()) {
             // 유효성 검사 오류가 있을 시 등록 페이지로 다시 이동
             return "match/create";
         }
 
-//        String username = user.getUsername();
-//
-//        User user1 = userRepository.findByUsername(username).orElse(null);
+        Long userId = user.getId();
+
+        User user1 = userRepository.findById(userId).orElseThrow();
 
         // 사용자가 선택한 마감 시간을 설정하여 매칭 생성에 사용
         LocalDateTime deadlineDate;
@@ -95,6 +98,7 @@ public class MatchingController {
 
         // 서비스에서 추가 기능 구현
         RsData<Matching> createRsData = matchingService.create(
+                user1,
                 createForm.getTitle(),
                 createForm.getContent(),
                 createForm.getCapacity(),
