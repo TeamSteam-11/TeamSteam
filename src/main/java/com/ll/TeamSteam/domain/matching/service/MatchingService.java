@@ -1,9 +1,12 @@
 package com.ll.TeamSteam.domain.matching.service;
 
+import com.fasterxml.jackson.databind.deser.DataFormatReaders;
+import com.ll.TeamSteam.domain.matching.controller.MatchingController;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.global.rsData.RsData;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.sql.model.jdbc.OptionalTableUpdateOperation;
 import org.springframework.stereotype.Service;
@@ -58,6 +61,25 @@ public class MatchingService {
     @Transactional
     public void deleteById(Long id) {
         matchingRepository.deleteById(id);
+    }
+
+    @Transactional
+    public RsData<Matching> modify(Matching matching, User user, @Valid MatchingController.CreateForm createForm) {
+        try {
+            matching.setUser(user);
+            matching.setTitle(createForm.getTitle());
+            matching.setContent(createForm.getContent());
+            matching.setCapacity(createForm.getCapacity());
+            matching.setStartTime(createForm.getStartTime());
+            matching.setEndTime(createForm.getEndTime());
+
+            matchingRepository.save(matching);
+
+            return RsData.of("S-1", "매칭이 수정되었습니다", matching);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RsData.of("F-1", "매칭 수정 중 오류가 발생했습니다.");
+        }
     }
 
 }

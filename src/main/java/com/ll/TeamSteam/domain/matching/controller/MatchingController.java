@@ -129,7 +129,7 @@ public class MatchingController {
     }
 
     @PostMapping("/detail/delete/{id}")
-    public String matchingDelete(@PathVariable("id") Long id, @AuthenticationPrincipal SecurityUser user) {
+    public String deleteMatching(@PathVariable("id") Long id, @AuthenticationPrincipal SecurityUser user) {
         Matching matching = matchingService.findById(id);
 
         if (matching.getUser().getId() != user.getId()) {
@@ -140,5 +140,46 @@ public class MatchingController {
 
         return rq.redirectWithMsg("/match/list", "매칭 게시글이 삭제되었습니다.");
     }
+
+    @GetMapping("/modify/{id}")
+    public String modifyMatching(@PathVariable("id") Long id, Model model) {
+        Matching matching = matchingService.findById(id);
+
+        if (matching == null) {
+            return "/matching/detail";
+        }
+
+        model.addAttribute("matching", matching);
+
+        return "matching/modify";
+    }
+
+    @PostMapping("/modify/{id}")
+    public String modify(@PathVariable("id") Long id, @Valid CreateForm createForm,
+                         BindingResult bindingResult, @AuthenticationPrincipal SecurityUser user, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("matching", matchingService.findById(id));
+            return "matching/modify";
+        }
+
+        Long userId = user.getId();
+
+        User user1 = userRepository.findById(userId).orElse(null);
+
+        Matching matching = matchingService.findById(id);
+
+        if (matching.getUser().getId() != user.getId()) {
+            return rq.historyBack("수정 권한이 없습니다.");
+        }
+
+        RsData<Matching> modifyRsData = matchingService.modify(matching, user1, createForm);
+
+        if (modifyRsData.isFail()) {
+            return rq.historyBack(modifyRsData);
+        }
+
+        return "redirect:/match/detail/" + modifyRsData.getData().getId();
+    }
+
 
 }
