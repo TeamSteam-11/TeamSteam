@@ -45,7 +45,6 @@ public class UserService {
     }
 
 
-
     @Transactional
     public void create(UserInfoResponse userInfo) {
 
@@ -61,7 +60,7 @@ public class UserService {
         GameTag gameTag = GameTag.builder().userTag(userTag).build();
         gameTagRepository.save(gameTag);
 
-        SteamGameLibrary steamGameLibrary =SteamGameLibrary.builder().user(createdUser).build();
+        SteamGameLibrary steamGameLibrary = SteamGameLibrary.builder().user(createdUser).build();
         steamGameLibraryRepository.save(steamGameLibrary);
     }
 
@@ -71,7 +70,7 @@ public class UserService {
         String steamId = userInfo.getResponse().getPlayers().get(0).getSteamid();
         String avatar = userInfo.getResponse().getPlayers().get(0).getAvatarmedium();
 
-        User user = new User(username,steamId,avatar);
+        User user = new User(username, steamId, avatar);
         user.setTemperature(36);
         user.setType(Gender.Wait);
 
@@ -83,7 +82,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserData(String gender, List<GenreTagType> genreTagTypes, Long id){
+    public void updateUserData(String gender, List<GenreTagType> genreTagTypes, Long id) {
         User user = findById(id).orElseThrow();
         UserTag userTag = userTagRepository.findByUserId(id).orElseThrow();
         genreTagRepository.deleteAll(userTag.getGenreTag());
@@ -102,8 +101,6 @@ public class UserService {
         genreTagRepository.saveAll(genreTags);
 
 
-
-
         // Gender 업데이트
         user.setType(Gender.valueOf(gender));
 
@@ -113,8 +110,8 @@ public class UserService {
 
     }
 
-    public Optional<User> findById(Long id){
-        return userRepository.findById(id);
+    public Optional<User> findById(Long userId) {
+        return userRepository.findById(userId);
     }
 
 
@@ -123,15 +120,34 @@ public class UserService {
 
         for (SteamGameLibrary game : gameList) {
             SteamGameLibrary newGameLibrary = SteamGameLibrary.builder()
-                .appid(game.getAppid())
-                .name(game.getName())
-                .imageUrl(game.getImageUrl())
-                .user(userRepository.findBySteamId(steamId).orElseThrow())
-                .build();
+                    .appid(game.getAppid())
+                    .name(game.getName())
+                    .imageUrl(game.getImageUrl())
+                    .user(userRepository.findBySteamId(steamId).orElseThrow())
+                    .build();
             gameLibraries.add(newGameLibrary);
         }
 
         steamGameLibraryRepository.saveAll(gameLibraries);
+    }
+
+    @Transactional
+    public void updateTemperature(long userId, int like) {
+        log.info("like = {} ", like);
+//        log.info("user.getTemperature = {}", user.getTemperature());
+        User user = findById(userId).orElseThrow();
+        int updateTemperature = user.getTemperature();
+
+        if (like == 1) {
+            updateTemperature++;
+        }
+        if (like == 0) {
+            updateTemperature--;
+        }
+
+        user.setTemperature(updateTemperature);
+
+        userRepository.save(user);
     }
 
     public List<User> findAll() {

@@ -9,6 +9,7 @@
 
 <div class="container">
     <h1 class="my-4">나의 게임 목록</h1>
+    <a th:href="@{'/user/profile/' + ${@rq.getUser().getId()} +'/'+ ${1}}">좋아요</a><a th:href="@{'/user/profile/' + ${@rq.getUser().getId()} +'/'+ ${0}}">싫어요</a><div th:text="${@rq.getUser().getTemperature()}"></div>
     <table class="table table-striped">
         <thead>
         <tr>

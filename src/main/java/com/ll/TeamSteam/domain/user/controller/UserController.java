@@ -31,11 +31,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -137,6 +135,7 @@ public class UserController {
                 .id(userService.findBySteamId(steamId).get().getId())
                 .username(userService.findBySteamId(steamId).get().getUsername())
                 .steamId(steamId)
+                .temperature(userService.findBySteamId(steamId).get().getTemperature())
                 .build();
 
         log.info("user.getId() = {} ", user.getId());
@@ -165,8 +164,8 @@ public class UserController {
 
     }
 
-    @GetMapping(value = "/user/profile", produces = MediaType.TEXT_HTML_VALUE)
-    public String userGameListSave(@AuthenticationPrincipal SecurityUser user, Model model) throws ParseException {
+    @GetMapping(value = "/user/profile/{userId}", produces = MediaType.TEXT_HTML_VALUE)
+    public String userGameListSave(@PathVariable long userId, @AuthenticationPrincipal SecurityUser user, Model model) throws ParseException {
         String steamId = user.getSteamId();
         RsData<List<SteamGameLibrary>> haveGameListData = steamService.getUserGameList(steamId);
 
@@ -175,6 +174,7 @@ public class UserController {
             userService.saveGameList(haveGameList, steamId);
 
             model.addAttribute("gameList", haveGameList);
+            model.addAttribute("user", user);
 
             return "user/profile";
         } else {
@@ -242,5 +242,13 @@ public class UserController {
         // DB에 저장
         userService.updateUserData(gender, genreTagTypes, id);
         return "redirect:/main/home";
+    }
+
+    @GetMapping("/user/profile/{userId}/{like}")
+    public String getLike(@PathVariable long userId, @PathVariable int like, RedirectAttributes redirectAttributes){
+        userService.updateTemperature(userId, like);
+
+        redirectAttributes.addAttribute("userId", userId);
+        return "redirect:/user/profile/{userId}";
     }
 }
