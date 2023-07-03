@@ -33,7 +33,13 @@
     <form th:action="@{/match/detail/delete/{id}(id=${matching.id})}" method="post">
         <button type="submit" class="btn btn-light border" style="background-color: #1F2227; color: white"
                 th:if="${matching.user.id == @rq.user.id}"
-                onclick="return confirm('해당 게시물을 정말 삭제하시겠습니까?')">삭제
+                onclick="return confirm('해당 게시물을 삭제하시겠습니까?')">삭제
+        </button>
+    </form>
+    <form th:action="@{/match/modify/{id}(id=${matching.id})}" method="post">
+        <button type="submit" class="btn btn-light border" style="background-color: #1F2227; color: white"
+                th:if="${matching.user.id == @rq.user.id}"
+                onclick="return confirm('해당 게시물을 수정하시겠습니까?')">수정
         </button>
     </form>
 </div>
