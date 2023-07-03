@@ -175,7 +175,7 @@
                         <label tabindex="0" class="btn btn-ghost btn-circle">
                             <i class="fa-solid fa-bars"></i>
                         </label>
-                        <ul tabindex="0" class="menu menu-compact dropdown-content ml-2 mt-3 shadow bg-base-100 rounded w-64" style="background-color: #1D2939">
+                        <ul tabindex="0" class="menu menu-compact dropdown-content ml-2 mt-3 shadow bg-base-100 rounded w-64 shadow-2xl" style="background-color: #1D2939">
                             <li class="hover:bg-[#1F2227]">
                                 <a th:href="@{|/chat/${chatRoom.id}/userList|}" th:if="${@rq.login} and ${@rq.getUser().username} == ${user.username}">
                                     <span>참여자 목록</span>
