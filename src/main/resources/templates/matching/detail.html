@@ -4,10 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Matching Detail</title>
+    <style>
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
 
 <h1>매칭 상세 페이지</h1>
+
+<div class="container">
+    <p><strong>등록자:</strong> <span th:text="${matching.user.username}">User Name</span></p>
+    <p><strong>제목:</strong> <span th:text="${matching.title}">Matching Title</span></p>
+    <p><strong>내용:</strong> <span th:text="${matching.content}">Matching Content</span></p>
+    <p><strong>참가 인원:</strong> <span th:text="${matching.capacity}">Matching Capacity</span></p>
+    <p><strong>시작 시간:</strong> <span th:text="${matching.startTime}">Matching Start Time</span></p>
+    <p><strong>종료 시간:</strong> <span th:text="${matching.endTime}">Matching End Time</span></p>
+    <p><strong>마감 기한:</strong> <span th:text="${matching.deadlineDate}">Matching Deadline Date</span></p>
+</div>
 
 </body>
 </html>

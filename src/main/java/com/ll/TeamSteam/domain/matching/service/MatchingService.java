@@ -5,10 +5,12 @@ import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.sql.model.jdbc.OptionalTableUpdateOperation;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -43,8 +45,11 @@ public class MatchingService {
         return matchingRepository.findAll();
     }
 
-    public Matching getMatching(Long id) {
+    public Matching findById(Long id) {
         Optional<Matching> matching = matchingRepository.findById(id);
+
+        // 존재하지 않는 매칭의 id가 입력되는 경우 에러 처리
+        if (matching.isPresent() == false) throw new NoSuchElementException("매칭이 존재하지 않습니다.");
 
         return matching.get();
     }

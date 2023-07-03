@@ -1,6 +1,7 @@
 package com.ll.TeamSteam.domain.matching.controller;
 
 import com.ll.TeamSteam.domain.matching.entity.Matching;
+import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
@@ -30,6 +31,7 @@ import java.util.List;
 public class MatchingController {
     private final Rq rq;
     private final MatchingService matchingService;
+    private final MatchingRepository matchingRepository;
     private final UserRepository userRepository;
 
     @GetMapping("/list")
@@ -118,7 +120,7 @@ public class MatchingController {
 
     @GetMapping("/detail/{id}")
     public String matchingDetail(Model model, @PathVariable("id") Long id) {
-        Matching matching = matchingService.getMatching(id);
+        Matching matching = matchingService.findById(id);
 
         model.addAttribute("matching", matching);
 
