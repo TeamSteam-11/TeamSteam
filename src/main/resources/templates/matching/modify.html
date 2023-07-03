@@ -1,0 +1,70 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{common/layout}">
+
+<head>
+    <title>매칭 등록</title>
+    <style>
+        input[type="text"], textarea {
+            border: 1px solid gray;
+        }
+
+        input[type="number"], textarea {
+            border: 1px solid gray;
+        }
+    </style>
+</head>
+<body layout:fragment="content">
+<!--<h1>상품 등록</h1>-->
+<form th:object="${createForm}" th:action="@{/match/modify}" method="POST" style="margin: 10px 40px">
+    <label for="title">제목 :</label><br>
+    <input type="text" id="title" th:value="${matching.title}"><br><br>
+
+    <label for="content">내용 :</label><br>
+    <input type="text" id="content" th:value="${matching.content}"><br><br>
+
+    <label for="capacity">매칭 인원 :</label><br>
+    <input type="number" id="capacity" th:value="${matching.capacity}"><br><br>
+
+    <div>
+        <label for="startTime">시작 시간</label><br>
+        <select id="startTime" th:value="${matching.startTime}">
+            <option th:each="hour : ${#numbers.sequence(0, 24)}" th:value="${hour}" th:text="${hour}"></option>
+        </select><br><br>
+    </div>
+    <div>
+        <label for="endTime">끝나는 시간</label><br>
+        <select id="endTime" th:value="${matching.endTime}">
+            <option th:each="hour : ${#numbers.sequence(0, 24)}" th:value="${hour}" th:text="${hour}"></option>
+        </select><br><br>
+    </div>
+
+    <div>
+        <label for="deadline">마감 시간</label><br>
+        <select id="deadline" name="deadline" onchange="setSelectedHours()">
+            <option value="0">제한 없음</option>
+            <option value="1">1시간 후</option>
+            <option value="2">2시간 후</option>
+            <option value="3">3시간 후</option>
+            <option value="6">6시간 후</option>
+            <option value="12">12시간 후</option>
+            <option value="24">1일 후</option>
+        </select><br><br>
+    </div>
+    <input type="hidden" id="selectedHours" name="selectedHours" value="0">
+
+
+    <button type="submit" onclick="showSuccessMessage()" style="background-color: #1F2227; color: white; font-size: 1.2em; padding: 10px 20px; border-radius: 10px">등록</button>
+</form>
+
+<script>
+    function setSelectedHours() {
+        var selectedValue = document.getElementById("deadline").value;
+        document.getElementById("selectedHours").value = selectedValue;
+    }
+
+    function showSuccessMessage() {
+        toastNotice("입력하신 매칭이 등록되었습니다.")
+    }
+</script>
+
+</body>
+</html>

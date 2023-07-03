@@ -159,7 +159,7 @@ public class MatchingController {
                          BindingResult bindingResult, @AuthenticationPrincipal SecurityUser user, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("matching", matchingService.findById(id));
-            return "matching/modify";
+            return "match/modify";
         }
 
         Long userId = user.getId();
