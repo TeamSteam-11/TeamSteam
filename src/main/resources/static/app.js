@@ -71,20 +71,31 @@ function drawMessages(messages) {
             }
 
             if (message.sender.user_id === userId) {
-                newItem.innerHTML = `<div><div class="message-content">${message.content}</div><span class="message-time">${formattedTime}</span></div> `;
+                newItem.innerHTML = `
+                                <div><div class="chat chat-end">
+                                     <div class="chat-bubble">${message.content}</div></div>
+                                     <span class="message-time">${formattedTime}</span></div> `;
             } else {
                 newItem.innerHTML = `
-                <div>
-                    <div class="message-username mt-5 mb-1 flex items-center">
-                        <img src="${message.sender.avatar}" alt="${message.sender.username}'s avatar" style="width: 35px; height: 35px;" class="mr-1 rounded">
+                <div class="chat chat-start">
+                    <div class="chat-image avatar">
+                        
+                    </div>
+                    <div class="chat-header flex items-center mb-1">
+                        <div class="w-9 mr-1">
+                            <img src="${message.sender.avatar}" alt="${message.sender.username}'s avatar" class="rounded-lg"/>
+                        </div>
                         ${message.sender.username}
                     </div>
-                    <div class="message-content">${message.content}</div> 
-                    <span class="message-time">${formattedTime}</span>
+                    <div class="chat-bubble">${message.content}</div>
+                    <div class="chat-footer message-time">
+                        ${formattedTime}
+                    </div>
                 </div>`;
 
                 if ( lastChatMessageUser == message.sender.user_id ) {
-                    $(newItem).find('.message-username').remove();
+                    $(newItem).find('.chat-header').remove();
+                    $(newItem).find('.chat-image').remove();
                 }
             }
 
