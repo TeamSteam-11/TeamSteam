@@ -14,25 +14,27 @@
 </head>
 <body layout:fragment="content">
 <!--<h1>상품 등록</h1>-->
-<form th:object="${createForm}" th:action="@{'/match/modify/' + ${matching.id}}" method="POST" style="margin: 10px 40px">
+<form th:object="${createForm}" method="POST" style="margin: 10px 40px">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
     <label for="title">제목 :</label><br>
-    <input type="text" id="title" th:value="${matching.title}"><br><br>
+    <input type="text" id="title" th:field="*{title}" th:value="${matching.getTitle()}"><br><br>
 
     <label for="content">내용 :</label><br>
-    <input type="text" id="content" th:value="${matching.content}"><br><br>
+    <input type="text" id="content" th:field="*{content}" th:value="${matching.getContent()}"><br><br>
 
     <label for="capacity">매칭 인원 :</label><br>
-    <input type="number" id="capacity" th:value="${matching.capacity}"><br><br>
+    <input type="number" id="capacity" th:field="*{capacity}" th:value="${matching.getCapacity()}"><br><br>
 
     <div>
         <label for="startTime">시작 시간</label><br>
-        <select id="startTime" th:value="${matching.startTime}">
+        <select id="startTime" th:field="*{startTime}" th:value="${matching.getStartTime()}">
             <option th:each="hour : ${#numbers.sequence(0, 24)}" th:value="${hour}" th:text="${hour}"></option>
         </select><br><br>
     </div>
     <div>
         <label for="endTime">끝나는 시간</label><br>
-        <select id="endTime" th:value="${matching.endTime}">
+        <select id="endTime" th:field="*{endTime}" th:value="${matching.getEndTime()}">
             <option th:each="hour : ${#numbers.sequence(0, 24)}" th:value="${hour}" th:text="${hour}"></option>
         </select><br><br>
     </div>

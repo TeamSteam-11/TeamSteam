@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -126,7 +127,7 @@ public class MatchingController {
     @GetMapping("/detail/{id}")
     public String matchingDetail(Model model, @PathVariable Long id) {
 
-        Matching matching = matchingService.findById(id);
+        Matching matching = matchingService.findById(id).orElse(null);
 
         model.addAttribute("matching", matching);
 
@@ -136,7 +137,7 @@ public class MatchingController {
     @PostMapping("/detail/delete/{id}")
     public String deleteMatching(@PathVariable("id") Long id, @AuthenticationPrincipal SecurityUser user) {
 
-        Matching matching = matchingService.findById(id);
+        Matching matching = matchingService.findById(id).orElse(null);
 
         if (matching.getUser().getId() != user.getId()) {
             return rq.historyBack("삭제할 수 있는 권한이 없습니다.");
@@ -147,47 +148,42 @@ public class MatchingController {
         return rq.redirectWithMsg("/match/list", "매칭 게시글이 삭제되었습니다.");
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modifyMatching(@PathVariable("id") Long id, Model model) {
+    public String modifyMatching(@PathVariable Long id, CreateForm createForm, Model model) {
 
-        Matching matching = matchingService.findById(id);
+        Matching matching = matchingService.findById(id).orElse(null);
 
-//        if (matching == null) {
-//            return "matching/detail";
-//        }
+        createForm.setTitle(matching.getTitle());
+        createForm.setContent(matching.getContent());
+        createForm.setCapacity(matching.getCapacity());
+        createForm.setStartTime(matching.getStartTime());
+        createForm.setEndTime(matching.getEndTime());
 
         model.addAttribute("matching", matching);
 
         return "matching/modify";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
-    public String modify(@PathVariable("id") Long id, @Valid CreateForm createForm,
-                         BindingResult bindingResult, @AuthenticationPrincipal SecurityUser user, Model model) {
+    public String modify(@Valid CreateForm createForm, @PathVariable("id") Long id, @AuthenticationPrincipal SecurityUser user) {
 
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("matching", matchingService.findById(id));
-            return "matching/modify";
-        }
+//        User user1 = userRepository.findById(user.getId()).orElse(null);
 
-        Long userId = user.getId();
-
-        User user1 = userRepository.findById(userId).orElse(null);
-
-        Matching matching = matchingService.findById(id);
+        Matching matching = matchingService.findById(id).orElse(null);
 
         if (matching.getUser().getId() != user.getId()) {
             return rq.historyBack("수정 권한이 없습니다.");
         }
 
-        RsData<Matching> modifyRsData = matchingService.modify(matching, user1, createForm);
+        RsData<Matching> modifyRsData = matchingService.modify(matching, createForm.getTitle(), createForm.getContent(),
+                createForm.getCapacity(), createForm.getStartTime(), createForm.getEndTime());
 
         if (modifyRsData.isFail()) {
             return rq.historyBack(modifyRsData);
         }
 
-        return "redirect:/match/detail/" + modifyRsData.getData().getId();
+        return String.format("redirect:/match/detail/%d", id);
     }
-
-
 }
