@@ -71,14 +71,13 @@ public class SteamService {
             for (JsonNode gameNode : gamesNode) {
                 JsonNode appIdNode = gameNode.get("appid");
                 JsonNode nameNode = gameNode.get("name");
-                JsonNode imageUrlNode = gameNode.get("img_logo_url");
+
 
                 Integer appId = (appIdNode != null && !appIdNode.isNull()) ? appIdNode.asInt() : null;
                 String name = (nameNode != null && !nameNode.isNull()) ? nameNode.asText() : "";
-                String imageUrl = (imageUrlNode != null && !imageUrlNode.isNull()) ? imageUrlNode.asText() : "";
 
                 if (appId != null) {
-                    SteamGameLibrary gameLibrary = new SteamGameLibrary(appId, name, imageUrl);
+                    SteamGameLibrary gameLibrary = new SteamGameLibrary(appId, name);
                     gameList.add(gameLibrary);
                 }
             }

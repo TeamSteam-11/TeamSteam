@@ -128,7 +128,6 @@ public class UserService {
             SteamGameLibrary newGameLibrary = SteamGameLibrary.builder()
                 .appid(game.getAppid())
                 .name(game.getName())
-                .imageUrl(game.getImageUrl())
                 .user(userRepository.findBySteamId(steamId).orElseThrow())
                 .build();
             gameLibraries.add(newGameLibrary);
@@ -155,7 +154,6 @@ public class UserService {
                 GameTag gameTag = new GameTag();
                 gameTag.setAppid(gameLibrary.getAppid());
                 gameTag.setName(gameLibrary.getName());
-                gameTag.setImageUrl(gameLibrary.getImageUrl());
                 gameTag.setUserTag(user.getUserTag());
 
 

@@ -53,9 +53,6 @@ public class UserController {
 
     private final SteamService steamService;
 
-    private final GameTagRepository gameTagRepository;
-
-
     @GetMapping("/user/login")
     public String login() {
         return "/user/login";
@@ -156,68 +153,30 @@ public class UserController {
 
     }
 
-    @GetMapping(value = "/user/profile", produces = MediaType.TEXT_HTML_VALUE)
+    @GetMapping(value = "/user/createGameTag", produces = MediaType.TEXT_HTML_VALUE)
     public String userGameListSave(@AuthenticationPrincipal SecurityUser user, Model model) throws ParseException {
+
         String steamId = user.getSteamId();
         RsData<List<SteamGameLibrary>> haveGameListData = steamService.getUserGameList(steamId);
-
-        if (haveGameListData.isSuccess()) {
             List<SteamGameLibrary> haveGameList = haveGameListData.getData();
             userService.saveGameList(haveGameList, steamId);
 
-            model.addAttribute("gameList", haveGameList);
+            model.addAttribute("gameList",haveGameList);
 
-            return "createGameTag";
-        } else {
-            String errorMessage = haveGameListData.getMsg();
+            return "user/createGameTag";
 
-            model.addAttribute("error", errorMessage);
-            return "error";
-        }
     }
 
-    @PostMapping(value = "/user/profile/save-gametag")
+    @PostMapping(value = "/user/createGameTag/save-gametag")
     public String saveGameTags(@RequestParam("selectedGames") List<Integer> selectedGames,
-        @AuthenticationPrincipal SecurityUser user,
-        Model model) {
+        @AuthenticationPrincipal SecurityUser user) {
+
         String steamId = user.getSteamId();
         userService.saveSelectedGames(selectedGames, steamId);
 
-        if (selectedGames.isEmpty()) {
-            model.addAttribute("message", "No games were selected.");
-            return "redirect:/user/createGameTag";
-        } else {
-            model.addAttribute("message", "Game tags saved successfully.");
-
-        }
-        return "redirect:/user/createGameTag";
+        return "redirect:/main/home";
     }
 
-    @GetMapping("/user/check")
-    @PreAuthorize("isAuthenticated()")
-    @ResponseBody
-    public String check(HttpSession session) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecurityUser user = (SecurityUser)authentication.getPrincipal();
-        return user.getSteamId();
-    }
-
-    @GetMapping("/user/isLogin")
-    @PreAuthorize("isAuthenticated()")
-    public String isLogin() {
-        return "user/isLogin";
-    }
-
-    public UserInfoResponse getUserInfo(String steamId) {
-        //UserInfoResponse 객체를 사용
-
-        return steamService.getUserInformation(steamId);
-    }
-
-    @GetMapping("user/createGenre")
-    public String test() {
-        return "user/createGenre";
-    }
 
     @GetMapping("/user/checkFirstVisit")
     public String checkLogin(@AuthenticationPrincipal SecurityUser user) {
@@ -232,6 +191,11 @@ public class UserController {
         return "redirect:/main/home";
     }
 
+    @GetMapping("user/createGenre")
+    public String test(){
+        return "user/createGenre";
+    }
+
     @PostMapping("/user/createGenre")
     public String genreFormPost(@RequestParam String gender, @RequestParam("gameGenre") String[] gameGenres,
         @AuthenticationPrincipal SecurityUser user){
@@ -244,7 +208,13 @@ public class UserController {
 
             // DB에 저장
             userService.updateUserData(gender, genreTagTypes, id);
-            return "redirect:/main/home";
+            return "redirect:/user/createGameTag";
         }
+
+    public UserInfoResponse getUserInfo(String steamId) {
+        //UserInfoResponse 객체를 사용
+
+        return steamService.getUserInformation(steamId);
+    }
 }
 

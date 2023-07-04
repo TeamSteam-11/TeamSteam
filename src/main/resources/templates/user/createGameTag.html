@@ -1,11 +1,7 @@
-<form action="/user/profile/save-gametag" method="post" th:action="@{/user/profile/save-gametag}" th:object="${selectedGamesForm}">
+<form action="/user/createGameTag/save-gametag" method="post" th:action="@{/user/createGameTag/save-gametag}" th:object="${selectedGamesForm}">
     <div class="container">
         <h1 class="my-4">나의 게임 목록</h1>
-        <div th:if="${message}">
-            <p th:text="${message}"></p>
-        </div>
-        <form action="/user/profile/save-gametag" method="post">
-
+        <form action="/user/createGameTag/save-gametag" method="post">
         <table class="table table-striped">
             <thead>
             <tr>

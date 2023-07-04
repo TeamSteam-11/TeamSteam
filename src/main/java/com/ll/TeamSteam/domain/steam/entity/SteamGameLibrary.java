@@ -22,16 +22,12 @@ public class SteamGameLibrary extends BaseEntity{
 	@Column(name = "name")
 	private String name;
 
-	@Column(name = "image_url")
-	private String imageUrl;
-
 	@ManyToOne
 	private User user;
 
-	public SteamGameLibrary(Integer appid, String name, String imageUrl) {
+	public SteamGameLibrary(Integer appid, String name) {
 		this.appid = appid;
 		this.name = name;
-		this.imageUrl = imageUrl;
 	}
 
 	// Getters and Setters

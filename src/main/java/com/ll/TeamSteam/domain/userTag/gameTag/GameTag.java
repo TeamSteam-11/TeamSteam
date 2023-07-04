@@ -22,9 +22,6 @@ public class GameTag extends BaseEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "image_url")
-    private String imageUrl;
-
     @ManyToOne
     private UserTag userTag;
 
@@ -34,10 +31,6 @@ public class GameTag extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public void setUserTag(UserTag userTag) {
