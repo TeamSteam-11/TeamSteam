@@ -1,7 +1,7 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{common/layout}">
 
 <head>
-    <title>매칭 등록</title>
+    <title>매칭 수정</title>
     <style>
         input[type="text"], textarea {
             border: 1px solid gray;
@@ -14,7 +14,7 @@
 </head>
 <body layout:fragment="content">
 <!--<h1>상품 등록</h1>-->
-<form th:object="${createForm}" th:action="@{/match/modify}" method="POST" style="margin: 10px 40px">
+<form th:object="${createForm}" th:action="@{'/match/modify/' + ${matching.id}}" method="POST" style="margin: 10px 40px">
     <label for="title">제목 :</label><br>
     <input type="text" id="title" th:value="${matching.title}"><br><br>
 
@@ -52,7 +52,7 @@
     <input type="hidden" id="selectedHours" name="selectedHours" value="0">
 
 
-    <button type="submit" onclick="showSuccessMessage()" style="background-color: #1F2227; color: white; font-size: 1.2em; padding: 10px 20px; border-radius: 10px">등록</button>
+    <button type="submit" onclick="submitFormAndRedirect()" style="background-color: #1F2227; color: white; font-size: 1.2em; padding: 10px 20px; border-radius: 10px">등록</button>
 </form>
 
 <script>
@@ -62,7 +62,12 @@
     }
 
     function showSuccessMessage() {
-        toastNotice("입력하신 매칭이 등록되었습니다.")
+        toastNotice("입력하신 매칭이 수정되었습니다.")
+    }
+
+    function submitFormAndRedirect() {
+        showSuccessMessage();
+        document.querySelector('form').submit();
     }
 </script>
 

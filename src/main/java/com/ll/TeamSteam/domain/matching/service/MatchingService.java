@@ -23,7 +23,7 @@ public class MatchingService {
     public final MatchingRepository matchingRepository;
 
     // 매칭 등록 기능
-    public RsData<Matching> create(User user, String title, String content, Long capacity, int startTime, int endTime, LocalDateTime deadlineDate) {
+    public Matching create(User user, String title, String content, Long capacity, int startTime, int endTime, LocalDateTime deadlineDate) {
         Matching matching = Matching
                 .builder()
                 .user(user)
@@ -37,7 +37,7 @@ public class MatchingService {
 
         matchingRepository.save(matching);
 
-        return RsData.of("S-1", "입력하신 매칭이 등록되었습니다.", matching);
+        return matching;
     }
 
     // 마감 시간 구현
