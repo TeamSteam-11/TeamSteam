@@ -1,11 +1,8 @@
 package com.ll.TeamSteam.domain.steam.service;
 
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
+
 import net.minidev.json.parser.ParseException;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -22,9 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class SteamService {
@@ -76,14 +71,13 @@ public class SteamService {
             for (JsonNode gameNode : gamesNode) {
                 JsonNode appIdNode = gameNode.get("appid");
                 JsonNode nameNode = gameNode.get("name");
-                JsonNode imageUrlNode = gameNode.get("img_logo_url");
+
 
                 Integer appId = (appIdNode != null && !appIdNode.isNull()) ? appIdNode.asInt() : null;
                 String name = (nameNode != null && !nameNode.isNull()) ? nameNode.asText() : "";
-                String imageUrl = (imageUrlNode != null && !imageUrlNode.isNull()) ? imageUrlNode.asText() : "";
 
                 if (appId != null) {
-                    SteamGameLibrary gameLibrary = new SteamGameLibrary(appId, name, imageUrl);
+                    SteamGameLibrary gameLibrary = new SteamGameLibrary(appId, name);
                     gameList.add(gameLibrary);
                 }
             }
@@ -93,6 +87,7 @@ public class SteamService {
 
         return new RsData<>("S-1", "Success", gameList);
     }
-
-
 }
+
+
+

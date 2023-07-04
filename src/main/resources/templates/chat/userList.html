@@ -1,12 +1,29 @@
-<html layout:decorate="~{common/layout.html}" xmlns:layout="">
+<html layout:decorate="~{common/layout.html}">
 
 <head>
   <title>참여자 목록</title>
   <style>
+    body {
+      color:white;
+    }
+
     .table {
       display: flex;
       justify-content: center;
       margin-top: 50px;
+    }
+
+    .table thead tr:first-child th,
+    .table thead tr:first-child td {
+      background-color: #1F2227;
+      text-align: center;
+    }
+
+    .table tbody tr th,
+    .table tbody tr td {
+      background-color: #202d3e;
+      border:0px;
+      text-align: center;
     }
   </style>
 </head>
@@ -15,9 +32,10 @@
 
 <main layout:fragment="main">
   <div style="display: flex; justify-content: center;">
-    <table class="table">
-      <thead class="table-dark">
+    <table class="table shadow-2xl w-2/5 flex justify-center">
+      <thead>
       <tr>
+        <th>프로필</th>
         <th>아이디</th>
         <th>입장일시</th>
         <th>방장</th>
@@ -25,10 +43,15 @@
       </thead>
       <tbody>
       <tr th:each="chatUser, loop : ${chatUserList}" th:if="${chatUser.type == COMMON}">
-        <td th:text="${chatUser.user.name}"></td>
+        <td class="flex justify-center">
+          <img th:src="${chatUser.getUser().getAvatar()}" alt="${user.username}'s avatar" class="rounded-lg w-10 h-10 m-auto"/>
+        </td>
+        <td th:text="${chatUser.getUser().getUsername()}"></td>
         <td th:text="${#temporals.format(chatUser.createDate, 'yyyy/MM/dd hh:mm')}"></td>
         <td>
-          <span th:if="${chatUser.user.id == chatRoom.owner.id}">방장</span>
+          <span th:if="${chatUser.user.id == chatRoom.owner.id}">
+            <i class="fa-solid fa-crown"></i>
+          </span>
         </td>
       </tr>
       </tbody>

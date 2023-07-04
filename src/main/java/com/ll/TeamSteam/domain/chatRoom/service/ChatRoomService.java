@@ -278,14 +278,30 @@ public class ChatRoomService {
             return RsData.of("F-2", "본인을 초대할 수 없습니다");
         }
 
-        // 현재 DB에 정보가 있으면 더 이상 저장이 되지 않게
-        boolean isDuplicateInvite = notificationService.checkDuplicateInvite(invitingUser, invitedUser, roomId);
-        if (isDuplicateInvite) {
-            return RsData.of("F-3", "이미 초대된 사용자입니다.");
-        }
-
         publisher.publishEvent(new EventAfterInvite(this, invitingUser, invitedUser, chatRoom));
 
         return RsData.of("S-1", "%s 님에게 초대를 보냈습니다".formatted(invitedUser.getUsername()));
+    }
+
+    public boolean isDuplicateInvite(Long roomId, Long invitingUserId, Long invitedUserId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+
+        // 현재 로그인된 사용자가 방에 있는지 확인하는 로직
+        User invitingUser = userService.findByIdElseThrow(invitingUserId);
+        ChatUser chatUserByUserId = findChatUserByUserId(chatRoom, invitingUserId);
+
+        if (chatUserByUserId == null){
+            throw new IllegalArgumentException("현재 당신은 %s 방에 들어있지 않습니다.".formatted(chatRoom.getName()));
+        }
+
+        User invitedUser = userService.findByIdElseThrow(invitedUserId);
+
+        if (invitingUser.getId() != null && invitingUser.getId().equals(invitedUser.getId())) {
+            throw new IllegalArgumentException("본인을 초대할 수 없습니다.");
+        }
+
+        // 현재 DB에 정보가 있으면 더 이상 저장이 되지 않게
+        return notificationService.checkDuplicateInvite(invitingUser, invitedUser, roomId);
     }
 }
