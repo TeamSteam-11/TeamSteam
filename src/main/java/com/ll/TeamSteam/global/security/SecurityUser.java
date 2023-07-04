@@ -19,13 +19,10 @@ public class SecurityUser implements SecurityUserAdapter {
 
     private String steamId;
 
-    private int temperature;
-
-    public SecurityUser(Long id, String username, String steamId, int temperature) {
+    public SecurityUser(Long id, String username, String steamId) {
         this.id = id;
         this.username = username;
         this.steamId = steamId;
-        this.temperature = temperature;
     }
 
     @Override

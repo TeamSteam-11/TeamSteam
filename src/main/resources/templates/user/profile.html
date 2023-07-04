@@ -2,14 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>게임 목록</title>
+    <title>프로필</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
 </head>
 <body>
-
+<div>
+    <form>
+        <button th:if="${loginedId == targetUser.getId()}" type="submit" class="btn btn-primary">Edit Tag</button>
+    </form>
+    <form>
+        <button th:if="${loginedId != targetUser.getId()}" type="submit" class="btn btn-primary">친구추가</button>
+    </form>
+</div>
 <div class="container">
     <h1 class="my-4">나의 게임 목록</h1>
-    <a th:href="@{'/user/profile/' + ${@rq.getUser().getId()} +'/'+ ${1}}">좋아요</a><a th:href="@{'/user/profile/' + ${@rq.getUser().getId()} +'/'+ ${0}}">싫어요</a><div th:text="${@rq.getUser().getTemperature()}"></div>
+    <a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${1}}">좋아요</a><a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${0}}">싫어요</a><div th:text="${targetUser.getTemperature()}"></div>
+
     <table class="table table-striped">
         <thead>
         <tr>

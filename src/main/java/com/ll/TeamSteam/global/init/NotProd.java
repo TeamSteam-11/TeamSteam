@@ -36,7 +36,8 @@ public class NotProd {
                 User user1 = User.builder()
                         .id(1L)
                         .username("user1")
-                        .steamId("7777777777")
+                        .steamId("76561199121470467")
+                        .temperature(36)
                         .build();
 
                 userRepository.save(user1);
@@ -45,6 +46,7 @@ public class NotProd {
                         .id(2L)
                         .username("user2")
                         .steamId("8888888888")
+                        .temperature(36)
                         .build();
 
                 userRepository.save(user2);

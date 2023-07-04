@@ -107,7 +107,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="h-full flex items-center px-2">
+                <a th:if="${@rq.isLogin()}" th:href="@{'/user/profile/' + ${@rq.getUser().getId()}}" class="h-full flex items-center px-2">
                     <span>프로필</span>
                 </a>
             </li>
