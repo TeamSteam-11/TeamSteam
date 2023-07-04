@@ -2,8 +2,8 @@ package com.ll.TeamSteam.domain.friend.entity;
 
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,8 @@ import static jakarta.persistence.FetchType.LAZY;
 @SuperBuilder
 public class Friend extends BaseEntity {
 
-    String username;
+    @Column(nullable = false)
+    long friendId;
 
     @ManyToOne(fetch = LAZY)
     private User user;

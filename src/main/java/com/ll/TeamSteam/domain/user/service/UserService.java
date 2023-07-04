@@ -1,5 +1,7 @@
 package com.ll.TeamSteam.domain.user.service;
 
+import com.ll.TeamSteam.domain.friend.entity.Friend;
+import com.ll.TeamSteam.domain.friend.repository.FriendRepository;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
 import com.ll.TeamSteam.domain.steam.repository.SteamGameLibraryRepository;
@@ -41,6 +43,8 @@ public class UserService {
     private final GenreTagRepository genreTagRepository;
 
     private final SteamGameLibraryRepository steamGameLibraryRepository;
+
+    private final FriendRepository friendRepository;
 
 
     @Transactional(readOnly = true)
@@ -158,6 +162,23 @@ public class UserService {
 
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public void addFriends(Long targetId,Long loginedId){
+
+        //서로 저장
+        Friend meToFriends = Friend.builder()
+                .user(findByIdElseThrow(loginedId))
+                .friendId(targetId)
+                .build();
+        Friend friendToMe = Friend.builder()
+                .user(findByIdElseThrow(targetId))
+                .friendId(loginedId)
+                .build();
+
+
+        friendRepository.save(meToFriends);
+        friendRepository.save(friendToMe);
     }
 
     public void saveSelectedGames(List<Integer> selectedGames, String steamId) {

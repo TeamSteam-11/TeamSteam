@@ -244,5 +244,15 @@ public class UserController {
     }
 
 
+    @PostMapping("/user/profile/{userId}/addFriend")
+    public String friend(@PathVariable long userId, @AuthenticationPrincipal SecurityUser user){
+        long targetId = userId;
+        long loginedId = user.getId();
+        userService.addFriends(targetId, loginedId);
+
+        return "redirect:/user/profile/" + userId;
+    }
+
+
 }
 
