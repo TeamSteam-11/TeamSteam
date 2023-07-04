@@ -22,7 +22,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws")   //SockJS 연결 주소
                 .setAllowedOriginPatterns("*")
                 .setAllowedOrigins("http://localhost:8080")
-//                .setAllowedOrigins("https://www.colikeprdo.work")// spring stomp CORS 설정하기
+                .setAllowedOrigins("https://www.teamsteam.site")// spring stomp CORS 설정하기
                 .withSockJS() // 주소 : ws://localhost:8080/ws
                 .setInterceptors(new HttpSessionHandshakeInterceptor());
     }
