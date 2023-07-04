@@ -1,13 +1,56 @@
-<!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{common/layout}">
+<html layout:decorate="~{common/layout.html}">
 
 <head>
-    <meta charset="UTF-8">
     <title>Matching Detail</title>
+    <style>
+        body {
+            color:white;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
+<main layout:fragment="main">
 
-<h1>매칭 상세 페이지</h1>
 
+<div class="container">
+    <p><strong>등록자:</strong> <span th:text="${matching.user.username}">User Name</span></p>
+    <p><strong>제목:</strong> <span th:text="${matching.title}">Matching Title</span></p>
+    <p><strong>내용:</strong> <span th:text="${matching.content}">Matching Content</span></p>
+    <p><strong>참가 인원:</strong> <span th:text="${matching.capacity}">Matching Capacity</span></p>
+    <p><strong>시작 시간:</strong> <span th:text="${matching.startTime}">Matching Start Time</span></p>
+    <p><strong>종료 시간:</strong> <span th:text="${matching.endTime}">Matching End Time</span></p>
+    <p><strong>마감 기한:</strong> <span th:text="${matching.deadlineDate}">Matching Deadline Date</span></p>
+
+</div>
+
+<div>
+    <form th:action="@{/match/detail/delete/{id}(id=${matching.id})}" method="post">
+        <button type="submit" class="btn btn-light border" style="background-color: #1F2227; color: white"
+                th:if="${matching.user.id == @rq.user.id}"
+                onclick="return confirm('해당 게시물을 삭제하시겠습니까?')">삭제
+        </button>
+    </form>
+    <form th:action="@{/match/modify/{id}(id=${matching.id})}" method="post">
+        <button type="submit" class="btn btn-light border"
+                th:if="${matching.user.id == @rq.user.id}"
+                onclick="return confirm('해당 게시물을 수정하시겠습니까?')">수정
+        </button>
+    </form>
+</div>
+
+<div>
+    <button class="btn btn-outline">
+        <a th:href="@{|/chat/rooms/${matching.chatRoom.id}|}">참여하기</a>
+    </button>
+</div>
+</main>
 </body>
 </html>
