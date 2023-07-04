@@ -1,7 +1,5 @@
 package com.ll.TeamSteam.domain.matching.controller;
 
-import com.fasterxml.jackson.databind.deser.DataFormatReaders;
-import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
@@ -126,7 +124,7 @@ public class MatchingController {
     }
 
     @GetMapping("/detail/{id}")
-    public String matchingDetail(Model model, @PathVariable("id") Long id) {
+    public String matchingDetail(Model model, @PathVariable Long id) {
 
         Matching matching = matchingService.findById(id);
 

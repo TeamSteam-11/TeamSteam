@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{common/layout}">
+<html layout:decorate="~{common/layout.html}">
 
 <head>
-    <meta charset="UTF-8">
     <title>Matching Detail</title>
     <style>
+        body {
+            color:white;
+        }
+
         .container {
             width: 80%;
             margin: 0 auto;
@@ -15,8 +17,8 @@
     </style>
 </head>
 <body>
+<main layout:fragment="main">
 
-<h1>매칭 상세 페이지</h1>
 
 <div class="container">
     <p><strong>등록자:</strong> <span th:text="${matching.user.username}">User Name</span></p>
@@ -37,7 +39,7 @@
         </button>
     </form>
     <form th:action="@{/match/modify/{id}(id=${matching.id})}" method="post">
-        <button type="submit" class="btn btn-light border" style="background-color: #1F2227; color: white"
+        <button type="submit" class="btn btn-light border"
                 th:if="${matching.user.id == @rq.user.id}"
                 onclick="return confirm('해당 게시물을 수정하시겠습니까?')">수정
         </button>
@@ -45,12 +47,10 @@
 </div>
 
 <div>
-    <form>
-        <button>
-
-        </button>
-    </form>
+    <button class="btn btn-outline">
+        <a th:href="@{|/chat/rooms/${matching.chatRoom.id}|}">참여하기</a>
+    </button>
 </div>
-
+</main>
 </body>
 </html>
