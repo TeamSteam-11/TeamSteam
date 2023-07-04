@@ -37,7 +37,7 @@ public class Matching extends BaseEntity {
 
     private LocalDateTime deadlineDate; // 마감 시간
 
-    @OneToOne(mappedBy = "matching")
+    @OneToOne(mappedBy = "matching", fetch = LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ChatRoom chatRoom;
 
     @OneToMany(mappedBy = "matching", cascade = CascadeType.ALL)
@@ -47,36 +47,11 @@ public class Matching extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setTitle(String title) {
+    public void update(String title, String content, Long capacity, int startTime, int endTime) {
         this.title = title;
-    }
-
-    public void setContent(String content) {
         this.content = content;
-    }
-
-    public void setCapacity(Long capacity) {
         this.capacity = capacity;
-    }
-
-    public void setParticipant(Long participant) {
-        this.participant = participant;
-    }
-
-    public void setStartTime(int startTime) {
         this.startTime = startTime;
-    }
-
-    public void setEndTime(int endTime) {
         this.endTime = endTime;
     }
-
-    public void setDeadlineDate(LocalDateTime deadlineDate) {
-        this.deadlineDate = deadlineDate;
-    }
-
 }
