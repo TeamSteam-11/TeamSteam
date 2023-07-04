@@ -169,8 +169,6 @@ public class MatchingController {
     @PostMapping("/modify/{id}")
     public String modify(@Valid CreateForm createForm, @PathVariable("id") Long id, @AuthenticationPrincipal SecurityUser user) {
 
-//        User user1 = userRepository.findById(user.getId()).orElse(null);
-
         Matching matching = matchingService.findById(id).orElse(null);
 
         if (matching.getUser().getId() != user.getId()) {
@@ -179,6 +177,9 @@ public class MatchingController {
 
         RsData<Matching> modifyRsData = matchingService.modify(matching, createForm.getTitle(), createForm.getContent(),
                 createForm.getCapacity(), createForm.getStartTime(), createForm.getEndTime());
+
+
+        chatRoomService.updateChatRoomName(matching.getChatRoom(), matching.getTitle());
 
         if (modifyRsData.isFail()) {
             return rq.historyBack(modifyRsData);
