@@ -114,9 +114,10 @@ public class MatchingController {
         );
 
         // 매칭 등록 실패 시
-//        if (createRsData.isFail()) {
-//            return rq.redirectWithMsg(createRsData);
-//        }
+        if (createRsData == null) {
+            throw new IllegalArgumentException("게시글이 작성되지 않았습니다.");
+            // return "match/create";
+        }
 
         chatRoomService.createAndConnect(createForm.getTitle(), createRsData, user.getId());
 
