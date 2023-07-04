@@ -35,8 +35,10 @@ public class NotProd {
             public void run(String... args) throws Exception {
                 User user1 = User.builder()
                         .id(1L)
-                        .username("user1")
-                        .steamId("7777777777")
+                        .username("핵귤")
+                        .steamId("76561199121470467")
+                        .temperature(36)
+                        .avatar("https://avatars.steamstatic.com/79915b7e057fe79132264d80a180056c0468b581_medium.jpg")
                         .build();
 
                 userRepository.save(user1);
@@ -45,6 +47,7 @@ public class NotProd {
                         .id(2L)
                         .username("user2")
                         .steamId("8888888888")
+                        .temperature(36)
                         .build();
 
                 userRepository.save(user2);
