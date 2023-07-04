@@ -17,7 +17,16 @@
 <div class="container">
     <h1 class="my-4">나의 게임 목록</h1>
     <a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${1}}">좋아요</a><a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${0}}">싫어요</a><div th:text="${targetUser.getTemperature()}"></div>
+    <div th:if="${loginedId == targetUser.getId()}">
+        <tr th:each="friend: ${friendsList}">
 
+            <td th:text="${friend.getFriend().getId()}"></td>
+            <td th:text="${friend.getFriend().getUsername()}"></td>
+            <td>
+                <img th:src="${friend.getFriend().getAvatar()}">
+            </td>
+        </tr>
+    </div>
     <table class="table table-striped">
         <thead>
         <tr>

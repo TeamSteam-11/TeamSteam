@@ -2,6 +2,7 @@ package com.ll.TeamSteam.domain.user.controller;
 
 
 
+import com.ll.TeamSteam.domain.friend.entity.Friend;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
 import com.ll.TeamSteam.domain.steam.service.SteamService;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -224,12 +226,13 @@ public class UserController {
             User targetUser = userService.findById(userId).orElseThrow();
             RsData<List<SteamGameLibrary>> haveGameListData = steamService.getUserGameList(targetUser.getSteamId());
             List<SteamGameLibrary> haveGameList = haveGameListData.getData();
-
+            List<Friend> friendsList = userService.getFriends(user.getId());
             model.addAttribute("gameList", haveGameList);
 
             long loginedId = user.getId();//프로필 본인인지 아닌지 검증하는 용도
             model.addAttribute("targetUser", targetUser);
             model.addAttribute("loginedId", loginedId);
+            model.addAttribute("friendsList",friendsList);
 
             return "user/profile";
 

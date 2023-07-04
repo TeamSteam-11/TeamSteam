@@ -15,6 +15,7 @@ import com.ll.TeamSteam.domain.userTag.UserTag;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTag;
 import com.ll.TeamSteam.domain.userTag.genreTag.GenreTag;
 import com.ll.TeamSteam.global.rsData.RsData;
+import com.ll.TeamSteam.global.security.SecurityUser;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -169,11 +170,11 @@ public class UserService {
         //서로 저장
         Friend meToFriends = Friend.builder()
                 .user(findByIdElseThrow(loginedId))
-                .friendId(targetId)
+                .friend(findByIdElseThrow(targetId))
                 .build();
         Friend friendToMe = Friend.builder()
                 .user(findByIdElseThrow(targetId))
-                .friendId(loginedId)
+                .friend(findByIdElseThrow(loginedId))
                 .build();
 
 
@@ -200,5 +201,9 @@ public class UserService {
                 gameTagRepository.save(gameTag);
             }
         }
+    }
+
+    public List<Friend> getFriends(Long userId) {
+        return friendRepository.findAllByUserId(userId);
     }
 }
