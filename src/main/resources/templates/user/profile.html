@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>프로필</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+</head>
+<body>
+<div>
+    <form>
+        <button th:if="${loginedId == targetUser.getId()}" type="submit" class="btn btn-primary">Edit Tag</button>
+    </form>
+        <form th:action="@{/user/profile/{userId}/addFriend(userId=${targetUser.id})}" method="post">
+        <button th:if="${loginedId != targetUser.getId()}" type="submit" class="btn btn-primary">친구추가</button>
+    </form>
+</div>
+<div class="container">
+    <h1 class="my-4">나의 게임 목록</h1>
+    <a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${1}}">좋아요</a><a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${0}}">싫어요</a><div th:text="${targetUser.getTemperature()}"></div>
+    <div th:if="${loginedId == targetUser.getId()}">
+        <tr th:each="friend: ${friendsList}">
+
+            <td th:text="${friend.getFriend().getId()}"></td>
+            <td th:text="${friend.getFriend().getUsername()}"></td>
+            <td>
+                <img th:src="${friend.getFriend().getAvatar()}">
+            </td>
+        </tr>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>게임 이름</th>
+            <th>AppID</th>
+            <th>이미지</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="game : ${gameList}">
+            <td th:text="${game.name}"></td>
+            <td th:text="${game.appid}"></td>
+            <td>
+                <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${game.appid} + '/header.jpg'}"
+                     alt="게임 이미지" width="200" height="auto"/>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

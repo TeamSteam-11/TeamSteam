@@ -2,10 +2,12 @@ package com.ll.TeamSteam.domain.user.controller;
 
 
 
+import com.ll.TeamSteam.domain.friend.entity.Friend;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
 import com.ll.TeamSteam.domain.steam.service.SteamService;
 import com.ll.TeamSteam.domain.user.entity.Gender;
+import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.rsData.RsData;
@@ -29,12 +31,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -104,7 +105,9 @@ public class UserController {
 
         log.info("isTrue = {} ", isTrue);
         if (!isTrue) {
-            return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=http://localhost:8080/login/check&openid.realm=http://localhost:8080&openid.mode=checkid_setup";
+            //위가 로컬 아래가 prod
+//            return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=http://localhost:8080/login/check&openid.realm=http://localhost:8080&openid.mode=checkid_setup";
+            return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=https://www.teamsteam.site/login/check&openid.realm=https://www.teamsteam.site&openid.mode=checkid_setup";
         }
 
         Pattern pattern = Pattern.compile("\\d+");
@@ -216,5 +219,45 @@ public class UserController {
 
         return steamService.getUserInformation(steamId);
     }
+
+
+        @GetMapping(value = "/user/profile/{userId}", produces = MediaType.TEXT_HTML_VALUE)
+        public String userGameListSave(@PathVariable long userId, @AuthenticationPrincipal SecurityUser user, Model model) throws ParseException {
+
+
+            User targetUser = userService.findById(userId).orElseThrow();
+            RsData<List<SteamGameLibrary>> haveGameListData = steamService.getUserGameList(targetUser.getSteamId());
+            List<SteamGameLibrary> haveGameList = haveGameListData.getData();
+            List<Friend> friendsList = userService.getFriends(user.getId());
+            model.addAttribute("gameList", haveGameList);
+
+            long loginedId = user.getId();//프로필 본인인지 아닌지 검증하는 용도
+            model.addAttribute("targetUser", targetUser);
+            model.addAttribute("loginedId", loginedId);
+            model.addAttribute("friendsList",friendsList);
+
+            return "user/profile";
+
+        }
+
+    @GetMapping("/user/profile/{userId}/{like}")
+    public String getLike(@PathVariable long userId, @PathVariable int like, RedirectAttributes redirectAttributes){
+        userService.updateTemperature(userId, like);
+
+        redirectAttributes.addAttribute("userId", userId);
+        return "redirect:/user/profile/{userId}";
+    }
+
+
+    @PostMapping("/user/profile/{userId}/addFriend")
+    public String friend(@PathVariable long userId, @AuthenticationPrincipal SecurityUser user){
+        long targetId = userId;
+        long loginedId = user.getId();
+        userService.addFriends(targetId, loginedId);
+
+        return "redirect:/user/profile/" + userId;
+    }
+
+
 }
 

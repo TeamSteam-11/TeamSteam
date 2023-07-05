@@ -35,17 +35,17 @@ public class ChatRoom extends BaseEntity {
 
     private String name;
 
-    @OneToOne(fetch = LAZY)
+    @OneToOne(fetch = LAZY, cascade = PERSIST, orphanRemoval = true)
     private Matching matching;
 
     @ManyToOne(fetch = LAZY)
     private User owner;
 
-    @OneToMany(mappedBy = "chatRoom",  cascade = PERSIST)
+    @OneToMany(mappedBy = "chatRoom",  cascade = PERSIST, orphanRemoval = true)
     @Builder.Default
     private Set<ChatUser> chatUsers = new HashSet<>();
 
-    @OneToMany(mappedBy = "chatRoom",  cascade = PERSIST)
+    @OneToMany(mappedBy = "chatRoom",  cascade = PERSIST, orphanRemoval = true)
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
     public static ChatRoom create(String name, Matching matching, User owner) {

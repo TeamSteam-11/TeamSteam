@@ -14,7 +14,9 @@
 </head>
 <body layout:fragment="content">
 <!--<h1>상품 등록</h1>-->
-<form th:object="${createForm}" th:action="@{'/match/modify/' + ${matching.id}}" method="POST" style="margin: 10px 40px">
+<form th:object="${createForm}" method="POST" style="margin: 10px 40px">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
     <label for="title">제목 :</label><br>
     <input type="text" id="title" th:field="*{title}" th:value="${matching.getTitle()}"><br><br>
 

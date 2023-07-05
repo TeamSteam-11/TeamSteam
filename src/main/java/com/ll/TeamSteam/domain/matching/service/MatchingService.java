@@ -49,13 +49,8 @@ public class MatchingService {
         return matchingRepository.findAll();
     }
 
-    public Matching findById(Long id) {
-        Optional<Matching> matching = matchingRepository.findById(id);
-
-        // 존재하지 않는 매칭의 id가 입력되는 경우 에러 처리
-        if (matching.isPresent() == false) throw new NoSuchElementException("매칭이 존재하지 않습니다.");
-
-        return matching.get();
+    public Optional<Matching> findById(Long id) {
+        return matchingRepository.findById(id);
     }
 
     @Transactional
@@ -64,15 +59,9 @@ public class MatchingService {
     }
 
     @Transactional
-    public RsData<Matching> modify(Matching matching, User user, @Valid MatchingController.CreateForm createForm) {
+    public RsData<Matching> modify(Matching matching, String title, String content, Long capacity, int startTime, int endTime) {
         try {
-            matching.setUser(user);
-            matching.setTitle(createForm.getTitle());
-            matching.setContent(createForm.getContent());
-            matching.setCapacity(createForm.getCapacity());
-            matching.setStartTime(createForm.getStartTime());
-            matching.setEndTime(createForm.getEndTime());
-
+            matching.update(title, content, capacity, startTime, endTime);
             matchingRepository.save(matching);
 
             return RsData.of("S-1", "매칭이 수정되었습니다", matching);
@@ -81,5 +70,4 @@ public class MatchingService {
             return RsData.of("F-1", "매칭 수정 중 오류가 발생했습니다.");
         }
     }
-
 }

@@ -1,5 +1,7 @@
 package com.ll.TeamSteam.domain.user.service;
 
+import com.ll.TeamSteam.domain.friend.entity.Friend;
+import com.ll.TeamSteam.domain.friend.repository.FriendRepository;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
 import com.ll.TeamSteam.domain.steam.repository.SteamGameLibraryRepository;
@@ -13,6 +15,7 @@ import com.ll.TeamSteam.domain.userTag.UserTag;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTag;
 import com.ll.TeamSteam.domain.userTag.genreTag.GenreTag;
 import com.ll.TeamSteam.global.rsData.RsData;
+import com.ll.TeamSteam.global.security.SecurityUser;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,12 +45,13 @@ public class UserService {
 
     private final SteamGameLibraryRepository steamGameLibraryRepository;
 
+    private final FriendRepository friendRepository;
+
 
     @Transactional(readOnly = true)
     public Optional<User> findBySteamId(String steamId) {
         return userRepository.findBySteamId(steamId);
     }
-
 
 
     @Transactional
@@ -65,7 +69,7 @@ public class UserService {
         GameTag gameTag = GameTag.builder().userTag(userTag).build();
         gameTagRepository.save(gameTag);
 
-        SteamGameLibrary steamGameLibrary =SteamGameLibrary.builder().user(createdUser).build();
+        SteamGameLibrary steamGameLibrary = SteamGameLibrary.builder().user(createdUser).build();
         steamGameLibraryRepository.save(steamGameLibrary);
     }
 
@@ -75,7 +79,7 @@ public class UserService {
         String steamId = userInfo.getResponse().getPlayers().get(0).getSteamid();
         String avatar = userInfo.getResponse().getPlayers().get(0).getAvatarmedium();
 
-        User user = new User(username,steamId,avatar);
+        User user = new User(username, steamId, avatar);
         user.setTemperature(36);
         user.setType(Gender.Wait);
 
@@ -87,7 +91,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserData(String gender, List<GenreTagType> genreTagTypes,  Long id){
+    public void updateUserData(String gender, List<GenreTagType> genreTagTypes, Long id) {
 
         User user = findById(id).orElseThrow();
         UserTag userTag = userTagRepository.findByUserId(id).orElseThrow();
@@ -116,8 +120,8 @@ public class UserService {
 
     }
 
-    public Optional<User> findById(Long id){
-        return userRepository.findById(id);
+    public Optional<User> findById(Long userId) {
+        return userRepository.findById(userId);
     }
 
 
@@ -130,15 +134,52 @@ public class UserService {
                 .name(game.getName())
                 .user(userRepository.findBySteamId(steamId).orElseThrow())
                 .build();
+
             gameLibraries.add(newGameLibrary);
         }
 
         steamGameLibraryRepository.saveAll(gameLibraries);
     }
 
+    @Transactional
+    public void updateTemperature(long userId, int like) {
+        log.info("like = {} ", like);
+//        log.info("user.getTemperature = {}", user.getTemperature());
+        User user = findById(userId).orElseThrow();
+        int updateTemperature = user.getTemperature();
+
+        if (like == 1) {
+            updateTemperature++;
+        }
+        if (like == 0) {
+            updateTemperature--;
+        }
+
+        user.setTemperature(updateTemperature);
+
+        userRepository.save(user);
+    }
+
 
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public void addFriends(Long targetId,Long loginedId){
+
+        //서로 저장
+        Friend meToFriends = Friend.builder()
+                .user(findByIdElseThrow(loginedId))
+                .friend(findByIdElseThrow(targetId))
+                .build();
+        Friend friendToMe = Friend.builder()
+                .user(findByIdElseThrow(targetId))
+                .friend(findByIdElseThrow(loginedId))
+                .build();
+
+
+        friendRepository.save(meToFriends);
+        friendRepository.save(friendToMe);
     }
 
     public void saveSelectedGames(List<Integer> selectedGames, String steamId) {
@@ -160,5 +201,9 @@ public class UserService {
                 gameTagRepository.save(gameTag);
             }
         }
+    }
+
+    public List<Friend> getFriends(Long userId) {
+        return friendRepository.findAllByUserId(userId);
     }
 }
