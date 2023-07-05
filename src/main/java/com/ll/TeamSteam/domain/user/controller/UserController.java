@@ -108,7 +108,7 @@ public class UserController {
 
         log.info("isTrue = {} ", isTrue);
         if (!isTrue) {
-             return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=${custom.site.baseUrl}/login/check&openid.realm=${custom.site.baseUrl}&openid.mode=checkid_setup";
+             return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to="+baseUrl+"/login/check&openid.realm="+baseUrl+"&openid.mode=checkid_setup";
         }
 
         Pattern pattern = Pattern.compile("\\d+");
