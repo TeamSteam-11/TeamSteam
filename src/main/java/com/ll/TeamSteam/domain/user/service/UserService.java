@@ -125,8 +125,19 @@ public class UserService {
     }
 
 
-    public void saveGameList(List<SteamGameLibrary> gameList, String steamId) {
+    @Transactional
+    public void updateGameList(List<SteamGameLibrary> gameList, String steamId) {
         List<SteamGameLibrary> gameLibraries = new ArrayList<>();
+
+        User user = findBySteamId(steamId).orElseThrow();
+        Long userId = user.getId();
+        UserTag userTag = userTagRepository.findByUserId(userId).orElseThrow();
+        gameTagRepository.deleteAll(userTag.getGameTag());
+        if(!steamGameLibraryRepository.findAllByUserId(userId).isEmpty()){
+            log.info("steamGameLibraryRepository.findAllByUserId(userId).isEmpty() = {}", steamGameLibraryRepository.findAllByUserId(userId).isEmpty());
+            log.info("userId = {}", userId);
+            steamGameLibraryRepository.deleteByUserId(userId);
+        }
 
         for (SteamGameLibrary game : gameList) {
             SteamGameLibrary newGameLibrary = SteamGameLibrary.builder()

@@ -104,8 +104,8 @@ public class UserController {
         log.info("isTrue = {} ", isTrue);
         if (!isTrue) {
             //위가 로컬 아래가 prod
-            // return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=http://localhost:8080/login/check&openid.realm=http://localhost:8080&openid.mode=checkid_setup";
-             return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=https://www.teamsteam.site/login/check&openid.realm=https://www.teamsteam.site&openid.mode=checkid_setup";
+             return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=http://localhost:8080/login/check&openid.realm=http://localhost:8080&openid.mode=checkid_setup";
+//             return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=https://www.teamsteam.site/login/check&openid.realm=https://www.teamsteam.site&openid.mode=checkid_setup";
         }
 
         Pattern pattern = Pattern.compile("\\d+");
@@ -160,7 +160,7 @@ public class UserController {
         String steamId = user.getSteamId();
         RsData<List<SteamGameLibrary>> haveGameListData = steamService.getUserGameList(steamId);
             List<SteamGameLibrary> haveGameList = haveGameListData.getData();
-            userService.saveGameList(haveGameList, steamId);
+            userService.updateGameList(haveGameList, steamId);
 
             model.addAttribute("gameList",haveGameList);
 
@@ -255,5 +255,12 @@ public class UserController {
 
         return "redirect:/user/profile/" + userId;
     }
+
+    @PostMapping("/user/profile/editprofile")
+    public String editProfile(){
+        return "user/createGenre";
+    }
+
+
 
 }
