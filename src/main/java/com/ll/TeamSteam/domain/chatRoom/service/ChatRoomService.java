@@ -8,8 +8,6 @@ import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUserType;
 import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
-import com.ll.TeamSteam.domain.notification.entity.Notification;
-import com.ll.TeamSteam.domain.notification.repository.NotificationRepository;
 import com.ll.TeamSteam.domain.notification.service.NotificationService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
@@ -24,8 +22,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 

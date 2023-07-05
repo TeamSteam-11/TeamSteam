@@ -108,7 +108,7 @@ public class ChatRoomController {
     @PostMapping("/rooms/{roomId}")
     public String removeRoom(@PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user) {
         chatRoomService.remove(roomId, user.getId());
-        return "redirect:matching/list";
+        return "redirect:/match/list";
     }
 
     /**
