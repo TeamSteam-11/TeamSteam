@@ -16,13 +16,19 @@
             border-radius: 10px;
             text-decoration: none;
         }
+
+        .btn-custom {
+            float: right;
+            margin-top: 30px;
+            margin-right: 80px;
+        }
     </style>
 </head>
 <body>
 
 <main layout:fragment="main">
 
-<a href="/match/create" class="btn">매칭 등록</a><br><br>
+<a href="/match/create" class="btn btn-custom">매칭 등록</a><br><br>
 
 <div style="display: flex; justify-content: center; flex-wrap: wrap; width: 100%">
     <a th:each="matching : ${matchingList}" th:href="@{|/match/detail/${matching.id}|}"
