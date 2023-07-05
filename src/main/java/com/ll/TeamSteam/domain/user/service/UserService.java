@@ -86,6 +86,7 @@ public class UserService {
         return user;
     }
 
+    @Transactional(readOnly = true)
     public User findByIdElseThrow(Long ownerId) {
         return userRepository.findById(ownerId).orElseThrow();
     }
@@ -120,6 +121,7 @@ public class UserService {
 
     }
 
+    @Transactional(readOnly = true)
     public Optional<User> findById(Long userId) {
         return userRepository.findById(userId);
     }
@@ -172,10 +174,12 @@ public class UserService {
     }
 
 
+    @Transactional(readOnly = true)
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public void addFriends(Long targetId,Long loginedId){
 
         if(!isFriend(targetId, loginedId)) {//친구가 아닐 때
@@ -208,6 +212,7 @@ public class UserService {
         return false;
     }
 
+    @Transactional
     public void saveSelectedGames(List<Integer> selectedGames, String steamId) {
 
         User user = userRepository.findBySteamId(steamId).orElseThrow();
@@ -229,6 +234,7 @@ public class UserService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Friend> getFriends(Long userId) {
         return friendRepository.findAllByUserId(userId);
     }
