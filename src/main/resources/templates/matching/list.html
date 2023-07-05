@@ -1,10 +1,13 @@
-<!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{common/layout}">
+<html layout:decorate="~{common/layout.html}">
 
 <head>
     <meta charset="UTF-8">
     <title>MatchingPage</title>
     <style>
+        body {
+            color:white;
+        }
+
         .btn {
             padding: 5px 10px;
             white-space: nowrap;
@@ -17,9 +20,9 @@
 </head>
 <body>
 
-<a href="/match/create" class="btn">매칭 등록</a><br><br>
+<main layout:fragment="main">
 
-<h1>매칭 목록 페이지</h1>
+<a href="/match/create" class="btn">매칭 등록</a><br><br>
 
 <div style="display: flex; justify-content: center; flex-wrap: wrap; width: 100%">
     <a th:each="matching : ${matchingList}" th:href="@{|/match/detail/${matching.id}|}"
@@ -55,5 +58,6 @@
     </a>
 </div>
 
+</main>
 </body>
 </html>
