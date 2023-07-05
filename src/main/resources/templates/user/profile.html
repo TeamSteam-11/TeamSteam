@@ -1,11 +1,13 @@
+<html >
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{common/layout.html}">
 <head>
     <meta charset="UTF-8"/>
     <title>프로필</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
 </head>
 <body>
+<main layout:fragment="main">
 <div>
     <form>
         <button th:if="${loginedId == targetUser.getId()}" type="submit" class="btn btn-primary">Edit Tag</button>
@@ -15,8 +17,21 @@
     </form>
 </div>
 <div class="container">
-    <h1 class="my-4">나의 게임 목록</h1>
-    <a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${1}}">좋아요</a><a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${0}}">싫어요</a><div th:text="${targetUser.getTemperature()}"></div>
+    <img th:src="${targetUser.getAvatar()}">
+    <h1 class="my-4" th:text="${targetUser.getUsername()} + '의 프로필'" style="color: #dddddd;"></h1>
+    <table>
+        <tr th:if="${!targetUser.getUserTag().getGameTag.isEmpty()}" th:each="targetUserGameTag : ${targetUser.getUserTag().gameTag}">
+            <td><div class="badge bg-sky-500 badge-accent" th:text="${targetUserGameTag.getName()}"></div></td>
+        </tr>
+        <tr th:if="${!targetUser.getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${targetUser.getUserTag().genreTag}">
+            <td><div class="badge bg-green-500 badge-accent" th:text="${targetUserGenreTag.getGenre()}"></div></td>
+        </tr>
+    </table>
+    <a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${1}}" style="color: #dddddd">좋아요</a>
+    <a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${0}}" style="color: #dddddd">싫어요</a>
+    <div><progress class="progress progress-accent w-56" th:value="${targetUser.getTemperature()}" max="100"></progress></div>
+<!--    <div th:text="${targetUser.getTemperature()}"></div>-->
+
     <div th:if="${loginedId == targetUser.getId()}">
         <tr th:each="friend: ${friendsList}">
 
@@ -47,6 +62,6 @@
         </tbody>
     </table>
 </div>
-
+</main>
 </body>
 </html>

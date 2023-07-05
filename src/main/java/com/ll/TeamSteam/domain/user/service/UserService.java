@@ -142,7 +142,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateTemperature(long userId, int like) {
+    public void updateTemperature(Long userId, int like) {
         log.info("like = {} ", like);
 //        log.info("user.getTemperature = {}", user.getTemperature());
         User user = findById(userId).orElseThrow();
@@ -167,19 +167,34 @@ public class UserService {
 
     public void addFriends(Long targetId,Long loginedId){
 
-        //서로 저장
-        Friend meToFriends = Friend.builder()
-                .user(findByIdElseThrow(loginedId))
-                .friend(findByIdElseThrow(targetId))
-                .build();
-        Friend friendToMe = Friend.builder()
-                .user(findByIdElseThrow(targetId))
-                .friend(findByIdElseThrow(loginedId))
-                .build();
+        if(!isFriend(targetId, loginedId)) {//친구가 아닐 때
+            //서로 저장
+            Friend meToFriends = Friend.builder()
+                    .user(findByIdElseThrow(loginedId))
+                    .friend(findByIdElseThrow(targetId))
+                    .build();
+            Friend friendToMe = Friend.builder()
+                    .user(findByIdElseThrow(targetId))
+                    .friend(findByIdElseThrow(loginedId))
+                    .build();
 
 
-        friendRepository.save(meToFriends);
-        friendRepository.save(friendToMe);
+            friendRepository.save(meToFriends);
+            friendRepository.save(friendToMe);
+        }
+        else{//친구일 때
+
+
+        }
+    }
+
+    public boolean isFriend(Long targetId, Long loginedId){
+        List<Friend> friends = getFriends(loginedId);
+
+        for(Friend friend : friends){
+            if(friend.getFriend().getId() == targetId) return true;
+        }
+        return false;
     }
 
     public void saveSelectedGames(List<Integer> selectedGames, String steamId) {
