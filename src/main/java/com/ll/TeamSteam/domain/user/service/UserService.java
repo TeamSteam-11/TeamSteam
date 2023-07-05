@@ -179,7 +179,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void addFriends(Long targetId,Long loginedId){
 
         if(!isFriend(targetId, loginedId)) {//친구가 아닐 때
