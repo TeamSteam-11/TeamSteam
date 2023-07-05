@@ -127,9 +127,10 @@
                                         class="h-full flex items-center px-2" th:if="${@rq.logout}">
                                     <span>로그인</span>
                                 </a>
-                                <a href="#"
-                                   class="h-full flex items-center px-2" th:if="${@rq.login}">
+                                <a href="/user/logout"
+                                   class="h-full flex items-center px-2" th:if="${@rq.login}" >
                                     <span>로그아웃</span>
+
                                 </a>
                             </li>
                         </ul>
