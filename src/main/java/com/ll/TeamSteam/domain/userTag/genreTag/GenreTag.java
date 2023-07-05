@@ -8,10 +8,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
+@Getter
 @RequiredArgsConstructor
 @SuperBuilder
 public class GenreTag extends BaseEntity {
