@@ -12,6 +12,7 @@ html > body {
     background-color: #1D2939;
     padding-top:var(--top-bar__height);
     height:100vh;
+    color: white;
 }
 
 :root {
