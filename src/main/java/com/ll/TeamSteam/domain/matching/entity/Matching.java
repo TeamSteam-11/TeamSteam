@@ -2,19 +2,14 @@ package com.ll.TeamSteam.domain.matching.entity;
 
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
-import com.ll.TeamSteam.domain.matchingTag.entity.MatchingTag;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalUnit;
-import java.util.ArrayList;
-import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
 

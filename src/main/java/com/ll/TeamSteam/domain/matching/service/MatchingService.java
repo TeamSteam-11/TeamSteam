@@ -1,23 +1,16 @@
 package com.ll.TeamSteam.domain.matching.service;
 
-import com.fasterxml.jackson.databind.deser.DataFormatReaders;
-import com.ll.TeamSteam.domain.matching.controller.MatchingController;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.entity.User;
-import com.ll.TeamSteam.domain.userTag.UserTag;
-import com.ll.TeamSteam.domain.userTag.genreTag.GenreTag;
 import com.ll.TeamSteam.global.rsData.RsData;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.sql.model.jdbc.OptionalTableUpdateOperation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service

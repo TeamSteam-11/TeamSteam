@@ -2,10 +2,8 @@ package com.ll.TeamSteam.domain.matching.controller;
 
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
-import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
-import com.ll.TeamSteam.domain.user.controller.UserController;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTag;
 import com.ll.TeamSteam.domain.userTag.genreTag.GenreTag;
