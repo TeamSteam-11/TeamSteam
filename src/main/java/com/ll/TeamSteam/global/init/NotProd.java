@@ -4,6 +4,7 @@ import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
+import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
 import com.ll.TeamSteam.domain.user.service.UserService;
@@ -35,10 +36,9 @@ public class NotProd {
             public void run(String... args) throws Exception {
                 User user1 = User.builder()
                         .id(1L)
-                        .username("핵귤")
-                        .steamId("76561199121470467")
+                        .username("user1")
+                        .steamId("13513513124")
                         .temperature(36)
-                        .avatar("https://avatars.steamstatic.com/79915b7e057fe79132264d80a180056c0468b581_medium.jpg")
                         .build();
 
                 userRepository.save(user1);
@@ -55,15 +55,15 @@ public class NotProd {
                 log.info("user1 = {}", user1);
 
                 Matching matching1 = matchingService.create(user1, "오늘 한강에서 러닝하실 분 구합니다!!",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", 8L, 8, 10, null);
+                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),199932, 8L, 8, 10, null);
                 Matching matching2 = matchingService.create(user2, "오늘 한강에서 러닝하실 분 구합니다!!",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", 4L, 7, 9, null);
+                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),22222, 4L, 7, 9, null);
                 Matching matching3 = matchingService.create(user1, "도ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ",
-                        "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ", 5L, 17, 19, null);
+                        "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ", GenreTagType.valueOf("삼인칭슈팅"),13579, 5L, 17, 19, null);
                 Matching matching4 = matchingService.create(user2, "ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", 4L, 18, 20, null);
+                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),50000, 4L, 18, 20, null);
                 Matching matching5 = matchingService.create(user2, "코코코콬코코코코코코콬",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", 4L, 20, 22, null);
+                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
 
                 log.info("matching1 = {}", matching1);
                 log.info("matching2 = {}", matching2);

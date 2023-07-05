@@ -221,4 +221,5 @@ public class UserService {
     public List<Friend> getFriends(Long userId) {
         return friendRepository.findAllByUserId(userId);
     }
+
 }

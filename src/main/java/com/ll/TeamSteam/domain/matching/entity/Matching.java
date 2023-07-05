@@ -1,6 +1,7 @@
 package com.ll.TeamSteam.domain.matching.entity;
 
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
+import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.matchingTag.entity.MatchingTag;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
@@ -24,8 +25,12 @@ import static jakarta.persistence.FetchType.LAZY;
 public class Matching extends BaseEntity {
 
     private String title;
-
     private String content;
+
+    @Enumerated(EnumType.STRING)
+    private GenreTagType genre;
+
+    private Integer gameTagId;
 
     private Long capacity; // 모집 인원
 
@@ -40,9 +45,6 @@ public class Matching extends BaseEntity {
     @OneToOne(mappedBy = "matching", fetch = LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ChatRoom chatRoom;
 
-    @OneToMany(mappedBy = "matching", cascade = CascadeType.ALL)
-    private List<MatchingTag> matchingTagList = new ArrayList<>();
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -54,4 +56,5 @@ public class Matching extends BaseEntity {
         this.startTime = startTime;
         this.endTime = endTime;
     }
+
 }

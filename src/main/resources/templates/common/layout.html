@@ -121,46 +121,46 @@
             </li>
             <li class="menu-1__li-join">
 <!--                로컬환경 위 | prod 아래-->
-<!--                <a href="https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=http://localhost:8080/login/check&openid.realm=http://localhost:8080&openid.mode=checkid_setup"-->
-<!--                   class="h-full flex items-center px-2" th:if="${@rq.logout}">-->
-                    <a href="https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=https://www.teamsteam.site/login/check&openid.realm=https://www.teamsteam.site&openid.mode=checkid_setup"
-                       class="h-full flex items-center px-2" th:if="${@rq.logout}">
-                    <span>로그인</span>
-                </a>
-                <a href="#"
-                   class="h-full flex items-center px-2" th:if="${@rq.login}">
-                    <span>로그아웃</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-</header>
+                <a href="https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=http://localhost:8080/login/check&openid.realm=http://localhost:8080&openid.mode=checkid_setup"
+                 class="h-full flex items-center px-2" th:if="${@rq.logout}">-->
+<!--                     <a href="https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=https://www.teamsteam.site/login/check&openid.realm=https://www.teamsteam.site&openid.mode=checkid_setup"-->
+<!--                                        class="h-full flex items-center px-2" th:if="${@rq.logout}">-->
+                                    <span>로그인</span>
+                                </a>
+                                <a href="#"
+                                   class="h-full flex items-center px-2" th:if="${@rq.login}">
+                                    <span>로그아웃</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </header>
 
-<main layout:fragment="main"></main>
-<script th:inline="javascript">
-    // 타임리프 문법(파라미터, ? 뒤에 입력된 매개변수들)
-    const params = /*[[ ${param} ]]*/ null;
-    if (params.msg) {
-        toastNotice(params.msg[0]);
-    }
-    if (params.errorMsg) {
-        toastWarning(params.errorMsg[0]);
-    }
-    // history.back 에 의해서 돌아온 경우에 실행됨
-    // 평소에도 실행됨
-    $(window).bind("pageshow", function (event) {
-        const localStorageKeyAboutHistoryBackErrorMsg = "historyBackErrorMsg___" + location.href;
-        if (localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg)) {
-            toastWarning(localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg));
-            localStorage.removeItem(localStorageKeyAboutHistoryBackErrorMsg);
-        } else if ( !document.referrer ) {
-            const localStorageKeyAboutHistoryBackErrorMsg = "historyBackErrorMsg___null";
-            if (localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg)) {
-                toastWarning(localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg));
-                localStorage.removeItem(localStorageKeyAboutHistoryBackErrorMsg);
-            }
-        }
-    });
-</script>
-</body>
-</html>
+                <main layout:fragment="main"></main>
+                <script th:inline="javascript">
+                    // 타임리프 문법(파라미터, ? 뒤에 입력된 매개변수들)
+                    const params = /*[[ ${param} ]]*/ null;
+                    if (params.msg) {
+                        toastNotice(params.msg[0]);
+                    }
+                    if (params.errorMsg) {
+                        toastWarning(params.errorMsg[0]);
+                    }
+                    // history.back 에 의해서 돌아온 경우에 실행됨
+                    // 평소에도 실행됨
+                    $(window).bind("pageshow", function (event) {
+                        const localStorageKeyAboutHistoryBackErrorMsg = "historyBackErrorMsg___" + location.href;
+                        if (localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg)) {
+                            toastWarning(localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg));
+                            localStorage.removeItem(localStorageKeyAboutHistoryBackErrorMsg);
+                        } else if ( !document.referrer ) {
+                            const localStorageKeyAboutHistoryBackErrorMsg = "historyBackErrorMsg___null";
+                            if (localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg)) {
+                                toastWarning(localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg));
+                                localStorage.removeItem(localStorageKeyAboutHistoryBackErrorMsg);
+                            }
+                        }
+                    });
+                </script>
+                </body>
+                </html>

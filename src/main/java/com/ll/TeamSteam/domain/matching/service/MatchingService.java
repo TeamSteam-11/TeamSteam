@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.deser.DataFormatReaders;
 import com.ll.TeamSteam.domain.matching.controller.MatchingController;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
+import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.entity.User;
+import com.ll.TeamSteam.domain.userTag.UserTag;
+import com.ll.TeamSteam.domain.userTag.genreTag.GenreTag;
 import com.ll.TeamSteam.global.rsData.RsData;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +26,14 @@ public class MatchingService {
     public final MatchingRepository matchingRepository;
 
     // 매칭 등록 기능
-    public Matching create(User user, String title, String content, Long capacity, int startTime, int endTime, LocalDateTime deadlineDate) {
+    public Matching create(User user, String title, String content, GenreTagType genreTag, Integer gameTagId, Long capacity, int startTime, int endTime, LocalDateTime deadlineDate) {
         Matching matching = Matching
                 .builder()
                 .user(user)
                 .title(title)
                 .content(content)
+                .genre(genreTag)
+                .gameTagId(gameTagId)
                 .capacity(capacity)
                 .startTime(startTime)
                 .endTime(endTime)

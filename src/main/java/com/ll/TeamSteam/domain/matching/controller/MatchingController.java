@@ -4,11 +4,15 @@ import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
-import com.ll.TeamSteam.domain.user.entity.User;
+import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
+import com.ll.TeamSteam.domain.user.controller.UserController;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
+import com.ll.TeamSteam.domain.userTag.gameTag.GameTag;
+import com.ll.TeamSteam.domain.userTag.genreTag.GenreTag;
 import com.ll.TeamSteam.global.rq.Rq;
 import com.ll.TeamSteam.global.rsData.RsData;
 import com.ll.TeamSteam.global.security.SecurityUser;
+import com.ll.TeamSteam.domain.user.entity.User;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,28 +31,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/match")
 public class MatchingController {
     private final Rq rq;
     private final MatchingService matchingService;
-    private final MatchingRepository matchingRepository;
     private final UserRepository userRepository;
     private final ChatRoomService chatRoomService;
 
     @GetMapping("/list")
     public String matchingList(Model model) {
         List<Matching> matchingList = matchingService.getMachingList();
+
         model.addAttribute("matchingList", matchingList);
 
         return "matching/list";
     }
 
     @GetMapping("/create")
-    public String matchingCreate(Model model) {
+    public String matchingCreate(@AuthenticationPrincipal SecurityUser user, Model model) {
         // CreateForm 객체를 모델에 추가
         model.addAttribute("createForm", new CreateForm());
+        List<GameTag> userGameTags = userRepository.findById(user.getId()).orElseThrow().getUserTag().getGameTag();
+        List<GenreTag> userGenreTags = userRepository.findById(user.getId()).orElseThrow().getUserTag().getGenreTag();
+        model.addAttribute("userGameTags", userGameTags);
+        model.addAttribute("userGenreTags", userGenreTags);
 
         return "matching/create";
     }
@@ -60,6 +69,8 @@ public class MatchingController {
     public static class CreateForm {
         private String title;
         private String content;
+        private GenreTagType genre;
+        private Integer gameTagId;
         private Long capacity;
         private int startTime;
         private int endTime;
@@ -68,6 +79,8 @@ public class MatchingController {
         public CreateForm() {
             this.title = "제목";
             this.content = "내용";
+            this.genre =GenreTagType.valueOf("삼인칭슈팅");
+            this.gameTagId=1;
             this.capacity = 1L;
             this.startTime = 0;
             this.endTime = 24;
@@ -82,7 +95,7 @@ public class MatchingController {
 
         if (bindingResult.hasErrors()) {
             // 유효성 검사 오류가 있을 시 등록 페이지로 다시 이동
-            return "match/create";
+            return "redirect:/match/create";
         }
 
         Long userId = user.getId();
@@ -106,6 +119,8 @@ public class MatchingController {
                 user1,
                 createForm.getTitle(),
                 createForm.getContent(),
+                createForm.getGenre(),
+                createForm.getGameTagId(),
                 createForm.getCapacity(),
                 createForm.getStartTime(),
                 createForm.getEndTime(),
@@ -117,6 +132,8 @@ public class MatchingController {
             throw new IllegalArgumentException("게시글이 작성되지 않았습니다.");
             // return "match/create";
         }
+
+
 
         chatRoomService.createAndConnect(createForm.getTitle(), createRsData, user.getId());
 
