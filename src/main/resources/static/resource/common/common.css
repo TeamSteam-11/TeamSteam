@@ -11,7 +11,7 @@ html > body {
     word-break: keep-all;
     background-color: #1D2939;
     padding-top:var(--top-bar__height);
-    height:100vh;
+    min-height:100vh;
     color: white;
 }
 
