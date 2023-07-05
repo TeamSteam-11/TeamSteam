@@ -8,7 +8,6 @@ import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
 import com.ll.TeamSteam.domain.steam.service.SteamService;
 import com.ll.TeamSteam.domain.user.entity.Gender;
 import com.ll.TeamSteam.domain.user.entity.User;
-import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.rsData.RsData;
 import com.ll.TeamSteam.global.security.SecurityUser;
@@ -24,7 +23,6 @@ import net.minidev.json.parser.ParseException;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,7 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -106,8 +104,8 @@ public class UserController {
         log.info("isTrue = {} ", isTrue);
         if (!isTrue) {
             //위가 로컬 아래가 prod
-//            return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=http://localhost:8080/login/check&openid.realm=http://localhost:8080&openid.mode=checkid_setup";
-            return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=https://www.teamsteam.site/login/check&openid.realm=https://www.teamsteam.site&openid.mode=checkid_setup";
+            // return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=http://localhost:8080/login/check&openid.realm=http://localhost:8080&openid.mode=checkid_setup";
+             return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=https://www.teamsteam.site/login/check&openid.realm=https://www.teamsteam.site&openid.mode=checkid_setup";
         }
 
         Pattern pattern = Pattern.compile("\\d+");
@@ -257,4 +255,5 @@ public class UserController {
 
         return "redirect:/user/profile/" + userId;
     }
+
 }
