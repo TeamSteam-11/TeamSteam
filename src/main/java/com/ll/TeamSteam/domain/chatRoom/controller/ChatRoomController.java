@@ -13,7 +13,6 @@ import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.rq.Rq;
 import com.ll.TeamSteam.global.rsData.RsData;
 import com.ll.TeamSteam.global.security.SecurityUser;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,7 +139,7 @@ public class ChatRoomController {
         chatRoomService.exitChatRoom(roomId, user.getId());
         chatRoomService.changeParticipant(chatRoom);
 
-        return "redirect:/matching/list";
+        return "redirect:/match/list";
     }
 
     // 방장이 유저 강퇴시키기
@@ -155,7 +153,7 @@ public class ChatRoomController {
         Long chatRoomId = chatUserService.findById(userId).getChatRoom().getId();
         chatRoomService.changeParticipant(chatRoom);
 
-        return ("redirect:/matching/detail/%d").formatted(chatRoomId);
+        return ("redirect:/match/detail/%d").formatted(chatRoomId);
     }
 
     // 유저 정보 가져오기
