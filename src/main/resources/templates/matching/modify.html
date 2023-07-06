@@ -39,6 +39,14 @@
     <input type="number" id="capacity" th:field="*{capacity}" th:value="${matching.getCapacity()}"><br><br>
 
     <div>
+        <label for="genreTag">장르 태그</label><br>
+        <select id="genreTag" th:field="*{genre}" th:value="${matching.getGenre()}">
+            <option value="">선택하세요</option>
+            <option th:each="genreTag : ${userGenreTags}" th:value="${genreTag.genre}" th:text="${genreTag.genre}"></option>
+        </select><br><br>
+    </div>
+
+    <div>
         <label for="startTime">시작 시간</label><br>
         <select id="startTime" th:field="*{startTime}" th:value="${matching.getStartTime()}">
             <option th:each="hour : ${#numbers.sequence(0, 24)}" th:value="${hour}" th:text="${hour}"></option>
