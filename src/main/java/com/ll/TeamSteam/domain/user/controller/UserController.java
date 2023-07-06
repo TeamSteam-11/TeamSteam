@@ -59,7 +59,7 @@ public class UserController {
     public String login(Model model) {
         model.addAttribute("baseUrl", baseUrl);
         log.info("baseUrl = {}", baseUrl);
-        return "/user/login";
+        return "user/login";
     }
 
     @GetMapping("/login/check")
