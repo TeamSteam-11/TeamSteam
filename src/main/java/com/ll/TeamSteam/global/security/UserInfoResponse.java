@@ -20,6 +20,7 @@ public class UserInfoResponse {
         private int profilestate;
         private String avatarmedium;
 
+
 //        private int lastlogoff;  최근에 한 게임 유닉스 시간기준으로 볼수있음
 
         // 추가로 가져올 유저 정보 필드들을 여기에 추가합니다.
