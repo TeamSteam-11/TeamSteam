@@ -15,5 +15,6 @@ spring:
   profiles:
     active: local
     include: secret
-
-
+custom:
+  site:
+    baseUrl: http://localhost:8080

@@ -1,12 +1,64 @@
-<html>
-<head>
+<html layout:decorate="~{common/layout.html}">
 
+<head>
+    <style>
+        .login-text {
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+
+        .login-text::before,
+        .login-text::after {
+            content:'';
+            width:300px;
+            height:1px;
+            background-color:white;
+        }
+
+        .login-text::before {
+            margin-right:30px;
+        }
+
+        .login-text::after {
+            margin-left:30px;
+        }
+    </style>
 </head>
 <body>
-<!--위가 로컬 아래가 prod-->
-<!--    <a href="redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=http://localhost:8080/login/check&openid.realm=http://localhost:8080&openid.mode=checkid_setup">-->
-<a href="redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=https://www.teamsteam.site/login/check&openid.realm=https://www.teamsteam.site&openid.mode=checkid_setup">
-<!--    스팀 로그인-->
-</a>
+
+<main layout:fragment="main">
+    <div class="min-h-screen flex flex-col justify-center flex-grow" style="min-height: calc(100vh - 64px)">
+
+        <div class="flex justify-center">
+            <div class="flex items-center bg-gray-700 p-9 text-black" style="border-radius:45px;">
+                <img src="https://cdn.jsdelivr.net/gh/LeeYulhee/projectlion_img/teamsteam/steam_icon.png" alt="steam-logo" class="w-14 h-14">
+                <div class="text-4xl ml-5">
+                    TeamSteam
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-center mt-6">
+            TeamSteam은 스팀 게임을 같이 할 사람을 모집하는 사이트입니다
+        </div>
+
+
+        <div class="login-text text-3xl mt-8">로그인</div>
+
+        <div class="flex justify-center mt-8">
+            <a class="flex items-center !bg-black p-3 pl-40 pr-40 text-black hover:cursor-pointer" style="border-radius:60px;"
+               th:href="|https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&amp;openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&amp;openid.identity=http://specs.openid.net/auth/2.0/identifier_select&amp;openid.return_to=${baseUrl}/login/check&amp;openid.realm=${baseUrl}&amp;openid.mode=checkid_setup|">
+                <img src="https://cdn.jsdelivr.net/gh/LeeYulhee/projectlion_img/teamsteam/steam-logo-white.png" alt="steam-logo" class="w-8 h-8">
+                <div class="text-2xl ml-5 text-white">
+                    Login with Steam
+                </div>
+            </a>
+        </div>
+
+        <div class="flex justify-center mt-3">
+            저희 서비스는 스팀 로그인이 반드시 필요합니다
+        </div>
+    </div>
+</main>
 </body>
 </html>
