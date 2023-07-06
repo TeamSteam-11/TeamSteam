@@ -163,7 +163,7 @@ public class UserController {
         String steamId = user.getSteamId();
         RsData<List<SteamGameLibrary>> haveGameListData = steamService.getUserGameList(steamId);
             List<SteamGameLibrary> haveGameList = haveGameListData.getData();
-            userService.saveGameList(haveGameList, steamId);
+            userService.updateGameList(haveGameList, steamId);
 
             model.addAttribute("gameList",haveGameList);
 
@@ -258,5 +258,12 @@ public class UserController {
 
         return "redirect:/user/profile/" + userId;
     }
+
+    @PostMapping("/user/profile/editprofile")
+    public String editProfile(){
+        return "user/createGenre";
+    }
+
+
 
 }

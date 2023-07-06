@@ -9,7 +9,7 @@
 <body>
 <main layout:fragment="main">
 <div>
-    <form>
+        <form th:action="@{/user/profile/editprofile}" method="post">
         <button th:if="${loginedId == targetUser.getId()}" type="submit" class="btn btn-primary">Edit Tag</button>
     </form>
         <form th:action="@{/user/profile/{userId}/addFriend(userId=${targetUser.id})}" method="post">
