@@ -3,7 +3,6 @@ package com.ll.TeamSteam.domain.user.controller;
 
 import com.ll.TeamSteam.domain.friend.entity.Friend;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
-import com.ll.TeamSteam.domain.notification.controller.NotificationController;
 import com.ll.TeamSteam.domain.notification.service.NotificationService;
 import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
 import com.ll.TeamSteam.domain.steam.service.SteamService;
@@ -273,7 +272,10 @@ public class UserController {
 //    }
 
     @PostMapping("/user/profile/editprofile")
-    public String editProfile() {
+    public String editProfile(@AuthenticationPrincipal SecurityUser user) {
+        //프로필만 업데이트
+        userService.updateUserAvatar(getUserInfo(user.getSteamId()), user.getId());
+
         return "user/createGenre";
     }
 
