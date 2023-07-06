@@ -5,6 +5,7 @@ import com.ll.TeamSteam.domain.friend.repository.FriendRepository;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
 import com.ll.TeamSteam.domain.steam.repository.SteamGameLibraryRepository;
+import com.ll.TeamSteam.domain.user.controller.UserController;
 import com.ll.TeamSteam.domain.user.entity.Gender;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
@@ -73,7 +74,6 @@ public class UserService {
         steamGameLibraryRepository.save(steamGameLibrary);
     }
 
-    @Transactional
     public User createUser(UserInfoResponse userInfo) {
         String username = userInfo.getResponse().getPlayers().get(0).getPersonaname();
         String steamId = userInfo.getResponse().getPlayers().get(0).getSteamid();
@@ -179,20 +179,22 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    @Transactional
     public void addFriends(Long targetId,Long loginedId){
 
         if(!isFriend(targetId, loginedId)) {//친구가 아닐 때
+            User targetUser = findByIdElseThrow(targetId);
+            User loginedUser = findByIdElseThrow(loginedId);
             //서로 저장
+//            (targetUser, loginedUser);
+
             Friend meToFriends = Friend.builder()
-                    .user(findByIdElseThrow(loginedId))
-                    .friend(findByIdElseThrow(targetId))
+                    .user(loginedUser)
+                    .friend(targetUser)
                     .build();
             Friend friendToMe = Friend.builder()
-                    .user(findByIdElseThrow(targetId))
-                    .friend(findByIdElseThrow(loginedId))
+                    .user(targetUser)
+                    .friend(loginedUser)
                     .build();
-
 
             friendRepository.save(meToFriends);
             friendRepository.save(friendToMe);

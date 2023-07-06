@@ -4,6 +4,8 @@ package com.ll.TeamSteam.domain.user.controller;
 
 import com.ll.TeamSteam.domain.friend.entity.Friend;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
+import com.ll.TeamSteam.domain.notification.controller.NotificationController;
+import com.ll.TeamSteam.domain.notification.service.NotificationService;
 import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
 import com.ll.TeamSteam.domain.steam.service.SteamService;
 import com.ll.TeamSteam.domain.user.entity.Gender;
@@ -54,6 +56,8 @@ public class UserController {
     private final UserService userService;
 
     private final SteamService steamService;
+
+    private final NotificationService notificationService;
 
     @GetMapping("/user/login")
     public String login(Model model) {
@@ -252,12 +256,20 @@ public class UserController {
 
     @PostMapping("/user/profile/{userId}/addFriend")
     public String friend(@PathVariable long userId, @AuthenticationPrincipal SecurityUser user){
-        long targetId = userId;
+
         long loginedId = user.getId();
-        userService.addFriends(targetId, loginedId);
+
+        User invitingUser =userService.findByIdElseThrow(loginedId);
+        User invitedUser =userService.findByIdElseThrow(userId);
+
+        notificationService.makeFriend(invitingUser,invitedUser);
 
         return "redirect:/user/profile/" + userId;
     }
+
+//    public void requestFriend(User targetUser, User loginedUser){
+//        notificationController.friendRequest(targetUser, loginedUser);
+//    }
 
     @PostMapping("/user/profile/editprofile")
     public String editProfile(){

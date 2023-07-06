@@ -19,14 +19,14 @@
 <div class="container">
     <img th:src="${targetUser.getAvatar()}">
     <h1 class="my-4" th:text="${targetUser.getUsername()} + '의 프로필'" style="color: #dddddd;"></h1>
-    <table>
-        <tr th:if="${!targetUser.getUserTag().getGameTag.isEmpty()}" th:each="targetUserGameTag : ${targetUser.getUserTag().gameTag}">
-            <td><div class="badge bg-sky-500 badge-accent" th:text="${targetUserGameTag.getName()}"></div></td>
-        </tr>
-        <tr th:if="${!targetUser.getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${targetUser.getUserTag().genreTag}">
-            <td><div class="badge bg-green-500 badge-accent" th:text="${targetUserGenreTag.getGenre()}"></div></td>
-        </tr>
-    </table>
+<!--    <table>-->
+<!--        <tr th:if="${!targetUser.getUserTag().getGameTag.isEmpty()}" th:each="targetUserGameTag : ${targetUser.getUserTag().gameTag}">-->
+<!--            <td><div class="badge bg-sky-500 badge-accent" th:text="${targetUserGameTag.getName()}"></div></td>-->
+<!--        </tr>-->
+<!--        <tr th:if="${!targetUser.getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${targetUser.getUserTag().genreTag}">-->
+<!--            <td><div class="badge bg-green-500 badge-accent" th:text="${targetUserGenreTag.getGenre()}"></div></td>-->
+<!--        </tr>-->
+<!--    </table>-->
     <a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${1}}" style="color: #dddddd">좋아요</a>
     <a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${0}}" style="color: #dddddd">싫어요</a>
     <div><progress class="progress progress-accent w-56" th:value="${targetUser.getTemperature()}" max="100"></progress></div>

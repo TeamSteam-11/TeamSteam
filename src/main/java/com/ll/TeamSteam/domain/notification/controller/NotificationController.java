@@ -2,11 +2,12 @@ package com.ll.TeamSteam.domain.notification.controller;
 
 import com.ll.TeamSteam.domain.notification.entity.Notification;
 import com.ll.TeamSteam.domain.notification.service.NotificationService;
+import com.ll.TeamSteam.domain.user.controller.UserController;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.security.SecurityUser;
-import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,8 @@ import java.util.List;
 public class NotificationController {
     private final NotificationService notificationService;
     private final UserService userService;
+
+    private final UserController userController;
 
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
@@ -55,11 +58,26 @@ public class NotificationController {
                                    @AuthenticationPrincipal SecurityUser user) {
 
         Notification notification = notificationService.findById(notificationId);
+
+        Long InvitedUserId = user.getId();
+        Long InvitingUserId = notification.getInvitingUser().getId();
+        log.info("InvitingUserId = {}", InvitingUserId);
+        log.info("InvitedUserId = {}", InvitedUserId);
         Long roomId = notification.getRoomId();
 
         notificationService.deleteNotification(user.getId(), notificationId);
 
+        if(roomId == null) {
+            userService.addFriends(InvitedUserId, InvitingUserId);
+
+            return "redirect:/notification/list";
+        }
+
         return String.format("redirect:/chat/rooms/%d", roomId);
+    }
+
+    public void friendRequest(User targetUser, User loginedUser){
+        notificationService.makeFriend(targetUser, loginedUser);
     }
 
 }
