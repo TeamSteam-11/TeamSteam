@@ -48,7 +48,12 @@
 
 <div>
     <button class="btn">
-        <a th:href="@{|/chat/rooms/${matching.chatRoom.id}|}">참여하기</a>
+        <a th:href="@{|/match/detail/${matching.getId()}/addPartner|}">참여하기</a>
+        <!-- 매칭 상세 페이지 redirect 되게 URL 바꾸기 -->
+    </button>
+    <button class="btn">
+        <a th:href="@{|/chat/rooms/${matching.chatRoom.id}|}">채팅 참여하기</a>
+        <!-- 만약 user가 matchingPartner면 해당 버튼 보이게 하기 -->
     </button>
 </div>
 </main>
