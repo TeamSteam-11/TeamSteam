@@ -86,6 +86,7 @@ public class UserService {
         return user;
     }
 
+    @Transactional(readOnly = true)
     public User findByIdElseThrow(Long ownerId) {
         return userRepository.findById(ownerId).orElseThrow();
     }
@@ -120,13 +121,25 @@ public class UserService {
 
     }
 
+    @Transactional(readOnly = true)
     public Optional<User> findById(Long userId) {
         return userRepository.findById(userId);
     }
 
 
-    public void saveGameList(List<SteamGameLibrary> gameList, String steamId) {
+    @Transactional
+    public void updateGameList(List<SteamGameLibrary> gameList, String steamId) {
         List<SteamGameLibrary> gameLibraries = new ArrayList<>();
+
+        User user = findBySteamId(steamId).orElseThrow();
+        Long userId = user.getId();
+        UserTag userTag = userTagRepository.findByUserId(userId).orElseThrow();
+        gameTagRepository.deleteAll(userTag.getGameTag());
+        if(!steamGameLibraryRepository.findAllByUserId(userId).isEmpty()){
+            log.info("steamGameLibraryRepository.findAllByUserId(userId).isEmpty() = {}", steamGameLibraryRepository.findAllByUserId(userId).isEmpty());
+            log.info("userId = {}", userId);
+            steamGameLibraryRepository.deleteByUserId(userId);
+        }
 
         for (SteamGameLibrary game : gameList) {
             SteamGameLibrary newGameLibrary = SteamGameLibrary.builder()
@@ -161,10 +174,12 @@ public class UserService {
     }
 
 
+    @Transactional(readOnly = true)
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
+    @Transactional
     public void addFriends(Long targetId,Long loginedId){
 
         if(!isFriend(targetId, loginedId)) {//친구가 아닐 때
@@ -197,6 +212,7 @@ public class UserService {
         return false;
     }
 
+    @Transactional
     public void saveSelectedGames(List<Integer> selectedGames, String steamId) {
 
         User user = userRepository.findBySteamId(steamId).orElseThrow();
@@ -218,6 +234,7 @@ public class UserService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Friend> getFriends(Long userId) {
         return friendRepository.findAllByUserId(userId);
     }
