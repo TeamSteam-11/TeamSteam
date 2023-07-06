@@ -1,7 +1,6 @@
 package com.ll.TeamSteam.domain.user.controller;
 
 
-
 import com.ll.TeamSteam.domain.friend.entity.Friend;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.notification.controller.NotificationController;
@@ -68,41 +67,40 @@ public class UserController {
 
     @GetMapping("/login/check")
     public String startSession(@RequestParam(value = "openid.ns") String openidNs,
-        @RequestParam(value = "openid.mode") String openidMode,
-        @RequestParam(value = "openid.op_endpoint") String openidOpEndpoint,
-        @RequestParam(value = "openid.claimed_id") String openidClaimedId,
-        @RequestParam(value = "openid.identity") String openidIdentity,
-        @RequestParam(value = "openid.return_to") String openidReturnTo,
-        @RequestParam(value = "openid.response_nonce") String openidResponseNonce,
-        @RequestParam(value = "openid.assoc_handle") String openidAssocHandle,
-        @RequestParam(value = "openid.signed") String openidSigned,
-        @RequestParam(value = "openid.sig") String openidSig,
-        HttpServletRequest request,
-        HttpServletResponse response) throws InterruptedException {
+                               @RequestParam(value = "openid.mode") String openidMode,
+                               @RequestParam(value = "openid.op_endpoint") String openidOpEndpoint,
+                               @RequestParam(value = "openid.claimed_id") String openidClaimedId,
+                               @RequestParam(value = "openid.identity") String openidIdentity,
+                               @RequestParam(value = "openid.return_to") String openidReturnTo,
+                               @RequestParam(value = "openid.response_nonce") String openidResponseNonce,
+                               @RequestParam(value = "openid.assoc_handle") String openidAssocHandle,
+                               @RequestParam(value = "openid.signed") String openidSigned,
+                               @RequestParam(value = "openid.sig") String openidSig,
+                               HttpServletRequest request,
+                               HttpServletResponse response) throws InterruptedException {
 
 
-        log.info("openidResponseNonce = {} ",openidResponseNonce);
+        log.info("openidResponseNonce = {} ", openidResponseNonce);
 
         ResponseEntity<String> block = WebClient.create("https://steamcommunity.com")
-            .get()
-            .uri(uriBuilder -> uriBuilder
-                .path("/openid/login")
-                .queryParam("openid.ns", openidNs)
-                .queryParam("openid.mode", "check_authentication")
-                .queryParam("openid.op_endpoint", openidOpEndpoint)
-                .queryParam("openid.claimed_id", openidClaimedId)
-                .queryParam("openid.identity", openidIdentity)
-                .queryParam("openid.return_to", openidReturnTo)
-                .queryParam("openid.response_nonce", openidResponseNonce)
-                .queryParam("openid.assoc_handle", openidAssocHandle)
-                .queryParam("openid.signed", openidSigned)
-                .queryParam("openid.sig", openidSig)
-                .build()
-            )
-            .retrieve()
-            .toEntity(String.class)
-            .block();
-
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/openid/login")
+                        .queryParam("openid.ns", openidNs)
+                        .queryParam("openid.mode", "check_authentication")
+                        .queryParam("openid.op_endpoint", openidOpEndpoint)
+                        .queryParam("openid.claimed_id", openidClaimedId)
+                        .queryParam("openid.identity", openidIdentity)
+                        .queryParam("openid.return_to", openidReturnTo)
+                        .queryParam("openid.response_nonce", openidResponseNonce)
+                        .queryParam("openid.assoc_handle", openidAssocHandle)
+                        .queryParam("openid.signed", openidSigned)
+                        .queryParam("openid.sig", openidSig)
+                        .build()
+                )
+                .retrieve()
+                .toEntity(String.class)
+                .block();
 
 
         log.info("block = {} ", block);
@@ -112,7 +110,7 @@ public class UserController {
 
         log.info("isTrue = {} ", isTrue);
         if (!isTrue) {
-             return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to="+baseUrl+"/login/check&openid.realm="+baseUrl+"&openid.mode=checkid_setup";
+            return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=" + baseUrl + "/login/check&openid.realm=" + baseUrl + "&openid.mode=checkid_setup";
         }
 
         Pattern pattern = Pattern.compile("\\d+");
@@ -130,10 +128,10 @@ public class UserController {
         }
 
         SecurityUser user = SecurityUser.builder()
-            .id(userService.findBySteamId(steamId).get().getId())
-            .username(userService.findBySteamId(steamId).get().getUsername())
-            .steamId(steamId)
-            .build();
+                .id(userService.findBySteamId(steamId).get().getId())
+                .username(userService.findBySteamId(steamId).get().getUsername())
+                .steamId(steamId)
+                .build();
 
         log.info("user.getId() = {} ", user.getId());
         log.info("user.getUsername() = {}", user.getUsername());
@@ -166,18 +164,18 @@ public class UserController {
 
         String steamId = user.getSteamId();
         RsData<List<SteamGameLibrary>> haveGameListData = steamService.getUserGameList(steamId);
-            List<SteamGameLibrary> haveGameList = haveGameListData.getData();
-            userService.updateGameList(haveGameList, steamId);
+        List<SteamGameLibrary> haveGameList = haveGameListData.getData();
+        userService.updateGameList(haveGameList, steamId);
 
-            model.addAttribute("gameList",haveGameList);
+        model.addAttribute("gameList", haveGameList);
 
-            return "user/createGameTag";
+        return "user/createGameTag";
 
     }
 
     @PostMapping(value = "/user/createGameTag/save-gametag")
     public String saveGameTags(@RequestParam("selectedGames") List<Integer> selectedGames,
-        @AuthenticationPrincipal SecurityUser user) {
+                               @AuthenticationPrincipal SecurityUser user) {
 
         String steamId = user.getSteamId();
         userService.saveSelectedGames(selectedGames, steamId);
@@ -199,25 +197,25 @@ public class UserController {
         return "redirect:/main/home";
     }
 
-    @GetMapping("user/createGenre")
-    public String test(){
+    @GetMapping("/user/createGenre")
+    public String test() {
         return "user/createGenre";
     }
 
     @PostMapping("/user/createGenre")
     public String genreFormPost(@RequestParam String gender, @RequestParam("gameGenre") String[] gameGenres,
-        @AuthenticationPrincipal SecurityUser user){
+                                @AuthenticationPrincipal SecurityUser user) {
         Long id = user.getId();
 
         // GenreTagType enum으로 변환하여 리스트로 저장
         List<GenreTagType> genreTagTypes = Arrays.stream(gameGenres)
-            .map(GenreTagType::valueOf)
-            .collect(Collectors.toList());
+                .map(GenreTagType::valueOf)
+                .collect(Collectors.toList());
 
-            // DB에 저장
-            userService.updateUserData(gender, genreTagTypes, id);
-            return "redirect:/user/createGameTag";
-        }
+        // DB에 저장
+        userService.updateUserData(gender, genreTagTypes, id);
+        return "redirect:/user/createGameTag";
+    }
 
     public UserInfoResponse getUserInfo(String steamId) {
         //UserInfoResponse 객체를 사용
@@ -226,27 +224,27 @@ public class UserController {
     }
 
 
-        @GetMapping(value = "/user/profile/{userId}", produces = MediaType.TEXT_HTML_VALUE)
-        public String userGameListSave(@PathVariable long userId, @AuthenticationPrincipal SecurityUser user, Model model) throws ParseException {
+    @GetMapping(value = "/user/profile/{userId}", produces = MediaType.TEXT_HTML_VALUE)
+    public String userGameListSave(@PathVariable long userId, @AuthenticationPrincipal SecurityUser user, Model model) throws ParseException {
 
 
-            User targetUser = userService.findById(userId).orElseThrow();
-            RsData<List<SteamGameLibrary>> haveGameListData = steamService.getUserGameList(targetUser.getSteamId());
-            List<SteamGameLibrary> haveGameList = haveGameListData.getData();
-            List<Friend> friendsList = userService.getFriends(user.getId());
-            model.addAttribute("gameList", haveGameList);
+        User targetUser = userService.findById(userId).orElseThrow();
+        RsData<List<SteamGameLibrary>> haveGameListData = steamService.getUserGameList(targetUser.getSteamId());
+        List<SteamGameLibrary> haveGameList = haveGameListData.getData();
+        List<Friend> friendsList = userService.getFriends(user.getId());
+        model.addAttribute("gameList", haveGameList);
 
-            long loginedId = user.getId();//프로필 본인인지 아닌지 검증하는 용도
-            model.addAttribute("targetUser", targetUser);
-            model.addAttribute("loginedId", loginedId);
-            model.addAttribute("friendsList",friendsList);
+        long loginedId = user.getId();//프로필 본인인지 아닌지 검증하는 용도
+        model.addAttribute("targetUser", targetUser);
+        model.addAttribute("loginedId", loginedId);
+        model.addAttribute("friendsList", friendsList);
 
-            return "user/profile";
+        return "user/profile";
 
-        }
+    }
 
     @GetMapping("/user/profile/{userId}/{like}")
-    public String getLike(@PathVariable long userId, @PathVariable int like, RedirectAttributes redirectAttributes){
+    public String getLike(@PathVariable long userId, @PathVariable int like, RedirectAttributes redirectAttributes) {
         userService.updateTemperature(userId, like);
 
         redirectAttributes.addAttribute("userId", userId);
@@ -255,15 +253,18 @@ public class UserController {
 
 
     @PostMapping("/user/profile/{userId}/addFriend")
-    public String friend(@PathVariable long userId, @AuthenticationPrincipal SecurityUser user){
+    public String friend(@PathVariable long userId, @AuthenticationPrincipal SecurityUser user) {
 
         long loginedId = user.getId();
 
-        User invitingUser =userService.findByIdElseThrow(loginedId);
-        User invitedUser =userService.findByIdElseThrow(userId);
+        User invitingUser = userService.findByIdElseThrow(loginedId);
+        User invitedUser = userService.findByIdElseThrow(userId);
+        if (!userService.isFriend(invitingUser.getId(), invitedUser.getId())
+                && !notificationService.isDupNotification(invitingUser, invitedUser)){
+            //이미 친구인지, 이미 친구신청을 보내놨는지 검증
+            notificationService.makeFriend(invitingUser, invitedUser);
 
-        notificationService.makeFriend(invitingUser,invitedUser);
-
+        }
         return "redirect:/user/profile/" + userId;
     }
 
@@ -272,10 +273,9 @@ public class UserController {
 //    }
 
     @PostMapping("/user/profile/editprofile")
-    public String editProfile(){
+    public String editProfile() {
         return "user/createGenre";
     }
-
 
 
 }

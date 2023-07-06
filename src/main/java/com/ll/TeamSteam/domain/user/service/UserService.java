@@ -181,11 +181,10 @@ public class UserService {
 
     public void addFriends(Long targetId,Long loginedId){
 
-        if(!isFriend(targetId, loginedId)) {//친구가 아닐 때
+        if(!isFriend(targetId, loginedId)) {//친구가 아닐 때 이중검증
             User targetUser = findByIdElseThrow(targetId);
             User loginedUser = findByIdElseThrow(loginedId);
             //서로 저장
-//            (targetUser, loginedUser);
 
             Friend meToFriends = Friend.builder()
                     .user(loginedUser)

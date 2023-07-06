@@ -14,4 +14,5 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     int countByInvitedUserAndReadDateIsNull(User user);
 
     boolean existsByInvitingUserAndInvitedUserAndRoomId(User invitingUser, User invitedUser, Long roomId);
+    Optional<Notification> findByInvitingUserAndInvitedUser(User invitingUser, User invitedUser);
 }
