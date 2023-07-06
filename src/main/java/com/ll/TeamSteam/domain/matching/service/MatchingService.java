@@ -57,9 +57,9 @@ public class MatchingService {
     }
 
     @Transactional
-    public RsData<Matching> modify(Matching matching, String title, String content, Long capacity, int startTime, int endTime) {
+    public RsData<Matching> modify(Matching matching, String title, String content, GenreTagType genreTag, Long capacity, int startTime, int endTime) {
         try {
-            matching.update(title, content, capacity, startTime, endTime);
+            matching.update(title, content, genreTag, capacity, startTime, endTime);
             matchingRepository.save(matching);
 
             return RsData.of("S-1", "매칭이 수정되었습니다", matching);

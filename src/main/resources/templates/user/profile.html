@@ -4,29 +4,63 @@
 <head>
     <meta charset="UTF-8"/>
     <title>프로필</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <style>
+        body {
+            color:white;
+        }
+
+        .table {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+        .table thead tr:first-child th,
+        .table thead tr:first-child td {
+            background-color: #1F2227;
+            text-align: center;
+        }
+
+        .table tbody tr th,
+        .table tbody tr td {
+            background-color: #202d3e;
+            border:0px;
+            text-align: center;
+        }
+        .custom-card{
+            background-color: #202d3e;
+            border:0px;
+
+        }
+    </style>
 </head>
 <body>
 <main layout:fragment="main">
-<div>
-        <form th:action="@{/user/profile/editprofile}" method="post">
-        <button th:if="${loginedId == targetUser.getId()}" type="submit" class="btn btn-primary">Edit Tag</button>
-    </form>
-        <form th:action="@{/user/profile/{userId}/addFriend(userId=${targetUser.id})}" method="post">
-        <button th:if="${loginedId != targetUser.getId()}" type="submit" class="btn btn-primary">친구추가</button>
-    </form>
-</div>
-<div class="container">
-    <img th:src="${targetUser.getAvatar()}">
-    <h1 class="my-4" th:text="${targetUser.getUsername()} + '의 프로필'" style="color: #dddddd;"></h1>
-<!--    <table>-->
-<!--        <tr th:if="${!targetUser.getUserTag().getGameTag.isEmpty()}" th:each="targetUserGameTag : ${targetUser.getUserTag().gameTag}">-->
-<!--            <td><div class="badge bg-sky-500 badge-accent" th:text="${targetUserGameTag.getName()}"></div></td>-->
-<!--        </tr>-->
-<!--        <tr th:if="${!targetUser.getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${targetUser.getUserTag().genreTag}">-->
-<!--            <td><div class="badge bg-green-500 badge-accent" th:text="${targetUserGenreTag.getGenre()}"></div></td>-->
-<!--        </tr>-->
-<!--    </table>-->
+    <div class="card lg:card-side bg-base-100 shadow-xl custom-card">
+        <figure><img th:src="${targetUser.getAvatar()}"  class="w-48 h-48"></figure>
+        <div class="card-body">
+            <h1 class="my-4" th:text="${targetUser.getUsername()} + '의 프로필'" style="color: #dddddd;"></h1>
+            <div class="flex flex-col items-center">
+                <table>
+                    <tr th:if="${!targetUser.getUserTag().getGameTag.isEmpty()}" th:each="targetUserGameTag : ${targetUser.getUserTag().gameTag}">
+                        <td><div class="badge bg-sky-500 badge-accent" th:text="${targetUserGameTag.getName()}"></div></td>
+                    </tr>
+                    <tr th:if="${!targetUser.getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${targetUser.getUserTag().genreTag}">
+                        <td><div class="badge bg-green-500 badge-accent" th:text="${targetUserGenreTag.getGenre()}"></div></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="card-actions justify-end">
+                <form th:action="@{/user/profile/editprofile}" method="post">
+                    <button th:if="${loginedId == targetUser.getId()}" type="submit" class="btn btn-primary">Edit Tag</button>
+                </form>
+                <form th:action="@{/user/profile/{userId}/addFriend(userId=${targetUser.id})}" method="post">
+                    <button th:if="${loginedId != targetUser.getId()}" type="submit" class="btn btn-primary">친구추가</button>
+                </form>
+            </div>
+        </div>
+    </div>
+<div class ="container">
     <a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${1}}" style="color: #dddddd">좋아요</a>
     <a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${0}}" style="color: #dddddd">싫어요</a>
     <div><progress class="progress progress-accent w-56" th:value="${targetUser.getTemperature()}" max="100"></progress></div>
@@ -42,18 +76,16 @@
             </td>
         </tr>
     </div>
-    <table class="table table-striped">
+    <table class="table table-striped" style="margin: 0 auto;">
         <thead>
         <tr>
             <th>게임 이름</th>
-            <th>AppID</th>
             <th>이미지</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="game : ${gameList}">
             <td th:text="${game.name}"></td>
-            <td th:text="${game.appid}"></td>
             <td>
                 <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${game.appid} + '/header.jpg'}"
                      alt="게임 이미지" width="200" height="auto"/>

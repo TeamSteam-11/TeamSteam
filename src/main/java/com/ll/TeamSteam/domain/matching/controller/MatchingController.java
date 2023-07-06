@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -33,6 +34,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/match")
+@Slf4j
 public class MatchingController {
     private final Rq rq;
     private final MatchingService matchingService;
@@ -132,7 +134,6 @@ public class MatchingController {
         }
 
 
-
         chatRoomService.createAndConnect(createForm.getTitle(), createRsData, user.getId());
 
         // 등록 게시글 작성 후 매칭 목록 페이지로 이동
@@ -165,17 +166,24 @@ public class MatchingController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modifyMatching(@PathVariable Long id, CreateForm createForm, Model model) {
+    public String modifyMatching(@PathVariable Long id, CreateForm createForm, Model model, @AuthenticationPrincipal SecurityUser user) {
 
         Matching matching = matchingService.findById(id).orElse(null);
 
         createForm.setTitle(matching.getTitle());
         createForm.setContent(matching.getContent());
+        createForm.setGenre(matching.getGenre());
+        createForm.setGameTagId(matching.getGameTagId());
         createForm.setCapacity(matching.getCapacity());
         createForm.setStartTime(matching.getStartTime());
         createForm.setEndTime(matching.getEndTime());
 
         model.addAttribute("matching", matching);
+
+        List<GameTag> userGameTags = userRepository.findById(user.getId()).orElseThrow().getUserTag().getGameTag();
+        List<GenreTag> userGenreTags = userRepository.findById(user.getId()).orElseThrow().getUserTag().getGenreTag();
+        model.addAttribute("userGameTags", userGameTags);
+        model.addAttribute("userGenreTags", userGenreTags);
 
         return "matching/modify";
     }
@@ -191,7 +199,7 @@ public class MatchingController {
         }
 
         RsData<Matching> modifyRsData = matchingService.modify(matching, createForm.getTitle(), createForm.getContent(),
-                createForm.getCapacity(), createForm.getStartTime(), createForm.getEndTime());
+                createForm.getGenre(), createForm.getCapacity(), createForm.getStartTime(), createForm.getEndTime());
 
 
         chatRoomService.updateChatRoomName(matching.getChatRoom(), matching.getTitle());
