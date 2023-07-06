@@ -218,11 +218,11 @@ public class UserService {
 
         User user = userRepository.findBySteamId(steamId).orElseThrow();
 
-        gameTagRepository.deleteAll();
+        gameTagRepository.deleteByUserTag(user.getUserTag());
 
 
         for (Integer appId : selectedGames) {
-            SteamGameLibrary gameLibrary = steamGameLibraryRepository.findByAppid(appId);
+            SteamGameLibrary gameLibrary = steamGameLibraryRepository.findByAppidAndUserId(appId,user.getId());
             if (gameLibrary != null) {
                 GameTag gameTag = new GameTag();
                 gameTag.setAppid(gameLibrary.getAppid());
