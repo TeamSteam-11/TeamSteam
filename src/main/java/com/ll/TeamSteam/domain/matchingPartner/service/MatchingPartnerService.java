@@ -52,20 +52,12 @@ public class MatchingPartnerService {
             throw new IllegalArgumentException("매칭이 존재하지 않음");
         }
 
-//        MatchingPartner.builder()
-//                .user(user)
-//                .matching(matching)
-//                .inChatRoomTrueFalse(true)
-//                .build();
-
+        /**
+         * moveChatController 에서 검증을 한번 한 후 service 쪽에서도 검증
+         */
         MatchingPartner matchingPartner = matchingPartnerRepository.findByMatchingAndUser(matching, user)
                 .orElseThrow(() -> new IllegalArgumentException("매칭 파트너를 찾을 수 없어"));
 
         matchingPartner.updateInChatRoomTrueFalse(true);
-
-
     }
-
-
-
 }
