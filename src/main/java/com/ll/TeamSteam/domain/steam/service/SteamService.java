@@ -54,6 +54,9 @@ public class SteamService {
     public RsData<List<SteamGameLibrary>> getUserGameList(String steamId) throws ParseException {
         String url = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={apiKey}&steamid={steam_id}" +
             "&include_appinfo=true&format=json";
+        // 같이 시도해볼것
+        //"http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={apiKey}&steamid={steam_id}" +
+        // "&include_appinfo=true&include_played_free_games=true&format=json"
 
         UriComponents builder = UriComponentsBuilder
             .fromHttpUrl(url)

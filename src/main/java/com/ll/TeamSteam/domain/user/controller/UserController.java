@@ -200,7 +200,8 @@ public class UserController {
     }
 
     @GetMapping("user/createGenre")
-    public String test(){
+    public String createGenre(Model model){
+        model.addAttribute("genreTags",GenreTagType.values());
         return "user/createGenre";
     }
 
