@@ -171,6 +171,8 @@ public class MatchingController {
 
         createForm.setTitle(matching.getTitle());
         createForm.setContent(matching.getContent());
+        createForm.setGenre(matching.getGenre());
+        createForm.setGameTagId(matching.getGameTagId());
         createForm.setCapacity(matching.getCapacity());
         createForm.setStartTime(matching.getStartTime());
         createForm.setEndTime(matching.getEndTime());
@@ -191,7 +193,7 @@ public class MatchingController {
         }
 
         RsData<Matching> modifyRsData = matchingService.modify(matching, createForm.getTitle(), createForm.getContent(),
-                createForm.getCapacity(), createForm.getStartTime(), createForm.getEndTime());
+                createForm.getGenre(), createForm.getGameTagId(), createForm.getCapacity(), createForm.getStartTime(), createForm.getEndTime());
 
 
         chatRoomService.updateChatRoomName(matching.getChatRoom(), matching.getTitle());

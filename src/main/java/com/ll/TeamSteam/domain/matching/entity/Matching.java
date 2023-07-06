@@ -44,9 +44,11 @@ public class Matching extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void update(String title, String content, Long capacity, int startTime, int endTime) {
+    public void update(String title, String content, GenreTagType genre, Integer gameTagId, Long capacity, int startTime, int endTime) {
         this.title = title;
         this.content = content;
+        this.genre = genre;
+        this.gameTagId = gameTagId;
         this.capacity = capacity;
         this.startTime = startTime;
         this.endTime = endTime;
