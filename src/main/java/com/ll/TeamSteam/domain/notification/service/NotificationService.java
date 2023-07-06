@@ -75,4 +75,20 @@ public class NotificationService {
     public boolean checkDuplicateInvite(User invitingUser, User invitedUser, Long roomId) {
         return notificationRepository.existsByInvitingUserAndInvitedUserAndRoomId(invitingUser, invitedUser, roomId);
     }
+
+    public void makeFriend(User invitingUser, User invitedUser) {
+        createAndSaveNotification(invitingUser, invitedUser);
+    }
+
+    public RsData<Notification> createAndSaveNotification(User invitingUser, User invitedUser) {
+
+        Notification notification = Notification.builder()
+                .invitingUser(invitingUser)
+                .invitedUser(invitedUser)
+                .build();
+
+        notificationRepository.save(notification);
+
+        return RsData.of("S-1", "알림 메세지가 생성되었습니다.", notification);
+    }
 }

@@ -8,6 +8,7 @@ import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
 import com.ll.TeamSteam.domain.user.service.UserService;
+import com.ll.TeamSteam.domain.userTag.UserTag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -37,8 +38,9 @@ public class NotProd {
                 User user1 = User.builder()
                         .id(1L)
                         .username("user1")
-                        .steamId("13513513124")
+                        .steamId("12412412414")
                         .temperature(36)
+                        .avatar("")
                         .build();
 
                 userRepository.save(user1);
