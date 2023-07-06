@@ -30,4 +30,16 @@ public class MatchingPartnerService {
 
         matchingPartnerRepository.save(matchingPartner);
     }
+
+    // 검증 로직
+    public boolean isDuplicatedMatchingPartner(Long matchingId, Long currentUserId) {
+        User user = userService.findByIdElseThrow(currentUserId);
+        Matching matching = matchingService.findById(matchingId).orElseThrow();
+
+        if (matching.getId() == null) {
+            throw new IllegalArgumentException("매칭이 존재하지 않음");
+        }
+
+        return matchingPartnerRepository.existsByMatchingAndUser(matching, user);
+    }
 }

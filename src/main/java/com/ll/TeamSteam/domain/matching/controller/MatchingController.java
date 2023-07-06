@@ -219,7 +219,17 @@ public class MatchingController {
     public String addPartner(@PathVariable Long matchingId, @AuthenticationPrincipal SecurityUser user){
         Matching matching = matchingService.findById(matchingId).orElseThrow();
 
+        // true 면 matching partner에 저장되어있고, false 면 없음
+        boolean alreadyWithPartner = matchingPartnerService.isDuplicatedMatchingPartner(matching.getId(), user.getId());
+
+        // 이미 저장된 사람은 중복 저장되지 않도록 처리
+        if (alreadyWithPartner) {
+             throw new IllegalArgumentException("너 이미 참여중이야");
+        }
+
         matchingPartnerService.addPartner(matching.getId(), user.getId());
+
+        // TODO: 매칭 생성한 사람은 매칭 파트너에 바로 저장되게
 
         return String.format("redirect:/match/detail/%d", matchingId);
     }
