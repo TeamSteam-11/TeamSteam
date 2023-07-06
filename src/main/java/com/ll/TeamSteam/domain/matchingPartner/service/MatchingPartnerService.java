@@ -42,4 +42,30 @@ public class MatchingPartnerService {
 
         return matchingPartnerRepository.existsByMatchingAndUser(matching, user);
     }
+
+    @Transactional
+    public void updateTrue(Long matchingId, Long currentUserId) {
+        User user = userService.findByIdElseThrow(currentUserId);
+        Matching matching = matchingService.findById(matchingId).orElseThrow();
+
+        if (matching.getId() == null) {
+            throw new IllegalArgumentException("매칭이 존재하지 않음");
+        }
+
+//        MatchingPartner.builder()
+//                .user(user)
+//                .matching(matching)
+//                .inChatRoomTrueFalse(true)
+//                .build();
+
+        MatchingPartner matchingPartner = matchingPartnerRepository.findByMatchingAndUser(matching, user)
+                .orElseThrow(() -> new IllegalArgumentException("매칭 파트너를 찾을 수 없어"));
+
+        matchingPartner.updateInChatRoomTrueFalse(true);
+
+
+    }
+
+
+
 }

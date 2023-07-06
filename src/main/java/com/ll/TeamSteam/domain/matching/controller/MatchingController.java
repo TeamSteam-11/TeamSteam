@@ -233,4 +233,23 @@ public class MatchingController {
 
         return String.format("redirect:/match/detail/%d", matchingId);
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/detail/{matchingId}/moveChatRoom")
+    public String moveChatRoom(@PathVariable Long matchingId, @AuthenticationPrincipal SecurityUser user){
+        Matching matching = matchingService.findById(matchingId).orElseThrow();
+
+        // true 면 matching partner에 저장되어있고, false 면 없음
+        boolean alreadyWithPartner = matchingPartnerService.isDuplicatedMatchingPartner(matching.getId(), user.getId());
+
+        if (!alreadyWithPartner) {
+            throw new IllegalArgumentException("너 접근 금지야");
+        }
+
+        matchingPartnerService.updateTrue(matching.getId(), user.getId());
+
+        return String.format("redirect:/chat/rooms/%d", matchingId);
+    }
+
+
 }

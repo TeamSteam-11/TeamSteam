@@ -23,4 +23,10 @@ public class MatchingPartner extends BaseEntity {
     private User user;
 
     private boolean inChatRoomTrueFalse;
+
+    public void updateInChatRoomTrueFalse(boolean inChatRoomTrueFalse){
+        this.inChatRoomTrueFalse = inChatRoomTrueFalse;
+    }
+
+
 }
