@@ -118,7 +118,7 @@ public class MatchingController {
 
 
         // 서비스에서 추가 기능 구현
-        Matching createRsData = matchingService.create(
+        Matching matching = matchingService.create(
                 user1,
                 createForm.getTitle(),
                 createForm.getContent(),
@@ -131,13 +131,15 @@ public class MatchingController {
         );
 
         // 매칭 등록 실패 시
-        if (createRsData == null) {
+        if (matching == null) {
             throw new IllegalArgumentException("게시글이 작성되지 않았습니다.");
             // return "match/create";
         }
 
+        log.info("createRsData.getId = {}", matching.getId());
 
-        chatRoomService.createAndConnect(createForm.getTitle(), createRsData, user.getId());
+        matchingPartnerService.addPartner(matching.getId(), user1.getId());
+        chatRoomService.createAndConnect(createForm.getTitle(), matching, user.getId());
 
         // 등록 게시글 작성 후 매칭 목록 페이지로 이동
         return rq.redirectWithMsg("/match/list", "매칭이 게시글이 생성되었습니다.");
@@ -228,8 +230,6 @@ public class MatchingController {
         }
 
         matchingPartnerService.addPartner(matching.getId(), user.getId());
-
-        // TODO: 매칭 생성한 사람은 매칭 파트너에 바로 저장되게
 
         return String.format("redirect:/match/detail/%d", matchingId);
     }
