@@ -138,6 +138,8 @@ public class MatchingController {
         log.info("createRsData.getId = {}", matching.getId());
 
         matchingPartnerService.addPartner(matching.getId(), user1.getId());
+        matchingPartnerService.updateTrue(matching.getId(), user1.getId());
+
         chatRoomService.createAndConnect(createForm.getTitle(), matching, user.getId());
 
         // 등록 게시글 작성 후 매칭 목록 페이지로 이동
