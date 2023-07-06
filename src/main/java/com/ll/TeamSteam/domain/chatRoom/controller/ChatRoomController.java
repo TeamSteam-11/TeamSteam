@@ -8,6 +8,7 @@ import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
+import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.rq.Rq;
@@ -42,7 +43,6 @@ public class ChatRoomController {
     private final ChatMessageService chatMessageService;
     private final SimpMessageSendingOperations template;
     private final ChatUserService chatUserService;
-
     private final UserService userService;
 
     /**

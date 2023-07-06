@@ -6,7 +6,6 @@ import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
-import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTag;
 import com.ll.TeamSteam.domain.userTag.genreTag.GenreTag;
 import com.ll.TeamSteam.global.rq.Rq;
@@ -150,6 +149,14 @@ public class MatchingController {
 
         Matching matching = matchingService.findById(matchingId).orElse(null);
 
+        boolean alreadyWithPartner = false;
+
+        // 로그인 상태인지 확인
+        if (rq.isLogin()) {
+            alreadyWithPartner = matchingPartnerService.isDuplicatedMatchingPartner(matching.getId(), rq.getUser().getId());
+        }
+
+        model.addAttribute("alreadyWithPartner", alreadyWithPartner);
         model.addAttribute("matching", matching);
 
         return "matching/detail";
@@ -216,17 +223,29 @@ public class MatchingController {
         return String.format("redirect:/match/detail/%d", matchingId);
     }
 
+    /**
+     * 파트너 신청
+     */
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/detail/{matchingId}/addPartner")
-    public String addPartner(@PathVariable Long matchingId, @AuthenticationPrincipal SecurityUser user){
+    public String addPartner(@PathVariable Long matchingId, @AuthenticationPrincipal SecurityUser user,
+                             Model model){
         Matching matching = matchingService.findById(matchingId).orElseThrow();
+
+        // 로그인 하지 않은 유저가 매칭파트너 신청을 했을 경우 로그인 페이지로 redirect
+        if (user == null){
+            return "redirect:/user/login";
+        }
 
         // true 면 matching partner에 저장되어있고, false 면 없음
         boolean alreadyWithPartner = matchingPartnerService.isDuplicatedMatchingPartner(matching.getId(), user.getId());
+        log.info("alreadyWithPartner = {} ", alreadyWithPartner);
+
+        model.addAttribute("alreadyWithPartner", alreadyWithPartner);
 
         // 이미 저장된 사람은 중복 저장되지 않도록 처리
         if (alreadyWithPartner) {
-             throw new IllegalArgumentException("너 이미 참여중이야");
+             throw new IllegalArgumentException("너 이미 매칭파트너에 참여중이야");
         }
 
         matchingPartnerService.addPartner(matching.getId(), user.getId());
@@ -243,13 +262,11 @@ public class MatchingController {
         boolean alreadyWithPartner = matchingPartnerService.isDuplicatedMatchingPartner(matching.getId(), user.getId());
 
         if (!alreadyWithPartner) {
-            throw new IllegalArgumentException("너 접근 금지야");
+            throw new IllegalArgumentException("너 지금 매칭파트너에 등록이 안되어있어, 우선 매칭파트너부터 등록해");
         }
 
         matchingPartnerService.updateTrue(matching.getId(), user.getId());
 
         return String.format("redirect:/chat/rooms/%d", matchingId);
     }
-
-
 }

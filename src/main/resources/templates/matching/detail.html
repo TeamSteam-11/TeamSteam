@@ -18,27 +18,24 @@
 </head>
 <body>
 <main layout:fragment="main">
-
-
-<div class="container">
-    <p><strong>등록자:</strong> <span th:text="${matching.user.username}">User Name</span></p>
-    <p><strong>제목:</strong> <span th:text="${matching.title}">Matching Title</span></p>
-    <p><strong>내용:</strong> <span th:text="${matching.content}">Matching Content</span></p>
-    <p><strong>참가 인원:</strong> <span th:text="${matching.capacity}">Matching Capacity</span></p>
-    <p><strong>시작 시간:</strong> <span th:text="${matching.startTime}">Matching Start Time</span></p>
-    <p><strong>종료 시간:</strong> <span th:text="${matching.endTime}">Matching End Time</span></p>
-    <p><strong>마감 기한:</strong> <span th:text="${matching.deadlineDate}">Matching Deadline Date</span></p>
-
-</div>
+    <div class="container">
+        <p><strong>등록자:</strong> <span th:text="${matching.user.username}">User Name</span></p>
+        <p><strong>제목:</strong> <span th:text="${matching.title}">Matching Title</span></p>
+        <p><strong>내용:</strong> <span th:text="${matching.content}">Matching Content</span></p>
+        <p><strong>참가 인원:</strong> <span th:text="${matching.capacity}">Matching Capacity</span></p>
+        <p><strong>시작 시간:</strong> <span th:text="${matching.startTime}">Matching Start Time</span></p>
+        <p><strong>종료 시간:</strong> <span th:text="${matching.endTime}">Matching End Time</span></p>
+        <p><strong>마감 기한:</strong> <span th:text="${matching.deadlineDate}">Matching Deadline Date</span></p>
+    </div>
 
 <div>
-    <form th:action="@{/match/detail/delete/{id}(id=${matching.id})}" method="post">
+    <form th:if="${@rq.isLogin()}" th:action="@{/match/detail/delete/{id}(id=${matching.id})}" method="post">
         <button type="submit" class="btn btn-light border" style="background-color: #1F2227; color: white"
                 th:if="${matching.user.id == @rq.user.id}"
                 onclick="return confirm('해당 게시물을 삭제하시겠습니까?')">삭제
         </button>
     </form>
-    <form th:action="@{/match/modify/{id}(id=${matching.id})}">
+    <form th:if="${@rq.isLogin()}" th:action="@{/match/modify/{id}(id=${matching.id})}">
         <button type="submit" class="btn btn-light border"
                 th:if="${matching.user.id == @rq.user.id}"
                 onclick="return confirm('해당 게시물을 수정하시겠습니까?')">수정
@@ -47,10 +44,10 @@
 </div>
 
 <div>
-    <a class="!bg-black p-3 text-white hover:cursor-pointer" th:href="@{|/match/detail/${matching.getId()}/addPartner|}">참여하기</a>
-    <!-- 매칭 상세 페이지 redirect 되게 URL 바꾸기 -->
-    <a class="!bg-black p-3 text-white hover:cursor-pointer" th:href="@{|/chat/rooms/${matching.chatRoom.id}|}">채팅 참여하기</a>
-    <!-- 만약 user가 matchingPartner면 해당 버튼 보이게 하기 -->
+    <a class="!bg-black p-3 text-white hover:cursor-pointer" th:if="${!alreadyWithPartner}" th:href="@{|/match/detail/${matching.getId()}/addPartner|}">참여하기</a>
+
+    <!-- 매칭 파트너인 경우에 채팅 참여하기 버튼 활성화됨 -> 미니 프로필도 보이게 하기 -->
+    <a class="!bg-black p-3 text-white hover:cursor-pointer" th:if="${alreadyWithPartner}" th:href="@{|/match/detail/${matching.getId()}/moveChatRoom|}">채팅 참여하기</a>
 </div>
 </main>
 </body>
