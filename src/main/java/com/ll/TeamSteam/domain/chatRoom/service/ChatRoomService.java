@@ -126,11 +126,10 @@ public class ChatRoomService {
      * 채팅방 삭제
      */
     @Transactional
-    // @CacheEvict(value = "chatroom", allEntries=true)
     public void remove(Long roomId, Long OwnerId) {
         User owner = userService.findByIdElseThrow(OwnerId);
         log.info("roomId = {}", roomId);
-        log.info("OnwerId = {}", owner.getId());
+        log.info("OwnerId = {}", owner.getId());
 
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));

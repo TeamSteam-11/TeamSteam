@@ -3,8 +3,10 @@ package com.ll.TeamSteam.domain.matching.controller;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
+import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
+import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTag;
 import com.ll.TeamSteam.domain.userTag.genreTag.GenreTag;
 import com.ll.TeamSteam.global.rq.Rq;
@@ -40,6 +42,7 @@ public class MatchingController {
     private final MatchingService matchingService;
     private final UserRepository userRepository;
     private final ChatRoomService chatRoomService;
+    private final MatchingPartnerService matchingPartnerService;
 
     @GetMapping("/list")
     public String matchingList(Model model) {
@@ -115,7 +118,7 @@ public class MatchingController {
 
 
         // 서비스에서 추가 기능 구현
-        Matching createRsData = matchingService.create(
+        Matching matching = matchingService.create(
                 user1,
                 createForm.getTitle(),
                 createForm.getContent(),
@@ -128,47 +131,49 @@ public class MatchingController {
         );
 
         // 매칭 등록 실패 시
-        if (createRsData == null) {
+        if (matching == null) {
             throw new IllegalArgumentException("게시글이 작성되지 않았습니다.");
             // return "match/create";
         }
 
+        log.info("createRsData.getId = {}", matching.getId());
 
-        chatRoomService.createAndConnect(createForm.getTitle(), createRsData, user.getId());
+        matchingPartnerService.addPartner(matching.getId(), user1.getId());
+        chatRoomService.createAndConnect(createForm.getTitle(), matching, user.getId());
 
         // 등록 게시글 작성 후 매칭 목록 페이지로 이동
         return rq.redirectWithMsg("/match/list", "매칭이 게시글이 생성되었습니다.");
     }
 
-    @GetMapping("/detail/{id}")
-    public String matchingDetail(Model model, @PathVariable Long id) {
+    @GetMapping("/detail/{matchingId}")
+    public String matchingDetail(Model model, @PathVariable Long matchingId) {
 
-        Matching matching = matchingService.findById(id).orElse(null);
+        Matching matching = matchingService.findById(matchingId).orElse(null);
 
         model.addAttribute("matching", matching);
 
         return "matching/detail";
     }
 
-    @PostMapping("/detail/delete/{id}")
-    public String deleteMatching(@PathVariable("id") Long id, @AuthenticationPrincipal SecurityUser user) {
+    @PostMapping("/detail/delete/{matchingId}")
+    public String deleteMatching(@PathVariable Long matchingId, @AuthenticationPrincipal SecurityUser user) {
 
-        Matching matching = matchingService.findById(id).orElse(null);
+        Matching matching = matchingService.findById(matchingId).orElse(null);
 
         if (matching.getUser().getId() != user.getId()) {
             return rq.historyBack("삭제할 수 있는 권한이 없습니다.");
         }
 
-        matchingService.deleteById(id);
+        matchingService.deleteById(matchingId);
 
         return rq.redirectWithMsg("/match/list", "매칭 게시글이 삭제되었습니다.");
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/modify/{id}")
-    public String modifyMatching(@PathVariable Long id, CreateForm createForm, Model model, @AuthenticationPrincipal SecurityUser user) {
+    @GetMapping("/modify/{matchingId}")
+    public String modifyMatching(@PathVariable Long matchingId, CreateForm createForm, Model model, @AuthenticationPrincipal SecurityUser user) {
 
-        Matching matching = matchingService.findById(id).orElse(null);
+        Matching matching = matchingService.findById(matchingId).orElse(null);
 
         createForm.setTitle(matching.getTitle());
         createForm.setContent(matching.getContent());
@@ -189,10 +194,10 @@ public class MatchingController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/modify/{id}")
-    public String modify(@Valid CreateForm createForm, @PathVariable("id") Long id, @AuthenticationPrincipal SecurityUser user) {
+    @PostMapping("/modify/{matchingId}")
+    public String modify(@Valid CreateForm createForm, @PathVariable Long matchingId, @AuthenticationPrincipal SecurityUser user) {
 
-        Matching matching = matchingService.findById(id).orElse(null);
+        Matching matching = matchingService.findById(matchingId).orElse(null);
 
         if (matching.getUser().getId() != user.getId()) {
             return rq.historyBack("수정 권한이 없습니다.");
@@ -208,6 +213,43 @@ public class MatchingController {
             return rq.historyBack(modifyRsData);
         }
 
-        return String.format("redirect:/match/detail/%d", id);
+        return String.format("redirect:/match/detail/%d", matchingId);
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/detail/{matchingId}/addPartner")
+    public String addPartner(@PathVariable Long matchingId, @AuthenticationPrincipal SecurityUser user){
+        Matching matching = matchingService.findById(matchingId).orElseThrow();
+
+        // true 면 matching partner에 저장되어있고, false 면 없음
+        boolean alreadyWithPartner = matchingPartnerService.isDuplicatedMatchingPartner(matching.getId(), user.getId());
+
+        // 이미 저장된 사람은 중복 저장되지 않도록 처리
+        if (alreadyWithPartner) {
+             throw new IllegalArgumentException("너 이미 참여중이야");
+        }
+
+        matchingPartnerService.addPartner(matching.getId(), user.getId());
+
+        return String.format("redirect:/match/detail/%d", matchingId);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/detail/{matchingId}/moveChatRoom")
+    public String moveChatRoom(@PathVariable Long matchingId, @AuthenticationPrincipal SecurityUser user){
+        Matching matching = matchingService.findById(matchingId).orElseThrow();
+
+        // true 면 matching partner에 저장되어있고, false 면 없음
+        boolean alreadyWithPartner = matchingPartnerService.isDuplicatedMatchingPartner(matching.getId(), user.getId());
+
+        if (!alreadyWithPartner) {
+            throw new IllegalArgumentException("너 접근 금지야");
+        }
+
+        matchingPartnerService.updateTrue(matching.getId(), user.getId());
+
+        return String.format("redirect:/chat/rooms/%d", matchingId);
+    }
+
+
 }

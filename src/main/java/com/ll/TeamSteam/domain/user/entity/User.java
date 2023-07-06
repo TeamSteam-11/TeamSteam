@@ -2,6 +2,7 @@ package com.ll.TeamSteam.domain.user.entity;
 
 import com.ll.TeamSteam.domain.friend.entity.Friend;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
+import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
 import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
 import com.ll.TeamSteam.domain.userTag.UserTag;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
@@ -52,6 +53,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Friend> friendList;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<MatchingPartner> matchingPartners;
 
 
 
