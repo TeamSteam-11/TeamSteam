@@ -8,6 +8,7 @@ import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUserType;
 import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
+import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
 import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.notification.service.NotificationService;
 import com.ll.TeamSteam.domain.user.entity.User;
@@ -72,6 +73,15 @@ public class ChatRoomService {
         User user = userService.findByIdElseThrow(userId);
 
         ChatRoom chatRoom = findById(roomId);
+        /**
+         * 매칭 파트너가 아닌데 채팅방에 들어가려고 하면 IllegalArgumentException 던저주기
+         */
+        Matching matching = chatRoom.getMatching();
+
+        matching.getMatchingPartners().stream()
+                .filter(matchingPartner -> matchingPartner.getUser().getId().equals(user.getId()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("너 매칭 파트너 아니야"));
 
         addChatRoomUser(chatRoom, user, userId);
 
