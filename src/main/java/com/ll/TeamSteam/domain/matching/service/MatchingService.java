@@ -48,8 +48,9 @@ public class MatchingService {
         return modifyDate.plusHours(hours);
     }
 
-    public List<Matching> getMachingList() {
-        return matchingRepository.findAll();
+    public Page<Matching> getMatchingList(Pageable pageable) {
+
+        return matchingRepository.findAll(pageable);
     }
 
     public Optional<Matching> findById(Long id) {
@@ -74,10 +75,19 @@ public class MatchingService {
         }
     }
 
-    public Page<Matching> searchMatching(String keyword, Pageable pageable) {
+    public Page<Matching> searchMatching(String name, String keyword, Pageable pageable) {
         SearchQuery searchQuery = new SearchQuery(keyword);
-        log.info("keyword = {] ", keyword);
-        Page<Matching> matchingList = matchingRepository.findByTitleContainingIgnoreCase(searchQuery.getValue(), pageable);
+        log.info("keyword = {}", keyword);
+
+        Page<Matching> matchingList;
+
+        if (name.equals("title")) {
+            matchingList = matchingRepository.findByTitleContainingIgnoreCase(searchQuery.getValue(), pageable);
+        } else if (name.equals("content")) {
+            matchingList = matchingRepository.findByContentContainingIgnoreCase(searchQuery.getValue(), pageable);
+        } else {
+            throw new IllegalArgumentException("검색 쿼리가 잘 작성되지 않았음");
+        }
 
         return matchingList;
     }

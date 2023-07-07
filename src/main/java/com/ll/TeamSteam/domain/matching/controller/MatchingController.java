@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -45,8 +46,14 @@ public class MatchingController {
     private final MatchingPartnerService matchingPartnerService;
 
     @GetMapping("/list")
-    public String matchingList(Model model) {
-        List<Matching> matchingList = matchingService.getMachingList();
+    public String matchingList(Model model,
+//                               @RequestParam(defaultValue = "0") int page,
+//                               @RequestParam(defaultValue = "12") int size,
+//                               @RequestParam(defaultValue = "createDate") String sort,
+//                               @RequestParam(defaultValue = "DESC") String direction
+                               @PageableDefault(sort = "createDate", direction = Sort.Direction.DESC, size = 12) Pageable pageable) {
+//        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort));
+        Page<Matching> matchingList = matchingService.getMatchingList(pageable);
 
         model.addAttribute("matchingList", matchingList);
 
@@ -274,13 +281,14 @@ public class MatchingController {
     }
 
     @GetMapping("/search")
-    public String searchMatching(@RequestParam String keyword,
+    public String searchMatching(@RequestParam String name, @RequestParam String keyword,
                                  @PageableDefault(sort = "createDate", direction = Sort.Direction.DESC, size = 12) Pageable pageable,
                                  Model model){
-        Page<Matching> matchingList = matchingService.searchMatching(keyword, pageable);
+
+        Page<Matching> matchingList = matchingService.searchMatching(name, keyword, pageable);
         model.addAttribute("matchingList", matchingList);
+        model.addAttribute("searchOption", name);  // 검색 옵션 추가
 
         return "matching/list";
-
     }
 }
