@@ -32,24 +32,54 @@
             border:0px;
 
         }
+        .custom-card2{
+            background-color: #202d3e;
+            border:0px;
+
+        }
+        .progress-custom {
+            background-image: linear-gradient(90deg, #1c92d2 0%,#f2fcfe 100%);
+            height: 30px;
+        }
+
     </style>
 </head>
 <body>
 <main layout:fragment="main">
-    <div class="card lg:card-side bg-base-100 shadow-xl custom-card">
-        <figure><img th:src="${targetUser.getAvatar()}"  class="w-48 h-48"></figure>
-        <div class="card-body">
-            <h1 class="my-4" th:text="${targetUser.getUsername()} + '의 프로필'" style="color: #dddddd;"></h1>
-            <div class="flex flex-col items-center">
-                <table>
-                    <tr th:if="${!targetUser.getUserTag().getGameTag.isEmpty()}" th:each="targetUserGameTag : ${targetUser.getUserTag().gameTag}">
-                        <td><div class="badge bg-sky-500 badge-accent" th:text="${targetUserGameTag.getName()}"></div></td>
-                    </tr>
-                    <tr th:if="${!targetUser.getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${targetUser.getUserTag().genreTag}">
-                        <td><div class="badge bg-green-500 badge-accent" th:text="${targetUserGenreTag.getGenre()}"></div></td>
-                    </tr>
-                </table>
+    <div class="card lg:card-side bg-base-100 shadow-xl custom-card" style="height: 400px; overflow: auto;">
+        <figure class="ml-4" style="width: 150px;">
+            <div class="w-48 h-48">
+                <img th:src="${targetUser.getAvatar()}" class="w-full h-full">
             </div>
+        </figure>
+        <div class="card-body">
+            <h1 class="my-4 text-3xl" th:text="${targetUser.getUsername()}" style="color: #dddddd;"></h1>
+            <div class="ml-4" style="width: calc(100% - 150px);">
+                        <div class="flex pt-4">
+                        <div class="table-cell">
+                            <div class="flex flex-wrap">
+                                <div th:if="${!targetUser.getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${targetUser.getUserTag().getGameTag()}" class="badge bg-sky-500 badge-accent inline max-w-[10rem]">
+                                    <span th:text="${targetUserGameTag.getName()}"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="flex flex-wrap">
+                                <div th:if="${!targetUser.getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${targetUser.getUserTag().getGenreTag()}" class="badge bg-green-500 badge-accent inline max-w-[10rem]">
+                                    <span th:text="${targetUserGenreTag.getGenre()}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <div class="pt-4">
+                <p class="mb-2">매너온도:<span th:text="${targetUser.getTemperature()}"></span></p>
+                <progress class="progress progress-accent w-56 progress-custom" th:value="${targetUser.getTemperature()}" max="100">
+                </progress>
+                </div>
+            </div>
+<!--                <a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${1}}" style="color: #dddddd">좋아요</a>-->
+<!--                <a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${0}}" style="color: #dddddd">싫어요</a>-->
+
             <div class="card-actions justify-end">
                 <form th:action="@{/user/profile/editprofile}" method="post">
                     <button th:if="${loginedId == targetUser.getId()}" type="submit" class="btn btn-primary">Edit Tag</button>
@@ -60,40 +90,49 @@
             </div>
         </div>
     </div>
-<div class ="container">
-    <a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${1}}" style="color: #dddddd">좋아요</a>
-    <a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${0}}" style="color: #dddddd">싫어요</a>
-    <div><progress class="progress progress-accent w-56" th:value="${targetUser.getTemperature()}" max="100"></progress></div>
-<!--    <div th:text="${targetUser.getTemperature()}"></div>-->
-
     <div th:if="${loginedId == targetUser.getId()}">
-        <tr th:each="friend: ${friendsList}">
+        <div class="flex justify-end">
+            <div>
+                <h2 class="text-xl font-semibold mb-4">친구 목록</h2>
 
-            <td th:text="${friend.getFriend().getId()}"></td>
-            <td th:text="${friend.getFriend().getUsername()}"></td>
-            <td>
-                <img th:src="${friend.getFriend().getAvatar()}">
-            </td>
-        </tr>
+                <th:block th:if="${!friendsList.isEmpty()}">
+                    <table class="table-auto">
+                        <thead>
+                        <tr>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="friend: ${friendsList}">
+                            <td th:text="${friend.getFriend().getId()}"></td>
+                            <td th:text="${friend.getFriend().getUsername()}"></td>
+                            <td>
+                                <img th:src="${friend.getFriend().getAvatar()}" class="w-8 h-8 rounded-full">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </th:block>
+                <th:block th:if="${friendsList.isEmpty()}">
+                    <p class="text-gray-500">친구를 추가해주세요.</p>
+                </th:block>
+            </div>
+        </div>
     </div>
-    <table class="table table-striped" style="margin: 0 auto;">
-        <thead>
-        <tr>
-            <th>게임 이름</th>
-            <th>이미지</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="game : ${gameList}">
-            <td th:text="${game.name}"></td>
-            <td>
-                <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${game.appid} + '/header.jpg'}"
-                     alt="게임 이미지" width="200" height="auto"/>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+
+    <div class="card lg:card-side bg-base-100 shadow-xl custom-card2 ">
+        <div class="card-body">
+            <h2 class="card-title" style="color: #dddddd;">Game Library</h2>
+            <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                <div th:each="game : ${gameList}" class="card">
+                    <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${game.appid} + '/header.jpg'}"
+                         alt="게임 이미지" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${game.name}"></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 </body>
 </html>

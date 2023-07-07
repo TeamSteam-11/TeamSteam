@@ -196,8 +196,11 @@ public class UserController {
         return "redirect:/main/home";
     }
 
-    @GetMapping("/user/createGenre")
-    public String test() {
+
+    @GetMapping("user/createGenre")
+    public String createGenre(Model model){
+        model.addAttribute("genreTags",GenreTagType.values());
+
         return "user/createGenre";
     }
 
@@ -272,9 +275,10 @@ public class UserController {
 //    }
 
     @PostMapping("/user/profile/editprofile")
-    public String editProfile(@AuthenticationPrincipal SecurityUser user) {
+    public String editProfile(@AuthenticationPrincipal SecurityUser user, Model model) {
         //프로필만 업데이트
         userService.updateUserAvatar(getUserInfo(user.getSteamId()), user.getId());
+        model.addAttribute("genreTags",GenreTagType.values());
 
         return "user/createGenre";
     }

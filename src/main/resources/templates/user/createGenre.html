@@ -15,30 +15,14 @@
         여자
     </label>
     <br><br>
-    <label>
-        <input type="checkbox" name="gameGenre" value="일인칭슈팅">
-        일인칭슈팅
-    </label>
-    <br>
-    <label>
-        <input type="checkbox" name="gameGenre" value="삼인칭슈팅">
-        삼인칭슈팅
-    </label>
-    <br>
-    <label>
-        <input type="checkbox" name="gameGenre" value="핵앤슬래시">
-        핵앤슬래시
-    </label>
-    <br>
-    <label>
-        <input type="checkbox" name="gameGenre" value="로그라이크">
-        로그라이크
-    </label>
-    <br>
-    <label>
-        <input type="checkbox" name="gameGenre" value="낚시">
-        낚시
-    </label>
+
+    <th:block th:each="genreTag : ${genreTags}">
+        <label>
+            <input type="checkbox" name="gameGenre" th:value="${genreTag}" th:text="${genreTag}">
+        </label>
+        <br>
+    </th:block>
+
     <br><br>
     <input type="submit" value="제출">
 </form>
