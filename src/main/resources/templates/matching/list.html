@@ -28,6 +28,15 @@
 
 <main layout:fragment="main">
 
+    <div class="search-box flex justify-center mt-20 mb-10">
+        <form action="#" method="GET" class="relative">
+            <input type="text" name="query" placeholder="게임 / 유저 검색" class="h-12 p-4 pr-12 rounded-xl" style="background-color: #525964; width:500px;"/>
+            <button type="submit" aria-label="Search" title="Search" class="absolute right-0 top-0 bottom-0 flex items-center justify-center text-black text-2xl pr-3">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
+
 <a href="/match/create" class="btn btn-custom">매칭 등록</a><br><br>
 
 <div style="display: flex; justify-content: center; flex-wrap: wrap; width: 100%">
