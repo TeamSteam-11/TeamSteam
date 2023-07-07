@@ -273,7 +273,8 @@ public class UserController {
 //    }
 
     @PostMapping("/user/profile/editprofile")
-    public String editProfile(){
+    public String editProfile(Model model){
+        model.addAttribute("genreTags",GenreTagType.values());
         return "user/createGenre";
     }
 
