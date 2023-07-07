@@ -7,6 +7,7 @@ import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
+import com.ll.TeamSteam.domain.friend.entity.Friend;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.user.entity.User;
@@ -180,19 +181,15 @@ public class ChatRoomController {
     @GetMapping("/{roomId}/inviteList")
     public String inviteList(Model model, @PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user) {
         List<User> userList = userService.findAll();
-        ChatRoom chatRoom = chatRoomService.findById(roomId);
 
-        // 친구 목록으로 불러올 때는 없어도 되는 로직(전체 유저에서 본인을 제외한 목록)
-        List<User> filteredUserList = new ArrayList<>();
-        for (User userForList : userList) {
-            if (!user.getId().equals(userForList.getId())) {
-                filteredUserList.add(userForList);
-            }
-        }
+        User currentUser = userService.findByIdElseThrow(user.getId());
+        List<Friend> friendList = currentUser.getFriendList();
+        ChatRoom chatRoom = chatRoomService.findById(roomId);
 
         log.info("userList = {}", userList);
         model.addAttribute("chatRoom", chatRoom);
-        model.addAttribute("userList", filteredUserList);
+        model.addAttribute("user", currentUser);
+        model.addAttribute("friendList", friendList);
 
         return "chat/inviteList";
     }
