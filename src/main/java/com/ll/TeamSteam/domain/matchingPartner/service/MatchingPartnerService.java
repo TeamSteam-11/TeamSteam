@@ -1,5 +1,7 @@
 package com.ll.TeamSteam.domain.matchingPartner.service;
 
+import java.util.List;
+
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
@@ -59,5 +61,20 @@ public class MatchingPartnerService {
                 .orElseThrow(() -> new IllegalArgumentException("매칭 파트너를 찾을 수 없어"));
 
         matchingPartner.updateInChatRoomTrueFalse(true);
+    }
+    public List<MatchingPartner> findByMatching(Matching matching){
+        return matchingPartnerRepository.findByMatching(matching);
+    }
+
+    // public List<MatchingPartner> findByMatchingByUserId(Long userId) {
+    //     return matchingPartnerRepository.findByMatchingByUserId(userId);
+    // }
+
+    public List<MatchingPartner> findByAll() {
+        return matchingPartnerRepository.findAll();
+    }
+
+    public List<MatchingPartner> findByMatchingId(Long matchingId) {
+        return matchingPartnerRepository.findByMatchingId(matchingId);
     }
 }

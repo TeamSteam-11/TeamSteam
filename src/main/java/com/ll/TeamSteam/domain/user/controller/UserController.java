@@ -4,6 +4,8 @@ package com.ll.TeamSteam.domain.user.controller;
 import com.ll.TeamSteam.domain.friend.entity.Friend;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.notification.service.NotificationService;
+import com.ll.TeamSteam.domain.recentlyUser.entity.RecentlyUser;
+import com.ll.TeamSteam.domain.recentlyUser.service.RecentlyUserService;
 import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
 import com.ll.TeamSteam.domain.steam.service.SteamService;
 import com.ll.TeamSteam.domain.user.entity.Gender;
@@ -54,6 +56,8 @@ public class UserController {
     private final UserService userService;
 
     private final SteamService steamService;
+
+    private final RecentlyUserService recentlyUserService;
 
     private final NotificationService notificationService;
 
@@ -231,8 +235,12 @@ public class UserController {
 
 
         User targetUser = userService.findById(userId).orElseThrow();
+
         RsData<List<SteamGameLibrary>> haveGameListData = steamService.getUserGameList(targetUser.getSteamId());
         List<SteamGameLibrary> haveGameList = haveGameListData.getData();
+
+        List<RecentlyUser> recentlyUserList =recentlyUserService.findAllByUserId(userId);
+
         List<Friend> friendsList = userService.getFriends(user.getId());
         model.addAttribute("gameList", haveGameList);
 
@@ -240,6 +248,7 @@ public class UserController {
         model.addAttribute("targetUser", targetUser);
         model.addAttribute("loginedId", loginedId);
         model.addAttribute("friendsList", friendsList);
+        model.addAttribute("recentlyUserList",recentlyUserList);
 
         return "user/profile";
 

@@ -5,6 +5,7 @@ import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
+import com.ll.TeamSteam.domain.recentlyUser.service.RecentlyUserService;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTag;
 import com.ll.TeamSteam.domain.userTag.genreTag.GenreTag;
@@ -42,6 +43,8 @@ public class MatchingController {
     private final UserRepository userRepository;
     private final ChatRoomService chatRoomService;
     private final MatchingPartnerService matchingPartnerService;
+
+    private final RecentlyUserService recentlyUserService;
 
     @GetMapping("/list")
     public String matchingList(Model model) {
@@ -252,6 +255,8 @@ public class MatchingController {
 
         matchingPartnerService.addPartner(matching.getId(), user.getId());
 
+
+
         return String.format("redirect:/match/detail/%d", matchingId);
     }
 
@@ -268,6 +273,8 @@ public class MatchingController {
         }
 
         matchingPartnerService.updateTrue(matching.getId(), user.getId());
+
+        recentlyUserService.updateRecentlyUser(user.getId());
 
         return String.format("redirect:/chat/rooms/%d", matchingId);
     }

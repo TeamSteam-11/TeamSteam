@@ -91,7 +91,7 @@
         </div>
     </div>
     <div th:if="${loginedId == targetUser.getId()}">
-        <div class="flex justify-end">
+        <div class="flex justify-start">
             <div>
                 <h2 class="text-xl font-semibold mb-4">친구 목록</h2>
 
@@ -103,7 +103,6 @@
                         </thead>
                         <tbody>
                         <tr th:each="friend: ${friendsList}">
-                            <td th:text="${friend.getFriend().getId()}"></td>
                             <td th:text="${friend.getFriend().getUsername()}"></td>
                             <td>
                                 <img th:src="${friend.getFriend().getAvatar()}" class="w-8 h-8 rounded-full">
@@ -118,6 +117,34 @@
             </div>
         </div>
     </div>
+    <div th:if="${loginedId == targetUser.getId()}">
+        <div class="flex justify-end">
+            <div>
+                <h2 class="text-xl font-semibold mb-4">최근 매칭된 유저</h2>
+
+                <th:block th:if="${!recentlyUserList.isEmpty()}">
+                    <table class="table-auto">
+                        <thead>
+                        <tr>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="recentlyUser: ${recentlyUserList}">
+                            <td th:text="${recentlyUser.getUsername()}"></td>
+                            <td>
+                                <img th:src="${recentlyUser.getUser().getAvatar()}" class="w-8 h-8 rounded-full">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </th:block>
+                <th:block th:if="${recentlyUserList.isEmpty()}">
+                    <p class="text-gray-500">매칭을 시작해주세요.</p>
+                </th:block>
+            </div>
+        </div>
+    </div>
+
 
     <div class="card lg:card-side bg-base-100 shadow-xl custom-card2 ">
         <div class="card-body">
