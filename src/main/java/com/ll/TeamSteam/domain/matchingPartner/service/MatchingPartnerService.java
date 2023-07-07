@@ -62,19 +62,12 @@ public class MatchingPartnerService {
 
         matchingPartner.updateInChatRoomTrueFalse(true);
     }
-    public List<MatchingPartner> findByMatching(Matching matching){
-        return matchingPartnerRepository.findByMatching(matching);
-    }
-
-    // public List<MatchingPartner> findByMatchingByUserId(Long userId) {
-    //     return matchingPartnerRepository.findByMatchingByUserId(userId);
-    // }
-
-    public List<MatchingPartner> findByAll() {
-        return matchingPartnerRepository.findAll();
-    }
 
     public List<MatchingPartner> findByMatchingId(Long matchingId) {
         return matchingPartnerRepository.findByMatchingId(matchingId);
+    }
+
+    public List<MatchingPartner> findByUserId(Long userId) {
+        return matchingPartnerRepository.findByUserId(userId);
     }
 }

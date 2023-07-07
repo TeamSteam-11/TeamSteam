@@ -130,9 +130,9 @@
                         </thead>
                         <tbody>
                         <tr th:each="recentlyUser: ${recentlyUserList}">
-                            <td th:text="${recentlyUser.getUsername()}"></td>
+                            <td th:text="${recentlyUser.getMatchingPartnerName()}"></td>
                             <td>
-                                <img th:src="${recentlyUser.getUser().getAvatar()}" class="w-8 h-8 rounded-full">
+                                <img th:src="${recentlyUser.getMatchingPartner().getUser().getAvatar()}" class="w-8 h-8 rounded-full">
                             </td>
                         </tr>
                         </tbody>

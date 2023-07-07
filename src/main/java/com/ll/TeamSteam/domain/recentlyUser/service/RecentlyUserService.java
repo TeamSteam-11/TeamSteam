@@ -32,67 +32,73 @@ public class RecentlyUserService {
 	private final MatchingPartnerService matchingPartnerService;
 	private final RecentlyUserRepository recentlyUserRepository;
 
-	public void saveRecentlyUser(MatchingPartner matchingPartner){
-
-	}
+	// public void saveRecentlyUser(MatchingPartner matchingPartner){
+	//
+	// }
 	@Transactional
 	public void updateRecentlyUser(Long userId){
 
 		User user =	userService.findByIdElseThrow(userId);
 
-	try {
+		log.info("user = {} ",user);
 		//유저가 가지고있는 매칭리스트들의 아이디리스트
-		List<Long> matchingListIdList = user.getMatchingList().stream()
-			.map(m -> m.getId()).collect(Collectors.toList());
+		List<MatchingPartner> matchingPartnerList = matchingPartnerService.findByUserId(userId);
 
-		log.info("matchingListIdList = {} ",matchingListIdList);
+		List<Long> matchingIdList = matchingPartnerList.stream()
+			.map(m->m.getMatching().getId())
+			.collect(Collectors.toList());
+
+		log.info("matchingListIdList = {} ",matchingIdList);
+		List<RecentlyUser> recentlyUserList = new ArrayList<>();
 
 		//매칭리스트의 아이디리스트로 매칭파트너 찾기
-		for (Long matchingListId : matchingListIdList) {
-			List<MatchingPartner> matchingPartnerList = matchingPartnerService.findByMatchingId(matchingListId);
+		for (Long matchingListId : matchingIdList) {
+			List<MatchingPartner> matchingPartners = matchingPartnerService.findByMatchingId(matchingListId);
 			//찾은 매칭파트너 목록에서 필터링
-			matchingPartnerList.stream()
+			List<MatchingPartner> matchingPartnersNoContainsMe = matchingPartners.stream()
 				.filter(u -> u.isInChatRoomTrueFalse() == true)
+				.filter(t ->t.getUser().getId() != userId)//요부분
 				.collect(Collectors.toList());
 
-			log.info("matchingPartnerList = {} ",matchingPartnerList);
+			log.info("matchingPartners = {} ",matchingPartners);
 
-			List<RecentlyUser> recentlyUserList = new ArrayList<>();
-
-			for (MatchingPartner matchingPartner : matchingPartnerList) {
+			for (MatchingPartner matchingPartner : matchingPartnersNoContainsMe) {
 
 				RecentlyUser recentlyUser = RecentlyUser.builder()
 					.user(user)
 					.matchingPartner(matchingPartner)
-					.username(matchingPartner.getUser().getUsername())
+					.matchingPartnerName(matchingPartner.getUser().getUsername())
 					.build();
 
 				log.info("recentlyUser = {} ",recentlyUser);
+				log.info("recentlyUser.getMatchingPartner() = {} ",recentlyUser.getMatchingPartner());
+				log.info("recentlyUser.getUsername() = {} ",recentlyUser.getMatchingPartnerName());
+
+
 
 				recentlyUserList.add(recentlyUser);
 
 			}
-			recentlyUserRepository.saveAll(recentlyUserList);
+
 		}
-	}
-	catch(Exception e){
-		e.printStackTrace();
-	}
+		recentlyUserRepository.saveAll(recentlyUserList);
 	}
 
-	public void deleteRecentlyUser(){
 
-	}
 
-	public Optional<RecentlyUser> findById(){
-		// return recentlyUserRepository.findById();
-		return null;
-	}
-
-	public RecentlyUser findByIdOrElseThrow(){
-		// return recentlyUserRepository.findById().orElseThrow();
-		return null;
-	}
+	// public void deleteRecentlyUser(){
+	//
+	// }
+	//
+	// public Optional<RecentlyUser> findById(){
+	// 	// return recentlyUserRepository.findById();
+	// 	return null;
+	// }
+	//
+	// public RecentlyUser findByIdOrElseThrow(){
+	// 	// return recentlyUserRepository.findById().orElseThrow();
+	// 	return null;
+	// }
 
 	public List<RecentlyUser> findAllByUserId(Long userId) {
 		return recentlyUserRepository.findAllByUserId(userId);

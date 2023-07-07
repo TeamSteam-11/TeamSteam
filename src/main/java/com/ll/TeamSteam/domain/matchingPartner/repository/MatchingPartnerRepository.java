@@ -18,5 +18,7 @@ public interface MatchingPartnerRepository extends JpaRepository<MatchingPartner
 
     List<MatchingPartner> findByMatchingId(Long matchingId);
 
-    // List<MatchingPartner> findByMatchingByUserId(Long userId);
+	List<MatchingPartner> findByUserId(Long userId);
+
+
 }

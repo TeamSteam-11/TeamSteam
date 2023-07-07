@@ -239,10 +239,14 @@ public class UserController {
         RsData<List<SteamGameLibrary>> haveGameListData = steamService.getUserGameList(targetUser.getSteamId());
         List<SteamGameLibrary> haveGameList = haveGameListData.getData();
 
+        recentlyUserService.updateRecentlyUser(userId);
         List<RecentlyUser> recentlyUserList =recentlyUserService.findAllByUserId(userId);
 
         List<Friend> friendsList = userService.getFriends(user.getId());
         model.addAttribute("gameList", haveGameList);
+
+
+
 
         long loginedId = user.getId();//프로필 본인인지 아닌지 검증하는 용도
         model.addAttribute("targetUser", targetUser);
