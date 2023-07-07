@@ -62,6 +62,11 @@ public class MatchingController {
 
     @GetMapping("/create")
     public String matchingCreate(@AuthenticationPrincipal SecurityUser user, Model model) {
+
+        if (!rq.isLogin()) {
+            return "redirect:/user/login";
+        }
+
         // CreateForm 객체를 모델에 추가
         model.addAttribute("createForm", new CreateForm());
         List<GameTag> userGameTags = userRepository.findById(user.getId()).orElseThrow().getUserTag().getGameTag();
