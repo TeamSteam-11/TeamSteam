@@ -74,7 +74,9 @@ public class ChatRoomController {
 
         RsData rsData = chatRoomService.canAddChatRoomUser(chatRoom, user.getId(), matching);
 
-        if (rsData.isFail()) return rq.historyBack(rsData);
+        if (rsData.isFail()) {
+            return rq.historyBack(rsData);
+        }
 
         ChatRoomDto chatRoomDto = chatRoomService.getByIdAndUserId(roomId, user.getId());
 
@@ -144,16 +146,13 @@ public class ChatRoomController {
 
     // 방장이 유저 강퇴시키기
     @PreAuthorize("isAuthenticated()")
-    @DeleteMapping("/{roomId}/kick/{userId}")
-    public String kickChatUser(@PathVariable Long roomId, @PathVariable Long userId,
+    @DeleteMapping("/{roomId}/kick/{chatUserId}")
+    public String kickChatUser(@PathVariable Long roomId, @PathVariable Long chatUserId,
                                  @AuthenticationPrincipal SecurityUser user){
         ChatRoom chatRoom = chatRoomService.findById(roomId);
-        chatRoomService.kickChatUser(roomId, userId, user);
+        chatRoomService.kickChatUser(roomId, chatUserId, user);
 
-        Long chatRoomId = chatUserService.findById(userId).getChatRoom().getId();
-        chatRoomService.changeParticipant(chatRoom);
-
-        return ("redirect:/match/detail/%d").formatted(chatRoomId);
+        return ("redirect:/chat/%d/userList").formatted(chatRoom.getId());
     }
 
     // 유저 정보 가져오기
@@ -168,9 +167,12 @@ public class ChatRoomController {
             return rq.historyBack("해당 방에 참가하지 않았습니다.");
         }
 
+        User currentUser = userService.findById(user.getId()).orElseThrow(null);
+
         model.addAttribute("chatUserList", chatUserList);
         model.addAttribute("chatRoom", chatRoom);
         model.addAttribute("COMMON", COMMON);
+        model.addAttribute("currentUser", currentUser);
         return "chat/userList";
     }
 

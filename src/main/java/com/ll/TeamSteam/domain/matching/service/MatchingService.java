@@ -1,11 +1,15 @@
 package com.ll.TeamSteam.domain.matching.service;
 
 import com.ll.TeamSteam.domain.matching.entity.Matching;
+import com.ll.TeamSteam.domain.matching.entity.SearchQuery;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +19,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MatchingService {
     public final MatchingRepository matchingRepository;
 
@@ -43,8 +48,9 @@ public class MatchingService {
         return modifyDate.plusHours(hours);
     }
 
-    public List<Matching> getMachingList() {
-        return matchingRepository.findAll();
+    public Page<Matching> getMatchingList(Pageable pageable) {
+
+        return matchingRepository.findAll(pageable);
     }
 
     public Optional<Matching> findById(Long id) {
@@ -67,5 +73,22 @@ public class MatchingService {
             e.printStackTrace();
             return RsData.of("F-1", "매칭 수정 중 오류가 발생했습니다.");
         }
+    }
+
+    public Page<Matching> searchMatching(String name, String keyword, Pageable pageable) {
+        SearchQuery searchQuery = new SearchQuery(keyword);
+        log.info("keyword = {}", keyword);
+
+        Page<Matching> matchingList;
+
+        if (name.equals("title")) {
+            matchingList = matchingRepository.findByTitleContainingIgnoreCase(searchQuery.getValue(), pageable);
+        } else if (name.equals("content")) {
+            matchingList = matchingRepository.findByContentContainingIgnoreCase(searchQuery.getValue(), pageable);
+        } else {
+            throw new IllegalArgumentException("검색 쿼리가 잘 작성되지 않았음");
+        }
+
+        return matchingList;
     }
 }
