@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface SteamGameLibraryRepository extends JpaRepository<SteamGameLibrary, Long> {
 
-	SteamGameLibrary findByAppid(Integer appId);
+	SteamGameLibrary findByAppidAndUserId(Integer appId, Long UserId);
 	void deleteByUserId(Long userId);
 	List<SteamGameLibrary> findAllByUserId(Long userId);
 

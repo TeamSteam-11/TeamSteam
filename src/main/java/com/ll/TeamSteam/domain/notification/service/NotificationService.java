@@ -3,17 +3,13 @@ package com.ll.TeamSteam.domain.notification.service;
 import com.ll.TeamSteam.domain.notification.entity.Notification;
 import com.ll.TeamSteam.domain.notification.repository.NotificationRepository;
 import com.ll.TeamSteam.domain.user.entity.User;
-import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +17,6 @@ import java.util.Optional;
 @Slf4j
 public class NotificationService {
 
-    private final UserService userService;
     private final NotificationRepository notificationRepository;
 
     public List<Notification> findByInvitedUser(User user) {
@@ -78,6 +73,13 @@ public class NotificationService {
 
     public void makeFriend(User invitingUser, User invitedUser) {
         createAndSaveNotification(invitingUser, invitedUser);
+    }
+
+    public boolean isDupNotification(User invitingUser, User invitedUser){
+        if(notificationRepository.findByInvitingUserAndInvitedUser(invitingUser,invitedUser).isPresent()){
+            return true;
+        }
+        return false;
     }
 
     public RsData<Notification> createAndSaveNotification(User invitingUser, User invitedUser) {
