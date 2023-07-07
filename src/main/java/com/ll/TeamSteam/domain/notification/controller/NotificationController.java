@@ -1,5 +1,6 @@
 package com.ll.TeamSteam.domain.notification.controller;
 
+import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.notification.entity.Notification;
 import com.ll.TeamSteam.domain.notification.service.NotificationService;
 import com.ll.TeamSteam.domain.user.controller.UserController;
@@ -25,6 +26,8 @@ import java.util.List;
 public class NotificationController {
     private final NotificationService notificationService;
     private final UserService userService;
+    private final MatchingPartnerService matchingPartnerService;
+
 
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
@@ -57,19 +60,33 @@ public class NotificationController {
 
         Notification notification = notificationService.findById(notificationId);
 
-        Long InvitedUserId = user.getId();
-        Long InvitingUserId = notification.getInvitingUser().getId();
-        log.info("InvitingUserId = {}", InvitingUserId);
-        log.info("InvitedUserId = {}", InvitedUserId);
+        Long invitedUserId = user.getId();
+        Long invitingUserId = notification.getInvitingUser().getId();
+        log.info("InvitingUserId = {}", invitedUserId);
+        log.info("InvitedUserId = {}", invitingUserId);
         Long roomId = notification.getRoomId();
 
         notificationService.deleteNotification(user.getId(), notificationId);
 
         if(roomId == null) {
-            userService.addFriends(InvitedUserId, InvitingUserId);
+            userService.addFriends(invitedUserId, invitingUserId);
 
             return "redirect:/notification/list";
         }
+
+        //TODO:여기에 검증 => 초대 받았을 때, 매칭 파트너에 추가 + True로 변경
+
+        // true 면 matching partner에 저장되어있고, false 면 없음
+        boolean alreadyWithPartner = matchingPartnerService.isDuplicatedMatchingPartner(roomId, invitedUserId);
+
+        // 이미 저장된 사람은 중복 저장되지 않도록 처리
+        if (alreadyWithPartner) {
+            throw new IllegalArgumentException("너 이미 매칭파트너에 참여중이야");
+        }
+
+        matchingPartnerService.addPartner(roomId, invitedUserId);
+
+        matchingPartnerService.updateTrue(roomId, invitedUserId);
 
         return String.format("redirect:/chat/rooms/%d", roomId);
     }
