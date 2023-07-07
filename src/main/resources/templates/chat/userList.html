@@ -39,6 +39,7 @@
         <th>아이디</th>
         <th>입장일시</th>
         <th>방장</th>
+        <th th:if="${currentUser.getId() == chatRoom.getOwner().getId()}">강퇴</th>
       </tr>
       </thead>
       <tbody>
@@ -52,6 +53,13 @@
           <span th:if="${chatUser.user.id == chatRoom.owner.id}">
             <i class="fa-solid fa-crown"></i>
           </span>
+        </td>
+        <td th:if="${currentUser.getId() == chatRoom.getOwner().getId()}">
+          <form th:action="@{/chat/{roomId}/kick/{userId}(roomId=${chatRoom.id}, userId=${chatUser.id})}" th:if="${chatUser.chatRoom.owner.id != chatUser.user.id}"
+                method="post" onsubmit="if ( !confirm('해당 멤버를 강퇴하시겠습니까?\n(강퇴된 멤버는 모임에 다시 참여할 수 없습니다)') ) return false; disconnect()">
+            <input type="hidden" name="_method" value="delete">
+            <button class="btn" >강퇴</button>
+          </form>
         </td>
       </tr>
       </tbody>

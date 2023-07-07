@@ -44,13 +44,13 @@
       </tr>
       </thead>
       <tbody>
-      <tr th:each="user, loop : ${userList}">
+      <tr th:each="friend, loop : ${friendList}">
         <td class="flex justify-center">
-          <img th:src="${user.avatar}" alt="${user.username}'s avatar" class="rounded-lg w-10 h-10 m-auto"/>
+          <img th:src="${friend.getFriend().getAvatar()}" alt="${user.username}'s avatar" class="rounded-lg w-10 h-10 m-auto"/>
         </td>
-        <td th:text="${user.username}"></td>
+        <td th:text="${friend.getFriend().getUsername()}"></td>
         <td>
-          <a th:href="@{/chat/{roomId}/inviteUser/{userId}(roomId=${chatRoom.id}, userId=${user.id})}"
+          <a th:href="@{/chat/{roomId}/inviteUser/{friend}(roomId=${chatRoom.id}, friend=${friend.getFriend().getId()})}"
              class="btn btn-sm btn-outline border-white text-white hover:bg-[#1F2227] hover:border-white invite">초대</a>
         </td>
       </tr>

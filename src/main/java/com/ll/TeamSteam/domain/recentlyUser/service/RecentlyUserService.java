@@ -63,28 +63,29 @@ public class RecentlyUserService {
 			log.info("matchingPartners = {} ",matchingPartners);
 
 			for (MatchingPartner matchingPartner : matchingPartnersNoContainsMe) {
+				boolean exists = existsByUserAndMatchingPartner(user, matchingPartner);
+				if (!exists) {
+					RecentlyUser recentlyUser = RecentlyUser.builder()
+						.user(user)
+						.matchingPartner(matchingPartner)
+						.matchingPartnerName(matchingPartner.getUser().getUsername())
+						.build();
 
-				RecentlyUser recentlyUser = RecentlyUser.builder()
-					.user(user)
-					.matchingPartner(matchingPartner)
-					.matchingPartnerName(matchingPartner.getUser().getUsername())
-					.build();
+					log.info("recentlyUser = {} ", recentlyUser);
+					log.info("recentlyUser.getMatchingPartner() = {} ", recentlyUser.getMatchingPartner());
+					log.info("recentlyUser.getUsername() = {} ", recentlyUser.getMatchingPartnerName());
 
-				log.info("recentlyUser = {} ",recentlyUser);
-				log.info("recentlyUser.getMatchingPartner() = {} ",recentlyUser.getMatchingPartner());
-				log.info("recentlyUser.getUsername() = {} ",recentlyUser.getMatchingPartnerName());
-
-
-
-				recentlyUserList.add(recentlyUser);
-
+					recentlyUserList.add(recentlyUser);
+				}
 			}
 
 		}
 		recentlyUserRepository.saveAll(recentlyUserList);
 	}
 
-
+	public boolean existsByUserAndMatchingPartner(User user, MatchingPartner matchingPartner) {
+		return recentlyUserRepository.existsByUserAndMatchingPartner(user, matchingPartner);
+	}
 
 	// public void deleteRecentlyUser(){
 	//

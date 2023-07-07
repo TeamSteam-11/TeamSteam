@@ -8,6 +8,8 @@ import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUserType;
 import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
+import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
+import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.notification.service.NotificationService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
@@ -39,6 +41,7 @@ public class ChatRoomService {
     private final SimpMessageSendingOperations template;
     private final ApplicationEventPublisher publisher;
     private final NotificationService notificationService;
+    private final MatchingPartnerService matchingPartnerService;
 
 
     @Transactional
@@ -70,6 +73,15 @@ public class ChatRoomService {
         User user = userService.findByIdElseThrow(userId);
 
         ChatRoom chatRoom = findById(roomId);
+        /**
+         * 매칭 파트너가 아닌데 채팅방에 들어가려고 하면 IllegalArgumentException 던저주기
+         */
+        Matching matching = chatRoom.getMatching();
+
+        matching.getMatchingPartners().stream()
+                .filter(matchingPartner -> matchingPartner.getUser().getId().equals(user.getId()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("너 매칭 파트너 아니야"));
 
         addChatRoomUser(chatRoom, user, userId);
 
@@ -117,7 +129,9 @@ public class ChatRoomService {
     }
 
     public RsData checkChatUserType(ChatUser chatUser) {
-        if (chatUser.getType().equals(KICKED)) return RsData.of("F-1", "강퇴당한 모임입니다!");
+        if (chatUser.getType().equals(KICKED)) {
+            return RsData.of("F-1", "강퇴당한 모임입니다!");
+        }
 
         return RsData.of("S-1", "기존 모임 채팅방에 참여합니다.");
     }
@@ -195,6 +209,7 @@ public class ChatRoomService {
         Long originUserId = kickUser.getId();
 
         chatUser.changeType(); // 강퇴된 유저의 type 을 "KICKED"로 변경
+        matchingPartnerService.updateFalse(roomId, originUserId);  // 강퇴된 유저의 inChatRoomTrueFalse 값을 false로 변경
 
         List<ChatMessage> chatMessages = chatRoom.getChatMessages();
 

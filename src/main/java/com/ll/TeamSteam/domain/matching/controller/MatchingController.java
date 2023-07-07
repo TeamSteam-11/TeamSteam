@@ -19,15 +19,17 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,8 +49,14 @@ public class MatchingController {
     private final RecentlyUserService recentlyUserService;
 
     @GetMapping("/list")
-    public String matchingList(Model model) {
-        List<Matching> matchingList = matchingService.getMachingList();
+    public String matchingList(Model model,
+//                               @RequestParam(defaultValue = "0") int page,
+//                               @RequestParam(defaultValue = "12") int size,
+//                               @RequestParam(defaultValue = "createDate") String sort,
+//                               @RequestParam(defaultValue = "DESC") String direction
+                               @PageableDefault(sort = "createDate", direction = Sort.Direction.DESC, size = 12) Pageable pageable) {
+//        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort));
+        Page<Matching> matchingList = matchingService.getMatchingList(pageable);
 
         model.addAttribute("matchingList", matchingList);
 
@@ -57,6 +65,11 @@ public class MatchingController {
 
     @GetMapping("/create")
     public String matchingCreate(@AuthenticationPrincipal SecurityUser user, Model model) {
+
+        if (!rq.isLogin()) {
+            return "redirect:/user/login";
+        }
+
         // CreateForm 객체를 모델에 추가
         model.addAttribute("createForm", new CreateForm());
         List<GameTag> userGameTags = userRepository.findById(user.getId()).orElseThrow().getUserTag().getGameTag();
@@ -277,5 +290,17 @@ public class MatchingController {
         recentlyUserService.updateRecentlyUser(user.getId());
 
         return String.format("redirect:/chat/rooms/%d", matchingId);
+    }
+
+    @GetMapping("/search")
+    public String searchMatching(@RequestParam String name, @RequestParam String keyword,
+                                 @PageableDefault(sort = "createDate", direction = Sort.Direction.DESC, size = 12) Pageable pageable,
+                                 Model model){
+
+        Page<Matching> matchingList = matchingService.searchMatching(name, keyword, pageable);
+        model.addAttribute("matchingList", matchingList);
+        model.addAttribute("searchOption", name);  // 검색 옵션 추가
+
+        return "matching/list";
     }
 }

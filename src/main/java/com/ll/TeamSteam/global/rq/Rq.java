@@ -94,7 +94,7 @@ public class Rq {
         req.setAttribute("historyBackErrorMsg", msg);
         // 200 이 아니라 400 으로 응답코드가 지정되도록
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        return "usr/common/js";
+        return "common/js";
     }
 
     // 뒤로가기 + 메세지

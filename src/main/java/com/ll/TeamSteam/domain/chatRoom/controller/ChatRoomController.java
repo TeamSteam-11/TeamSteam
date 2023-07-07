@@ -7,6 +7,7 @@ import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
+import com.ll.TeamSteam.domain.friend.entity.Friend;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.user.entity.User;
@@ -74,7 +75,9 @@ public class ChatRoomController {
 
         RsData rsData = chatRoomService.canAddChatRoomUser(chatRoom, user.getId(), matching);
 
-        if (rsData.isFail()) return rq.historyBack(rsData);
+        if (rsData.isFail()) {
+            return rq.historyBack(rsData);
+        }
 
         ChatRoomDto chatRoomDto = chatRoomService.getByIdAndUserId(roomId, user.getId());
 
@@ -144,16 +147,13 @@ public class ChatRoomController {
 
     // 방장이 유저 강퇴시키기
     @PreAuthorize("isAuthenticated()")
-    @DeleteMapping("/{roomId}/kick/{userId}")
-    public String kickChatUser(@PathVariable Long roomId, @PathVariable Long userId,
+    @DeleteMapping("/{roomId}/kick/{chatUserId}")
+    public String kickChatUser(@PathVariable Long roomId, @PathVariable Long chatUserId,
                                  @AuthenticationPrincipal SecurityUser user){
         ChatRoom chatRoom = chatRoomService.findById(roomId);
-        chatRoomService.kickChatUser(roomId, userId, user);
+        chatRoomService.kickChatUser(roomId, chatUserId, user);
 
-        Long chatRoomId = chatUserService.findById(userId).getChatRoom().getId();
-        chatRoomService.changeParticipant(chatRoom);
-
-        return ("redirect:/match/detail/%d").formatted(chatRoomId);
+        return ("redirect:/chat/%d/userList").formatted(chatRoom.getId());
     }
 
     // 유저 정보 가져오기
@@ -168,9 +168,12 @@ public class ChatRoomController {
             return rq.historyBack("해당 방에 참가하지 않았습니다.");
         }
 
+        User currentUser = userService.findById(user.getId()).orElseThrow(null);
+
         model.addAttribute("chatUserList", chatUserList);
         model.addAttribute("chatRoom", chatRoom);
         model.addAttribute("COMMON", COMMON);
+        model.addAttribute("currentUser", currentUser);
         return "chat/userList";
     }
 
@@ -178,19 +181,15 @@ public class ChatRoomController {
     @GetMapping("/{roomId}/inviteList")
     public String inviteList(Model model, @PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user) {
         List<User> userList = userService.findAll();
-        ChatRoom chatRoom = chatRoomService.findById(roomId);
 
-        // 친구 목록으로 불러올 때는 없어도 되는 로직(전체 유저에서 본인을 제외한 목록)
-        List<User> filteredUserList = new ArrayList<>();
-        for (User userForList : userList) {
-            if (!user.getId().equals(userForList.getId())) {
-                filteredUserList.add(userForList);
-            }
-        }
+        User currentUser = userService.findByIdElseThrow(user.getId());
+        List<Friend> friendList = currentUser.getFriendList();
+        ChatRoom chatRoom = chatRoomService.findById(roomId);
 
         log.info("userList = {}", userList);
         model.addAttribute("chatRoom", chatRoom);
-        model.addAttribute("userList", filteredUserList);
+        model.addAttribute("user", currentUser);
+        model.addAttribute("friendList", friendList);
 
         return "chat/inviteList";
     }

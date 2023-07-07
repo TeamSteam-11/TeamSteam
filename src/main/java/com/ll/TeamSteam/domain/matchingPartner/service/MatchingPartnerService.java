@@ -25,10 +25,10 @@ public class MatchingPartnerService {
         Matching matching = matchingService.findById(matchingId).orElseThrow();
 
         MatchingPartner matchingPartner = MatchingPartner.builder()
-                .matching(matching)
-                .user(user)
-                .inChatRoomTrueFalse(false)
-                .build();
+            .matching(matching)
+            .user(user)
+            .inChatRoomTrueFalse(false)
+            .build();
 
         matchingPartnerRepository.save(matchingPartner);
     }
@@ -58,7 +58,7 @@ public class MatchingPartnerService {
          * moveChatController 에서 검증을 한번 한 후 service 쪽에서도 검증
          */
         MatchingPartner matchingPartner = matchingPartnerRepository.findByMatchingAndUser(matching, user)
-                .orElseThrow(() -> new IllegalArgumentException("매칭 파트너를 찾을 수 없어"));
+            .orElseThrow(() -> new IllegalArgumentException("매칭 파트너를 찾을 수 없어"));
 
         matchingPartner.updateInChatRoomTrueFalse(true);
     }
@@ -70,4 +70,20 @@ public class MatchingPartnerService {
     public List<MatchingPartner> findByUserId(Long userId) {
         return matchingPartnerRepository.findByUserId(userId);
     }
-}
+        @Transactional
+        public void updateFalse (Long matchingId, Long kickEdUserId){
+            User user = userService.findByIdElseThrow(kickEdUserId);
+            Matching matching = matchingService.findById(matchingId).orElseThrow();
+
+            if (matching.getId() == null) {
+                throw new IllegalArgumentException("매칭이 존재하지 않음");
+            }
+
+            MatchingPartner matchingPartner = matchingPartnerRepository.findByMatchingAndUser(matching, user)
+                .orElseThrow(() -> new IllegalArgumentException("매칭 파트너를 찾을 수 없어"));
+
+            matchingPartner.updateInChatRoomTrueFalse(false);
+
+        }
+    }
+
