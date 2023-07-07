@@ -105,11 +105,6 @@
                     <span>미니게임</span>
                 </a>
             </li>
-            <li>
-                <a th:if="${@rq.isLogin()}" th:href="@{'/user/profile/' + ${@rq.getUser().getId()}}" class="h-full flex items-center px-2">
-                    <span>프로필</span>
-                </a>
-            </li>
             <li class="menu-1__li-icon">
                 <a href="/notification/list" class="h-full flex items-center px-2 btn btn-ghost btn-circle">
                     <div class="indicator">
@@ -120,7 +115,7 @@
                 </a>
             </li>
             <li>
-                <a th:if="${@rq.isLogin()}" class="h-full flex items-center px-2">
+                <a th:if="${@rq.isLogin()}" class="h-full flex items-center px-2" th:href="@{'/user/profile/' + ${@rq.getUser().getId()}}">
                 <img th:src="${@rq.getUser().getAvatar()}" class="w-8 h-8 rounded-full mr-2" />
                 <span th:text="${@rq.getUser().getUsername()}"></span>
                 </a>
