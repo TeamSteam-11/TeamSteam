@@ -18,15 +18,16 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -270,5 +271,16 @@ public class MatchingController {
         matchingPartnerService.updateTrue(matching.getId(), user.getId());
 
         return String.format("redirect:/chat/rooms/%d", matchingId);
+    }
+
+    @GetMapping("/search")
+    public String searchMatching(@RequestParam String keyword,
+                                 @PageableDefault(sort = "createDate", direction = Sort.Direction.DESC, size = 12) Pageable pageable,
+                                 Model model){
+        Page<Matching> matchingList = matchingService.searchMatching(keyword, pageable);
+        model.addAttribute("matchingList", matchingList);
+
+        return "matching/list";
+
     }
 }
