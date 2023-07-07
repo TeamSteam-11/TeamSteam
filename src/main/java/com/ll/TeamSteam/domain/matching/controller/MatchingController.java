@@ -46,16 +46,17 @@ public class MatchingController {
     private final MatchingPartnerService matchingPartnerService;
 
     @GetMapping("/list")
-    public String matchingList(Model model,
-//                               @RequestParam(defaultValue = "0") int page,
-//                               @RequestParam(defaultValue = "12") int size,
-//                               @RequestParam(defaultValue = "createDate") String sort,
-//                               @RequestParam(defaultValue = "DESC") String direction
-                               @PageableDefault(sort = "createDate", direction = Sort.Direction.DESC, size = 12) Pageable pageable) {
-//        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort));
+    public String matchingList(@RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "8") int size,
+                               @RequestParam(defaultValue = "createDate") String sortCode,
+                               @RequestParam(defaultValue = "DESC") String direction,
+                               /*@PageableDefault(sort = "createDate", direction = Sort.Direction.DESC, size = 12) Pageable pageable,*/
+                               Model model) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
         Page<Matching> matchingList = matchingService.getMatchingList(pageable);
-
         model.addAttribute("matchingList", matchingList);
+        model.addAttribute("paging", page);
+        model.addAttribute("keyword", null);
 
         return "matching/list";
     }
@@ -285,13 +286,14 @@ public class MatchingController {
         return String.format("redirect:/chat/rooms/%d", matchingId);
     }
 
-    @GetMapping("/search")
+    @GetMapping("/list/search")
     public String searchMatching(@RequestParam String name, @RequestParam String keyword,
-                                 @PageableDefault(sort = "createDate", direction = Sort.Direction.DESC, size = 12) Pageable pageable,
+                                 @PageableDefault(sort = "createDate", direction = Sort.Direction.DESC, size = 8) Pageable pageable,
                                  Model model){
 
         Page<Matching> matchingList = matchingService.searchMatching(name, keyword, pageable);
         model.addAttribute("matchingList", matchingList);
+        model.addAttribute("keyword", keyword);
         model.addAttribute("searchOption", name);  // 검색 옵션 추가
 
         return "matching/list";
