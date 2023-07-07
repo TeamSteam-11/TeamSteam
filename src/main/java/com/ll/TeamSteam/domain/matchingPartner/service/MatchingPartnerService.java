@@ -60,4 +60,19 @@ public class MatchingPartnerService {
 
         matchingPartner.updateInChatRoomTrueFalse(true);
     }
+
+    @Transactional
+    public void updateFalse(Long matchingId, Long kickEdUserId) {
+        User user = userService.findByIdElseThrow(kickEdUserId);
+        Matching matching = matchingService.findById(matchingId).orElseThrow();
+
+        if (matching.getId() == null) {
+            throw new IllegalArgumentException("매칭이 존재하지 않음");
+        }
+
+        MatchingPartner matchingPartner = matchingPartnerRepository.findByMatchingAndUser(matching, user)
+                .orElseThrow(() -> new IllegalArgumentException("매칭 파트너를 찾을 수 없어"));
+
+        matchingPartner.updateInChatRoomTrueFalse(false);
+    }
 }
