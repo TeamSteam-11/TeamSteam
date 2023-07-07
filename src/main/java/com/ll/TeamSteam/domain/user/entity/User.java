@@ -67,4 +67,6 @@ public class User extends BaseEntity {
     }
     public void setUserTag(UserTag userTag){ this.userTag = userTag; }
 
+    public void setAvatar(String avatar){ this.avatar = avatar;}
+
 }

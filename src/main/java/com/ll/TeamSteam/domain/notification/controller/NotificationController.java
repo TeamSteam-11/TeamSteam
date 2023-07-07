@@ -26,8 +26,6 @@ public class NotificationController {
     private final NotificationService notificationService;
     private final UserService userService;
 
-    private final UserController userController;
-
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
     public String showList(Model model, @AuthenticationPrincipal SecurityUser user) {
@@ -74,10 +72,6 @@ public class NotificationController {
         }
 
         return String.format("redirect:/chat/rooms/%d", roomId);
-    }
-
-    public void friendRequest(User targetUser, User loginedUser){
-        notificationService.makeFriend(targetUser, loginedUser);
     }
 
 }

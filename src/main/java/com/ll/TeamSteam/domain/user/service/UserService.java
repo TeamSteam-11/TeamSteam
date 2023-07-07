@@ -5,7 +5,6 @@ import com.ll.TeamSteam.domain.friend.repository.FriendRepository;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
 import com.ll.TeamSteam.domain.steam.repository.SteamGameLibraryRepository;
-import com.ll.TeamSteam.domain.user.controller.UserController;
 import com.ll.TeamSteam.domain.user.entity.Gender;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
@@ -15,8 +14,6 @@ import com.ll.TeamSteam.domain.userTag.UserTagRepository;
 import com.ll.TeamSteam.domain.userTag.UserTag;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTag;
 import com.ll.TeamSteam.domain.userTag.genreTag.GenreTag;
-import com.ll.TeamSteam.global.rsData.RsData;
-import com.ll.TeamSteam.global.security.SecurityUser;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,12 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -179,13 +172,13 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    @Transactional
     public void addFriends(Long targetId,Long loginedId){
 
-        if(!isFriend(targetId, loginedId)) {//친구가 아닐 때
+        if(!isFriend(targetId, loginedId)) {//친구가 아닐 때 이중검증
             User targetUser = findByIdElseThrow(targetId);
             User loginedUser = findByIdElseThrow(loginedId);
             //서로 저장
-//            (targetUser, loginedUser);
 
             Friend meToFriends = Friend.builder()
                     .user(loginedUser)
@@ -219,11 +212,11 @@ public class UserService {
 
         User user = userRepository.findBySteamId(steamId).orElseThrow();
 
-        gameTagRepository.deleteAll();
+        gameTagRepository.deleteByUserTag(user.getUserTag());
 
 
         for (Integer appId : selectedGames) {
-            SteamGameLibrary gameLibrary = steamGameLibraryRepository.findByAppid(appId);
+            SteamGameLibrary gameLibrary = steamGameLibraryRepository.findByAppidAndUserId(appId,user.getId());
             if (gameLibrary != null) {
                 GameTag gameTag = new GameTag();
                 gameTag.setAppid(gameLibrary.getAppid());
@@ -241,4 +234,12 @@ public class UserService {
         return friendRepository.findAllByUserId(userId);
     }
 
+    @Transactional
+    public void updateUserAvatar(UserInfoResponse userInfo, Long userId) {
+
+        User user = findByIdElseThrow(userId);
+        user.setAvatar(userInfo.getResponse().getPlayers().get(0).getAvatarmedium());
+
+        userRepository.save(user);
+    }
 }

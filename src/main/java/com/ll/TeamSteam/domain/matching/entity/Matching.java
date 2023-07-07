@@ -1,6 +1,7 @@
 package com.ll.TeamSteam.domain.matching.entity;
 
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
+import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
@@ -10,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -39,6 +42,9 @@ public class Matching extends BaseEntity {
 
     @OneToOne(mappedBy = "matching", fetch = LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ChatRoom chatRoom;
+
+    @OneToMany(mappedBy = "matching", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<MatchingPartner> matchingPartners = new ArrayList<>();
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
