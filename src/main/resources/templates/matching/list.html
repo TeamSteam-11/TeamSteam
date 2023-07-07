@@ -79,13 +79,25 @@
 
     <div class="pagination" style="display: flex; justify-content: center; flex-wrap: wrap;">
         <ul th:if="${keyword == null and searchOption == null}" style="display: flex;">
+            <li>
+                <a th:if="${currentPage != 0}" th:href="@{/match/list(page=${currentPage - 1})}" style="margin-right: 1em;">&lt;이전</a>
+            </li>
             <li th:each="pageNumber : ${#numbers.sequence(0, matchingList.totalPages-1)}" style="display: inline;">
                 <a th:href="@{/match/list(page=${pageNumber})}" th:text="${pageNumber}" style="margin-right: 1em;"></a>
             </li>
+            <li>
+                <a th:if="${currentPage != matchingList.totalPages - 1}" th:href="@{/match/list(page=${currentPage + 1})}" style="margin-right: 1em;">다음&gt;</a>
+            </li>
         </ul>
         <ul th:if="${keyword != null and searchOption != null}" style="display: flex;">
+            <li>
+                <a th:if="${currentPage != 0}" th:href="@{/match/list/search(name=${searchOption}, keyword=${keyword}, page=${currentPage - 1})}" style="margin-right: 1em;">&lt;이전</a>
+            </li>
             <li th:each="pageNumber : ${#numbers.sequence(0, matchingList.totalPages-1)}" style="display: inline;">
                 <a th:href="@{/match/list/search(name=${searchOption}, keyword=${keyword}, page=${pageNumber})}" th:text="${pageNumber}" style="margin-right: 1em;"></a>
+            </li>
+            <li>
+                <a th:if="${currentPage != matchingList.totalPages - 1}" th:href="@{/match/list/search(name=${searchOption}, keyword=${keyword}, page=${currentPage + 1})}" style="margin-right: 1em;">다음&gt;</a>
             </li>
         </ul>
     </div>
