@@ -22,6 +22,15 @@
             margin-top: 30px;
             margin-right: 80px;
         }
+
+        .pagination a {
+            color: darkgray;
+        }
+
+        .pagination a.active {
+            text-decoration: underline;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -84,7 +93,7 @@
                 <a th:if="${currentPage != 0}" th:href="@{/match/list(page=${currentPage - 1})}" style="margin-right: 1em;">&lt;이전</a>
             </li>
             <li th:each="pageNumber : ${#numbers.sequence(0, matchingList.totalPages-1)}" style="display: inline;">
-                <a th:href="@{/match/list(page=${pageNumber})}" th:text="${pageNumber}" style="margin-right: 1em;"></a>
+                <a th:href="@{/match/list(page=${pageNumber})}" th:text="${pageNumber}" style="margin-right: 1em;" th:classappend="${pageNumber == currentPage ? 'active' : ''}"></a>
             </li>
             <li>
                 <a th:if="${currentPage != matchingList.totalPages - 1}" th:href="@{/match/list(page=${currentPage + 1})}" style="margin-right: 1em;">다음&gt;</a>
@@ -95,7 +104,7 @@
                 <a th:if="${currentPage != 0}" th:href="@{/match/list/search(name=${searchOption}, keyword=${keyword}, page=${currentPage - 1})}" style="margin-right: 1em;">&lt;이전</a>
             </li>
             <li th:each="pageNumber : ${#numbers.sequence(0, matchingList.totalPages-1)}" style="display: inline;">
-                <a th:href="@{/match/list/search(name=${searchOption}, keyword=${keyword}, page=${pageNumber})}" th:text="${pageNumber}" style="margin-right: 1em;"></a>
+                <a th:href="@{/match/list/search(name=${searchOption}, keyword=${keyword}, page=${pageNumber})}" th:text="${pageNumber}" style="margin-right: 1em;" th:classappend="${pageNumber == currentPage ? 'active' : ''}"></a>
             </li>
             <li>
                 <a th:if="${currentPage != matchingList.totalPages - 1}" th:href="@{/match/list/search(name=${searchOption}, keyword=${keyword}, page=${currentPage + 1})}" style="margin-right: 1em;">다음&gt;</a>
