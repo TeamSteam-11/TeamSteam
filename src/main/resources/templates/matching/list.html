@@ -1,4 +1,4 @@
-<html layout:decorate="~{common/layout.html}">
+<html layout:decorate="~{common/layout.html}" xmlns:layout="">
 
 <head>
     <meta charset="UTF-8">
@@ -22,6 +22,15 @@
             margin-top: 30px;
             margin-right: 80px;
         }
+
+        .pagination a {
+            color: darkgray;
+        }
+
+        .pagination a.active {
+            text-decoration: underline;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -29,13 +38,13 @@
 <main layout:fragment="main">
 
     <div class="search-box flex justify-center mt-20 mb-10">
-        <form th:action="@{/match/search}" method="GET" class="relative">
+        <form th:action="@{/match/list/search}" method="GET" class="relative">
             <div class="flex items-center rounded-xl" style="background-color: #525964;">
                 <select name="name" class="h-12 p-4 rounded-xl" style="background-color: #525964; border-top-right-radius: 0; border-bottom-right-radius: 0;">
-                    <option value="title">제목</option>
-                    <option value="content">내용</option>
+                    <option value="title" th:selected="${searchOption == 'title'}">제목</option>
+                    <option value="content" th:selected="${searchOption == 'content'}">내용</option>
                 </select>
-                <input type="text" name="keyword" placeholder="검색어 입력" class="h-12 p-4 pr-12 rounded-xl ml-4" style="background-color: #525964; width:500px;"/>
+                <input type="text" name="keyword" placeholder="검색어 입력" th:value="${keyword}" class="h-12 p-4 pr-12 rounded-xl ml-4" style="background-color: #525964; width:500px;"/>
                 <button type="submit" aria-label="Search" title="Search" class="absolute right-0 top-0 bottom-0 flex items-center justify-center text-black text-2xl pr-3">
                     <i class="fas fa-search"></i>
                 </button>
@@ -43,7 +52,7 @@
         </form>
     </div>
 
-<a href="/match/create" class="btn btn-custom">매칭 등록</a><br><br>
+    <a href="/match/create" class="btn btn-custom">매칭 등록</a><br><br>
 
 <div style="display: flex; justify-content: center; flex-wrap: wrap; width: 100%">
     <a th:each="matching : ${matchingList}" th:href="@{|/match/detail/${matching.id}|}"
@@ -73,16 +82,44 @@
                 <span th:text="${matching.startTime}"></span> : 00 ~
                 <span th:text="${matching.endTime}"></span> : 00
             </div><br><br>
-<!--            <div>-->
-<!--                <i class="fa-solid fa-calendar-days" style="margin-right: 6px"></i>-->
-<!--                <span th:text="|${meeting.date}, ${meeting.time}|"></span>-->
-<!--            </div>-->
-<!--            <div class="card-actions justify-end">-->
-<!--                <div class="badge badge-outline" th:text="${meeting.member.username}"></div>-->
-<!--            </div>-->
         </div>
     </a>
 </div>
+
+    <!--페이지네이션 시작-->
+    <div class="pagination" style="display: flex; justify-content: center; flex-wrap: wrap;">
+        <ul th:if="${keyword == null and searchOption == null}" style="display: flex;">
+            <li th:if="${currentPage != 0}">
+                <a th:href="@{/match/list(page=${currentPage - 1})}" style="margin-right: 1em;">&lt;이전</a>
+            </li>
+            <li th:each="pageNumber : ${#numbers.sequence((currentPage > 4 ? currentPage - 3 : 0),
+                        (matchingList.totalPages > currentPage + 5 ? currentPage + 5 : matchingList.totalPages))}"
+                style="display: inline;" th:unless="${pageNumber == 0}">
+                <a th:href="@{/match/list(page=${pageNumber - 1})}" th:text="${pageNumber}" style="margin-right: 1em;"
+                   th:classappend="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
+            </li>
+            <li th:if="${currentPage != matchingList.totalPages - 1}">
+                <a th:href="@{/match/list(page=${currentPage + 1})}" style="margin-right: 1em;">다음&gt;</a>
+            </li>
+        </ul>
+        <ul th:if="${keyword != null and searchOption != null}" style="display: flex;">
+            <li th:if="${currentPage != 0}">
+                <a th:href="@{/match/list/search(name=${searchOption}, keyword=${keyword}, page=${currentPage - 1})}"
+                   style="margin-right: 1em;">&lt;이전</a>
+            </li>
+            <li th:each="pageNumber : ${#numbers.sequence((currentPage > 4 ? currentPage - 3 : 0),
+            (matchingList.totalPages > currentPage + 5 ? currentPage + 5 : matchingList.totalPages))}"
+                style="display: inline;" th:unless="${pageNumber == 0}">
+                <a th:href="@{/match/list/search(name=${searchOption}, keyword=${keyword}, page=${pageNumber - 1})}"
+                   th:text="${pageNumber}" style="margin-right: 1em;"
+                   th:classappend="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
+            </li>
+            <li th:if="${currentPage != matchingList.totalPages - 1}">
+                <a th:href="@{/match/list/search(name=${searchOption}, keyword=${keyword}, page=${currentPage + 1})}"
+                   style="margin-right: 1em;">다음&gt;</a>
+            </li>
+        </ul>
+    </div>
 
 </main>
 </body>
