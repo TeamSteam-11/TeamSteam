@@ -34,4 +34,7 @@ public class UserTag extends BaseEntity {
     @OneToMany(mappedBy = "userTag")
     private List<GenreTag> genreTag = new ArrayList<>();
 
+
+
+
 }
