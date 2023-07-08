@@ -9,39 +9,144 @@
 
         .container {
             width: 80%;
-            margin: 0 auto;
+            margin: 40px auto;
             padding: 20px;
+            /*border: 1px solid #ccc;*/
+            box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+        }
+
+        .information-card {
+            display: flex;
+            width: 80%;
+            height: 80px;
+        }
+
+        .user-profile {
+            width: 50px;
+            height: 50px;
+        }
+
+        .user-name {
+            margin: 10px;
+        }
+
+        .title {
+            font-size: large;
+            color: #9E9D9D;
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .matching-information {
+            height: 400px;
+        }
+
+        .content-box {
+            height: auto;
+            margin: 10px;
+            padding: 20px;
+            border-radius: 10px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            color: #9E9D9D;
+        }
+
+        .genre-tag {
+            background-color: #87F86A;
+            color: #1F2227;
+            height: 25px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 15px
+        }
+
+        .game-tag {
+            background-color: #59C3F0;
+            color: #1F2227;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center
+        }
+
+        .content {
+            width: 100%;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .matching-owner {
+            display: flex;
+            justify-content: flex-end;
         }
     </style>
 </head>
 <body>
 <main layout:fragment="main">
     <div class="container">
-        <p><strong>등록자:</strong> <span th:text="${matching.user.username}">User Name</span></p>
-        <p><strong>제목:</strong> <span th:text="${matching.title}">Matching Title</span></p>
-        <p><strong>내용:</strong> <span th:text="${matching.content}">Matching Content</span></p>
+        <div class="information-card">
+            <img class="user-profile" th:src="${matching.user.getAvatar()}">
+            <span class="user-name" th:text="${matching.user.username}"></span>
+        </div>
+        <!-- YYYY년 M월 d일 h시 m분으로 변경 -->
+        <span style="float: right" th:text="${#temporals.format(matching.getModifyDate(), 'yyyy/MM/dd hh:mm')}"></span>
+
+        <div class="matching-information">
+            <span class="title" th:text="${matching.title}">제목</span>
+            <div class="content-box">
+
+                <div class="genre-tag">
+                    <span th:text="${matching.getGenre()}"></span>
+                </div>
+
+                <div class="game-tag">
+                    <span>게임 제목</span>
+                </div><br>
+
+                <span class="content" th:text="${matching.content}">내용</span>
+
+                <div class="matching-owner">
+                    <form th:if="${@rq.isLogin()}" th:action="@{/match/detail/delete/{id}(id=${matching.id})}" method="post">
+                        <button type="submit" class="btn btn-light border" style="background-color: #1F2227; color: white"
+                                th:if="${matching.user.id == @rq.user.id}"
+                                onclick="return confirm('해당 게시물을 삭제하시겠습니까?')">삭제
+                        </button>
+                    </form>
+                    <form th:if="${@rq.isLogin()}" th:action="@{/match/modify/{id}(id=${matching.id})}">
+                        <button type="submit" class="btn btn-light border"
+                                th:if="${matching.user.id == @rq.user.id}"
+                                onclick="return confirm('해당 게시물을 수정하시겠습니까?')">수정
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
         <p><strong>참가 인원:</strong> <span th:text="${matching.capacity}">Matching Capacity</span></p>
         <p><strong>시작 시간:</strong> <span th:text="${matching.startTime}">Matching Start Time</span></p>
         <p><strong>종료 시간:</strong> <span th:text="${matching.endTime}">Matching End Time</span></p>
         <p><strong>마감 기한:</strong> <span th:text="${matching.deadlineDate}">Matching Deadline Date</span></p>
     </div>
 
-<div>
-    <form th:if="${@rq.isLogin()}" th:action="@{/match/detail/delete/{id}(id=${matching.id})}" method="post">
-        <button type="submit" class="btn btn-light border" style="background-color: #1F2227; color: white"
-                th:if="${matching.user.id == @rq.user.id}"
-                onclick="return confirm('해당 게시물을 삭제하시겠습니까?')">삭제
-        </button>
-    </form>
-    <form th:if="${@rq.isLogin()}" th:action="@{/match/modify/{id}(id=${matching.id})}">
-        <button type="submit" class="btn btn-light border"
-                th:if="${matching.user.id == @rq.user.id}"
-                onclick="return confirm('해당 게시물을 수정하시겠습니까?')">수정
-        </button>
-    </form>
-</div>
+<!--<div>-->
+<!--    <form th:if="${@rq.isLogin()}" th:action="@{/match/detail/delete/{id}(id=${matching.id})}" method="post">-->
+<!--        <button type="submit" class="btn btn-light border" style="background-color: #1F2227; color: white"-->
+<!--                th:if="${matching.user.id == @rq.user.id}"-->
+<!--                onclick="return confirm('해당 게시물을 삭제하시겠습니까?')">삭제-->
+<!--        </button>-->
+<!--    </form>-->
+<!--    <form th:if="${@rq.isLogin()}" th:action="@{/match/modify/{id}(id=${matching.id})}">-->
+<!--        <button type="submit" class="btn btn-light border"-->
+<!--                th:if="${matching.user.id == @rq.user.id}"-->
+<!--                onclick="return confirm('해당 게시물을 수정하시겠습니까?')">수정-->
+<!--        </button>-->
+<!--    </form>-->
+<!--</div>-->
 
 <div>
     <a class="!bg-black p-3 text-white hover:cursor-pointer" th:if="${!alreadyWithPartner}" th:href="@{|/match/detail/${matching.getId()}/addPartner|}">참여하기</a>
