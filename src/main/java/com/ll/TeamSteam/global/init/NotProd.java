@@ -56,102 +56,18 @@ public class NotProd {
 
                 log.info("user1 = {}", user1);
 
-                Matching matching1 = matchingService.create(user1, "오늘 한강에서 러닝하실 분 구합니다!!",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),199932, 8L, 8, 10, null);
-                Matching matching2 = matchingService.create(user2, "오늘 한강에서 러닝하실 분 구합니다!!",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),22222, 4L, 7, 9, null);
-                Matching matching3 = matchingService.create(user1, "도ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ",
-                        "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ", GenreTagType.valueOf("삼인칭슈팅"),13579, 5L, 17, 19, null);
-                Matching matching4 = matchingService.create(user2, "ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),50000, 4L, 18, 20, null);
-                Matching matching5 = matchingService.create(user2, "코코코콬코코코코코코콬",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching6 = matchingService.create(user2, "안녕하신가요",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching7 = matchingService.create(user2, "하하하호호아이이하아아챠",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching8 = matchingService.create(user2, "오늘뭐먹지",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching9 = matchingService.create(user2, "내일은 뭐먹지",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching10 = matchingService.create(user2, "오늘은 샐러드",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching11 = matchingService.create(user2, "내일은 맛있는 삼계탕",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching12 = matchingService.create(user2, "그리고 지금은 공부",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching13 = matchingService.create(user2, "여권",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching14 = matchingService.create(user2, "물통이있네",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching15 = matchingService.create(user2, "물통이 큰게 있네",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching16 = matchingService.create(user2, "배가 고프다다아",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching17 = matchingService.create(user2, "인제 17번쨰네",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching18 = matchingService.create(user2, "한강으로 드라이브가자",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching19 = matchingService.create(user2, "한강이 넓다",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching20 = matchingService.create(user2, "쓰윽쓰윽",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching21 = matchingService.create(user2, "싹싹싹",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching22 = matchingService.create(user2, "헤헤헤헤헤헤헿",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching23 = matchingService.create(user2, "호로로로로롱",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching24 = matchingService.create(user2, "2번출구 서출구",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching25 = matchingService.create(user2, "잠실역 환승센터",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching26 = matchingService.create(user2, "잠실역 2번출구",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching27 = matchingService.create(user2, "잠실",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching28 = matchingService.create(user2, "잠실",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching29 = matchingService.create(user2, "잠실",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching30 = matchingService.create(user2, "잠실",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching31 = matchingService.create(user2, "잠실",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching32 = matchingService.create(user2, "잠실",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching33 = matchingService.create(user2, "잠실",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching34 = matchingService.create(user2, "잠실",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching35 = matchingService.create(user2, "잠실",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching36 = matchingService.create(user2, "잠실",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching37 = matchingService.create(user2, "잠실",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching38 = matchingService.create(user2, "잠실",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching39 = matchingService.create(user2, "잠실",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching40 = matchingService.create(user2, "잠실",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
-                Matching matching41 = matchingService.create(user2, "잠실 111111",
-                        "한강에서 2시간 정도 같이 달리실 분 구합니다!", GenreTagType.valueOf("삼인칭슈팅"),41000, 4L, 20, 22, null);
+                for (int i = 0; i <= 100; i++){
+                    String title = "Matching " + i;
+                    String content = "으악1";
+                    GenreTagType genre = GenreTagType.valueOf("삼인칭슈팅");
+                    int gameTag = 41000;
+                    long duration = 4L;
+                    int startTime = 20;
+                    int endTime = 22;
 
-
-
-
-
-
-                ChatRoom chatRoom1 = chatRoomService.createAndConnect(matching1.getTitle(), matching1, user1.getId());
-                ChatRoom chatRoom2 = chatRoomService.createAndConnect(matching2.getTitle(), matching2, user2.getId());
-                ChatRoom chatRoom3 = chatRoomService.createAndConnect(matching3.getTitle(), matching3, user2.getId());
-                ChatRoom chatRoom4 = chatRoomService.createAndConnect(matching4.getTitle(), matching4, user2.getId());
-                ChatRoom chatRoom5 = chatRoomService.createAndConnect(matching5.getTitle(), matching5, user2.getId());
-
-
-
+                    Matching matching = matchingService.create(user2, title, content, genre, gameTag, duration, startTime, endTime, null);
+                    ChatRoom chatRoom = chatRoomService.createAndConnect(matching.getTitle(), matching, user2.getId());
+                }
             }
         };
     }
