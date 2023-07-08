@@ -20,6 +20,7 @@ import java.util.ArrayList;
 @Getter
 @SuperBuilder
 @RequiredArgsConstructor
+@Table(name = "\"user\"")
 public class User extends BaseEntity {
 
 
