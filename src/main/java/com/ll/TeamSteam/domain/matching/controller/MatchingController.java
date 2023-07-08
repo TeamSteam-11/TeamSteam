@@ -303,4 +303,21 @@ public class MatchingController {
 
         return "matching/list";
     }
+
+    @GetMapping("/list/filter")
+    public String filterMatching(@RequestParam("genretype") GenreTagType genreType,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "8") int size,
+                                 @RequestParam(defaultValue = "createDate") String sortCode,
+                                 @RequestParam(defaultValue = "DESC") String direction,
+                                 Model model) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
+        Page<Matching> matchingList = matchingService.filterMatching(genreType, pageable);
+        model.addAttribute("matchingList", matchingList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("genretype", genreType);
+
+        return "matching/list";
+    }
 }

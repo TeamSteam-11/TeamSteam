@@ -91,4 +91,13 @@ public class MatchingService {
 
         return matchingList;
     }
+
+    public Page<Matching> filterMatching(GenreTagType genreType, Pageable pageable) {
+        Page<Matching> matchingList = matchingRepository.findByGenre(genreType, pageable);
+
+
+
+
+        return matchingList;
+    }
 }

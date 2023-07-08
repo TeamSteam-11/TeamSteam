@@ -49,6 +49,25 @@
                     <i class="fas fa-search"></i>
                 </button>
             </div>
+
+        </form>
+    </div>
+
+<!--                일인칭슈팅, 삼인칭슈팅, 격투, 슛뎀업, 아케이드, 러너, 핵앤슬래시, JRPG, 로그라이크,-->
+<!--                액션RPG, 어드벤처RPG, 전략RPG, 현대RPG, 파티, 군사, 대전략, 도시, 실시간전략, 카드,-->
+<!--                타워디펜스, 턴제전략, 매트로베니아, 비주얼노벨, 캐주얼, 퍼즐, 퐁부한스토리, 히든오브젝트,-->
+<!--                건설, 농업, 샌드박스, 생활, 연애, 우주, 취미, 스포츠, 낚시, 레이싱, 스포츠시뮬레이션-->
+
+    <div class="search-box flex justify-center mt-20 mb-10">
+        <form id="filter-form" th:action="@{/match/list/filter}" method="GET" class="relative">
+            <div class="flex items-center rounded-xl" style="background-color: #525964;">
+                <select id="genre-select" name="genretype" class="h-12 p-4 rounded-xl" onchange="submitForm()" style="background-color: #525964; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                    <option value="" selected>선택하세요</option>
+                    <option value="일인칭슈팅" th:selected="${genretype == '일인칭슈팅'}">일인칭슈팅</option>
+                    <option value="삼인칭슈팅" th:selected="${genretype == '삼인칭슈팅'}">삼인칭슈팅</option>
+                    <option value="격투" th:selected="${genretype == '격투'}">격투</option>
+                </select>
+            </div>
         </form>
     </div>
 
@@ -88,6 +107,7 @@
 
     <!--페이지네이션 시작-->
     <div class="pagination" style="display: flex; justify-content: center; flex-wrap: wrap;">
+        <!-- 검색이 없을경우 -->
         <ul th:if="${keyword == null and searchOption == null}" style="display: flex;">
             <li th:if="${currentPage != 0}">
                 <a th:href="@{/match/list(page=${currentPage - 1})}" style="margin-right: 1em;">&lt;이전</a>
@@ -102,6 +122,7 @@
                 <a th:href="@{/match/list(page=${currentPage + 1})}" style="margin-right: 1em;">다음&gt;</a>
             </li>
         </ul>
+        <!-- 검색이 있을경우 -->
         <ul th:if="${keyword != null and searchOption != null}" style="display: flex;">
             <li th:if="${currentPage != 0}">
                 <a th:href="@{/match/list/search(name=${searchOption}, keyword=${keyword}, page=${currentPage - 1})}"
@@ -121,6 +142,14 @@
         </ul>
     </div>
 
+    <script>
+        function submitForm() {
+            var form = document.getElementById('filter-form');
+            var select = document.getElementById('genre-select');
+            form.action = "/match/list/filter?genreType=" + select.value;
+            form.submit();
+        }
+    </script>
 </main>
 </body>
 </html>

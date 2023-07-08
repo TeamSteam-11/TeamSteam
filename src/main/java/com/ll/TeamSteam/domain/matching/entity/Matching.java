@@ -34,6 +34,7 @@ public class Matching extends BaseEntity {
 
     private Long participant; // 참가자 수
 
+
     private int startTime; // 원하는 시간대 시작
 
     private int endTime; // 원하는 시간대 끝
@@ -58,5 +59,4 @@ public class Matching extends BaseEntity {
         this.startTime = startTime;
         this.endTime = endTime;
     }
-
 }
