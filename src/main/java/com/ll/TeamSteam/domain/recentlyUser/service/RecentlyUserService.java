@@ -63,19 +63,26 @@ public class RecentlyUserService {
 			log.info("matchingPartners = {} ",matchingPartners);
 
 			for (MatchingPartner matchingPartner : matchingPartnersNoContainsMe) {
+
 				boolean exists = existsByUserAndMatchingPartner(user, matchingPartner);
+				boolean anotherMatchingExist = anotherMatchingExists(user,matchingPartner);
+
 				if (!exists) {
-					RecentlyUser recentlyUser = RecentlyUser.builder()
-						.user(user)
-						.matchingPartner(matchingPartner)
-						.matchingPartnerName(matchingPartner.getUser().getUsername())
-						.build();
+					if(!anotherMatchingExist) {
 
-					log.info("recentlyUser = {} ", recentlyUser);
-					log.info("recentlyUser.getMatchingPartner() = {} ", recentlyUser.getMatchingPartner());
-					log.info("recentlyUser.getUsername() = {} ", recentlyUser.getMatchingPartnerName());
+						RecentlyUser recentlyUser = RecentlyUser.builder()
+							.user(user)
+							.matchingPartner(matchingPartner)
+							.matchingPartnerName(matchingPartner.getUser().getUsername())
+							.build();
 
-					recentlyUserList.add(recentlyUser);
+						log.info("recentlyUser = {} ", recentlyUser);
+						log.info("recentlyUser.getMatchingPartner() = {} ", recentlyUser.getMatchingPartner());
+						log.info("recentlyUser.getUsername() = {} ", recentlyUser.getMatchingPartnerName());
+
+						recentlyUserList.add(recentlyUser);
+
+					}
 				}
 			}
 
@@ -83,9 +90,19 @@ public class RecentlyUserService {
 		recentlyUserRepository.saveAll(recentlyUserList);
 	}
 
+	private boolean anotherMatchingExists(User user, MatchingPartner matchingPartner) {
+
+		return recentlyUserRepository.findByUserId(user.getId()).stream()
+			.map(m->m.getMatchingPartnerName().equals(matchingPartner.getUser().getUsername()))
+			.findFirst()
+			.isPresent();
+	}
+
 	public boolean existsByUserAndMatchingPartner(User user, MatchingPartner matchingPartner) {
 		return recentlyUserRepository.existsByUserAndMatchingPartner(user, matchingPartner);
 	}
+
+
 
 	// public void deleteRecentlyUser(){
 	//

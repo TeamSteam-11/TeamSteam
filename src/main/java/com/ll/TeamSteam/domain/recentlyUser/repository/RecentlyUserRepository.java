@@ -1,5 +1,6 @@
 package com.ll.TeamSteam.domain.recentlyUser.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,4 +18,6 @@ public interface RecentlyUserRepository extends JpaRepository<RecentlyUser, Long
 	List<RecentlyUser> findAllByUserId(Long userId);
 
 	boolean existsByUserAndMatchingPartner(User user, MatchingPartner matchingPartner);
+
+	List<RecentlyUser> findByUserId(Long userId);
 }
