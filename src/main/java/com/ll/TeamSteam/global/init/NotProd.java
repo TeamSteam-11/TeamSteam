@@ -7,8 +7,6 @@ import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
-import com.ll.TeamSteam.domain.user.service.UserService;
-import com.ll.TeamSteam.domain.userTag.UserTag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -16,25 +14,21 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Configuration
-@Profile({"local"})
+@Profile({"local", "test"})
 @Slf4j
 public class NotProd {
     @Bean
     CommandLineRunner initData(
-            UserService userService,
             ChatRoomService chatRoomService,
             UserRepository userRepository,
             MatchingService matchingService
-
     ) {
         return new CommandLineRunner() {
             @Override
             @Transactional
             public void run(String... args) throws Exception {
+
                 User user1 = User.builder()
                         .id(1L)
                         .username("user1")
@@ -56,7 +50,7 @@ public class NotProd {
 
                 log.info("user1 = {}", user1);
 
-                for (int i = 0; i <= 100; i++){
+                for (int i = 0; i <= 5; i++){
                     String title = "Matching " + i;
                     String content = "으악1";
                     GenreTagType genre = GenreTagType.valueOf("삼인칭슈팅");

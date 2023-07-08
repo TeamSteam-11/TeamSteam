@@ -180,7 +180,7 @@ public class ChatRoomService {
         }
     }
 
-    private ChatUser findChatUserByUserId(ChatRoom chatRoom, Long userId) {
+    public ChatUser findChatUserByUserId(ChatRoom chatRoom, Long userId) {
         return chatRoom.getChatUsers().stream()
                 .filter(chatUser -> chatUser.getUser().getId().equals(userId))
                 .findFirst()
