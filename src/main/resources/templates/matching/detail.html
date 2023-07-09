@@ -50,27 +50,6 @@
             color: #9E9D9D;
         }
 
-        .genre-tag {
-            background-color: #87F86A;
-            color: #1F2227;
-            height: 25px;
-            border-radius: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 15px
-        }
-
-        .game-tag {
-            background-color: #59C3F0;
-            color: #1F2227;
-            height: 50px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center
-        }
-
         .content {
             width: 100%;
             height: 300px;
@@ -91,6 +70,7 @@
         <div class="information-card">
             <img class="user-profile" th:src="${matching.user.getAvatar()}">
             <span class="user-name" th:text="${matching.user.username}"></span>
+            <span class="badge badge-outline" style="float: right" th:text="|${matching.participant} / ${matching.capacity}|"></span>
         </div>
         <!-- YYYY년 M월 d일 h시 m분으로 변경 -->
         <span style="float: right" th:text="${#temporals.format(matching.getModifyDate(), 'yyyy/MM/dd hh:mm')}"></span>
@@ -99,13 +79,10 @@
             <span class="title" th:text="${matching.title}">제목</span>
             <div class="content-box">
 
-                <div class="genre-tag">
-                    <span th:text="${matching.getGenre()}"></span>
+                <div>
+                    <span class="badge bg-green-500 badge-accent inline max-w-[10rem]" th:text="${matching.getGenre()}"></span>
+                    <span class="badge bg-sky-500 badge-accent inline max-w-[10rem]" th:text="${matching.gameTagName}">게임 제목</span>
                 </div>
-
-                <div class="game-tag">
-                    <span th:text="${matching.gameTagName}">게임 제목</span>
-                </div><br>
 
                 <span class="content" th:text="${matching.content}">내용</span>
 
@@ -127,10 +104,9 @@
             </div>
         </div>
 
-        <p><strong>참가 인원:</strong> <span th:text="${matching.capacity}">Matching Capacity</span></p>
-        <p><strong>시작 시간:</strong> <span th:text="${matching.startTime}">Matching Start Time</span></p>
-        <p><strong>종료 시간:</strong> <span th:text="${matching.endTime}">Matching End Time</span></p>
-        <p><strong>마감 기한:</strong> <span th:text="${matching.deadlineDate}">Matching Deadline Date</span></p>
+        <span th:text="${matching.startTime}">시작 시간</span>
+        <span th:text="${matching.endTime}">종료 시간</span>
+        <span th:text="${matching.deadlineDate}">마감 시간</span>
     </div>
 
 <!--<div>-->
