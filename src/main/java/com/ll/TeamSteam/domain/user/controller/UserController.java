@@ -259,11 +259,13 @@ public class UserController {
     }
 
     @GetMapping("/user/profile/{userId}/{like}")
-    public String getLike(@PathVariable long userId, @PathVariable int like, RedirectAttributes redirectAttributes) {
+    public String getLike(@PathVariable long userId, @PathVariable int like, RedirectAttributes redirectAttributes,@AuthenticationPrincipal SecurityUser user) {
         userService.updateTemperature(userId, like);
 
-        redirectAttributes.addAttribute("userId", userId);
-        return "redirect:/user/profile/{userId}";
+        Long profileuserId = user.getId();
+
+        redirectAttributes.addAttribute("profileuserId", profileuserId);
+        return "redirect:/user/profile/{profileuserId}";
     }
 
 

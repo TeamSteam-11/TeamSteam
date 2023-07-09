@@ -33,11 +33,15 @@
         .custom-card2{
             background-color: #202d3e;
             border:0px;
-
+            margin-top: 30px;
         }
         .progress-custom {
             background-image: linear-gradient(90deg, #1c92d2 0%,#f2fcfe 100%);
             height: 30px;
+        }
+        .progress-custom2 {
+            background-image: linear-gradient(90deg, #1c92d2 0%,#f2fcfe 100%);
+            height: 4px;
         }
 
     </style>
@@ -75,9 +79,6 @@
                 </progress>
                 </div>
             </div>
-<!--                <a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${1}}" style="color: #dddddd">좋아요</a>-->
-<!--                <a th:href="@{'/user/profile/' + ${targetUser.getId()} +'/'+ ${0}}" style="color: #dddddd">싫어요</a>-->
-
             <div class="card-actions justify-end">
                 <form th:action="@{/user/profile/editprofile}" method="post">
                     <button th:if="${loginedId == targetUser.getId()}" type="submit" class="btn btn-primary">Edit Tag</button>
@@ -89,21 +90,24 @@
         </div>
     </div>
     <div th:if="${loginedId == targetUser.getId()}">
-        <div class="flex justify-start">
-            <div>
+        <div class="flex justify-between mx-8">
+            <div class="overflow-x-auto">
                 <h2 class="text-xl font-semibold mb-4">친구 목록</h2>
-
                 <th:block th:if="${!friendsList.isEmpty()}">
-                    <table class="table-auto">
-                        <thead>
-                        <tr>
-                        </tr>
-                        </thead>
+                    <table class="table">
                         <tbody>
                         <tr th:each="friend: ${friendsList}">
-                            <td th:text="${friend.getFriend().getUsername()}"></td>
                             <td>
-                                <img th:src="${friend.getFriend().getAvatar()}" class="w-8 h-8 rounded-full">
+                                <div class="flex items-center space-x-3">
+                                    <div class="avatar">
+                                        <div class="mask mask-squircle w-12 h-12">
+                                            <img th:src="${friend.getFriend().getAvatar()}" class="w-8 h-8 rounded-full">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="font bold" th:text="${friend.getFriend().getUsername()}"></div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         </tbody>
@@ -113,25 +117,48 @@
                     <p class="text-gray-500">친구를 추가해주세요.</p>
                 </th:block>
             </div>
-        </div>
-    </div>
-    <div th:if="${loginedId == targetUser.getId()}">
-        <div class="flex justify-end">
-            <div>
+            <div class="overflow-x-auto mx-8">
                 <h2 class="text-xl font-semibold mb-4">최근 매칭된 유저</h2>
-
                 <th:block th:if="${!recentlyUserList.isEmpty()}">
-                    <table class="table-auto">
-                        <thead>
-                        <tr>
-                        </tr>
-                        </thead>
+                    <table class="table">
                         <tbody>
                         <tr th:each="recentlyUser: ${recentlyUserList}">
-                            <td th:text="${recentlyUser.getMatchingPartnerName()}"></td>
                             <td>
-                                <img th:src="${recentlyUser.getMatchingPartner().getUser().getAvatar()}" class="w-8 h-8 rounded-full">
+                                <div class="flex items-center space-x-3">
+                                    <div class="avatar">
+                                        <div class="mask mask-squircle w-12 h-12">
+                                            <img th:src="${recentlyUser.getMatchingPartner().getUser().getAvatar()}" class="w-8 h-8 rounded-full">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="font bold" th:text="${recentlyUser.getMatchingPartnerName()}"></div>
+                                    </div>
+                                </div>
                             </td>
+                            <td>
+                                <p class="mb-2">매너온도:
+                                    <span th:text="${recentlyUser.getMatchingPartner().getUser().getTemperature()}"></span>
+                                </p>
+                                <progress class="progress progress-accent w-30 progress-custom2"
+                                          th:value="${recentlyUser.getMatchingPartner().getUser().getTemperature()}" max="100">
+                                </progress>
+                            </td>
+                            <th>
+                                <label>
+                                    <a th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()} +'/'+ ${1}}"
+                                       class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded">
+                                        <i class="fa fa-thumbs-up fa-lg"></i>
+                                    </a>
+                                </label>
+                            </th>
+                            <th>
+                                <label>
+                                    <a th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()} +'/'+ ${0}}"
+                                       class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded">
+                                        <i class="fa fa-thumbs-down fa-lg"></i>
+                                    </a>
+                                </label>
+                            </th>
                         </tr>
                         </tbody>
                     </table>
@@ -142,6 +169,8 @@
             </div>
         </div>
     </div>
+
+
 
 
     <div class="card lg:card-side bg-base-100 shadow-xl custom-card2 ">
