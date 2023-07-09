@@ -78,6 +78,14 @@
                     <option value="20" th:selected="${starttime == 20}">20시</option>
                 </select>
             </div>
+            <div class="flex items-center rounded-xl" style="background-color: #525964;">
+                <select id="gender-select" name="gender" class="h-12 p-4 rounded-xl" onchange="submitForm()" style="background-color: #525964;">
+                    <option value="" selected>선택하세요</option>
+                    <option value="DC" th:selected="${gender == 'DC'}">성별무관</option>
+                    <option value="F" th:selected="${gender == 'F'}">여성</option>
+                    <option value="M" th:selected="${gender == 'M'}">남성</option>
+                </select>
+            </div>
         </form>
     </div>
 
@@ -148,30 +156,29 @@
                    style="margin-right: 1em;">다음&gt;</a>
             </li>
         </ul>
-        <ul th:if="${genretype != null or starttime != null}" style="display: flex;">
+        <ul th:if="${genretype != null or starttime != null or gender != null}" style="display: flex;">
             <li th:if="${currentPage != 0}">
-                <a th:href="@{/match/list/filter(genretype=${genretype != null ? genretype : ''}, starttime=${starttime != null ? starttime : ''}, page=${currentPage - 1})}"
+                <a th:href="@{/match/list/filter(genretype=${genretype != null ? genretype : ''}, starttime=${starttime != null ? starttime : ''}, gender=${gender != null ? gender : ''}, page=${currentPage - 1})}"
                    style="margin-right: 1em;">&lt;이전</a>
             </li>
             <li th:each="pageNumber : ${#numbers.sequence((currentPage > 4 ? currentPage - 3 : 0),
         (matchingList.totalPages > currentPage + 5 ? currentPage + 5 : matchingList.totalPages))}"
                 style="display: inline;" th:unless="${pageNumber == 0}">
-                <a th:href="@{/match/list/filter(genretype=${genretype != null ? genretype : ''}, starttime=${starttime != null ? starttime : ''}, page=${pageNumber - 1})}"
+                <a th:href="@{/match/list/filter(genretype=${genretype != null ? genretype : ''}, starttime=${starttime != null ? starttime : ''}, gender=${gender != null ? gender : ''}, page=${pageNumber - 1})}"
                    th:text="${pageNumber}" style="margin-right: 1em;"
                    th:classappend="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
             </li>
             <li th:if="${currentPage != matchingList.totalPages - 1}">
-                <a th:href="@{/match/list/filter(genretype=${genretype != null ? genretype : ''}, starttime=${starttime != null ? starttime : ''}, page=${currentPage + 1})}"
+                <a th:href="@{/match/list/filter(genretype=${genretype != null ? genretype : ''}, starttime=${starttime != null ? starttime : ''}, gender=${gender != null ? gender : ''}, page=${currentPage + 1})}"
                    style="margin-right: 1em;">다음&gt;</a>
             </li>
         </ul>
+
+
     </div>
     <script>
         function submitForm() {
             var form = document.getElementById('filter-form');
-            var genreSelect = document.getElementById('genre-select');
-            var timeSelect = document.getElementById('time-select');
-            form.action = "/match/list/filter?genretype=" + genreSelect.value + "&starttime=" + timeSelect.value;
             form.submit();
         }
     </script>

@@ -40,6 +40,8 @@ public class Matching extends BaseEntity {
 
     private LocalDateTime deadlineDate; // 마감 시간
 
+    private String gender; // 성별
+
     @OneToOne(mappedBy = "matching", fetch = LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ChatRoom chatRoom;
 
@@ -50,10 +52,11 @@ public class Matching extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void update(String title, String content, GenreTagType genre, Long capacity, int startTime, int endTime) {
+    public void update(String title, String content, GenreTagType genre, String gender, Long capacity, int startTime, int endTime) {
         this.title = title;
         this.content = content;
         this.genre = genre;
+        this.gender = gender;
         this.capacity = capacity;
         this.startTime = startTime;
         this.endTime = endTime;

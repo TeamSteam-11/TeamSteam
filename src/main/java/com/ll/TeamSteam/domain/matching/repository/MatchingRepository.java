@@ -18,9 +18,25 @@ public interface MatchingRepository extends JpaRepository<Matching, Long> {
 
     Page<Matching> findByContentContainingIgnoreCase(String keyword, Pageable pageable);
 
+    // 장르
     Page<Matching> findByGenre(GenreTagType genreType, Pageable pageable);
 
+    // 시간
     Page<Matching> findByStartTime(Integer startTime, Pageable pageable);
+
+    // 성별
+    Page<Matching> findByGender(String gender, Pageable pageable);
+
+    // 장르, 시간
     Page<Matching> findByGenreAndStartTime(GenreTagType genreTagType, Integer startTime, Pageable pageable);
+
+    // 장르, 성별
+    Page<Matching> findByGenreAndGender(GenreTagType genreTagType, String Gender, Pageable pageable);
+
+    // 시간, 성별
+    Page<Matching> findByStartTimeAndGender(Integer startTime, String Gender, Pageable pageable);
+
+    // 장르, 시간, 성별
+    Page<Matching> findByGenreAndStartTimeAndGender(GenreTagType genreTagType, Integer startTime, String Gender, Pageable pageable);
 
 }
