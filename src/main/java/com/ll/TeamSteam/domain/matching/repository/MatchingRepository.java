@@ -20,4 +20,7 @@ public interface MatchingRepository extends JpaRepository<Matching, Long> {
 
     Page<Matching> findByGenre(GenreTagType genreType, Pageable pageable);
 
+    Page<Matching> findByStartTime(Integer startTime, Pageable pageable);
+    Page<Matching> findByGenreAndStartTime(GenreTagType genreTagType, Integer startTime, Pageable pageable);
+
 }

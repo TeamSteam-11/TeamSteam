@@ -92,12 +92,15 @@ public class MatchingService {
         return matchingList;
     }
 
-    public Page<Matching> filterMatching(GenreTagType genreType, Pageable pageable) {
-        Page<Matching> matchingList = matchingRepository.findByGenre(genreType, pageable);
-
-
-
-
-        return matchingList;
+    public Page<Matching> filterMatching(GenreTagType genreType, Integer startTime, Pageable pageable) {
+        if (genreType != null && startTime != null) {
+            return matchingRepository.findByGenreAndStartTime(genreType, startTime, pageable);
+        } else if (genreType != null) {
+            return matchingRepository.findByGenre(genreType, pageable);
+        } else if (startTime != null) {
+            return matchingRepository.findByStartTime(startTime, pageable);
+        } else {
+            return matchingRepository.findAll(pageable);
+        }
     }
 }

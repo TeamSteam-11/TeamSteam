@@ -49,7 +49,6 @@
                     <i class="fas fa-search"></i>
                 </button>
             </div>
-
         </form>
     </div>
 
@@ -66,6 +65,30 @@
                     <option value="일인칭슈팅" th:selected="${genretype == '일인칭슈팅'}">일인칭슈팅</option>
                     <option value="삼인칭슈팅" th:selected="${genretype == '삼인칭슈팅'}">삼인칭슈팅</option>
                     <option value="격투" th:selected="${genretype == '격투'}">격투</option>
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <div class="search-box flex justify-center mt-20 mb-10">
+        <form id="filter-form" th:action="@{/match/list/filter}" method="GET" class="relative">
+            <div class="flex items-center rounded-xl" style="background-color: #525964;">
+                <select id="genre-select" name="genretype" class="h-12 p-4 rounded-xl" onchange="submitForm()" style="background-color: #525964; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                    <option value="" selected>선택하세요</option>
+                    <option value="일인칭슈팅" th:selected="${genretype == '일인칭슈팅'}">일인칭슈팅</option>
+                    <option value="삼인칭슈팅" th:selected="${genretype == '삼인칭슈팅'}">삼인칭슈팅</option>
+                    <option value="격투" th:selected="${genretype == '격투'}">격투</option>
+                    <option value="액션RPG" th:selected="${genretype == '액션RPG'}">액션RPG</option>
+                </select>
+            </div>
+            <div class="flex items-center rounded-xl" style="background-color: #525964;">
+                <select id="time-select" name="starttime" class="h-12 p-4 rounded-xl" onchange="submitForm()" style="background-color: #525964; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                    <option value="" selected>선택하세요</option>
+                    <option value="1" th:selected="${starttime == 1}">1시</option>
+                    <option value="2" th:selected="${starttime == 2}">2시</option>
+                    <option value="3" th:selected="${starttime == 3}">3시</option>
+                    <option value="4" th:selected="${starttime == 4}">4시</option>
+                    <option value="20" th:selected="${starttime == 20}">20시</option>
                 </select>
             </div>
         </form>
@@ -105,15 +128,14 @@
     </a>
 </div>
 
-    <!--페이지네이션 시작-->
+    <!-- 페이지네이션 시작 -->
     <div class="pagination" style="display: flex; justify-content: center; flex-wrap: wrap;">
-        <!-- 검색이 없을경우 -->
-        <ul th:if="${keyword == null and searchOption == null}" style="display: flex;">
+        <ul th:if="${keyword == null and searchOption == null and genretype == null and starttime == null}" style="display: flex;">
             <li th:if="${currentPage != 0}">
                 <a th:href="@{/match/list(page=${currentPage - 1})}" style="margin-right: 1em;">&lt;이전</a>
             </li>
             <li th:each="pageNumber : ${#numbers.sequence((currentPage > 4 ? currentPage - 3 : 0),
-                        (matchingList.totalPages > currentPage + 5 ? currentPage + 5 : matchingList.totalPages))}"
+                    (matchingList.totalPages > currentPage + 5 ? currentPage + 5 : matchingList.totalPages))}"
                 style="display: inline;" th:unless="${pageNumber == 0}">
                 <a th:href="@{/match/list(page=${pageNumber - 1})}" th:text="${pageNumber}" style="margin-right: 1em;"
                    th:classappend="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
@@ -122,14 +144,13 @@
                 <a th:href="@{/match/list(page=${currentPage + 1})}" style="margin-right: 1em;">다음&gt;</a>
             </li>
         </ul>
-        <!-- 검색이 있을경우 -->
         <ul th:if="${keyword != null and searchOption != null}" style="display: flex;">
             <li th:if="${currentPage != 0}">
                 <a th:href="@{/match/list/search(name=${searchOption}, keyword=${keyword}, page=${currentPage - 1})}"
                    style="margin-right: 1em;">&lt;이전</a>
             </li>
             <li th:each="pageNumber : ${#numbers.sequence((currentPage > 4 ? currentPage - 3 : 0),
-            (matchingList.totalPages > currentPage + 5 ? currentPage + 5 : matchingList.totalPages))}"
+        (matchingList.totalPages > currentPage + 5 ? currentPage + 5 : matchingList.totalPages))}"
                 style="display: inline;" th:unless="${pageNumber == 0}">
                 <a th:href="@{/match/list/search(name=${searchOption}, keyword=${keyword}, page=${pageNumber - 1})}"
                    th:text="${pageNumber}" style="margin-right: 1em;"
@@ -140,13 +161,30 @@
                    style="margin-right: 1em;">다음&gt;</a>
             </li>
         </ul>
+        <ul th:if="${genretype != null or starttime != null}" style="display: flex;">
+            <li th:if="${currentPage != 0}">
+                <a th:href="@{/match/list/filter(genretype=${genretype != null ? genretype : ''}, starttime=${starttime != null ? starttime : ''}, page=${currentPage - 1})}"
+                   style="margin-right: 1em;">&lt;이전</a>
+            </li>
+            <li th:each="pageNumber : ${#numbers.sequence((currentPage > 4 ? currentPage - 3 : 0),
+        (matchingList.totalPages > currentPage + 5 ? currentPage + 5 : matchingList.totalPages))}"
+                style="display: inline;" th:unless="${pageNumber == 0}">
+                <a th:href="@{/match/list/filter(genretype=${genretype != null ? genretype : ''}, starttime=${starttime != null ? starttime : ''}, page=${pageNumber - 1})}"
+                   th:text="${pageNumber}" style="margin-right: 1em;"
+                   th:classappend="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
+            </li>
+            <li th:if="${currentPage != matchingList.totalPages - 1}">
+                <a th:href="@{/match/list/filter(genretype=${genretype != null ? genretype : ''}, starttime=${starttime != null ? starttime : ''}, page=${currentPage + 1})}"
+                   style="margin-right: 1em;">다음&gt;</a>
+            </li>
+        </ul>
     </div>
-
     <script>
         function submitForm() {
             var form = document.getElementById('filter-form');
-            var select = document.getElementById('genre-select');
-            form.action = "/match/list/filter?genreType=" + select.value;
+            var genreSelect = document.getElementById('genre-select');
+            var timeSelect = document.getElementById('time-select');
+            form.action = "/match/list/filter?genretype=" + genreSelect.value + "&starttime=" + timeSelect.value;
             form.submit();
         }
     </script>

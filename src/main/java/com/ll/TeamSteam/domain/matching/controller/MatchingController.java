@@ -305,7 +305,8 @@ public class MatchingController {
     }
 
     @GetMapping("/list/filter")
-    public String filterMatching(@RequestParam("genretype") GenreTagType genreType,
+    public String filterMatching(@RequestParam(name = "genretype", required = false) GenreTagType genreType,
+                                 @RequestParam(name = "starttime", required = false) Integer startTime,
                                  @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "8") int size,
                                  @RequestParam(defaultValue = "createDate") String sortCode,
@@ -313,10 +314,11 @@ public class MatchingController {
                                  Model model) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
-        Page<Matching> matchingList = matchingService.filterMatching(genreType, pageable);
+        Page<Matching> matchingList = matchingService.filterMatching(genreType, startTime, pageable);
         model.addAttribute("matchingList", matchingList);
         model.addAttribute("currentPage", page);
         model.addAttribute("genretype", genreType);
+        model.addAttribute("starttime", startTime);
 
         return "matching/list";
     }
