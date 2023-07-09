@@ -109,6 +109,7 @@ public class ChatRoomService {
 
         if (getChatUser(chatRoom, user, userId).isEmpty()) {
             chatRoom.addChatUser(user);
+            chatRoom.getMatching().increaseParticipantsCount(); // 참여자가 방 입장 시 수 증가
         }
     }
 
@@ -123,7 +124,9 @@ public class ChatRoomService {
             return checkChatUserType(chatUser);
         }
 
-//        if (!matching.canAddParticipant()) return RsData.of("F-2", "모임 정원 초과!");
+        if (!matching.canAddParticipant()) {
+            return RsData.of("F-2", "모임 정원 초과!"); // 참여자 수가 capacity 보다 많으면 참가 하지 못하도록
+        }
 
         return RsData.of("S-1", "새로운 모임 채팅방에 참여합니다.");
     }
@@ -178,6 +181,8 @@ public class ChatRoomService {
         if (chatUser != null) {
             chatUser.exitType();
         }
+
+        chatRoom.getMatching().decreaseParticipantsCount(); // 참여자가 나갈 시 수 감소
     }
 
     public ChatUser findChatUserByUserId(ChatRoom chatRoom, Long userId) {
@@ -216,6 +221,8 @@ public class ChatRoomService {
         chatMessages.stream()
                 .filter(chatMessage -> chatMessage.getSender().getId().equals(chatUserId))
                 .forEach(chatMessage -> chatMessage.removeChatMessages("강퇴된 사용자의 메시지입니다."));
+
+        chatRoom.getMatching().decreaseParticipantsCount();  // 참여자가 강퇴 당할 시 수 감소
 
         template.convertAndSend("/topic/chats/" + roomId + "/kicked", originUserId);
     }

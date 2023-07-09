@@ -55,6 +55,7 @@ public class NotProd {
                     String content = "으악1";
                     GenreTagType genre = GenreTagType.valueOf("삼인칭슈팅");
                     int gameTag = 41000;
+                    Long participant = 1L;
                     long duration = 4L;
                     int startTime = 20;
                     int endTime = 22;

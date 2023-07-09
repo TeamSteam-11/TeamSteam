@@ -14,8 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +35,7 @@ public class MatchingService {
                 .content(content)
                 .genre(genreTag)
                 .gameTagId(gameTagId)
+                .participant(1L)
                 .capacity(capacity)
                 .startTime(startTime)
                 .endTime(endTime)
@@ -81,10 +85,13 @@ public class MatchingService {
 
         Page<Matching> matchingList;
 
-        if (name.equals("title")) {
-            matchingList = matchingRepository.findByTitleContainingIgnoreCase(searchQuery.getValue(), pageable);
-        } else if (name.equals("content")) {
-            matchingList = matchingRepository.findByContentContainingIgnoreCase(searchQuery.getValue(), pageable);
+        Map<String, Function<String, Page<Matching>>> methodMap = new HashMap<>();
+        methodMap.put("title", value -> matchingRepository.findByTitleContainingIgnoreCase(value, pageable));
+        methodMap.put("content", value -> matchingRepository.findByContentContainingIgnoreCase(value, pageable));
+
+        Function<String, Page<Matching>> method = methodMap.get(name);
+        if (method != null) {
+            matchingList = method.apply(searchQuery.getValue());
         } else {
             throw new IllegalArgumentException("검색 쿼리가 잘 작성되지 않았음");
         }

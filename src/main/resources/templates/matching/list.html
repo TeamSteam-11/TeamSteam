@@ -60,20 +60,7 @@
     <div class="search-box flex justify-center mt-20 mb-10">
         <form id="filter-form" th:action="@{/match/list/filter}" method="GET" class="relative">
             <div class="flex items-center rounded-xl" style="background-color: #525964;">
-                <select id="genre-select" name="genretype" class="h-12 p-4 rounded-xl" onchange="submitForm()" style="background-color: #525964; border-top-right-radius: 0; border-bottom-right-radius: 0;">
-                    <option value="" selected>선택하세요</option>
-                    <option value="일인칭슈팅" th:selected="${genretype == '일인칭슈팅'}">일인칭슈팅</option>
-                    <option value="삼인칭슈팅" th:selected="${genretype == '삼인칭슈팅'}">삼인칭슈팅</option>
-                    <option value="격투" th:selected="${genretype == '격투'}">격투</option>
-                </select>
-            </div>
-        </form>
-    </div>
-
-    <div class="search-box flex justify-center mt-20 mb-10">
-        <form id="filter-form" th:action="@{/match/list/filter}" method="GET" class="relative">
-            <div class="flex items-center rounded-xl" style="background-color: #525964;">
-                <select id="genre-select" name="genretype" class="h-12 p-4 rounded-xl" onchange="submitForm()" style="background-color: #525964; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                <select id="genre-select" name="genretype" class="h-12 p-4 rounded-xl" onchange="submitForm()" style="background-color: #525964;">
                     <option value="" selected>선택하세요</option>
                     <option value="일인칭슈팅" th:selected="${genretype == '일인칭슈팅'}">일인칭슈팅</option>
                     <option value="삼인칭슈팅" th:selected="${genretype == '삼인칭슈팅'}">삼인칭슈팅</option>
@@ -82,7 +69,7 @@
                 </select>
             </div>
             <div class="flex items-center rounded-xl" style="background-color: #525964;">
-                <select id="time-select" name="starttime" class="h-12 p-4 rounded-xl" onchange="submitForm()" style="background-color: #525964; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                <select id="time-select" name="starttime" class="h-12 p-4 rounded-xl" onchange="submitForm()" style="background-color: #525964;">
                     <option value="" selected>선택하세요</option>
                     <option value="1" th:selected="${starttime == 1}">1시</option>
                     <option value="2" th:selected="${starttime == 2}">2시</option>

@@ -59,4 +59,16 @@ public class Matching extends BaseEntity {
         this.endTime = endTime;
     }
 
+    public void increaseParticipantsCount() {
+        this.participant++;
+    }
+
+    public void decreaseParticipantsCount() {
+        this.participant--;
+    }
+
+    public boolean canAddParticipant() {
+        return this.participant < this.capacity;
+    }
+
 }
