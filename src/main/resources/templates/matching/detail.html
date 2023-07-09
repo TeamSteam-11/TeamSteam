@@ -104,9 +104,11 @@
             </div>
         </div>
 
-        <span th:text="${matching.startTime}">시작 시간</span>
-        <span th:text="${matching.endTime}">종료 시간</span>
-        <span th:text="${matching.deadlineDate}">마감 시간</span>
+<!--        <span th:text="${matching.startTime}">시작 시간</span>-->
+<!--        <span th:text="${matching.endTime}">종료 시간</span>-->
+        <span th:text="${matching.deadlineDate}">마감 시간</span><br>
+        <span id="deadline"></span>
+
     </div>
 
 <!--<div>-->
@@ -130,6 +132,38 @@
     <!-- 매칭 파트너인 경우에 채팅 참여하기 버튼 활성화됨 -> 미니 프로필도 보이게 하기 -->
     <a class="!bg-black p-3 text-white hover:cursor-pointer" th:if="${alreadyWithPartner}" th:href="@{|/match/detail/${matching.getId()}/moveChatRoom|}">채팅 참여하기</a>
 </div>
+
+    <script>
+        // 현재 시간을 가져오는 함수
+        function getCurrentTime() {
+            return new Date();
+        }
+
+        // deadlineDate에서 현재 시간을 뺀 후, 'n 시간 후' 형식으로 표시하는 함수
+        function calculateTimeDifference(deadlineDate) {
+            var currentTime = getCurrentTime();
+            var deadline = new Date(deadlineDate);
+            var differenceInHours = Math.floor((deadline - currentTime) / (1000 * 60 * 60));
+
+            // 'n 시간 후' 형식으로 표시
+            var output = differenceInHours + ' 시간 후';
+            return output;
+        }
+
+        // deadlineDate 값을 가져와서 변환한 뒤, 해당 값을 대체하는 함수
+        function replaceDeadlineDate() {
+            var deadlineDateElement = document.getElementById('deadline');
+            var deadlineDate = deadlineDateElement.innerHTML;
+            var transformedDate = calculateTimeDifference(deadlineDate);
+            deadlineDateElement.innerHTML = transformedDate;
+        }
+
+        // 페이지 로드 시 deadlineDate 값을 변환하여 대체
+        window.onload = function() {
+            replaceDeadlineDate();
+        };
+    </script>
+
 </main>
 </body>
 </html>
