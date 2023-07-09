@@ -1,9 +1,16 @@
+<html layout:decorate="~{common/layout.html}">
 <!DOCTYPE html>
 <html>
 <head>
     <title>폼 예시</title>
+    <style>
+        .selected {
+            background-color: yellow;
+        }
+    </style>
 </head>
 <body>
+<main layout:fragment="main">
 <form th:action="@{/user/createGenre}" method="post">
     <label>
         <input type="radio" name="gender" value="남성">
@@ -15,16 +22,39 @@
         여자
     </label>
     <br><br>
-
-    <th:block th:each="genreTag : ${genreTags}">
-        <label>
-            <input type="checkbox" name="gameGenre" th:value="${genreTag}" th:text="${genreTag}">
-        </label>
-        <br>
-    </th:block>
+    <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap">
+        <th:block th:each="genreTag : ${genreTags}" >
+            <label class="badge bg-green-500 badge-accent inline max-w-[10rem] ml-3" onclick="toggleCheckbox(this)">
+                <input type="checkbox" name="gameGenre" th:value="${genreTag}" th:text="${genreTag}" style="display: none">
+            </label>
+            <br>
+        </th:block>
+    </div>
+<!--    <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap">-->
+<!--    <th:block th:each="genreTag : ${genreTags}" >-->
+<!--        <label class="badge bg-green-500 badge-accent inline max-w-[10rem] ml-3" th:text="${genreTag}">-->
+<!--            <div class="badge bg-green-500 badge-accent inline max-w-[10rem] ml-3"  th:text="${genreTag}" onclick="toggleCheckbox(this)">-->
+<!--            <input type="checkbox" name="gameGenre" th:value="${genreTag}" style="display: none">-->
+<!--            <span>{{genreTag}}</span>-->
+<!--            </div>-->
+<!--        </label>-->
+<!--        <br>-->
+<!--    </th:block>-->
+<!--    </div>-->
 
     <br><br>
-    <input type="submit" value="제출">
+    <button class="btn btn-accent">제출</button>
+    <input type="submit" value="">
 </form>
+</main>
+<script>
+    function toggleCheckbox(genreTag) {
+        var checkbox = document.getElementById('checkbox_' + genreTag);
+        checkbox.checked = !checkbox.checked;
+        var label = document.querySelector('label[for="checkbox_' + genreTag + '"]');
+        label.classList.toggle('selected');
+    }
+</script>
+
 </body>
 </html>
