@@ -96,12 +96,15 @@
        class="card w-96 bg-base-100 shadow-xl"
        style="background-color: #1F2227; color: white; box-shadow: 3px 3px 5px #C0C0C0; margin: 30px;">
         <div class="card-body" style="margin: 10px">
-            <div>
-                <img style="margin-bottom: 10px" th:src="${matching.getUser().getAvatar()}">
-                <span class="card-title mb-1" th:text="${matching.title}"></span>
-                <span class="badge badge-outline" th:text="|${matching.participant} / ${matching.capacity}|"></span>
+            <div style="display: flex">
+                <div style="display: flex; flex-direction: column">
+                    <img style="width: 40px; height: 40px; margin-bottom: 10px; border-radius: 40px; align-items: center" th:src="${matching.getUser().getAvatar()}">
+                    <span th:text="${matching.getUser().username}"></span>
+                </div>
+                    <span class="card-title mb-1 ml-3" th:text="${matching.title}"></span>
             </div>
-            <p th:text="${matching.content}"></p><br>
+            <span class="badge badge-outline" th:text="|${matching.participant} / ${matching.capacity}|"></span>
+            <p class="mt-2" th:text="${matching.content}"></p><br>
             <div style="background-color: #87F86A; color: #1F2227; height: 25px; border-radius: 20px;
                  display: flex; justify-content: center; align-items: center; font-size: 15px">
                 <span th:text="${matching.genre}"></span>
@@ -115,15 +118,18 @@
                 <span style="display: flex; justify-content: center" th:text="${matching.gameTagName}">게임 이름</span>
             </div><br>
             <div>
-                시간 :
+                <div class="badge badge-secondary">시간</div>
                 <span th:text="${matching.startTime}"></span> : 00 ~
                 <span th:text="${matching.endTime}"></span> : 00
-            </div><br>
-            <span th:switch="${matching.gender}">
-              <span th:case="'F'">여성</span>
-              <span th:case="'M'">남성</span>
-              <span th:case="'DC'">성별무관</span>
-            </span>
+            </div>
+            <div>
+                <div class="badge badge-secondary">성별</div>
+                <span th:switch="${matching.gender}">
+                  <span th:case="'F'">여성</span>
+                  <span th:case="'M'">남성</span>
+                  <span th:case="'DC'">성별무관</span>
+                </span>
+            </div>
         </div>
     </a>
 </div>
