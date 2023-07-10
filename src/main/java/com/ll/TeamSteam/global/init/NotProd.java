@@ -19,16 +19,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Configuration
-@Profile({"local"})
+@Profile({"local", "test"})
 @Slf4j
 public class NotProd {
     @Bean
     CommandLineRunner initData(
-            UserService userService,
             ChatRoomService chatRoomService,
             UserRepository userRepository,
             MatchingService matchingService,
@@ -40,6 +36,7 @@ public class NotProd {
             @Override
             @Transactional
             public void run(String... args) throws Exception {
+
                 User user1 = User.builder()
                         .id(1L)
                         .username("user1")
@@ -79,6 +76,7 @@ public class NotProd {
                 gameTagRepository.save(gameTag);
 
                 for (int i = 0; i <= 100; i++){
+
                     String title = "Matching " + i;
                     String content = "으악1";
                     GenreTagType genre = GenreTagType.valueOf("삼인칭슈팅");
