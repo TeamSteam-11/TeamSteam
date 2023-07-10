@@ -24,7 +24,6 @@ public class RankController {
     public String showRank(Model model){
         List<User> topSevenUserList = getTopSevenUsersWithHighTemperature();
         model.addAttribute("topSevenUserList", topSevenUserList);
-
         return "rank/rank";
     }
 
