@@ -52,6 +52,43 @@
         </form>
     </div>
 
+<!--                일인칭슈팅, 삼인칭슈팅, 격투, 슛뎀업, 아케이드, 러너, 핵앤슬래시, JRPG, 로그라이크,-->
+<!--                액션RPG, 어드벤처RPG, 전략RPG, 현대RPG, 파티, 군사, 대전략, 도시, 실시간전략, 카드,-->
+<!--                타워디펜스, 턴제전략, 매트로베니아, 비주얼노벨, 캐주얼, 퍼즐, 퐁부한스토리, 히든오브젝트,-->
+<!--                건설, 농업, 샌드박스, 생활, 연애, 우주, 취미, 스포츠, 낚시, 레이싱, 스포츠시뮬레이션-->
+
+    <div class="search-box flex justify-center mt-20 mb-10">
+        <form id="filter-form" th:action="@{/match/list/filter}" method="GET" class="relative">
+            <div class="flex items-center rounded-xl" style="background-color: #525964;">
+                <select id="genre-select" name="genretype" class="h-12 p-4 rounded-xl" onchange="submitForm()" style="background-color: #525964;">
+                    <option value="" selected>선택하세요</option>
+                    <option value="일인칭슈팅" th:selected="${genretype == '일인칭슈팅'}">일인칭슈팅</option>
+                    <option value="삼인칭슈팅" th:selected="${genretype == '삼인칭슈팅'}">삼인칭슈팅</option>
+                    <option value="격투" th:selected="${genretype == '격투'}">격투</option>
+                    <option value="액션RPG" th:selected="${genretype == '액션RPG'}">액션RPG</option>
+                </select>
+            </div>
+            <div class="flex items-center rounded-xl" style="background-color: #525964;">
+                <select id="time-select" name="starttime" class="h-12 p-4 rounded-xl" onchange="submitForm()" style="background-color: #525964;">
+                    <option value="" selected>선택하세요</option>
+                    <option value="1" th:selected="${starttime == 1}">1시</option>
+                    <option value="2" th:selected="${starttime == 2}">2시</option>
+                    <option value="3" th:selected="${starttime == 3}">3시</option>
+                    <option value="4" th:selected="${starttime == 4}">4시</option>
+                    <option value="20" th:selected="${starttime == 20}">20시</option>
+                </select>
+            </div>
+            <div class="flex items-center rounded-xl" style="background-color: #525964;">
+                <select id="gender-select" name="gender" class="h-12 p-4 rounded-xl" onchange="submitForm()" style="background-color: #525964;">
+                    <option value="" selected>선택하세요</option>
+                    <option value="DC" th:selected="${gender == 'DC'}">성별무관</option>
+                    <option value="F" th:selected="${gender == 'F'}">여성</option>
+                    <option value="M" th:selected="${gender == 'M'}">남성</option>
+                </select>
+            </div>
+        </form>
+    </div>
+
     <a href="/match/create" class="btn btn-custom">매칭 등록</a><br><br>
 
 <div style="display: flex; justify-content: center; flex-wrap: wrap; width: 100%">
@@ -86,14 +123,14 @@
     </a>
 </div>
 
-    <!--페이지네이션 시작-->
+    <!-- 페이지네이션 시작 -->
     <div class="pagination" style="display: flex; justify-content: center; flex-wrap: wrap;">
-        <ul th:if="${keyword == null and searchOption == null}" style="display: flex;">
+        <ul th:if="${keyword == null and searchOption == null and genretype == null and starttime == null}" style="display: flex;">
             <li th:if="${currentPage != 0}">
                 <a th:href="@{/match/list(page=${currentPage - 1})}" style="margin-right: 1em;">&lt;이전</a>
             </li>
             <li th:each="pageNumber : ${#numbers.sequence((currentPage > 4 ? currentPage - 3 : 0),
-                        (matchingList.totalPages > currentPage + 5 ? currentPage + 5 : matchingList.totalPages))}"
+                    (matchingList.totalPages > currentPage + 5 ? currentPage + 5 : matchingList.totalPages))}"
                 style="display: inline;" th:unless="${pageNumber == 0}">
                 <a th:href="@{/match/list(page=${pageNumber - 1})}" th:text="${pageNumber}" style="margin-right: 1em;"
                    th:classappend="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
@@ -108,7 +145,7 @@
                    style="margin-right: 1em;">&lt;이전</a>
             </li>
             <li th:each="pageNumber : ${#numbers.sequence((currentPage > 4 ? currentPage - 3 : 0),
-            (matchingList.totalPages > currentPage + 5 ? currentPage + 5 : matchingList.totalPages))}"
+        (matchingList.totalPages > currentPage + 5 ? currentPage + 5 : matchingList.totalPages))}"
                 style="display: inline;" th:unless="${pageNumber == 0}">
                 <a th:href="@{/match/list/search(name=${searchOption}, keyword=${keyword}, page=${pageNumber - 1})}"
                    th:text="${pageNumber}" style="margin-right: 1em;"
@@ -119,8 +156,32 @@
                    style="margin-right: 1em;">다음&gt;</a>
             </li>
         </ul>
-    </div>
+        <ul th:if="${genretype != null or starttime != null or gender != null}" style="display: flex;">
+            <li th:if="${currentPage != 0}">
+                <a th:href="@{/match/list/filter(genretype=${genretype != null ? genretype : ''}, starttime=${starttime != null ? starttime : ''}, gender=${gender != null ? gender : ''}, page=${currentPage - 1})}"
+                   style="margin-right: 1em;">&lt;이전</a>
+            </li>
+            <li th:each="pageNumber : ${#numbers.sequence((currentPage > 4 ? currentPage - 3 : 0),
+        (matchingList.totalPages > currentPage + 5 ? currentPage + 5 : matchingList.totalPages))}"
+                style="display: inline;" th:unless="${pageNumber == 0}">
+                <a th:href="@{/match/list/filter(genretype=${genretype != null ? genretype : ''}, starttime=${starttime != null ? starttime : ''}, gender=${gender != null ? gender : ''}, page=${pageNumber - 1})}"
+                   th:text="${pageNumber}" style="margin-right: 1em;"
+                   th:classappend="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
+            </li>
+            <li th:if="${currentPage != matchingList.totalPages - 1}">
+                <a th:href="@{/match/list/filter(genretype=${genretype != null ? genretype : ''}, starttime=${starttime != null ? starttime : ''}, gender=${gender != null ? gender : ''}, page=${currentPage + 1})}"
+                   style="margin-right: 1em;">다음&gt;</a>
+            </li>
+        </ul>
 
+
+    </div>
+    <script>
+        function submitForm() {
+            var form = document.getElementById('filter-form');
+            form.submit();
+        }
+    </script>
 </main>
 </body>
 </html>

@@ -80,13 +80,13 @@ public class NotProd {
                     String title = "Matching " + i;
                     String content = "으악1";
                     GenreTagType genre = GenreTagType.valueOf("삼인칭슈팅");
-                    int gameTagId = 41000;
-                    long duration = 4L;
+                    int gameTag = 41000;
+                    String gender = "성별무관";
+                    long capacity = 4L;
                     int startTime = 20;
                     int endTime = 269770;
 
-                    Matching matching = matchingService.create(user2, title, content, genre, gameTagId, duration, startTime, endTime, null);
-
+                    Matching matching = matchingService.create(user2, title, content, genre, gameTag, gender, capacity, startTime, endTime, null);
                     ChatRoom chatRoom = chatRoomService.createAndConnect(matching.getTitle(), matching, user2.getId());
                 }
             }

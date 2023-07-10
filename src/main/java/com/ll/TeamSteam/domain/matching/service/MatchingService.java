@@ -16,8 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +30,7 @@ public class MatchingService {
     public final GameTagRepository gameTagRepository;
 
     // 매칭 등록 기능
-    public Matching create(User user, String title, String content, GenreTagType genreTag, Integer gameTagId, Long capacity, int startTime, int endTime, LocalDateTime deadlineDate) {
+    public Matching create(User user, String title, String content, GenreTagType genreTag, Integer gameTagId,String gender, Long capacity, int startTime, int endTime, LocalDateTime deadlineDate) {
 
         Optional<GameTag> gameTag = gameTagRepository.findByAppid(gameTagId);
         String gameTagName = "게임이름을 불러올 수 없습니다";
@@ -36,6 +39,7 @@ public class MatchingService {
             gameTagName = gameTag1.getName();
         }
 
+
         Matching matching = Matching
                 .builder()
                 .user(user)
@@ -43,6 +47,8 @@ public class MatchingService {
                 .content(content)
                 .genre(genreTag)
                 .gameTagId(gameTagId)
+                .gender(gender)
+                .participant(1L)
                 .gameTagName(gameTagName)
                 .capacity(capacity)
                 .startTime(startTime)
@@ -75,9 +81,9 @@ public class MatchingService {
     }
 
     @Transactional
-    public RsData<Matching> modify(Matching matching, String title, String content, GenreTagType genreTag, Long capacity, int startTime, int endTime) {
+    public RsData<Matching> modify(Matching matching, String title, String content, GenreTagType genreTag, String gender, Long capacity, int startTime, int endTime) {
         try {
-            matching.update(title, content, genreTag, capacity, startTime, endTime);
+            matching.update(title, content, genreTag, gender, capacity, startTime, endTime);
             matchingRepository.save(matching);
 
             return RsData.of("S-1", "매칭이 수정되었습니다", matching);
@@ -93,14 +99,44 @@ public class MatchingService {
 
         Page<Matching> matchingList;
 
-        if (name.equals("title")) {
-            matchingList = matchingRepository.findByTitleContainingIgnoreCase(searchQuery.getValue(), pageable);
-        } else if (name.equals("content")) {
-            matchingList = matchingRepository.findByContentContainingIgnoreCase(searchQuery.getValue(), pageable);
+        Map<String, Function<String, Page<Matching>>> methodMap = new HashMap<>();
+        methodMap.put("title", value -> matchingRepository.findByTitleContainingIgnoreCase(value, pageable));
+        methodMap.put("content", value -> matchingRepository.findByContentContainingIgnoreCase(value, pageable));
+
+        Function<String, Page<Matching>> method = methodMap.get(name);
+        if (method != null) {
+            matchingList = method.apply(searchQuery.getValue());
         } else {
             throw new IllegalArgumentException("검색 쿼리가 잘 작성되지 않았음");
         }
 
         return matchingList;
+    }
+
+    public Page<Matching> filterMatching(GenreTagType genreType, Integer startTime, String gender, Pageable pageable) {
+        if (genreType != null && startTime != null) {
+            // 장르와 시간
+            return matchingRepository.findByGenreAndStartTime(genreType, startTime, pageable);
+        } else if (genreType != null) {
+            // 장르
+            return matchingRepository.findByGenre(genreType, pageable);
+        } else if (startTime != null) {
+            // 시작시간
+            return matchingRepository.findByStartTime(startTime, pageable);
+        } else if (gender != null) {
+            // 성별
+            return matchingRepository.findByGender(gender, pageable);
+        } else if (genreType != null && gender != null) {
+            // 장르와 성별
+            return matchingRepository.findByGenreAndGender(genreType, gender, pageable);
+        } else if (startTime != null && gender != null) {
+            // 성별과 시간
+            return matchingRepository.findByStartTimeAndGender(startTime, gender, pageable);
+        } else if (genreType != null && startTime != null && gender != null){
+            return matchingRepository.findByGenreAndStartTimeAndGender(genreType, startTime, gender, pageable);
+        }else {
+            // 아무 조건 없이 전체 출력
+            return matchingRepository.findAll(pageable);
+        }
     }
 }

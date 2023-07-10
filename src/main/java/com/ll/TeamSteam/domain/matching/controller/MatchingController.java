@@ -91,6 +91,7 @@ public class MatchingController {
         private GenreTagType genre;
         private Integer gameTagId;
         private Long capacity;
+        private String gender;
         private int startTime;
         private int endTime;
         private int selectedHours;
@@ -101,6 +102,7 @@ public class MatchingController {
             this.genre =GenreTagType.valueOf("삼인칭슈팅");
             this.gameTagId=1;
             this.capacity = 1L;
+            this.gender = "성별무관";
             this.startTime = 0;
             this.endTime = 24;
             this.selectedHours = 0;
@@ -140,6 +142,7 @@ public class MatchingController {
                 createForm.getContent(),
                 createForm.getGenre(),
                 createForm.getGameTagId(),
+                createForm.getGender(),
                 createForm.getCapacity(),
                 createForm.getStartTime(),
                 createForm.getEndTime(),
@@ -205,6 +208,7 @@ public class MatchingController {
         createForm.setContent(matching.getContent());
         createForm.setGenre(matching.getGenre());
         createForm.setGameTagId(matching.getGameTagId());
+        createForm.setGender(matching.getGender());
         createForm.setCapacity(matching.getCapacity());
         createForm.setStartTime(matching.getStartTime());
         createForm.setEndTime(matching.getEndTime());
@@ -230,7 +234,7 @@ public class MatchingController {
         }
 
         RsData<Matching> modifyRsData = matchingService.modify(matching, createForm.getTitle(), createForm.getContent(),
-                createForm.getGenre(), createForm.getCapacity(), createForm.getStartTime(), createForm.getEndTime());
+                createForm.getGenre(), createForm.getGender(), createForm.getCapacity(), createForm.getStartTime(), createForm.getEndTime());
 
 
         chatRoomService.updateChatRoomName(matching.getChatRoom(), matching.getTitle());
@@ -307,6 +311,55 @@ public class MatchingController {
         model.addAttribute("currentPage", page);
         model.addAttribute("keyword", keyword);
         model.addAttribute("searchOption", name);  // 검색 옵션 추가
+
+        return "matching/list";
+    }
+
+//    @GetMapping("/list/filter")
+//    public String filterMatching(@RequestParam(name = "genretype", required = false) GenreTagType genreType,
+//                                 @RequestParam(name = "starttime", required = false) Integer startTime,
+//                                 @RequestParam(name = "gender", required = false) String gender,
+//                                 @RequestParam(defaultValue = "0") int page,
+//                                 @RequestParam(defaultValue = "8") int size,
+//                                 @RequestParam(defaultValue = "createDate") String sortCode,
+//                                 @RequestParam(defaultValue = "DESC") String direction,
+//                                 Model model) {
+//
+//        String genreTypeToString = genreType.toString();
+//
+//        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
+//        Page<Matching> matchingList = matchingService.filterMatching(genreType, startTime,gender, pageable);
+//        model.addAttribute("matchingList", matchingList);
+//        model.addAttribute("currentPage", page);
+//        model.addAttribute("genreTypeToString", genreTypeToString);
+//        model.addAttribute("starttime", startTime);
+//        model.addAttribute("gender", gender);
+//
+//        return "matching/list";
+//    }
+
+    @GetMapping("/list/filter")
+    public String filterMatching(@RequestParam(name = "genretype", required = false) String genreTypeStr,
+                                 @RequestParam(name = "starttime", required = false) Integer startTime,
+                                 @RequestParam(name = "gender", required = false) String gender,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "8") int size,
+                                 @RequestParam(defaultValue = "createDate") String sortCode,
+                                 @RequestParam(defaultValue = "DESC") String direction,
+                                 Model model) {
+
+        GenreTagType genreType = null;
+        if (genreTypeStr != null && !genreTypeStr.isEmpty()) {
+            genreType = GenreTagType.ofCode(genreTypeStr);
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
+        Page<Matching> matchingList = matchingService.filterMatching(genreType, startTime,gender, pageable);
+        model.addAttribute("matchingList", matchingList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("genretype", genreTypeStr); // This line is changed
+        model.addAttribute("starttime", startTime);
+        model.addAttribute("gender", gender);
 
         return "matching/list";
     }
