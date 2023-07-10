@@ -47,22 +47,9 @@ public class NotProd {
 
                 userRepository.save(user1);
 
-                User user2 = User.builder()
-                        .id(2L)
-                        .username("user2")
-                        .steamId("8888888888")
-                        .temperature(36)
-                        .build();
-
-                userRepository.save(user2);
-
-                log.info("user1 = {}", user1);
-
-
                 UserTag userTag =UserTag.builder()
                         .user(user1)
                         .build();
-
 
                 userTagRepository.save(userTag);
 
@@ -75,7 +62,7 @@ public class NotProd {
 
                 gameTagRepository.save(gameTag);
 
-                for (int i = 0; i <= 100; i++){
+                for (int i = 0; i <= 2; i++){
 
                     String title = "Matching " + i;
                     String content = "으악1";
@@ -86,8 +73,8 @@ public class NotProd {
                     int startTime = 20;
                     int endTime = 269770;
 
-                    Matching matching = matchingService.create(user2, title, content, genre, gameTagId, gender, capacity, startTime, endTime, null);
-                    ChatRoom chatRoom = chatRoomService.createAndConnect(matching.getTitle(), matching, user2.getId());
+                    Matching matching = matchingService.create(user1, title, content, genre, gameTagId, gender, capacity, startTime, endTime, null);
+                    chatRoomService.createAndConnect(matching.getTitle(), matching, user1.getId());
                 }
             }
         };
