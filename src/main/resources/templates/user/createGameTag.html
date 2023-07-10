@@ -36,12 +36,10 @@
             <div class="m-8 flex justify-center">
                 <div class="pagination">
                     <ul class="flex space-x-4 flex-row">
-
                         <li th:class="${currentPage == 0 ? 'disabled' : ''}">
                             <a th:if="${currentPage != 0}" th:href="@{/user/createGameTag(page=${currentPage - 1}, size=${size})}">&laquo; 이전</a>
                             <span th:if="${currentPage == 0}">&laquo; 이전</span>
                         </li>
-
                         <li th:class="${currentPage == totalPages - 1 ? 'disabled' : ''}">
                             <a th:if="${currentPage != totalPages - 1}" th:href="@{/user/createGameTag(page=${currentPage + 1}, size=${size})}">다음 &raquo;</a>
                             <span th:if="${currentPage == totalPages - 1}">다음 &raquo;</span>

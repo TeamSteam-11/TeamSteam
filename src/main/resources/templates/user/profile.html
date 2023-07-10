@@ -194,8 +194,10 @@
                         <h5 class="card-title" th:text="${game.name}"></h5>
                     </div>
                 </div>
+            </div>
+            <div class="m-8 flex justify-center">
                 <div class="pagination">
-                    <ul>
+                    <ul class="flex space-x-4 flex-row">
                         <li th:class="${currentPage == 0 ? 'disabled' : ''}">
                             <a th:if="${currentPage != 0}" th:href="@{/user/profile/{userId}(userId=${userId},page=${currentPage - 1},size=${size})}">&laquo; 이전</a>
                             <span th:if="${currentPage == 0}">&laquo; 이전</span>
