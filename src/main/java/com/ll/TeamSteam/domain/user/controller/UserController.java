@@ -236,7 +236,6 @@ public class UserController {
     }
 
     public UserInfoResponse getUserInfo(String steamId) {
-        //UserInfoResponse 객체를 사용
 
         return steamService.getUserInformation(steamId);
     }
@@ -297,9 +296,15 @@ public class UserController {
         return "redirect:/user/profile/" + userId;
     }
 
-//    public void requestFriend(User targetUser, User loginedUser){
-//        notificationController.friendRequest(targetUser, loginedUser);
-//    }
+    @GetMapping("/user/profile/{userId}/deleteFriend")
+    public String deleteFriend(@PathVariable long userId, @AuthenticationPrincipal SecurityUser user){
+
+        Long targetId =userId;
+        Long loginedId =user.getId();
+
+        userService.deleteFriend(targetId,loginedId);
+        return "redirect:/user/profile/" + loginedId;
+    }
 
     @PostMapping("/user/profile/editprofile")
     public String editProfile(@AuthenticationPrincipal SecurityUser user, Model model) {
