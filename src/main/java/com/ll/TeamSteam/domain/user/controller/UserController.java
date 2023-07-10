@@ -259,24 +259,35 @@ public class UserController {
 
     @GetMapping(value = "/user/profile/{userId}", produces = MediaType.TEXT_HTML_VALUE)
     public String userProfile(@PathVariable long userId, @AuthenticationPrincipal SecurityUser user, Model model,
-                                   @PageableDefault(size = 5) Pageable pageable) throws ParseException {
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size) throws ParseException {
 
 
         User targetUser = userService.findById(userId).orElseThrow();
 
-        List<SteamGameLibrary> haveGameListData = steamService.getUserGameList(targetUser.getSteamId());
+        String steamId = user.getSteamId();
+        List<SteamGameLibrary> haveGameListData = steamService.getUserGameList(steamId);
+
+        int totalItems = haveGameListData.size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        int start = page * size;
+        int end = Math.min(start + size, totalItems);
+        List<SteamGameLibrary> pagedGameList = haveGameListData.subList(start, end);
 
 
         recentlyUserService.updateRecentlyUser(userId);
         List<RecentlyUser> recentlyUserList =recentlyUserService.findAllByUserId(userId);
 
         List<Friend> friendsList = userService.getFriends(user.getId());
-        model.addAttribute("gameList", haveGameListData);
-
-
 
 
         long loginedId = user.getId();//프로필 본인인지 아닌지 검증하는 용도
+
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("gameList", pagedGameList);
         model.addAttribute("targetUser", targetUser);
         model.addAttribute("loginedId", loginedId);
         model.addAttribute("friendsList", friendsList);
