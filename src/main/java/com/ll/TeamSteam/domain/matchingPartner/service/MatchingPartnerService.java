@@ -1,5 +1,7 @@
 package com.ll.TeamSteam.domain.matchingPartner.service;
 
+import java.util.List;
+
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
@@ -23,10 +25,10 @@ public class MatchingPartnerService {
         Matching matching = matchingService.findById(matchingId).orElseThrow();
 
         MatchingPartner matchingPartner = MatchingPartner.builder()
-                .matching(matching)
-                .user(user)
-                .inChatRoomTrueFalse(false)
-                .build();
+            .matching(matching)
+            .user(user)
+            .inChatRoomTrueFalse(false)
+            .build();
 
         matchingPartnerRepository.save(matchingPartner);
     }
@@ -56,23 +58,32 @@ public class MatchingPartnerService {
          * moveChatController 에서 검증을 한번 한 후 service 쪽에서도 검증
          */
         MatchingPartner matchingPartner = matchingPartnerRepository.findByMatchingAndUser(matching, user)
-                .orElseThrow(() -> new IllegalArgumentException("매칭 파트너를 찾을 수 없어"));
+            .orElseThrow(() -> new IllegalArgumentException("매칭 파트너를 찾을 수 없어"));
 
         matchingPartner.updateInChatRoomTrueFalse(true);
     }
 
-    @Transactional
-    public void updateFalse(Long matchingId, Long kickEdUserId) {
-        User user = userService.findByIdElseThrow(kickEdUserId);
-        Matching matching = matchingService.findById(matchingId).orElseThrow();
+    public List<MatchingPartner> findByMatchingId(Long matchingId) {
+        return matchingPartnerRepository.findByMatchingId(matchingId);
+    }
 
-        if (matching.getId() == null) {
-            throw new IllegalArgumentException("매칭이 존재하지 않음");
-        }
+    public List<MatchingPartner> findByUserId(Long userId) {
+        return matchingPartnerRepository.findByUserId(userId);
+    }
+        @Transactional
+        public void updateFalse (Long matchingId, Long kickEdUserId){
+            User user = userService.findByIdElseThrow(kickEdUserId);
+            Matching matching = matchingService.findById(matchingId).orElseThrow();
 
-        MatchingPartner matchingPartner = matchingPartnerRepository.findByMatchingAndUser(matching, user)
+            if (matching.getId() == null) {
+                throw new IllegalArgumentException("매칭이 존재하지 않음");
+            }
+
+            MatchingPartner matchingPartner = matchingPartnerRepository.findByMatchingAndUser(matching, user)
                 .orElseThrow(() -> new IllegalArgumentException("매칭 파트너를 찾을 수 없어"));
 
-        matchingPartner.updateInChatRoomTrueFalse(false);
+            matchingPartner.updateInChatRoomTrueFalse(false);
+
+        }
     }
-}
+

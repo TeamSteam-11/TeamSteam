@@ -112,7 +112,7 @@
                     <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${matching.getGameTagId()} + '/header.jpg'}"
                          alt="게임 이미지" width="200" height="auto"/>
                 </td>
-                게임
+                <span th:text="${matching.gameTagName}">게임 이름</span>
             </div><br>
             <div>
                 시간 :

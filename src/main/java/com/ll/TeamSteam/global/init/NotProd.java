@@ -7,6 +7,11 @@ import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
+import com.ll.TeamSteam.domain.user.service.UserService;
+import com.ll.TeamSteam.domain.userTag.UserTag;
+import com.ll.TeamSteam.domain.userTag.UserTagRepository;
+import com.ll.TeamSteam.domain.userTag.gameTag.GameTag;
+import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +27,10 @@ public class NotProd {
     CommandLineRunner initData(
             ChatRoomService chatRoomService,
             UserRepository userRepository,
-            MatchingService matchingService
+            MatchingService matchingService,
+            UserTagRepository userTagRepository,
+            GameTagRepository gameTagRepository
+
     ) {
         return new CommandLineRunner() {
             @Override
@@ -50,7 +58,25 @@ public class NotProd {
 
                 log.info("user1 = {}", user1);
 
-                for (int i = 0; i <= 5; i++){
+
+                UserTag userTag =UserTag.builder()
+                        .user(user1)
+                        .build();
+
+
+                userTagRepository.save(userTag);
+
+                GameTag gameTag = GameTag.builder()
+                        .appid(41000)
+                        .name("시리우스샘")
+                        .build();
+
+                gameTag.setUserTag(userTag);
+
+                gameTagRepository.save(gameTag);
+
+                for (int i = 0; i <= 100; i++){
+
                     String title = "Matching " + i;
                     String content = "으악1";
                     GenreTagType genre = GenreTagType.valueOf("삼인칭슈팅");
@@ -58,7 +84,7 @@ public class NotProd {
                     String gender = "성별무관";
                     long capacity = 4L;
                     int startTime = 20;
-                    int endTime = 22;
+                    int endTime = 269770;
 
                     Matching matching = matchingService.create(user2, title, content, genre, gameTag, gender, capacity, startTime, endTime, null);
                     ChatRoom chatRoom = chatRoomService.createAndConnect(matching.getTitle(), matching, user2.getId());

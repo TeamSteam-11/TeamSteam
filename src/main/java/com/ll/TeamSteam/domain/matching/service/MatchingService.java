@@ -5,6 +5,8 @@ import com.ll.TeamSteam.domain.matching.entity.SearchQuery;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.entity.User;
+import com.ll.TeamSteam.domain.userTag.gameTag.GameTag;
+import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
 import com.ll.TeamSteam.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +27,19 @@ import java.util.function.Function;
 @Slf4j
 public class MatchingService {
     public final MatchingRepository matchingRepository;
+    public final GameTagRepository gameTagRepository;
 
     // 매칭 등록 기능
     public Matching create(User user, String title, String content, GenreTagType genreTag, Integer gameTagId,String gender, Long capacity, int startTime, int endTime, LocalDateTime deadlineDate) {
+
+        Optional<GameTag> gameTag = gameTagRepository.findByAppid(gameTagId);
+        String gameTagName = "게임이름을 불러올 수 없습니다";
+        if(gameTag.isPresent()){
+            GameTag gameTag1 = gameTag.orElseThrow();
+            gameTagName = gameTag1.getName();
+        }
+
+
         Matching matching = Matching
                 .builder()
                 .user(user)
@@ -37,6 +49,7 @@ public class MatchingService {
                 .gameTagId(gameTagId)
                 .gender(gender)
                 .participant(1L)
+                .gameTagName(gameTagName)
                 .capacity(capacity)
                 .startTime(startTime)
                 .endTime(endTime)

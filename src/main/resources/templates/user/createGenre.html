@@ -1,9 +1,16 @@
-<!DOCTYPE html>
-<html>
+<html layout:decorate="~{common/layout.html}">
 <head>
     <title>폼 예시</title>
+
+    <style>
+        .badge.selected {
+            background-color: #22f1a3; /* 변경하고자 하는 배경색 */
+            border-color: #22f1a3;
+        }
+    </style>
 </head>
 <body>
+<main layout:fragment="main">
 <form th:action="@{/user/createGenre}" method="post">
     <label>
         <input type="radio" name="gender" value="남성">
@@ -15,16 +22,28 @@
         여자
     </label>
     <br><br>
-
-    <th:block th:each="genreTag : ${genreTags}">
-        <label>
-            <input type="checkbox" name="gameGenre" th:value="${genreTag}" th:text="${genreTag}">
-        </label>
-        <br>
-    </th:block>
+    <hr3>장르 태그를 선택해주세요</hr3>
+    <hr style="border-color: #dddddd; border-width: 2px">
+    <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; margin-top:3px">
+        <th:block th:each="genreTag : ${genreTags}">
+            <label class="badge bg-green-800 badge-accent inline max-w-[10rem] ml-3 hover:cursor-pointer">
+                <input type="checkbox" name="gameGenre" th:value="${genreTag}" th:text="${genreTag}" style="display: none" onchange="toggleCheckbox(this)">
+            </label>
+            <br>
+        </th:block>
+    </div>
 
     <br><br>
-    <input type="submit" value="제출">
+    <button class="btn btn-accent">제출</button>
+    <input type="submit" value="">
 </form>
+
+    <script>
+        function toggleCheckbox(checkbox) {
+            var label = checkbox.parentNode;
+            label.classList.toggle("selected");
+        }
+    </script>
+</main>
 </body>
 </html>

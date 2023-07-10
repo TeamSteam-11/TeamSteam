@@ -44,16 +44,18 @@
 </head>
 <body>
 <main layout:fragment="main">
-    <div class="card lg:card-side bg-base-100 shadow-xl custom-card" style="height: 400px; overflow: auto;">
-        <figure class="ml-4" style="width: 150px;">
+    <div class="card lg:card-side bg-base-100 shadow-xl custom-card" style="height: 400px; overflow: auto; display: flex;">
+        <div>
+        <figure class="ml-8 mt-8" style="width: 150px;">
             <div class="w-48 h-48">
-                <img th:src="${targetUser.getAvatar()}" class="w-full h-full">
+                <img th:src="${targetUser.getAvatar()}" class="w-full h-full object-cover">
             </div>
         </figure>
-        <div class="card-body">
-            <h1 class="my-4 text-3xl" th:text="${targetUser.getUsername()}" style="color: #dddddd;"></h1>
+        </div>
+        <div class="card-body" style="display: flex; margin-top: 1px;">
+            <h1 class="my-2 text-3xl" th:text="${targetUser.getUsername()}" style="color: #dddddd;"></h1>
             <div class="ml-4" style="width: calc(100% - 150px);">
-                        <div class="flex pt-4">
+                        <div class="flex pt-4" style="display: flex; flex-direction: column">
                         <div class="table-cell">
                             <div class="flex flex-wrap">
                                 <div th:if="${!targetUser.getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${targetUser.getUserTag().getGameTag()}" class="badge bg-sky-500 badge-accent inline max-w-[10rem]">
@@ -89,7 +91,7 @@
         </div>
     </div>
     <div th:if="${loginedId == targetUser.getId()}">
-        <div class="flex justify-end">
+        <div class="flex justify-start">
             <div>
                 <h2 class="text-xl font-semibold mb-4">친구 목록</h2>
 
@@ -101,7 +103,6 @@
                         </thead>
                         <tbody>
                         <tr th:each="friend: ${friendsList}">
-                            <td th:text="${friend.getFriend().getId()}"></td>
                             <td th:text="${friend.getFriend().getUsername()}"></td>
                             <td>
                                 <img th:src="${friend.getFriend().getAvatar()}" class="w-8 h-8 rounded-full">
@@ -116,6 +117,34 @@
             </div>
         </div>
     </div>
+    <div th:if="${loginedId == targetUser.getId()}">
+        <div class="flex justify-end">
+            <div>
+                <h2 class="text-xl font-semibold mb-4">최근 매칭된 유저</h2>
+
+                <th:block th:if="${!recentlyUserList.isEmpty()}">
+                    <table class="table-auto">
+                        <thead>
+                        <tr>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="recentlyUser: ${recentlyUserList}">
+                            <td th:text="${recentlyUser.getMatchingPartnerName()}"></td>
+                            <td>
+                                <img th:src="${recentlyUser.getMatchingPartner().getUser().getAvatar()}" class="w-8 h-8 rounded-full">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </th:block>
+                <th:block th:if="${recentlyUserList.isEmpty()}">
+                    <p class="text-gray-500">매칭을 시작해주세요.</p>
+                </th:block>
+            </div>
+        </div>
+    </div>
+
 
     <div class="card lg:card-side bg-base-100 shadow-xl custom-card2 ">
         <div class="card-body">
