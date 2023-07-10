@@ -30,6 +30,8 @@ public class Matching extends BaseEntity {
 
     private Integer gameTagId;
 
+    private String gameTagName;
+
     private Long capacity; // 모집 인원
 
     private Long participant; // 참가자 수

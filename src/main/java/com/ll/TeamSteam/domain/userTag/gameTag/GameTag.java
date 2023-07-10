@@ -36,4 +36,10 @@ public class GameTag extends BaseEntity {
     public void setUserTag(UserTag userTag) {
         this.userTag = userTag;
     }
+
+    public GameTag(Integer appid, UserTag userTag, String name) {
+        this.appid = appid;
+        this.userTag = userTag;
+        this.name = name;
+    }
 }
