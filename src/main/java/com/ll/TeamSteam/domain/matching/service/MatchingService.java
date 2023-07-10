@@ -133,9 +133,9 @@ public class MatchingService {
             // 성별과 시간
             return matchingRepository.findByStartTimeAndGender(startTime, gender, pageable);
         } else if (genreType != null && startTime != null && gender != null){
+            // 장르, 성별, 시간
             return matchingRepository.findByGenreAndStartTimeAndGender(genreType, startTime, gender, pageable);
-        }else {
-            // 아무 조건 없이 전체 출력
+        } else {
             return matchingRepository.findAll(pageable);
         }
     }
