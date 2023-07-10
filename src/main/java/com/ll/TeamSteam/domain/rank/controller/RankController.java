@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/rank")
 public class RankController {
 
     @GetMapping("/rank")
