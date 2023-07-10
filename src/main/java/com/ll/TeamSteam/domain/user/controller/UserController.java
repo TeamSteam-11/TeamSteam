@@ -185,6 +185,8 @@ public class UserController {
         int end = Math.min(start + size, totalItems);
         List<SteamGameLibrary> pagedGameList = haveGameListData.subList(start, end);
 
+        userService.updateGameList(haveGameListData, steamId);
+
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("gameList", pagedGameList);

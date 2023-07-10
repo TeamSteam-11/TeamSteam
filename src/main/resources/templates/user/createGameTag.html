@@ -12,11 +12,12 @@
 </head>
 <body>
 <main layout:fragment="main">
+    <form action="/user/createGameTag/save-gametag" method="post" th:action="@{/user/createGameTag/save-gametag}" th:object="${selectedGamesForm}">
     <div class="container">
         <div class="flex justify-center">
             <p class="m-8 text-2xl">선호하는 게임을 선택해주세요!</p>
         </div>
-        <form action="/user/createGameTag/save-gametag" method="post" th:action="@{/user/createGameTag/save-gametag}" th:object="${selectedGamesForm}">
+        <form action="/user/createGameTag/save-gametag" method="post">
             <div class="grid grid-cols-3  gap-x-8 gap-y-4">
                 <div th:each="game : ${gameList}">
                     <div class="card card-compact w-96 bg-base-100 shadow-xl custom-card">
@@ -53,6 +54,7 @@
 
         </form>
     </div>
+    </form>
 </main>
 </body>
 
