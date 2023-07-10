@@ -42,35 +42,35 @@
             padding: 2px 5px;
         }
 
-        .card-actions{
+        .card-actions {
             width: 50%;
             height: 50%;
         }
 
-        .mini-profile{
+        .mini-profile {
             display: flex;
             flex-direction: row;
             width: 100%;
         }
 
-        .mini-profile-avatar{
+        .mini-profile-avatar {
             margin-left: 10px;
             margin-right: 10px;
             border-right-color: #525964;
         }
 
-        .mini-profile-tag{
+        .mini-profile-tag {
             border-left-color: #525964;
             border-left-width: 1px;
             padding-left: 5px;
         }
 
-        .gameTagBadge{
+        .gameTagBadge {
             font-size: 8px;
             display: flex;
         }
 
-        .genreTagBadge{
+        .genreTagBadge {
             display: flex;
         }
     </style>
@@ -86,21 +86,26 @@
                      style="width: 100%; height: 100%;"/>
             </figure>
             <div class="card-body items-center text-center">
-                <h2 class="card-title" style="color: silver; " th:text="${oneToThreeUserList.get(1).getUsername()}"></h2>
+                <h2 class="card-title" style="color: silver; "
+                    th:text="${oneToThreeUserList.get(1).getUsername()}"></h2>
                 <div class="mini-profile">
                     <div class="mini-profile-avatar"><img th:src="${oneToThreeUserList.get(1).getAvatar()}"/></div>
                     <div class="mini-profile-tag">
-                        <tr th:each="twoUserGameTag, index : ${oneToThreeUserList.get(1).getUserTag().getGameTag()}" th:if="${index.size} != 0 and ${index.index} < 2">
-                            <div class="badge bg-sky-500 badge-accent mt-2" th:text="${twoUserGameTag.getName()}"></div>
+                        <tr th:each="twoUserGameTag, index : ${oneToThreeUserList.get(1).getUserTag().getGameTag()}"
+                            th:if="${index.size} != 0 and ${index.index} < 2">
+                            <div class="badge bg-sky-400 badge-accent mt-2" th:text="${twoUserGameTag.getName()}"></div>
                         </tr>
                         <br>
-                        <tr  th:each="twoUserGenreTag, index : ${oneToThreeUserList.get(1).getUserTag().getGenreTag()}" th:if="${index.size} != 0 and ${index.index} < 3">
+                        <tr th:each="twoUserGenreTag, index : ${oneToThreeUserList.get(1).getUserTag().getGenreTag()}"
+                            th:if="${index.size} != 0 and ${index.index} < 3">
                             <div class="badge bg-green-500 badge-accent" th:text="${twoUserGenreTag.getGenre()}"></div>
                         </tr>
                     </div>
                 </div>
-                <div class="card-actions" style="display:flex; align-content: center;">
-                    <button class="btn-rank btn-primary">Buy Now</button>
+                <div class="card-actions" style="display:flex; align-content: center; justify-content: center;">
+                    <a th:href="'/user/profile/'+${oneToThreeUserList.get(1).getId()}">
+                        <button class="btn-rank btn-primary items-center">Go Profile</button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -110,21 +115,26 @@
                      style="width: 100%; height: 100%;"/>
             </figure>
             <div class="card-body items-center text-center">
-                <h2 class="card-title" style="color: #F5ED27;" th:text="${oneToThreeUserList.get(0).getUsername()}"></h2>
+                <h2 class="card-title" style="color: #F5ED27;"
+                    th:text="${oneToThreeUserList.get(0).getUsername()}"></h2>
                 <div class="mini-profile">
-                    <div class="mini-profile-avatar"><img th:src="${oneToThreeUserList.get(1).getAvatar()}"/></div>
+                    <div class="mini-profile-avatar"><img th:src="${oneToThreeUserList.get(0).getAvatar()}"/></div>
                     <div class="mini-profile-tag">
-                        <tr th:each="twoUserGameTag, index : ${oneToThreeUserList.get(1).getUserTag().getGameTag()}" th:if="${index.size} != 0 and ${index.index} < 2">
-                            <div class="badge bg-sky-500 badge-accent mt-2" th:text="${twoUserGameTag.getName()}"></div>
+                        <tr th:each="twoUserGameTag, index : ${oneToThreeUserList.get(0).getUserTag().getGameTag()}"
+                            th:if="${index.size} != 0 and ${index.index} < 2">
+                            <div class="badge bg-sky-400 badge-accent mt-2" th:text="${twoUserGameTag.getName()}"></div>
                         </tr>
                         <br>
-                        <tr  th:each="twoUserGenreTag, index : ${oneToThreeUserList.get(1).getUserTag().getGenreTag()}" th:if="${index.size} != 0 and ${index.index} < 3">
+                        <tr th:each="twoUserGenreTag, index : ${oneToThreeUserList.get(0).getUserTag().getGenreTag()}"
+                            th:if="${index.size} != 0 and ${index.index} < 3">
                             <div class="badge bg-green-500 badge-accent" th:text="${twoUserGenreTag.getGenre()}"></div>
                         </tr>
                     </div>
                 </div>
-                <div class="card-actions">
-                    <button class="btn-rank btn-primary">Buy Now</button>
+                <div class="card-actions" style="display:flex; align-content: center; justify-content: center;">
+                    <a th:href="'/user/profile/'+${oneToThreeUserList.get(0).getId()}">
+                        <button class="btn-rank btn-primary items-center">Go Profile</button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -134,21 +144,26 @@
                      style="width: 100%; height: 100%;"/>
             </figure>
             <div class="card-body items-center text-center">
-                <h2 class="card-title" style="color: #FF2B2B;" th:text="${oneToThreeUserList.get(2).getUsername()}"></h2>
+                <h2 class="card-title" style="color: #FF2B2B;"
+                    th:text="${oneToThreeUserList.get(2).getUsername()}"></h2>
                 <div class="mini-profile">
-                    <div class="mini-profile-avatar"><img th:src="${oneToThreeUserList.get(1).getAvatar()}"/></div>
+                    <div class="mini-profile-avatar"><img th:src="${oneToThreeUserList.get(2).getAvatar()}"/></div>
                     <div class="mini-profile-tag">
-                        <tr th:each="twoUserGameTag, index : ${oneToThreeUserList.get(1).getUserTag().getGameTag()}" th:if="${index.size} != 0 and ${index.index} < 2">
-                            <div class="badge bg-sky-500 badge-accent mt-2" th:text="${twoUserGameTag.getName()}"></div>
+                        <tr th:each="twoUserGameTag, index : ${oneToThreeUserList.get(2).getUserTag().getGameTag()}"
+                            th:if="${index.size} != 0 and ${index.index} < 2">
+                            <div class="badge bg-sky-400 badge-accent mt-2" th:text="${twoUserGameTag.getName()}"></div>
                         </tr>
                         <br>
-                        <tr  th:each="twoUserGenreTag, index : ${oneToThreeUserList.get(1).getUserTag().getGenreTag()}" th:if="${index.size} != 0 and ${index.index} < 3">
+                        <tr th:each="twoUserGenreTag, index : ${oneToThreeUserList.get(2).getUserTag().getGenreTag()}"
+                            th:if="${index.size} != 0 and ${index.index} < 3">
                             <div class="badge bg-green-500 badge-accent" th:text="${twoUserGenreTag.getGenre()}"></div>
                         </tr>
                     </div>
                 </div>
-                <div class="card-actions">
-                    <button class="btn-rank btn-primary">Buy Now</button>
+                <div class="card-actions" style="display:flex; align-content: center; justify-content: center;">
+                    <a th:href="'/user/profile/'+${oneToThreeUserList.get(2).getId()}">
+                        <button class="btn-rank btn-primary items-center">Go Profile</button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -162,118 +177,44 @@
             <tr style="background-color: #1D2939;">
                 <th>Rank</th>
                 <th>User</th>
-                <th>Job</th>
-                <th>Favorite Color</th>
-                <th></th>
+                <th>Games</th>
+                <th>Genres</th>
+                <th>Profile</th>
             </tr>
             </thead>
             <tbody>
-            <!-- row 1 -->
-            <tr>
-                <td></td>
+            <tr th:each="fourToSevenUser, index : ${fourToSevenUserList}"
+                th:if="${index.size} != 0 and ${index.index} < 4">
+                <td th:text="${index.index+4}"></td>
                 <td>
                     <div class="flex items-center space-x-3">
                         <div class="avatar">
                             <div class="mask mask-squircle w-12 h-12">
-                                <img src="/tailwind-css-component-profile-2@56w.png"
-                                     alt="Avatar Tailwind CSS Component"/>
+                                <img th:src="${fourToSevenUser.getAvatar()}"/>
                             </div>
                         </div>
                         <div>
-                            <div class="font-bold">Hart Hagerty</div>
-                            <div class="text-sm opacity-50">United States</div>
+                            <div class="font-bold" th:text="${fourToSevenUser.getUsername()}"></div>
+                            <div class="text-sm opacity-50">Steam</div>
                         </div>
                     </div>
                 </td>
                 <td>
-                    Zemlak, Daniel and Leannon
-                    <br/>
-                    <span class="badge badge-ghost badge-sm">Desktop Support Technician</span>
-                </td>
-                <td>Purple</td>
-                <td>
-                    <button class="btn-rank btn-ghost btn-xs">details</button>
-                </td>
-            </tr>
-            <!-- row 2 -->
-            <tr>
-                <td></td>
-                <td>
-                    <div class="flex items-center space-x-3">
-                        <div class="avatar">
-                            <div class="mask mask-squircle w-12 h-12">
-                                <img src="/tailwind-css-component-profile-3@56w.png"
-                                     alt="Avatar Tailwind CSS Component"/>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="font-bold">Brice Swyre</div>
-                            <div class="text-sm opacity-50">China</div>
-                        </div>
+                    <div th:each="fourToSevenUserGameTag, indexTwo : ${fourToSevenUser.getUserTag().getGameTag()}"
+                         th:if="${indexTwo.size} != 0 and ${indexTwo.index} < 3">
+                        <div class="badge bg-sky-400 badge-accent mt-2" th:text="${fourToSevenUserGameTag.getName()}"></div>
                     </div>
                 </td>
                 <td>
-                    Carroll Group
-                    <br/>
-                    <span class="badge badge-ghost badge-sm">Tax Accountant</span>
-                </td>
-                <td>Red</td>
-                <td>
-                    <button class="btn-rank btn-ghost btn-xs">details</button>
-                </td>
-            </tr>
-            <!-- row 3 -->
-            <tr>
-                <td></td>
-                <td>
-                    <div class="flex items-center space-x-3">
-                        <div class="avatar">
-                            <div class="mask mask-squircle w-12 h-12">
-                                <img src="/tailwind-css-component-profile-4@56w.png"
-                                     alt="Avatar Tailwind CSS Component"/>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="font-bold">Marjy Ferencz</div>
-                            <div class="text-sm opacity-50">Russia</div>
-                        </div>
+                    <div th:each="fourToSevenUserGenreTag, indexTwo : ${fourToSevenUser.getUserTag().getGenreTag()}"
+                         th:if="${indexTwo.size} != 0 and ${indexTwo.index} < 3">
+                        <div class="badge bg-green-500 badge-accent" th:text="${fourToSevenUserGenreTag.getGenre()}"></div>
                     </div>
                 </td>
                 <td>
-                    Rowe-Schoen
-                    <br/>
-                    <span class="badge badge-ghost badge-sm">Office Assistant I</span>
-                </td>
-                <td>Crimson</td>
-                <td>
-                    <button class="btn-rank btn-ghost btn-xs">details</button>
-                </td>
-            </tr>
-            <!-- row 4 -->
-            <tr>
-                <td></td>
-                <td>
-                    <div class="flex items-center space-x-3">
-                        <div class="avatar">
-                            <div class="mask mask-squircle w-12 h-12">
-                                <img src="/tailwind-css-component-profile-5@56w.png"
-                                     alt="Avatar Tailwind CSS Component"/>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="font-bold">Yancy Tear</div>
-                            <div class="text-sm opacity-50">Brazil</div>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    Wyman-Ledner
-                    <br/>
-                    <span class="badge badge-ghost badge-sm">Community Outreach Specialist</span>
-                </td>
-                <td>Indigo</td>
-                <td>
-                    <button class="btn-ranl btn-ghost btn-xs">details</button>
+                    <a th:href="'/user/profile/'+${fourToSevenUser.getId()}">
+                        <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
+                    </a>
                 </td>
             </tr>
             </tbody>

@@ -80,7 +80,7 @@ public class NotProd {
                         .id(4L)
                         .username("user4")
                         .steamId("12412412414")
-                        .temperature(66)
+                        .temperature(33)
                         .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
                         .build();
 
@@ -124,7 +124,7 @@ public class NotProd {
                         .id(8L)
                         .username("user8")
                         .steamId("12412412418")
-                        .temperature(50)
+                        .temperature(21)
                         .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
                         .build();
 
