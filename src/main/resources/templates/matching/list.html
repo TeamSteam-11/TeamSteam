@@ -118,7 +118,12 @@
                 시간 :
                 <span th:text="${matching.startTime}"></span> : 00 ~
                 <span th:text="${matching.endTime}"></span> : 00
-            </div><br><br>
+            </div><br>
+            <span th:switch="${matching.gender}">
+              <span th:case="'F'">여성</span>
+              <span th:case="'M'">남성</span>
+              <span th:case="'DC'">성별무관</span>
+            </span>
         </div>
     </a>
 </div>
