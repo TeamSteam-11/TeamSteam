@@ -63,6 +63,12 @@
             justify-content: flex-end;
         }
 
+        .participant-button {
+            display: flex;
+            justify-content: flex-end;
+            margin-right: 10%;
+        }
+
         .mini-profile {
             display: flex;
             width: 300px;
@@ -144,7 +150,7 @@
 <!--    </form>-->
 <!--</div>-->
 
-<div>
+<div class="participant-button">
     <a class="!bg-black p-3 text-white hover:cursor-pointer" th:if="${!alreadyWithPartner}" th:href="@{|/match/detail/${matching.getId()}/addPartner|}">참여하기</a>
 
     <!-- 매칭 파트너인 경우에 채팅 참여하기 버튼 활성화됨 -> 미니 프로필도 보이게 하기 -->

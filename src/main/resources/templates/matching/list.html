@@ -97,22 +97,22 @@
        style="background-color: #1F2227; color: white; box-shadow: 3px 3px 5px #C0C0C0; margin: 30px;">
         <div class="card-body" style="margin: 10px">
             <div>
-                <img th:src="${matching.getUser().getAvatar()}">
-                <span class="badge badge-secondary" th:text="${matching.title}"></span>
+                <img style="margin-bottom: 10px" th:src="${matching.getUser().getAvatar()}">
+                <span class="card-title mb-1" th:text="${matching.title}"></span>
                 <span class="badge badge-outline" th:text="|${matching.participant} / ${matching.capacity}|"></span>
             </div>
-            <h3 class="card-title" th:text="${matching.content}"></h3><br>
+            <p th:text="${matching.content}"></p><br>
             <div style="background-color: #87F86A; color: #1F2227; height: 25px; border-radius: 20px;
                  display: flex; justify-content: center; align-items: center; font-size: 15px">
-                태그
+                <span th:text="${matching.genre}"></span>
             </div><br>
-            <div style="background-color: #59C3F0; color: #1F2227; height: 50px; border-radius: 10px;
-                 display: flex; justify-content: center; align-items: center">
+            <div style="background-color: #59C3F0; color: #1F2227; height: 50px; border-radius: 10px; padding: 10px;
+                 display: flex; justify-content: flex-start; align-items: center">
                 <td >
-                    <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${matching.getGameTagId()} + '/header.jpg'}"
+                    <img style="width: 40px; height: 40px; border-radius: 5px; margin-right: 20px" th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${matching.getGameTagId()} + '/header.jpg'}"
                          alt="게임 이미지" width="200" height="auto"/>
                 </td>
-                <span th:text="${matching.gameTagName}">게임 이름</span>
+                <span style="display: flex; justify-content: center" th:text="${matching.gameTagName}">게임 이름</span>
             </div><br>
             <div>
                 시간 :
