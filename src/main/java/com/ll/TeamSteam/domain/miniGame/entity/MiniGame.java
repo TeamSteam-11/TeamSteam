@@ -10,5 +10,5 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @SuperBuilder
-public class miniGame extends BaseEntity {
+public class MiniGame extends BaseEntity {
 }
