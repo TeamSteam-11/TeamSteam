@@ -171,7 +171,7 @@ public class UserController {
 
     @GetMapping(value = "/user/createGameTag", produces = MediaType.TEXT_HTML_VALUE)
     public String userGameListSave(@RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "5") int size,
+        @RequestParam(defaultValue = "9") int size,
         @AuthenticationPrincipal SecurityUser user, Model model
         ) throws ParseException {
 
@@ -260,7 +260,7 @@ public class UserController {
     @GetMapping(value = "/user/profile/{userId}", produces = MediaType.TEXT_HTML_VALUE)
     public String userProfile(@PathVariable long userId, @AuthenticationPrincipal SecurityUser user, Model model,
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "5") int size) throws ParseException {
+        @RequestParam(defaultValue = "9") int size) throws ParseException {
 
 
         User targetUser = userService.findById(userId).orElseThrow();

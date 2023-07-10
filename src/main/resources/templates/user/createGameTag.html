@@ -1,55 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html layout:decorate="~{common/layout.html}">
 <head>
-    <meta charset="UTF-8">
     <title>나의 게임 목록</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .custom-card{
+            background-color: #202d3e;
+            border:0px;
+
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-    <h1 class="my-4">나의 게임 목록</h1>
-    <form action="/user/createGameTag/save-gametag" method="post" th:action="@{/user/createGameTag/save-gametag}" th:object="${selectedGamesForm}">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>게임 이름</th>
-                <th>AppID</th>
-                <th>이미지</th>
-                <th>선택</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="game : ${gameList}">
-                <td th:text="${game.name}"></td>
-                <td th:text="${game.appid}"></td>
-                <td>
-                    <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${game.appid} + '/header.jpg'}"
-                         alt="게임 이미지" width="200" height="auto"/>
-                </td>
-                <td>
-                    <input type="checkbox" name="selectedGames" th:value="${game.appid}"/>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <div class="pagination">
-            <ul>
-                <li th:class="${currentPage == 0 ? 'disabled' : ''}">
-                    <a th:if="${currentPage != 0}" th:href="@{/user/createGameTag(page=${currentPage - 1}, size=${size})}">&laquo; 이전</a>
-                    <span th:if="${currentPage == 0}">&laquo; 이전</span>
-                </li>
-                <li th:class="${currentPage == totalPages - 1 ? 'disabled' : ''}">
-                    <a th:if="${currentPage != totalPages - 1}" th:href="@{/user/createGameTag(page=${currentPage + 1}, size=${size})}">다음 &raquo;</a>
-                    <span th:if="${currentPage == totalPages - 1}">다음 &raquo;</span>
-                </li>
-            </ul>
+<main layout:fragment="main">
+    <div class="container">
+        <div class="flex justify-center">
+            <p class="m-8 text-2xl">선호하는 게임을 선택해주세요!</p>
         </div>
+        <form action="/user/createGameTag/save-gametag" method="post" th:action="@{/user/createGameTag/save-gametag}" th:object="${selectedGamesForm}">
+            <div class="grid grid-cols-3  gap-x-8 gap-y-4">
+                <div th:each="game : ${gameList}">
+                    <div class="card card-compact w-96 bg-base-100 shadow-xl custom-card">
+                        <figure>
+                            <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${game.appid} + '/header.jpg'}"
+                                 alt="게임 이미지" />
+                        </figure>
+                        <div class="card-body">
+                            <h2 class="card-title" th:text="${game.name}"></h2>
+                            <div class="card-actions justify-end">
+                                <input type="checkbox" class="checkbox checkbox-info checkbox-lg" name="selectedGames" th:value="${game.appid}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="m-8 flex justify-center">
+                <div class="pagination">
+                    <ul class="flex space-x-4 flex-row">
 
+                        <li th:class="${currentPage == 0 ? 'disabled' : ''}">
+                            <a th:if="${currentPage != 0}" th:href="@{/user/createGameTag(page=${currentPage - 1}, size=${size})}">&laquo; 이전</a>
+                            <span th:if="${currentPage == 0}">&laquo; 이전</span>
+                        </li>
 
-        <button type="submit" class="btn btn-primary">게임 저장</button>
-    </form>
-</div>
+                        <li th:class="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+                            <a th:if="${currentPage != totalPages - 1}" th:href="@{/user/createGameTag(page=${currentPage + 1}, size=${size})}">다음 &raquo;</a>
+                            <span th:if="${currentPage == totalPages - 1}">다음 &raquo;</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="flex justify-end">
+                <button type="submit" class="btn btn-primary">게임 저장</button>
+            </div>
 
+        </form>
+    </div>
+</main>
 </body>
+
 </html>
