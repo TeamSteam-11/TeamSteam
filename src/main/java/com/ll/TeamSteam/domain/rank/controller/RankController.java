@@ -22,18 +22,10 @@ public class RankController {
 
     @GetMapping("/rank")
     public String showRank(Model model){
-        List<User> allUserList = getAllUserList();
-
         List<User> topSevenUserList = getTopSevenUsersWithHighTemperature();
-        for(User user: topSevenUserList){
-            log.info("userTemperature = {}",user.getTemperature());
-        }
         model.addAttribute("topSevenUserList", topSevenUserList);
-        return "rank/rank";
-    }
 
-    public List<User> getAllUserList(){
-        return userController.findAll();
+        return "rank/rank";
     }
 
     public List<User> getTopSevenUsersWithHighTemperature (){
