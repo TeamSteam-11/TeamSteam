@@ -177,8 +177,15 @@ public class UserController {
     }
 
     @PostMapping(value = "/user/createGameTag/save-gametag")
-    public String saveGameTags(@RequestParam("selectedGames") List<Integer> selectedGames,
+    public String saveGameTags(@RequestParam(value = "selectedGames", required = false) List<Integer> selectedGames,
                                @AuthenticationPrincipal SecurityUser user) {
+
+        /**
+         * TODO 게임목록을 1개도 못불러왔을 때 안내페이지로 이동하게 만들기 // 프로필설정을 바꿔야한다던가, 게임이 0개라고 안내
+         */
+
+        //게임목록에서 아무것도 체크하지 않았을 시 리다이렉트
+        if(selectedGames == null) return "redirect:/user/createGameTag";
 
         String steamId = user.getSteamId();
         userService.saveSelectedGames(selectedGames, steamId);
@@ -209,9 +216,14 @@ public class UserController {
     }
 
     @PostMapping("/user/createGenre")
-    public String genreFormPost(@RequestParam String gender, @RequestParam("gameGenre") String[] gameGenres,
+    public String genreFormPost(@RequestParam(required = false) String gender, @RequestParam(value = "gameGenre", required = false) String[] gameGenres,
                                 @AuthenticationPrincipal SecurityUser user) {
         Long id = user.getId();
+
+        if(gender == null || gameGenres == null){
+            return "redirect:/user/createGenre";
+            //둘중 하나라도 비어있을 시 리다이렉트 에러문구 출력이 가장좋음
+        }
 
         // GenreTagType enum으로 변환하여 리스트로 저장
         List<GenreTagType> genreTagTypes = Arrays.stream(gameGenres)
