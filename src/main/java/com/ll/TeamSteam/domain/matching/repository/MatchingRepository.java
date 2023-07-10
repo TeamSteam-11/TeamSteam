@@ -1,6 +1,7 @@
 package com.ll.TeamSteam.domain.matching.repository;
 
 import com.ll.TeamSteam.domain.matching.entity.Matching;
+import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,5 +39,4 @@ public interface MatchingRepository extends JpaRepository<Matching, Long> {
 
     // 장르, 시간, 성별
     Page<Matching> findByGenreAndStartTimeAndGender(GenreTagType genreTagType, Integer startTime, String Gender, Pageable pageable);
-
 }

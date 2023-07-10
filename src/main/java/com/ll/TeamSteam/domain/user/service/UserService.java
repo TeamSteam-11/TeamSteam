@@ -197,6 +197,21 @@ public class UserService {
 
         }
     }
+    @Transactional
+    public void deleteFriend(Long targetId, Long loginedId) {
+        if (isFriend(targetId, loginedId)) {
+            User targetUser = findByIdElseThrow(targetId);
+            User loginedUser = findByIdElseThrow(loginedId);
+
+            // 내가 친구인 관계 삭제
+            Friend meToFriend = friendRepository.findByUserAndFriend(loginedUser, targetUser);
+            friendRepository.delete(meToFriend);
+
+            // 상대방이 나를 친구로 추가한 관계 삭제
+            Friend friendToMe = friendRepository.findByUserAndFriend(targetUser, loginedUser);
+            friendRepository.delete(friendToMe);
+        }
+    }
 
     public boolean isFriend(Long targetId, Long loginedId){
         List<Friend> friends = getFriends(loginedId);

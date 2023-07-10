@@ -193,32 +193,7 @@ public class NotProd {
                     userRepository.save(userEach);
                 }
 
-//                UserTag userTag =UserTag.builder()
-//                        .user(user1)
-//                        .build();
-//
-//                userTagRepository.save(userTag);
-//
-//                GameTag gameTag = GameTag.builder()
-//                        .userTag(userTag)
-//                        .appid(41000)
-//                        .name("시리우스샘")
-//                        .build();
-//
-//                gameTag.setUserTag(userTag);
-//
-//                gameTagRepository.save(gameTag);
-//
-//                GenreTag genreTag = GenreTag.builder()
-//                        .userTag(userTag)
-//                        .genre(GenreTagType.농업)
-//                        .build();
-//
-//                genreTagRepository.save(genreTag);
-
-
-
-                for (int i = 0; i <= 2; i++){
+                for (int i = 0; i <= 5; i++){
 
                     String title = "Matching " + i;
                     String content = "으악1";

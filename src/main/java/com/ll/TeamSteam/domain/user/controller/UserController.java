@@ -2,6 +2,7 @@ package com.ll.TeamSteam.domain.user.controller;
 
 
 import com.ll.TeamSteam.domain.friend.entity.Friend;
+import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.notification.service.NotificationService;
 import com.ll.TeamSteam.domain.recentlyUser.entity.RecentlyUser;
@@ -23,6 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.minidev.json.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -162,16 +168,28 @@ public class UserController {
 
     }
 
+
     @GetMapping(value = "/user/createGameTag", produces = MediaType.TEXT_HTML_VALUE)
-    public String userGameListSave(@AuthenticationPrincipal SecurityUser user, Model model) throws ParseException {
+    public String userGameListSave(@RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "9") int size,
+        @AuthenticationPrincipal SecurityUser user, Model model
+        ) throws ParseException {
 
         String steamId = user.getSteamId();
-        RsData<List<SteamGameLibrary>> haveGameListData = steamService.getUserGameList(steamId);
-        List<SteamGameLibrary> haveGameList = haveGameListData.getData();
-        userService.updateGameList(haveGameList, steamId);
+        List<SteamGameLibrary> haveGameListData = steamService.getUserGameList(steamId);
 
-        model.addAttribute("gameList", haveGameList);
+        int totalItems = haveGameListData.size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
 
+        int start = page * size;
+        int end = Math.min(start + size, totalItems);
+        List<SteamGameLibrary> pagedGameList = haveGameListData.subList(start, end);
+
+        userService.updateGameList(haveGameListData, steamId);
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("gameList", pagedGameList);
         return "user/createGameTag";
 
     }
@@ -236,31 +254,42 @@ public class UserController {
     }
 
     public UserInfoResponse getUserInfo(String steamId) {
-        //UserInfoResponse 객체를 사용
 
         return steamService.getUserInformation(steamId);
     }
 
 
     @GetMapping(value = "/user/profile/{userId}", produces = MediaType.TEXT_HTML_VALUE)
-    public String userGameListSave(@PathVariable long userId, @AuthenticationPrincipal SecurityUser user, Model model) throws ParseException {
+    public String userProfile(@PathVariable long userId, @AuthenticationPrincipal SecurityUser user, Model model,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "9") int size) throws ParseException {
 
 
         User targetUser = userService.findById(userId).orElseThrow();
 
-        RsData<List<SteamGameLibrary>> haveGameListData = steamService.getUserGameList(targetUser.getSteamId());
-        List<SteamGameLibrary> haveGameList = haveGameListData.getData();
+        String steamId = user.getSteamId();
+        List<SteamGameLibrary> haveGameListData = steamService.getUserGameList(steamId);
+
+        int totalItems = haveGameListData.size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        int start = page * size;
+        int end = Math.min(start + size, totalItems);
+        List<SteamGameLibrary> pagedGameList = haveGameListData.subList(start, end);
+
 
         recentlyUserService.updateRecentlyUser(userId);
         List<RecentlyUser> recentlyUserList =recentlyUserService.findAllByUserId(userId);
 
         List<Friend> friendsList = userService.getFriends(user.getId());
-        model.addAttribute("gameList", haveGameList);
-
-
 
 
         long loginedId = user.getId();//프로필 본인인지 아닌지 검증하는 용도
+
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("gameList", pagedGameList);
         model.addAttribute("targetUser", targetUser);
         model.addAttribute("loginedId", loginedId);
         model.addAttribute("friendsList", friendsList);
@@ -269,6 +298,7 @@ public class UserController {
         return "user/profile";
 
     }
+
 
     @GetMapping("/user/profile/{userId}/{like}")
     public String getLike(@PathVariable long userId, @PathVariable int like, RedirectAttributes redirectAttributes,@AuthenticationPrincipal SecurityUser user) {
@@ -297,9 +327,15 @@ public class UserController {
         return "redirect:/user/profile/" + userId;
     }
 
-//    public void requestFriend(User targetUser, User loginedUser){
-//        notificationController.friendRequest(targetUser, loginedUser);
-//    }
+    @GetMapping("/user/profile/{userId}/deleteFriend")
+    public String deleteFriend(@PathVariable long userId, @AuthenticationPrincipal SecurityUser user){
+
+        Long targetId =userId;
+        Long loginedId =user.getId();
+
+        userService.deleteFriend(targetId,loginedId);
+        return "redirect:/user/profile/" + loginedId;
+    }
 
     @PostMapping("/user/profile/editprofile")
     public String editProfile(@AuthenticationPrincipal SecurityUser user, Model model) {
