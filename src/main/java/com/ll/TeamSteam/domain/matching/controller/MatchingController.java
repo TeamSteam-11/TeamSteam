@@ -315,29 +315,6 @@ public class MatchingController {
         return "matching/list";
     }
 
-//    @GetMapping("/list/filter")
-//    public String filterMatching(@RequestParam(name = "genretype", required = false) GenreTagType genreType,
-//                                 @RequestParam(name = "starttime", required = false) Integer startTime,
-//                                 @RequestParam(name = "gender", required = false) String gender,
-//                                 @RequestParam(defaultValue = "0") int page,
-//                                 @RequestParam(defaultValue = "8") int size,
-//                                 @RequestParam(defaultValue = "createDate") String sortCode,
-//                                 @RequestParam(defaultValue = "DESC") String direction,
-//                                 Model model) {
-//
-//        String genreTypeToString = genreType.toString();
-//
-//        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
-//        Page<Matching> matchingList = matchingService.filterMatching(genreType, startTime,gender, pageable);
-//        model.addAttribute("matchingList", matchingList);
-//        model.addAttribute("currentPage", page);
-//        model.addAttribute("genreTypeToString", genreTypeToString);
-//        model.addAttribute("starttime", startTime);
-//        model.addAttribute("gender", gender);
-//
-//        return "matching/list";
-//    }
-
     @GetMapping("/list/filter")
     public String filterMatching(@RequestParam(name = "genretype", required = false) String genreTypeStr,
                                  @RequestParam(name = "starttime", required = false) Integer startTime,
@@ -351,6 +328,10 @@ public class MatchingController {
         GenreTagType genreType = null;
         if (genreTypeStr != null && !genreTypeStr.isEmpty()) {
             genreType = GenreTagType.ofCode(genreTypeStr);
+        }
+
+        if (genreTypeStr.isEmpty() && startTime == null && gender.isEmpty()) {
+            return "redirect:/match/list";
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
