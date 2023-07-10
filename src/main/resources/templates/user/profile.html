@@ -110,6 +110,14 @@
                                         <div class="font bold" th:text="${friend.getFriend().getUsername()}"></div>
                                     </div>
                                 </div>
+                            <th>
+                                <label>
+                                    <a th:href="@{'/user/profile/' + ${friend.getFriend().getId()} +'/deleteFriend'}"
+                                       class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded">
+                                        친구 삭제
+                                    </a>
+                                </label>
+                            </th>
                             </td>
                         </tr>
                         </tbody>
@@ -185,6 +193,20 @@
                     <div class="card-body">
                         <h5 class="card-title" th:text="${game.name}"></h5>
                     </div>
+                </div>
+            </div>
+            <div class="m-8 flex justify-center">
+                <div class="pagination">
+                    <ul class="flex space-x-4 flex-row">
+                        <li th:class="${currentPage == 0 ? 'disabled' : ''}">
+                            <a th:if="${currentPage != 0}" th:href="@{/user/profile/{userId}(userId=${userId},page=${currentPage - 1},size=${size})}">&laquo; 이전</a>
+                            <span th:if="${currentPage == 0}">&laquo; 이전</span>
+                        </li>
+                        <li th:class="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+                            <a th:if="${currentPage != totalPages - 1}" th:href="@{/user/profile/{userId}(userId=${userId},page=${currentPage + 1},size=${size})}">다음 &raquo;</a>
+                            <span th:if="${currentPage == totalPages - 1}">다음 &raquo;</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
