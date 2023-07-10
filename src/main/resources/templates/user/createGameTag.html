@@ -1,14 +1,21 @@
-<form action="/user/createGameTag/save-gametag" method="post" th:action="@{/user/createGameTag/save-gametag}" th:object="${selectedGamesForm}">
-    <div class="container">
-        <h1 class="my-4">나의 게임 목록</h1>
-        <form action="/user/createGameTag/save-gametag" method="post">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>나의 게임 목록</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4">나의 게임 목록</h1>
+    <form action="/user/createGameTag/save-gametag" method="post" th:action="@{/user/createGameTag/save-gametag}" th:object="${selectedGamesForm}">
         <table class="table table-striped">
             <thead>
             <tr>
                 <th>게임 이름</th>
                 <th>AppID</th>
                 <th>이미지</th>
-                <th>선택</th> <!-- Add a new column for selecting games -->
+                <th>선택</th>
             </tr>
             </thead>
             <tbody>
@@ -25,7 +32,24 @@
             </tr>
             </tbody>
         </table>
-            <button type="submit" class="btn btn-primary">게임 저장</button>
-        </form>
-    </div>
-</form>
+
+        <div class="pagination">
+            <ul>
+                <li th:class="${currentPage == 0 ? 'disabled' : ''}">
+                    <a th:if="${currentPage != 0}" th:href="@{/user/createGameTag(page=${currentPage - 1}, size=${size})}">&laquo; 이전</a>
+                    <span th:if="${currentPage == 0}">&laquo; 이전</span>
+                </li>
+                <li th:class="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+                    <a th:if="${currentPage != totalPages - 1}" th:href="@{/user/createGameTag(page=${currentPage + 1}, size=${size})}">다음 &raquo;</a>
+                    <span th:if="${currentPage == totalPages - 1}">다음 &raquo;</span>
+                </li>
+            </ul>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">게임 저장</button>
+    </form>
+</div>
+
+</body>
+</html>
