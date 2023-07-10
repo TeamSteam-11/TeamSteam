@@ -140,22 +140,55 @@ public class NotProd {
                     userTagRepository.save(userTag);
 
                     userEach.setUserTag(userTag);
-                    GameTag gameTag = GameTag.builder()
+
+                    GameTag gameTag1 = GameTag.builder()
                             .userTag(userTag)
                             .appid(appidPlus++)
                             .name("시리우스샘")
                             .build();
 
-                    gameTag.setUserTag(userTag);
-                    gameTagRepository.save(gameTag);
+                    gameTag1.setUserTag(userTag);
+                    gameTagRepository.save(gameTag1);
+
+                    GameTag gameTag2 = GameTag.builder()
+                            .userTag(userTag)
+                            .appid(appidPlus++)
+                            .name("시리우스샘")
+                            .build();
+
+                    gameTag2.setUserTag(userTag);
+                    gameTagRepository.save(gameTag2);
+
+                    GameTag gameTag3 = GameTag.builder()
+                            .userTag(userTag)
+                            .appid(appidPlus++)
+                            .name("시리우스샘")
+                            .build();
+
+                    gameTag3.setUserTag(userTag);
+                    gameTagRepository.save(gameTag3);
 
 
-                    GenreTag genreTag = GenreTag.builder()
+                    GenreTag genreTag1 = GenreTag.builder()
                             .userTag(userTag)
                             .genre(GenreTagType.농업)
                             .build();
 
-                    genreTagRepository.save(genreTag);
+                    genreTagRepository.save(genreTag1);
+
+                    GenreTag genreTag2 = GenreTag.builder()
+                            .userTag(userTag)
+                            .genre(GenreTagType.건설)
+                            .build();
+
+                    genreTagRepository.save(genreTag2);
+
+                    GenreTag genreTag3 = GenreTag.builder()
+                            .userTag(userTag)
+                            .genre(GenreTagType.낚시)
+                            .build();
+
+                    genreTagRepository.save(genreTag3);
 
                     userRepository.save(userEach);
                 }
