@@ -21,13 +21,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.EXIT;
 import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.KICKED;
 
 @Service
@@ -95,23 +95,19 @@ public class ChatRoomService {
         return ChatRoomDto.fromChatRoom(chatRoom, user);
     }
 
-    private Optional<ChatUser> getChatUser(ChatRoom chatRoom, User user, Long userId) {
+    private Optional<ChatUser> getChatUser(ChatRoom chatRoom, Long userId) {
         // 방에 해당 유저가 있으면 가져오기
         Optional<ChatUser> existingUser = chatRoom.getChatUsers().stream()
                 .filter(chatUser -> chatUser.getUser().getId().equals(userId))
                 .findFirst();
-
-        log.info("userId = {}", userId);
-        log.info("user.getId = {}", user.getId());
 
         return existingUser;
     }
 
     private void addChatRoomUser(ChatRoom chatRoom, User user, Long userId) {
 
-        if (getChatUser(chatRoom, user, userId).isEmpty()) {
+        if (getChatUser(chatRoom, userId).isEmpty()) {
             chatRoom.addChatUser(user);
-            chatRoom.getMatching().increaseParticipantsCount(); // 참여자가 방 입장 시 수 증가
         }
     }
 
@@ -120,9 +116,19 @@ public class ChatRoomService {
 
         User user = userService.findByIdElseThrow(userId);
 
+        // 발견한 건가?..발견한 것 같아!!!!
+        if(!getChatUser(chatRoom, userId).isEmpty() && !matching.canAddParticipant()) {
+            boolean whatIsTrueFalse = isExitUser(chatRoom, userId);
+            log.info("whatIsTrueFalse = {}", whatIsTrueFalse);
+
+            if(whatIsTrueFalse) {
+                return RsData.of("F-2", "모임 으으으으악 정원 초과!");
+            }
+        }
+
         // 이미 채팅방에 동일 유저가 존재하는 경우
-        if (!getChatUser(chatRoom, user, userId).isEmpty()) {
-            ChatUser chatUser = getChatUser(chatRoom, user, userId).get();
+        if (!getChatUser(chatRoom, userId).isEmpty()) {
+            ChatUser chatUser = getChatUser(chatRoom, userId).get();
             return checkChatUserType(chatUser);
         }
 
@@ -182,15 +188,13 @@ public class ChatRoomService {
         if (chatUser != null) {
             chatUser.exitType();
 
-            // TODO: 퇴장 시 매칭파트너에서도 삭제
+            //퇴장 시 매칭파트너에서도 삭제
             MatchingPartner matchingPartner = matchingPartnerService.findByMatchingIdAndUserId(roomId, userId);
             // 수동으로 연관관계 끊어주기
 //            chatRoom.getMatching().deleteMatchingPartner(matchingPartner);
             matchingPartnerRepository.delete(matchingPartner);
 
         }
-
-        chatRoom.getMatching().decreaseParticipantsCount(); // 참여자가 나갈 시 수 감소
     }
 
     public ChatUser findChatUserByUserId(ChatRoom chatRoom, Long userId) {
@@ -236,7 +240,6 @@ public class ChatRoomService {
         log.info("kick originUserId = {}", originUserId);
         matchingPartnerRepository.delete(matchingPartner);
 
-        chatRoom.getMatching().decreaseParticipantsCount();  // 참여자가 강퇴 당할 시 수 감소
 
         template.convertAndSend("/topic/chats/" + roomId + "/kicked", originUserId);
     }
@@ -334,5 +337,26 @@ public class ChatRoomService {
 
         // 현재 DB에 정보가 있으면 더 이상 저장이 되지 않게
         return notificationService.checkDuplicateInvite(invitingUser, invitedUser, roomId);
+    }
+
+    // chatUser type이 Exit라면 true / 아니라면 false 그래서 방에 못들어감
+    private boolean isExitUser(ChatRoom chatRoom, Long userId) {
+        // 방에 해당 유저가 있는지 확인
+        User currentUser = userService.findById(userId).orElseThrow();
+        ChatUser exitUser = chatUserService.findByChatRoomAndUser(chatRoom, currentUser);
+
+        // stream 버전
+//        ChatUser existingUser = chatRoom.getChatUsers().stream()
+//                .filter(chatUser -> chatUser.getUser().getId().equals(userId))
+//                .findFirst()
+//                .orElseThrow();
+
+        log.info("exitUser.getType() = {}", exitUser.getType());
+
+        if (exitUser.getType().equals(EXIT)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

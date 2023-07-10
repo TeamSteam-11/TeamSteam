@@ -68,14 +68,6 @@ public class Matching extends BaseEntity {
         this.participant = participant;
     }
 
-    public void increaseParticipantsCount() {
-        this.participant++;
-    }
-
-    public void decreaseParticipantsCount() {
-        this.participant--;
-    }
-
     public boolean canAddParticipant() {
         return this.participant < this.capacity;
     }
@@ -85,5 +77,4 @@ public class Matching extends BaseEntity {
         this.getMatchingPartners().remove(matchingPartner);
         matchingPartner.setMatching(null);
     }
-
 }
