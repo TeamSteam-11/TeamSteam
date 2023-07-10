@@ -9,6 +9,7 @@ import com.ll.TeamSteam.domain.chatUser.entity.ChatUserType;
 import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
+import com.ll.TeamSteam.domain.matchingPartner.repository.MatchingPartnerRepository;
 import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.notification.service.NotificationService;
 import com.ll.TeamSteam.domain.user.entity.User;
@@ -30,7 +31,7 @@ import java.util.Optional;
 import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.KICKED;
 
 @Service
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class ChatRoomService {
@@ -42,6 +43,7 @@ public class ChatRoomService {
     private final ApplicationEventPublisher publisher;
     private final NotificationService notificationService;
     private final MatchingPartnerService matchingPartnerService;
+    private final MatchingPartnerRepository matchingPartnerRepository;
 
 
     @Transactional
@@ -166,7 +168,6 @@ public class ChatRoomService {
 
     /**
      * 유저가 방 나가기
-     * 현재는 사용안하고 있음!
      */
     @Transactional
     public void exitChatRoom(Long roomId, Long userId) {
@@ -180,6 +181,13 @@ public class ChatRoomService {
 
         if (chatUser != null) {
             chatUser.exitType();
+
+            // TODO: 퇴장 시 매칭파트너에서도 삭제
+            MatchingPartner matchingPartner = matchingPartnerService.findByMatchingIdAndUserId(roomId, userId);
+            // 수동으로 연관관계 끊어주기
+//            chatRoom.getMatching().deleteMatchingPartner(matchingPartner);
+            matchingPartnerRepository.delete(matchingPartner);
+
         }
 
         chatRoom.getMatching().decreaseParticipantsCount(); // 참여자가 나갈 시 수 감소
@@ -201,7 +209,7 @@ public class ChatRoomService {
 
     // 유저 강퇴하기
     @Transactional
-    public void kickChatUser(Long roomId, Long chatUserId, @AuthenticationPrincipal SecurityUser user) {
+    public void kickChatUser(Long roomId, Long chatUserId, SecurityUser user) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
 
@@ -221,6 +229,12 @@ public class ChatRoomService {
         chatMessages.stream()
                 .filter(chatMessage -> chatMessage.getSender().getId().equals(chatUserId))
                 .forEach(chatMessage -> chatMessage.removeChatMessages("강퇴된 사용자의 메시지입니다."));
+
+        // TODO: 유저가 강퇴 시 매칭파트너에서도 삭제
+        MatchingPartner matchingPartner = matchingPartnerService.findByMatchingIdAndUserId(roomId, originUserId);
+        log.info("kick matchingPartner = {}", matchingPartner);
+        log.info("kick originUserId = {}", originUserId);
+        matchingPartnerRepository.delete(matchingPartner);
 
         chatRoom.getMatching().decreaseParticipantsCount();  // 참여자가 강퇴 당할 시 수 감소
 

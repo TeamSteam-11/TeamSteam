@@ -9,11 +9,13 @@ import com.ll.TeamSteam.domain.matchingPartner.repository.MatchingPartnerReposit
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MatchingPartnerService {
     private final MatchingPartnerRepository matchingPartnerRepository;
     private final UserService userService;
@@ -70,20 +72,26 @@ public class MatchingPartnerService {
     public List<MatchingPartner> findByUserId(Long userId) {
         return matchingPartnerRepository.findByUserId(userId);
     }
-        @Transactional
-        public void updateFalse (Long matchingId, Long kickEdUserId){
-            User user = userService.findByIdElseThrow(kickEdUserId);
-            Matching matching = matchingService.findById(matchingId).orElseThrow();
 
-            if (matching.getId() == null) {
-                throw new IllegalArgumentException("매칭이 존재하지 않음");
-            }
+    @Transactional
+    public void updateFalse (Long matchingId, Long kickEdUserId){
+        User user = userService.findByIdElseThrow(kickEdUserId);
+        Matching matching = matchingService.findById(matchingId).orElseThrow();
 
-            MatchingPartner matchingPartner = matchingPartnerRepository.findByMatchingAndUser(matching, user)
-                .orElseThrow(() -> new IllegalArgumentException("매칭 파트너를 찾을 수 없어"));
-
-            matchingPartner.updateInChatRoomTrueFalse(false);
-
+        if (matching.getId() == null) {
+            throw new IllegalArgumentException("매칭이 존재하지 않음");
         }
+
+        MatchingPartner matchingPartner = matchingPartnerRepository.findByMatchingAndUser(matching, user)
+            .orElseThrow(() -> new IllegalArgumentException("매칭 파트너를 찾을 수 없어"));
+
+        matchingPartner.updateInChatRoomTrueFalse(false);
+
     }
+
+    @Transactional
+    public MatchingPartner findByMatchingIdAndUserId (Long matchingId, Long userId) {
+        return matchingPartnerRepository.findByMatchingIdAndUserId(matchingId, userId);
+    }
+}
 

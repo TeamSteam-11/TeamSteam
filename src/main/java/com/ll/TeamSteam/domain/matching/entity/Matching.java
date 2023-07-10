@@ -47,7 +47,7 @@ public class Matching extends BaseEntity {
     @OneToOne(mappedBy = "matching", fetch = LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ChatRoom chatRoom;
 
-    @OneToMany(mappedBy = "matching", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "matching", cascade = CascadeType.REMOVE)
     private List<MatchingPartner> matchingPartners = new ArrayList<>();
 
     @ManyToOne(fetch = LAZY)
@@ -78,6 +78,12 @@ public class Matching extends BaseEntity {
 
     public boolean canAddParticipant() {
         return this.participant < this.capacity;
+    }
+
+    // 현재는 사용 x
+    public void deleteMatchingPartner(MatchingPartner matchingPartner){
+        this.getMatchingPartners().remove(matchingPartner);
+        matchingPartner.setMatching(null);
     }
 
 }
