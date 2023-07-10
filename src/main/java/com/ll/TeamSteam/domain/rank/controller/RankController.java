@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -23,7 +24,11 @@ public class RankController {
     @GetMapping("/rank")
     public String showRank(Model model){
         List<User> topSevenUserList = getTopSevenUsersWithHighTemperature();
-        model.addAttribute("topSevenUserList", topSevenUserList);
+        List<User> oneToThreeUserList = new ArrayList<>(topSevenUserList.subList(0, 3));
+        List<User> fourToSevenUserList = new ArrayList<>(topSevenUserList.subList(3, topSevenUserList.size()));
+
+        model.addAttribute("fourToSevenUserList", fourToSevenUserList);
+        model.addAttribute("oneToThreeUserList", oneToThreeUserList);
         return "rank/rank";
     }
 
