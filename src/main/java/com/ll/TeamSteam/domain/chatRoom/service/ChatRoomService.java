@@ -135,7 +135,7 @@ public class ChatRoomService {
 
     public RsData checkChatUserType(ChatUser chatUser) {
         if (chatUser.getType().equals(KICKED)) {
-            return RsData.of("F-1", "강퇴당한 모임입니다!");
+            return RsData.of("E-1", "강퇴당한 모임입니다!");
         }
 
         return RsData.of("S-1", "기존 모임 채팅방에 참여합니다.");

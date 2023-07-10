@@ -276,10 +276,13 @@ public class MatchingController {
         RsData rsData = chatRoomService.canAddChatRoomUser(chatRoom, user.getId(), matching);
         log.info("rsData.getData = {} ", rsData.getData());
 
+        if (rsData.isError()){
+            return rq.historyBack("강퇴당한 모임입니다.");
+        }
+
         if (rsData.isFail()){
             return rq.historyBack("이미 가득찬 방입니다.");
         }
-
 
         matchingPartnerService.addPartner(matching.getId(), user.getId());
 
