@@ -269,7 +269,7 @@ public class ChatRoomService {
     public void changeParticipant(ChatRoom chatRoom) {
         Long commonParticipantsCount = getCommonParticipantsCount(chatRoom);
         log.info("commonParticipantsCount = {} ", commonParticipantsCount);
-//        chatRoom.getMatching().setParticipantsCount(commonParticipantsCount);
+        chatRoom.getMatching().updateParticipant(commonParticipantsCount);
     }
 
     @Transactional

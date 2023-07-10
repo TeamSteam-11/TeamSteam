@@ -109,6 +109,16 @@
         <span th:text="${matching.deadlineDate}">마감 시간</span><br>
         <span id="deadline"></span>
 
+        <p><strong>참여 인원:</strong> <span th:text="${matching.participant}">참여 인원</span></p>
+        <p><strong>수용 인원:</strong> <span th:text="${matching.capacity}">수용 인원</span></p>
+        <p><strong>모집 성별:</strong>
+            <span th:switch="${matching.gender}">
+              <span th:case="'F'">여성</span>
+              <span th:case="'M'">남성</span>
+              <span th:case="'DC'">성별무관</span>
+            </span>
+        </p>
+
     </div>
 
 <!--<div>-->
