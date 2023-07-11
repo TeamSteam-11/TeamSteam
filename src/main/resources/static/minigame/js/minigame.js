@@ -306,19 +306,52 @@ game.addEventListener("mousedown", function(event) {
         }, time * 1000);
     }
 });
-// window.addEventListener("DOMContentLoaded", setPointer)
+
 // 게임 오버 함수
 function gameOver() {
+    console.log("게임오버는 돼?")
     clearInterval(timerInterval);
     cancelAnimationFrame(arrowInterval);
     clearInterval(arrowCreationInterval);
 
     // 점수 애니메이션 수정
-    const score = document.querySelector(".timer");
-    score.style.animation = "scoreAnimation 1s forwards";
+    const scoreElement = document.querySelector(".timer");
+    const score = parseInt(scoreElement.innerText);
+    if(currentUserId == null){
+        changeStartButtonToRestart();
+    }
 
-    // 게임 시작 버튼을 다시하기 버튼으로 변경
-    changeStartButtonToRestart();
+    // typeof currentUserId !== "undefined" &&
+    if (currentUserId != null) {
+        const userId = currentUserId;
+
+        const data = { score: score };
+
+        console.log("header : ", header);
+        console.log("token : ", token);
+
+        fetch(`/minigame/${userId}/scoreSave`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                [header]: token
+            },
+            body: JSON.stringify(data),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    changeStartButtonToRestart();
+                    console.log("점수가 저장되었습니다.");
+                } else {
+                    console.error("오류 발생");
+                }
+            })
+            .catch((error) => {
+                console.error("오류 발생", error);
+            });
+    }
+
+    score.style.animation = "scoreAnimation 1s forwards";
 
     // 화살 속도 초기화
     resetArrowSpeed();

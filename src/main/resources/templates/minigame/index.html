@@ -1,4 +1,4 @@
-<html layout:decorate="~{common/layout.html}">
+<html layout:decorate="~{common/layout.html}" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -75,8 +75,23 @@
                 </div>
             </div>
         </div>
-
     </div>
+
+    <!-- 로그인 했을 경우 -->
+    <div th:if="${@rq.isLogin()}">
+        <script th:inline="javascript">
+            const currentUserId = /*[[${currentUser.id}]]*/ '';
+            const token = /*[[${_csrf.token}]]*/ '';
+            const header = /*[[${_csrf.headerName}]]*/ '';
+        </script>
+    </div>
+    <!-- 로그인 하지 않았을 경우 -->
+    <div th:if="${!@rq.isLogin()}">
+    <script th:inline="javascript">
+        const currentUserId = null;
+    </script>
+    </div>
+
     <script src="/minigame/js/minigame.js"></script>
 </main>
 </body>
