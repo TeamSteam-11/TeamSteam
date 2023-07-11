@@ -203,7 +203,7 @@ public class NotProd {
                     int startTime = 20;
                     int endTime = 269770;
 
-                    Matching matching = matchingService.create(user1, title, content, genre, gameTagId, gender, capacity, startTime, endTime, LocalDateTime.now());
+                    Matching matching = matchingService.create(user1, title, content, genre, gameTagId, gender, capacity, startTime, endTime, LocalDateTime.now().plusHours(3));
                     chatRoomService.createAndConnect(matching.getTitle(), matching, user1.getId());
 
                 }
