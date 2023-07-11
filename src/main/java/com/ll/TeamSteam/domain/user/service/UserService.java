@@ -21,8 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -230,16 +232,20 @@ public class UserService {
         gameTagRepository.deleteByUserTag(user.getUserTag());
 
 
+        Set<Integer> distinctGameIds = new HashSet<>(); // 중복을 제거하기 위한 Set
+
         for (Integer appId : selectedGames) {
-            SteamGameLibrary gameLibrary = steamGameLibraryRepository.findByAppidAndUserId(appId,user.getId());
-            if (gameLibrary != null) {
-                GameTag gameTag = new GameTag();
-                gameTag.setAppid(gameLibrary.getAppid());
-                gameTag.setName(gameLibrary.getName());
-                gameTag.setUserTag(user.getUserTag());
+            if (!distinctGameIds.contains(appId)) { // 중복된 게임 ID가 아닌 경우에만 처리
+                SteamGameLibrary gameLibrary = steamGameLibraryRepository.findByAppidAndUserId(appId, user.getId());
+                if (gameLibrary != null) {
+                    GameTag gameTag = new GameTag();
+                    gameTag.setAppid(gameLibrary.getAppid());
+                    gameTag.setName(gameLibrary.getName());
+                    gameTag.setUserTag(user.getUserTag());
 
-
-                gameTagRepository.save(gameTag);
+                    gameTagRepository.save(gameTag);
+                }
+                distinctGameIds.add(appId); // 처리한 게임 ID를 추가
             }
         }
     }

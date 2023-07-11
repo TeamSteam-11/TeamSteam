@@ -12,6 +12,7 @@ import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
 import com.ll.TeamSteam.domain.matchingPartner.repository.MatchingPartnerRepository;
 import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.notification.service.NotificationService;
+import com.ll.TeamSteam.domain.recentlyUser.service.RecentlyUserService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.event.EventAfterInvite;
@@ -39,6 +40,7 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final UserService userService;
     private final ChatUserService chatUserService;
+    private final RecentlyUserService recentlyUserService;
     private final SimpMessageSendingOperations template;
     private final ApplicationEventPublisher publisher;
     private final NotificationService notificationService;
@@ -114,12 +116,18 @@ public class ChatRoomService {
     // 참여자 추가 가능한지 확인하는 메서드
     public RsData canAddChatRoomUser(ChatRoom chatRoom, Long userId, Matching matching) {
 
-        User user = userService.findByIdElseThrow(userId);
-
         // 발견한 건가?..발견한 것 같아!!!!
         if(!getChatUser(chatRoom, userId).isEmpty() && !matching.canAddParticipant()) {
             boolean whatIsTrueFalse = isExitUser(chatRoom, userId);
             log.info("whatIsTrueFalse = {}", whatIsTrueFalse);
+
+            //방에 있는 사용자들 최근 매칭된 유저로 업데이트
+            List<ChatUser> chatUserList = chatUserService.findByChatRoomId(chatRoom.getId());
+
+            chatUserList.stream()
+                .map(ChatUser::getUser)
+                .map(User::getId)
+                .forEach(recentlyUserService::updateRecentlyUser);
 
             if(whatIsTrueFalse) {
                 return RsData.of("F-2", "모임 으으으으악 정원 초과!");
