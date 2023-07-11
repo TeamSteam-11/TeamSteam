@@ -83,10 +83,12 @@
             </div>
             <div class="card-actions justify-end">
                 <form th:action="@{/user/profile/editprofile}" method="post">
-                    <button th:if="${loginedId == targetUser.getId()}" type="submit" class="btn btn-primary">Edit Tag</button>
+                    <button th:if="${loginedId == targetUser.getId()}" class="btn btn-accent">Edit Tag</button>
+                    <input type="submit" value="">
                 </form>
                 <form th:action="@{/user/profile/{userId}/addFriend(userId=${targetUser.id})}" method="post">
-                    <button th:if="${loginedId != targetUser.getId()}" type="submit" class="btn btn-primary">친구추가</button>
+                    <button th:if="${loginedId != targetUser.getId()}" class="btn btn-accent">친구추가</button>
+                    <input type="submit" value="">
                 </form>
             </div>
         </div>

@@ -277,8 +277,6 @@ public class UserController {
         int end = Math.min(start + size, totalItems);
         List<SteamGameLibrary> pagedGameList = haveGameListData.subList(start, end);
 
-
-        recentlyUserService.updateRecentlyUser(userId);
         List<RecentlyUser> recentlyUserList =recentlyUserService.findAllByUserId(userId);
 
         List<Friend> friendsList = userService.getFriends(user.getId());
