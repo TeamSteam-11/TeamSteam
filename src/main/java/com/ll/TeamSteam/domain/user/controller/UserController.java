@@ -12,6 +12,7 @@ import com.ll.TeamSteam.domain.steam.service.SteamService;
 import com.ll.TeamSteam.domain.user.entity.Gender;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
+import com.ll.TeamSteam.global.rq.Rq;
 import com.ll.TeamSteam.global.rsData.RsData;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
@@ -66,6 +67,8 @@ public class UserController {
     private final RecentlyUserService recentlyUserService;
 
     private final NotificationService notificationService;
+
+    private final Rq rq;
 
     @GetMapping("/user/login")
     public String login(Model model) {
@@ -198,12 +201,8 @@ public class UserController {
     public String saveGameTags(@RequestParam(value = "selectedGames", required = false) List<Integer> selectedGames,
                                @AuthenticationPrincipal SecurityUser user) {
 
-        /**
-         * TODO 게임목록을 1개도 못불러왔을 때 안내페이지로 이동하게 만들기 // 프로필설정을 바꿔야한다던가, 게임이 0개라고 안내
-         */
-
         //게임목록에서 아무것도 체크하지 않았을 시 리다이렉트
-        if(selectedGames == null) return "redirect:/user/createGameTag";
+        if(selectedGames == null) return rq.redirectWithMsg("/user/createGameTag","선택한 게임이 없습니다! 게임을 선택해주세요");
 
         String steamId = user.getSteamId();
         userService.saveSelectedGames(selectedGames, steamId);
