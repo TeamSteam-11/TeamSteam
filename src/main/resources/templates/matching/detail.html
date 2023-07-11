@@ -100,7 +100,7 @@
                 <div>
                     <span class="badge bg-green-500 badge-accent inline max-w-[10rem]" th:text="${matching.getGenre()}"></span>
                     <span class="badge bg-sky-500 badge-accent inline max-w-[10rem]" th:text="${matching.gameTagName}">게임 제목</span>
-                    <span style="float:right" th:text="${matching.getDeadlineDuration()}"></span>
+                    <span style="float:right" th:text="${matching.getDeadlineDuration() != null ? matching.getDeadlineDuration() : '마감완료'}"></span>
                 </div>
 
                 <span class="content" th:text="${matching.content}">내용</span>
