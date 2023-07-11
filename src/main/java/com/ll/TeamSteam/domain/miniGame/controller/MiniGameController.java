@@ -18,14 +18,17 @@ public class MiniGameController {
     private final UserService userService;
 
     @GetMapping("/minigame")
-    public String miniGame(){
-//        User currentUser = userService.findByIdElseThrow(user.getId());
-//        String avatar = currentUser.getAvatar();
-//
-//        model.addAttribute("avatar", avatar);
+    public String miniGame(@AuthenticationPrincipal SecurityUser user, Model model){
+
+        // 로그인 된 유저
+        if (user != null){
+            User currentUser = userService.findByIdElseThrow(user.getId());
+            model.addAttribute("currentUser", currentUser);
+            model.addAttribute("avatar", currentUser.getAvatar());
+            return "minigame/index";
+
+        }
 
         return "minigame/index";
     }
-
-
 }
