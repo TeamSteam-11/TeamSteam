@@ -146,18 +146,27 @@ public class MatchingService {
 
         for (Matching matching : matchingList) {
             String deadlineDuration = matching.getDeadlineDuration();
-            if (!deadlineDuration.isEmpty()) {
+            if (deadlineDuration != null && !deadlineDuration.isEmpty()) {
                 approachingDeadlineList.add(matching);
             }
         }
 
         Comparator<Matching> deadlineComparator = Comparator.comparing(matching -> {
-            Duration duration = Duration.between(LocalDateTime.now(), matching.getDeadlineDate());
-            return duration;
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime deadlineDate = matching.getDeadlineDate();
+            if (now != null && deadlineDate != null) {
+                return Duration.between(now, deadlineDate);
+            }
+            return Duration.ZERO;
+
+//            Duration duration = Duration.between(LocalDateTime.now(), matching.getDeadlineDate());
+//            return duration;
         });
         Collections.sort(approachingDeadlineList, deadlineComparator);
 
-        return approachingDeadlineList;
+        return approachingDeadlineList.stream()
+                .limit(6)
+                .collect(Collectors.toList());
     }
 
     public List<Matching> getSortedMatchingByParticipant() {
@@ -165,7 +174,9 @@ public class MatchingService {
 
         // capacity에서 participant를 뺀 값을 기준으로 정렬
         return matchingList.stream()
-                .sorted(Comparator.comparing(matching -> matching.getRemainingCapacity()))
+                .filter(matching -> matching.getRemainingCapacity() > 0)
+                .sorted(Comparator.comparing(Matching::getRemainingCapacity))
+                .limit(6)
                 .collect(Collectors.toList());
     }
 }
