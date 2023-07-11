@@ -185,6 +185,13 @@ public class ChatRoomService {
         ChatUser chatUser = findChatUserByUserId(chatRoom, userId);
         log.info("chatUser = {} ", chatUser);
 
+        // 방장은 방에서 나갈 수 없도록 설정
+        if(chatUser.getChatRoom().getOwner().getId() == userId){
+            log.info("chatUser.getChatRoom().getOwner().getId() = {}", chatUser.getChatRoom().getOwner().getId());
+            log.info("Owner userId = {}", userId);
+            throw new IllegalArgumentException("방장은 방에서 나갈 수 없어");
+        }
+
         if (chatUser != null) {
             chatUser.exitType();
 
