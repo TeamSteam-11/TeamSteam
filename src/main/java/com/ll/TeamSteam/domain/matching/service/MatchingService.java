@@ -1,5 +1,6 @@
 package com.ll.TeamSteam.domain.matching.service;
 
+import com.fasterxml.jackson.databind.deser.DataFormatReaders;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.entity.SearchQuery;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
@@ -15,11 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
@@ -30,7 +29,7 @@ public class MatchingService {
     public final GameTagRepository gameTagRepository;
 
     // 매칭 등록 기능
-    public Matching create(User user, String title, String content, GenreTagType genreTag, Integer gameTagId,String gender, Long capacity, int startTime, int endTime, LocalDateTime deadlineDate) {
+    public Matching create(User user, String title, String content, GenreTagType genreTag, Integer gameTagId, String gender, Long capacity, int startTime, int endTime, LocalDateTime deadlineDate) {
 
         Optional<GameTag> gameTag = gameTagRepository.findByAppid(gameTagId);
         String gameTagName = "게임이름을 불러올 수 없습니다";
@@ -140,4 +139,25 @@ public class MatchingService {
         }
         return matchingRepository.findAll(pageable);
     }
+
+    public List<Matching> getApproachingDeadlineMatchingList() {
+        List<Matching> matchingList = matchingRepository.findAll();
+        List<Matching> approachingDeadlineList = new ArrayList<>();
+
+        for (Matching matching : matchingList) {
+            String deadlineDuration = matching.getDeadlineDuration();
+            if (!deadlineDuration.isEmpty()) {
+                approachingDeadlineList.add(matching);
+            }
+        }
+
+        Comparator<Matching> deadlineComparator = Comparator.comparing(matching -> {
+            Duration duration = Duration.between(LocalDateTime.now(), matching.getDeadlineDate());
+            return duration;
+        });
+        Collections.sort(approachingDeadlineList, deadlineComparator);
+
+        return approachingDeadlineList;
+    }
+
 }

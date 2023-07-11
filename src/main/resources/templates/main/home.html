@@ -1,12 +1,48 @@
 <html layout:decorate="~{common/layout.html}">
 <head>
     <title>TEAMSTEAM 홈화면</title>
+    <style>
+        .matching-deadline {
+            padding: 30px;
+            margin-top: 40px;
+            margin-left: 50px;
+            width: 450px;
+            background-color: #1F2227;
+            color: white;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        td, th {
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
 <main layout:fragment="main">
     <div class="top-image-bar mt-10 w-screen">
         <img src="https://cdn.jsdelivr.net/gh/LeeYulhee/projectlion_img/teamsteam/teamsteam-banner.png" alt="" class="">
     </div>
+
+    <div class="matching-deadline">
+        <h1 style="font-size: 25px; margin-bottom: 10px; border-bottom-color: white">마감 시간 임박 매칭</h1>
+        <hr>
+        <table style="margin-top: 10px">
+            <tr>
+<!--                <th>제목</th>-->
+<!--                <th>마감까지 남은 시간</th>-->
+            </tr>
+            <!-- 매칭 리스트를 반복하여 표시 -->
+            <th:block th:each="matching : ${matchingList}">
+                <tr>
+                    <td th:text="${matching.title}"></td>
+                    <td th:text="${matching.getDeadlineDuration()}"></td>
+                </tr>
+            </th:block>
+        </table>
+    </div>
+
 </main>
 </body>
 </html>

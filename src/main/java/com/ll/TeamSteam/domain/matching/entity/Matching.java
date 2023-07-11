@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,9 +73,23 @@ public class Matching extends BaseEntity {
         return this.participant < this.capacity;
     }
 
+    // 마감 시간과 현재 시간 간 차이를 나타내는 메서드
+    public String getDeadlineDuration() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        Duration duration = Duration.between(currentTime, getDeadlineDate());
+
+        long hours = duration.toHours();
+        long minutes = duration.toMinutes() % 60;
+        long seconds = duration.getSeconds() % 60;
+        String result = String.format("%d시간 %d분 %d초", hours, minutes, seconds);
+
+        return result;
+    }
+
     // 현재는 사용 x
     public void deleteMatchingPartner(MatchingPartner matchingPartner){
         this.getMatchingPartners().remove(matchingPartner);
         matchingPartner.setMatching(null);
     }
+
 }
