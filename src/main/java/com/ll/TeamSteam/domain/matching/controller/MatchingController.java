@@ -3,6 +3,7 @@ package com.ll.TeamSteam.domain.matching.controller;
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
+import com.ll.TeamSteam.domain.matching.exception.MatchingPartnerNotFoundException;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
@@ -150,8 +151,8 @@ public class MatchingController {
 
         // 매칭 등록 실패 시
         if (matching == null) {
-            throw new IllegalArgumentException("게시글이 작성되지 않았습니다.");
-            // return "match/create";
+//            throw new IllegalArgumentException("게시글이 작성되지 않았습니다.");
+            return "redirect:/main/error";
         }
 
         log.info("createRsData.getId = {}", matching.getId());
@@ -267,7 +268,8 @@ public class MatchingController {
 
         // 이미 저장된 사람은 중복 저장되지 않도록 처리
         if (alreadyWithPartner) {
-             throw new IllegalArgumentException("너 이미 매칭파트너에 참여중이야");
+//             throw new IllegalArgumentException("너 이미 매칭파트너에 참여중이야");
+            return "redirect:/main/error";
         }
 
         ChatRoom chatRoom = chatRoomService.findById(matchingId);
@@ -296,7 +298,13 @@ public class MatchingController {
         boolean alreadyWithPartner = matchingPartnerService.isDuplicatedMatchingPartner(matching.getId(), user.getId());
 
         if (!alreadyWithPartner) {
-            throw new IllegalArgumentException("너 지금 매칭파트너에 등록이 안되어있어, 우선 매칭파트너부터 등록해");
+            return "redirect:/main/error";
+        }
+
+        try {
+            matchingPartnerService.updateTrue(matching.getId(), user.getId());
+        } catch (MatchingPartnerNotFoundException e) {
+            return "redirect:/main/error";
         }
 
         matchingPartnerService.updateTrue(matching.getId(), user.getId());
