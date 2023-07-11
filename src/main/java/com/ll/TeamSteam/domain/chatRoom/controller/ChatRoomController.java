@@ -89,8 +89,6 @@ public class ChatRoomController {
             String enterMessage = " < " + user.getUsername() + "님이 입장하셨습니다. >";
             chatMessageService.createAndSave(enterMessage, user.getId(), roomId, ENTER);
 
-            recentlyUserService.updateRecentlyUser(user.getId());
-
             // 실시간으로 입장 메시지 전송
             SignalResponse signalResponse = SignalResponse.builder()
                     .type(NEW_MESSAGE)
