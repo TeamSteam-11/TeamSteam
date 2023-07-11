@@ -4,25 +4,15 @@
     <style>
         .matching-list {
             display: flex;
+            justify-content: center;
+            margin-top: 40px;
         }
 
         .matching-deadline {
             padding: 30px;
-            margin-top: 40px;
-            margin-left: 50px;
-            width: 450px;
-            background-color: #1F2227;
-            color: white;
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-        }
-
-        .matching-participant {
-            padding: 30px;
-            margin-top: 40px;
-            margin-left: 50px;
-            width: 450px;
+            margin-left: 70px;
+            margin-right: 70px;
+            width: 600px;
             background-color: #1F2227;
             color: white;
             display: flex;
@@ -59,13 +49,13 @@
             </table>
         </div>
 
-        <div class="matching-participant">
+        <div class="matching-deadline">
             <h1 style="font-size: 25px; margin-bottom: 10px; border-bottom-color: white">마감 인원 임박 매칭</h1>
             <hr>
             <table style="margin-top: 10px">
                 <tr>
-                    <!--                <th>제목</th>-->
-                    <!--                <th>마감까지 남은 인원</th>-->
+<!--                    <th>제목</th>-->
+<!--                    <th>마감까지 남은 인원</th>-->
                 </tr>
                 <th:block th:each="matching : ${matchingListSortedByParticipant}">
                     <tr>
