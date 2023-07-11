@@ -186,6 +186,7 @@
                                 </a>
                             </li>
                             <li class="hover:bg-[#1F2227]">
+                            <li th:if="${chatRoom.owner.id != #authentication.principal.id}" class="hover:bg-[#1F2227]">
                                 <form th:action="@{/chat/rooms/{id}(id=${chatRoom.id})}" method="post" onsubmit="if ( !confirm('방을 나가시겠습니까?') ) return false; disconnect()" class="p-0">
                                     <input type="hidden" name="_method" value="delete">
                                     <button>나가기</button>
