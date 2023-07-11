@@ -201,18 +201,26 @@ public class UserController {
 
     @PostMapping(value = "/user/createGameTag/save-gametag")
     public String saveGameTags(
-        @RequestParam(value = "selectedGames", required = false) List<Integer> selectedGames,
-        @AuthenticationPrincipal SecurityUser user) {
+        @RequestParam(value = "selectedGames", required = false) String selectedGames,
+        @AuthenticationPrincipal SecurityUser user,
+        HttpSession session) {
 
         // 게임목록에서 아무것도 체크하지 않았을 시 리다이렉트
         if (selectedGames == null) return rq.redirectWithMsg("/user/createGameTag", "선택한 게임이 없습니다! 게임을 선택해주세요");
 
         String steamId = user.getSteamId();
-        userService.saveSelectedGames(selectedGames, steamId);
+        List<Integer> selectedGameIds = Arrays.stream(selectedGames.split(","))
+            .filter(s -> !s.isEmpty()) // 빈 문자열 필터링
+            .map(Integer::parseInt)
+            .collect(Collectors.toList());
+
+        // 선택한 게임 목록을 세션에 저장
+        session.setAttribute("selectedGames", selectedGameIds);
+
+        userService.saveSelectedGames(selectedGameIds, steamId);
 
         return "redirect:/main/home";
     }
-
 
     @GetMapping("/user/checkFirstVisit")
     public String checkLogin(@AuthenticationPrincipal SecurityUser user) {
