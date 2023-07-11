@@ -174,7 +174,8 @@ public class MatchingService {
 
         // capacity에서 participant를 뺀 값을 기준으로 정렬
         return matchingList.stream()
-                .sorted(Comparator.comparing(matching -> matching.getRemainingCapacity()))
+                .filter(matching -> matching.getRemainingCapacity() > 0)
+                .sorted(Comparator.comparing(Matching::getRemainingCapacity))
                 .limit(6)
                 .collect(Collectors.toList());
     }
