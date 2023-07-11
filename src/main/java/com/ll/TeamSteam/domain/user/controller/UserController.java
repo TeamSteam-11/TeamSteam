@@ -173,7 +173,8 @@ public class UserController {
 
 
     @GetMapping(value = "/user/createGameTag", produces = MediaType.TEXT_HTML_VALUE)
-    public String userGameListSave(@RequestParam(defaultValue = "0") int page,
+    public String userGameListSave(
+        @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "9") int size,
         @AuthenticationPrincipal SecurityUser user, Model model
         ) throws ParseException {
@@ -197,12 +198,14 @@ public class UserController {
 
     }
 
-    @PostMapping(value = "/user/createGameTag/save-gametag")
-    public String saveGameTags(@RequestParam(value = "selectedGames", required = false) List<Integer> selectedGames,
-                               @AuthenticationPrincipal SecurityUser user) {
 
-        //게임목록에서 아무것도 체크하지 않았을 시 리다이렉트
-        if(selectedGames == null) return rq.redirectWithMsg("/user/createGameTag","선택한 게임이 없습니다! 게임을 선택해주세요");
+    @PostMapping(value = "/user/createGameTag/save-gametag")
+    public String saveGameTags(
+        @RequestParam(value = "selectedGames", required = false) List<Integer> selectedGames,
+        @AuthenticationPrincipal SecurityUser user) {
+
+        // 게임목록에서 아무것도 체크하지 않았을 시 리다이렉트
+        if (selectedGames == null) return rq.redirectWithMsg("/user/createGameTag", "선택한 게임이 없습니다! 게임을 선택해주세요");
 
         String steamId = user.getSteamId();
         userService.saveSelectedGames(selectedGames, steamId);
