@@ -124,7 +124,6 @@ html, body {
     /*transform: rotate(90deg);*/
     transform-origin: bottom center;
     visibility: hidden;
-    background-image: url("../images/leg.png");
     background-size: contain;
     background-repeat: no-repeat;
     z-index: 0; /* 수정된 부분 */
