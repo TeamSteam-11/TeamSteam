@@ -100,4 +100,7 @@ public class Matching extends BaseEntity {
         matchingPartner.setMatching(null);
     }
 
+    public void setDeadlineDate(LocalDateTime deadlineDate) {
+        this.deadlineDate = deadlineDate;
+    }
 }

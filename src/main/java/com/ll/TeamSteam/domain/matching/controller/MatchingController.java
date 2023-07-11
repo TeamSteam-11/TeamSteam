@@ -211,6 +211,7 @@ public class MatchingController {
         createForm.setCapacity(matching.getCapacity());
         createForm.setStartTime(matching.getStartTime());
         createForm.setEndTime(matching.getEndTime());
+        createForm.setSelectedHours(matchingService.calculateSelectedHours(matchingId, matching.getDeadlineDate()));
 
         model.addAttribute("matching", matching);
 
@@ -233,7 +234,7 @@ public class MatchingController {
         }
 
         RsData<Matching> modifyRsData = matchingService.modify(matching, createForm.getTitle(), createForm.getContent(),
-                createForm.getGenre(), createForm.getGender(), createForm.getCapacity(), createForm.getStartTime(), createForm.getEndTime());
+                createForm.getGenre(), createForm.getGender(), createForm.getCapacity(), createForm.getStartTime(), createForm.getEndTime(), createForm.getSelectedHours());
 
 
         chatRoomService.updateChatRoomName(matching.getChatRoom(), matching.getTitle());
