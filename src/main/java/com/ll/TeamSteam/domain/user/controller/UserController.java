@@ -205,9 +205,6 @@ public class UserController {
         @AuthenticationPrincipal SecurityUser user,
         HttpSession session) {
 
-        // 게임목록에서 아무것도 체크하지 않았을 시 리다이렉트
-        if (selectedGames == null) return rq.redirectWithMsg("/user/createGameTag", "선택한 게임이 없습니다! 게임을 선택해주세요");
-
         String steamId = user.getSteamId();
         List<Integer> selectedGameIds = Arrays.stream(selectedGames.split(","))
             .filter(s -> !s.isEmpty()) // 빈 문자열 필터링

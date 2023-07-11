@@ -109,8 +109,17 @@
             hiddenInput.value = selectedGames.join(',');
             document.getElementById('gameTagForm').appendChild(hiddenInput);
 
-            // 폼 제출
-            document.getElementById('gameTagForm').submit();
+            document.getElementById('gameTagForm').addEventListener('submit', function (event) {
+                // 선택한 게임 목록이 비어있으면 폼 제출을 중단하고 경고 메시지를 보여줌
+                if (selectedGames == null || selectedGames.length === 0) {
+                    event.preventDefault(); // 폼 제출 중단
+                    alert("선택한 게임이 없습니다! 게임을 선택해주세요");
+                    return;
+                }
+                // 폼 제출
+                document.getElementById('gameTagForm').submit();
+            });
+
 
             // 폼 제출 후 해당 세션 스토리지 삭제
             sessionStorage.removeItem('selectedGames');
