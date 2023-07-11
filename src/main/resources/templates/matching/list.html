@@ -40,7 +40,7 @@
     <div class="search-box flex justify-center mt-20 mb-10">
         <form th:action="@{/match/list/search}" method="GET" class="relative">
             <div class="flex items-center rounded-xl" style="background-color: #525964;">
-                <select name="name" class="h-12 p-4 rounded-xl" style="background-color: #525964; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                <select name="name" class="h-14 p-4 rounded-xl" style="background-color: #525964; border-top-right-radius: 0; border-bottom-right-radius: 0;">
                     <option value="title" th:selected="${searchOption == 'title'}">제목</option>
                     <option value="content" th:selected="${searchOption == 'content'}">내용</option>
                 </select>
@@ -52,40 +52,100 @@
         </form>
     </div>
 
-<!--                일인칭슈팅, 삼인칭슈팅, 격투, 슛뎀업, 아케이드, 러너, 핵앤슬래시, JRPG, 로그라이크,-->
-<!--                액션RPG, 어드벤처RPG, 전략RPG, 현대RPG, 파티, 군사, 대전략, 도시, 실시간전략, 카드,-->
-<!--                타워디펜스, 턴제전략, 매트로베니아, 비주얼노벨, 캐주얼, 퍼즐, 퐁부한스토리, 히든오브젝트,-->
-<!--                건설, 농업, 샌드박스, 생활, 연애, 우주, 취미, 스포츠, 낚시, 레이싱, 스포츠시뮬레이션-->
-
-    <div class="search-box flex justify-center mt-20 mb-10">
+    <div class="filter-box flex justify-center">
         <form id="filter-form" th:action="@{/match/list/filter}" method="GET" class="relative">
-            <div class="flex items-center rounded-xl" style="background-color: #525964;">
-                <select id="genre-select" name="genretype" class="h-12 p-4 rounded-xl" onchange="submitForm()" style="background-color: #525964;">
-                    <option value="" selected>선택하세요</option>
+
+            <select id="genre-select" name="genretype" class="h-12 w-40 p-4 rounded-lg mr-2" onchange="submitForm()" style="background-color: #525964;">
+                <option value="" selected>장르 선택</option>
+                <optgroup label="액션">
                     <option value="일인칭슈팅" th:selected="${genretype == '일인칭슈팅'}">일인칭슈팅</option>
                     <option value="삼인칭슈팅" th:selected="${genretype == '삼인칭슈팅'}">삼인칭슈팅</option>
                     <option value="격투" th:selected="${genretype == '격투'}">격투</option>
+                    <option value="슛뎀업" th:selected="${genretype == '슛뎀업'}">슛뎀업</option>
+                    <option value="아케이드" th:selected="${genretype == '아케이드'}">아케이드</option>
+                    <option value="러너" th:selected="${genretype == '러너'}">러너</option>
+                    <option value="핵앤슬래시" th:selected="${genretype == '핵앤슬래시'}">핵앤슬래시</option>
+                </optgroup>
+                <optgroup label="롤플레잉">
+                    <option value="JRPG" th:selected="${genretype == 'JRPG'}">JRPG</option>
+                    <option value="로그라이크" th:selected="${genretype == '로그라이크'}">로그라이크</option>
                     <option value="액션RPG" th:selected="${genretype == '액션RPG'}">액션RPG</option>
-                </select>
-            </div>
-            <div class="flex items-center rounded-xl" style="background-color: #525964;">
-                <select id="time-select" name="starttime" class="h-12 p-4 rounded-xl" onchange="submitForm()" style="background-color: #525964;">
-                    <option value="" selected>선택하세요</option>
-                    <option value="1" th:selected="${starttime == 1}">1시</option>
-                    <option value="2" th:selected="${starttime == 2}">2시</option>
-                    <option value="3" th:selected="${starttime == 3}">3시</option>
-                    <option value="4" th:selected="${starttime == 4}">4시</option>
-                    <option value="20" th:selected="${starttime == 20}">20시</option>
-                </select>
-            </div>
-            <div class="flex items-center rounded-xl" style="background-color: #525964;">
-                <select id="gender-select" name="gender" class="h-12 p-4 rounded-xl" onchange="submitForm()" style="background-color: #525964;">
-                    <option value="" selected>선택하세요</option>
-                    <option value="DC" th:selected="${gender == 'DC'}">성별무관</option>
-                    <option value="F" th:selected="${gender == 'F'}">여성</option>
-                    <option value="M" th:selected="${gender == 'M'}">남성</option>
-                </select>
-            </div>
+                    <option value="어드벤처RPG" th:selected="${genretype == '어드벤처RPG'}">어드벤처RPG</option>
+                    <option value="전략RPG" th:selected="${genretype == '전략RPG'}">전략RPG</option>
+                    <option value="현대RPG" th:selected="${genretype == '현대RPG'}">현대RPG</option>
+                    <option value="파티" th:selected="${genretype == '파티'}">파티</option>
+                </optgroup>
+                <optgroup label="전략">
+                    <option value="군사" th:selected="${genretype == '군사'}">군사</option>
+                    <option value="대전략" th:selected="${genretype == '대전략'}">대전략</option>
+                    <option value="도시" th:selected="${genretype == '도시'}">도시</option>
+                    <option value="실시간전략" th:selected="${genretype == '실시간전략'}">실시간전략</option>
+                    <option value="카드" th:selected="${genretype == '카드'}">카드</option>
+                    <option value="타워디펜스" th:selected="${genretype == '타워디펜스'}">타워디펜스</option>
+                    <option value="턴제전략" th:selected="${genretype == '턴제전략'}">턴제전략</option>
+                </optgroup>
+                <optgroup label="어드벤처">
+                    <option value="매트로베니아" th:selected="${genretype == '매트로베니아'}">매트로베니아</option>
+                    <option value="비주얼노벨" th:selected="${genretype == '비주얼노벨'}">비주얼노벨</option>
+                    <option value="캐주얼" th:selected="${genretype == '캐주얼'}">캐주얼</option>
+                    <option value="풍부한스토리" th:selected="${genretype == '풍부한스토리'}">풍부한스토리</option>
+                    <option value="히든오브젝트" th:selected="${genretype == '히든오브젝트'}">히든오브젝트</option>
+                </optgroup>
+                <optgroup label="시뮬레이션">
+                    <option value="건설" th:selected="${genretype == '건설'}">건설</option>
+                    <option value="농업" th:selected="${genretype == '농업'}">농업</option>
+                    <option value="샌드박스" th:selected="${genretype == '샌드박스'}">샌드박스</option>
+                    <option value="생활" th:selected="${genretype == '생활'}">생활</option>
+                    <option value="연애" th:selected="${genretype == '연애'}">연애</option>
+                    <option value="우주" th:selected="${genretype == '우주'}">우주</option>
+                    <option value="취미" th:selected="${genretype == '취미'}">취미</option>
+                </optgroup>
+                <optgroup label="스포츠 및 레이싱">
+                    <option value="스포츠" th:selected="${genretype == '스포츠'}">스포츠</option>
+                    <option value="낚시" th:selected="${genretype == '낚시'}">낚시</option>
+                    <option value="레이싱" th:selected="${genretype == '레이싱'}">레이싱</option>
+                    <option value="스포츠시뮬레이션" th:selected="${genretype == '스포츠시뮬레이션'}">스포츠시뮬레이션</option>
+                </optgroup>
+            </select>
+
+
+            <select id="time-select" name="starttime" class="h-12 p-4 rounded-lg mr-2" onchange="submitForm()" style="background-color: #525964;">
+                <option value="" selected>시작 시간</option>
+                <option value="0" th:selected="${starttime == 0}">0시</option>
+                <option value="1" th:selected="${starttime == 1}">1시</option>
+                <option value="2" th:selected="${starttime == 2}">2시</option>
+                <option value="3" th:selected="${starttime == 3}">3시</option>
+                <option value="4" th:selected="${starttime == 4}">4시</option>
+                <option value="5" th:selected="${starttime == 5}">5시</option>
+                <option value="6" th:selected="${starttime == 6}">6시</option>
+                <option value="7" th:selected="${starttime == 7}">7시</option>
+                <option value="8" th:selected="${starttime == 8}">8시</option>
+                <option value="9" th:selected="${starttime == 9}">9시</option>
+                <option value="10" th:selected="${starttime == 10}">10시</option>
+                <option value="11" th:selected="${starttime == 11}">11시</option>
+                <option value="12" th:selected="${starttime == 12}">12시</option>
+                <option value="13" th:selected="${starttime == 13}">13시</option>
+                <option value="14" th:selected="${starttime == 14}">14시</option>
+                <option value="15" th:selected="${starttime == 15}">15시</option>
+                <option value="16" th:selected="${starttime == 16}">16시</option>
+                <option value="17" th:selected="${starttime == 17}">17시</option>
+                <option value="18" th:selected="${starttime == 18}">18시</option>
+                <option value="19" th:selected="${starttime == 19}">19시</option>
+                <option value="20" th:selected="${starttime == 20}">20시</option>
+                <option value="21" th:selected="${starttime == 21}">21시</option>
+                <option value="22" th:selected="${starttime == 22}">22시</option>
+                <option value="23" th:selected="${starttime == 23}">23시</option>
+                <option value="24" th:selected="${starttime == 24}">24시</option>
+            </select>
+
+
+            <select id="gender-select" name="gender" class="h-12 p-4 rounded-lg" onchange="submitForm()" style="background-color: #525964;">
+                <option value="" selected>성별</option>
+                <option value="DC" th:selected="${gender == 'DC'}">성별무관</option>
+                <option value="F" th:selected="${gender == 'F'}">여성</option>
+                <option value="M" th:selected="${gender == 'M'}">남성</option>
+            </select>
+
         </form>
     </div>
 
