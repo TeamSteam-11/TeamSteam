@@ -50,7 +50,7 @@
 <main layout:fragment="main">
     <div class="card lg:card-side bg-base-100 shadow-xl custom-card" style="height: 400px; overflow: auto; display: flex;">
         <div>
-        <figure class="ml-8 mt-8" style="width: 150px;">
+        <figure class="ml-8 mt-8" style="width: 200px;">
             <div class="w-48 h-48">
                 <img th:src="${targetUser.getAvatar()}" class="w-full h-full object-cover">
             </div>
@@ -58,7 +58,7 @@
         </div>
         <div class="card-body" style="display: flex; margin-top: 1px;">
             <h1 class="my-2 text-3xl" th:text="${targetUser.getUsername()}" style="color: #dddddd;"></h1>
-            <div class="ml-4" style="width: calc(100% - 150px);">
+            <div class="ml-4" style="width: calc(100% - 200px);">
                         <div class="flex pt-4" style="display: flex; flex-direction: column">
                         <div class="table-cell">
                             <div class="flex flex-wrap">
