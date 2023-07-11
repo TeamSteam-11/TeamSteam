@@ -19,6 +19,6 @@ public enum GenreTagType {
             }
         }
 
-        throw new IllegalArgumentException("장르태그 ENUM에서 오류 났어..힘내..");
+        return null;
     }
 }

@@ -4,6 +4,7 @@ package com.ll.TeamSteam.domain.recentlyUser.entity;
 import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
@@ -23,6 +24,6 @@ public class RecentlyUser extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private User user;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.REMOVE)
     private MatchingPartner matchingPartner;
 }

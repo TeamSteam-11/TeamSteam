@@ -40,9 +40,9 @@ public class NotProd {
                 User user1 = User.builder()
                         .id(1L)
                         .username("user1")
-                        .steamId("12412412414")
-                        .temperature(36)
-                        .avatar("")
+                        .steamId("12412412411")
+                        .temperature(37)
+                        .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
                         .build();
 
                 userRepository.save(user1);
@@ -50,19 +50,76 @@ public class NotProd {
                 User user2 = User.builder()
                         .id(2L)
                         .username("user2")
-                        .steamId("8888888888")
-                        .temperature(36)
+                        .steamId("12412412412")
+                        .temperature(40)
+                        .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
                         .build();
 
                 userRepository.save(user2);
 
-                log.info("user1 = {}", user1);
+                User user3 = User.builder()
+                        .id(3L)
+                        .username("user3")
+                        .steamId("12412412413")
+                        .temperature(25)
+                        .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
+                        .build();
 
+                userRepository.save(user3);
+
+                User user4 = User.builder()
+                        .id(4L)
+                        .username("user4")
+                        .steamId("12412412414")
+                        .temperature(66)
+                        .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
+                        .build();
+
+                userRepository.save(user4);
+
+                User user5 = User.builder()
+                        .id(5L)
+                        .username("user5")
+                        .steamId("12412412415")
+                        .temperature(80)
+                        .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
+                        .build();
+
+                userRepository.save(user5);
+
+                User user6 = User.builder()
+                        .id(6L)
+                        .username("user6")
+                        .steamId("12412412416")
+                        .temperature(75)
+                        .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
+                        .build();
+
+                userRepository.save(user6);
+
+                User user7 = User.builder()
+                        .id(7L)
+                        .username("user7")
+                        .steamId("12412412417")
+                        .temperature(53)
+                        .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
+                        .build();
+
+                userRepository.save(user7);
+
+                User user8 = User.builder()
+                        .id(8L)
+                        .username("user8")
+                        .steamId("12412412418")
+                        .temperature(50)
+                        .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
+                        .build();
+
+                userRepository.save(user8);
 
                 UserTag userTag =UserTag.builder()
                         .user(user1)
                         .build();
-
 
                 userTagRepository.save(userTag);
 
@@ -75,7 +132,9 @@ public class NotProd {
 
                 gameTagRepository.save(gameTag);
 
-                for (int i = 0; i <= 100; i++){
+
+
+                for (int i = 0; i <= 5; i++){
 
                     String title = "Matching " + i;
                     String content = "으악1";
@@ -86,8 +145,8 @@ public class NotProd {
                     int startTime = 20;
                     int endTime = 269770;
 
-                    Matching matching = matchingService.create(user2, title, content, genre, gameTagId, gender, capacity, startTime, endTime, null);
-                    ChatRoom chatRoom = chatRoomService.createAndConnect(matching.getTitle(), matching, user2.getId());
+                    Matching matching = matchingService.create(user1, title, content, genre, gameTagId, gender, capacity, startTime, endTime, null);
+                    chatRoomService.createAndConnect(matching.getTitle(), matching, user1.getId());
                 }
             }
         };
