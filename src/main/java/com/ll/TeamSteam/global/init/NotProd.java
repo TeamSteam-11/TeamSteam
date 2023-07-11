@@ -12,12 +12,17 @@ import com.ll.TeamSteam.domain.userTag.UserTag;
 import com.ll.TeamSteam.domain.userTag.UserTagRepository;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTag;
 import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
+import com.ll.TeamSteam.domain.userTag.genreTag.GenreTag;
+import com.ll.TeamSteam.domain.userTag.genreTag.GenreTagRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @Profile({"local", "test"})
@@ -29,13 +34,14 @@ public class NotProd {
             UserRepository userRepository,
             MatchingService matchingService,
             UserTagRepository userTagRepository,
-            GameTagRepository gameTagRepository
-
+            GameTagRepository gameTagRepository,
+            GenreTagRepository genreTagRepository
     ) {
         return new CommandLineRunner() {
             @Override
             @Transactional
             public void run(String... args) throws Exception {
+                List<User> userList = new ArrayList<>(); // 유저태그를 담기위한 리스트
 
                 User user1 = User.builder()
                         .id(1L)
@@ -45,6 +51,7 @@ public class NotProd {
                         .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
                         .build();
 
+                userList.add(user1);
                 userRepository.save(user1);
 
                 User user2 = User.builder()
@@ -55,6 +62,7 @@ public class NotProd {
                         .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
                         .build();
 
+                userList.add(user2);
                 userRepository.save(user2);
 
                 User user3 = User.builder()
@@ -65,16 +73,18 @@ public class NotProd {
                         .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
                         .build();
 
+                userList.add(user3);
                 userRepository.save(user3);
 
                 User user4 = User.builder()
                         .id(4L)
                         .username("user4")
                         .steamId("12412412414")
-                        .temperature(66)
+                        .temperature(33)
                         .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
                         .build();
 
+                userList.add(user4);
                 userRepository.save(user4);
 
                 User user5 = User.builder()
@@ -85,6 +95,7 @@ public class NotProd {
                         .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
                         .build();
 
+                userList.add(user5);
                 userRepository.save(user5);
 
                 User user6 = User.builder()
@@ -95,6 +106,7 @@ public class NotProd {
                         .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
                         .build();
 
+                userList.add(user6);
                 userRepository.save(user6);
 
                 User user7 = User.builder()
@@ -105,34 +117,81 @@ public class NotProd {
                         .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
                         .build();
 
+                userList.add(user7);
                 userRepository.save(user7);
 
                 User user8 = User.builder()
                         .id(8L)
                         .username("user8")
                         .steamId("12412412418")
-                        .temperature(50)
+                        .temperature(21)
                         .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
                         .build();
 
+                userList.add(user8);
                 userRepository.save(user8);
 
-                UserTag userTag =UserTag.builder()
-                        .user(user1)
-                        .build();
+                int appidPlus = 41000;
+                for(User userEach : userList){
+                    UserTag userTag =UserTag.builder()
+                            .user(userEach)
+                            .build();
 
-                userTagRepository.save(userTag);
+                    userTagRepository.save(userTag);
 
-                GameTag gameTag = GameTag.builder()
-                        .appid(41000)
-                        .name("시리우스샘")
-                        .build();
+                    userEach.setUserTag(userTag);
 
-                gameTag.setUserTag(userTag);
+                    GameTag gameTag1 = GameTag.builder()
+                            .userTag(userTag)
+                            .appid(appidPlus++)
+                            .name("시리우스샘")
+                            .build();
 
-                gameTagRepository.save(gameTag);
+                    gameTag1.setUserTag(userTag);
+                    gameTagRepository.save(gameTag1);
+
+                    GameTag gameTag2 = GameTag.builder()
+                            .userTag(userTag)
+                            .appid(appidPlus++)
+                            .name("시리우스샘")
+                            .build();
+
+                    gameTag2.setUserTag(userTag);
+                    gameTagRepository.save(gameTag2);
+
+                    GameTag gameTag3 = GameTag.builder()
+                            .userTag(userTag)
+                            .appid(appidPlus++)
+                            .name("시리우스샘")
+                            .build();
+
+                    gameTag3.setUserTag(userTag);
+                    gameTagRepository.save(gameTag3);
 
 
+                    GenreTag genreTag1 = GenreTag.builder()
+                            .userTag(userTag)
+                            .genre(GenreTagType.농업)
+                            .build();
+
+                    genreTagRepository.save(genreTag1);
+
+                    GenreTag genreTag2 = GenreTag.builder()
+                            .userTag(userTag)
+                            .genre(GenreTagType.건설)
+                            .build();
+
+                    genreTagRepository.save(genreTag2);
+
+                    GenreTag genreTag3 = GenreTag.builder()
+                            .userTag(userTag)
+                            .genre(GenreTagType.낚시)
+                            .build();
+
+                    genreTagRepository.save(genreTag3);
+
+                    userRepository.save(userEach);
+                }
 
                 for (int i = 0; i <= 5; i++){
 
