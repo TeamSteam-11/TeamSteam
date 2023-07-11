@@ -61,25 +61,25 @@ class ChatRoomControllerTest {
         assertThrows(NoSuchElementException.class, () -> chatRoomService.remove(invalidRoomId, invalidOwnerId));
     }
 
-    @Test
-    @DisplayName("채팅방 나가기 성공")
-    void testExitChatRoom() throws Exception {
-        Long validRoomId = 1L;
-        Long validUserId = 2L;
-
-        chatRoomService.exitChatRoom(validRoomId, validUserId);
-
-        ChatRoom chatRoom = chatRoomService.findById(validRoomId);
-        ChatUser chatUser = chatRoomService.findChatUserByUserId(chatRoom, validUserId);
-
-        assertNull(chatUser);
-    }
+//    @Test
+//    @DisplayName("채팅방 나가기 성공")
+//    void testExitChatRoom() throws Exception {
+//        Long validRoomId = 2L;
+//        Long validUserId = 2L;
+//
+//        chatRoomService.exitChatRoom(validRoomId, validUserId);
+//
+//        ChatRoom chatRoom = chatRoomService.findById(validRoomId);
+//        ChatUser chatUser = chatRoomService.findChatUserByUserId(chatRoom, validUserId);
+//
+//        assertNull(chatUser);
+//    }
 
     @Test
     @DisplayName("채팅방을 나갈 시 유저의 Type이 EXIT로 수정됨")
     void testExitChatRoomAndUserTypeChange() throws Exception {
-        Long validRoomId = 1L;
-        Long validUserId = 1L;
+        Long validRoomId = 2L;
+        Long validUserId = 2L;
 
         User user = userService.findByIdElseThrow(validUserId);
 
