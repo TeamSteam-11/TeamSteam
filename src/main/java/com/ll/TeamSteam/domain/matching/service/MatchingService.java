@@ -61,8 +61,8 @@ public class MatchingService {
     }
 
     // 마감 시간 구현
-    public LocalDateTime setDeadline(LocalDateTime modifyDate, int hours) {
-        return modifyDate.plusHours(hours);
+    public LocalDateTime setDeadline(LocalDateTime modifyDate, int selectedHours) {
+        return modifyDate.plusHours(selectedHours);
     }
 
     public Page<Matching> getMatchingList(Pageable pageable) {
@@ -80,9 +80,21 @@ public class MatchingService {
     }
 
     @Transactional
-    public RsData<Matching> modify(Matching matching, String title, String content, GenreTagType genreTag, String gender, Long capacity, int startTime, int endTime) {
+    public RsData<Matching> modify(Matching matching, String title, String content, GenreTagType genreTag, String gender, Long capacity, int startTime, int endTime, int selectedHours) {
         try {
             matching.update(title, content, genreTag, gender, capacity, startTime, endTime);
+
+            // 수정된 selectedHours를 기반으로 deadlineDate 계산
+            LocalDateTime modifyDate = LocalDateTime.now();
+            LocalDateTime deadlineDate;
+            if (selectedHours > 0) {
+                deadlineDate = setDeadline(modifyDate, selectedHours);
+            } else {
+                // 마감 시간을 '제한 없음'으로 선택 시 매칭 마감일이 30일 이후로 저장됨
+                deadlineDate = modifyDate.plusDays(30);
+            }
+            matching.setDeadlineDate(deadlineDate);
+
             matchingRepository.save(matching);
 
             return RsData.of("S-1", "매칭이 수정되었습니다", matching);
@@ -90,6 +102,17 @@ public class MatchingService {
             e.printStackTrace();
             return RsData.of("F-1", "매칭 수정 중 오류가 발생했습니다.");
         }
+    }
+
+    public int calculateSelectedHours(long id, LocalDateTime deadlineDate) {
+        Matching matching = matchingRepository.findById(id).orElseThrow();
+
+        if (deadlineDate == null) {
+            return 0;
+        }
+        LocalDateTime modifyDate = matching.getModifyDate();
+        Duration duration = Duration.between(modifyDate, deadlineDate);
+        return (int) duration.toHours();
     }
 
     public Page<Matching> searchMatching(String name, String keyword, Pageable pageable) {
