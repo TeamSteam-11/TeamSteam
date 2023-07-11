@@ -269,8 +269,7 @@ public class UserController {
 
         User targetUser = userService.findById(userId).orElseThrow();
 
-        String steamId = user.getSteamId();
-        List<SteamGameLibrary> haveGameListData = steamService.getUserGameList(steamId);
+        List<SteamGameLibrary> haveGameListData = steamService.getUserGameList(targetUser.getSteamId());
 
         int totalItems = haveGameListData.size();
         int totalPages = (int) Math.ceil((double) totalItems / size);
