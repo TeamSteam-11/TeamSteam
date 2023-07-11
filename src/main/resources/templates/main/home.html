@@ -23,12 +23,23 @@
         td, th {
             padding: 10px;
         }
+
+        .matching-button:hover{
+            background-color: #1F2227;
+            color:white;
+            background-color: rgba(31, 34, 39, 0.5);
+        }
     </style>
 </head>
 <body>
 <main layout:fragment="main">
-    <div class="top-image-bar mt-10 w-full">
-        <img src="https://cdn.jsdelivr.net/gh/LeeYulhee/projectlion_img/teamsteam/teamsteam-banner.png" alt="" class="">
+    <div class="top-image-bar mt-10 w-full relative">
+        <img src="https://cdn.jsdelivr.net/gh/LeeYulhee/projectlion_img/teamsteam/teamsteam-banner.png" class="w-screen">
+        <div class="absolute bottom-0 text-center" style="bottom: 20%; left:25%;">
+            <div class="relative max-w-2xl w-full px-4 h-12">
+                <a href="/match/list" class="matching-button bg-white text-black text-2xl block flex items-center justify-center bg-opacity-50 h-16 w-80">매칭 참여하기</a>
+            </div>
+        </div>
     </div>
 
     <div class="matching-list">
