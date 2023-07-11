@@ -53,7 +53,7 @@ html, body {
     display: flex;
     flex-grow: 1;
     width: 100%;
-    height: calc(100% - 80px); /* 화면 하단의 광고 공간을 제외한 높이 */
+    height: calc(100vh - 200px); /* 화면 하단의 광고 공간을 제외한 높이 */
 }
 
 .game-container {
@@ -65,6 +65,7 @@ html, body {
     background-color: #202d3e;
     background-repeat: repeat;
     height: calc(100vh - 200px);
+    max-height: calc(100vh - 200px);
 }
 
 .game {
@@ -75,6 +76,7 @@ html, body {
     margin: auto;
     cursor: url("../images/cur116.cur"), auto;
     height: calc(100vh - 200px);
+    max-height: calc(100vh - 200px);
 }
 
 /* 게임창 비활성화 */
