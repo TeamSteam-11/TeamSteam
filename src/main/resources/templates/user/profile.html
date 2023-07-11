@@ -157,16 +157,18 @@
                             </td>
                             <th>
                                 <label>
-                                    <a th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()} +'/'+ ${1}}"
-                                       class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded">
+                                    <a th:id="'thumbsUpButton_' + ${recentlyUser.getMatchingPartner().getUser().getId()}"
+                                       th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()} +'/'+ ${1}}"
+                                       class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded thumbs-up-button">
                                         <i class="fa fa-thumbs-up fa-lg"></i>
                                     </a>
                                 </label>
                             </th>
                             <th>
                                 <label>
-                                    <a th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()} +'/'+ ${0}}"
-                                       class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded">
+                                    <a th:id="'thumbsDownButton_' + ${recentlyUser.getMatchingPartner().getUser().getId()}"
+                                       th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()} +'/'+ ${0}}"
+                                       class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded thumbs-down-button">
                                         <i class="fa fa-thumbs-down fa-lg"></i>
                                     </a>
                                 </label>
@@ -213,6 +215,25 @@
             </div>
         </div>
     </div>
+    <script th:inline="javascript">
+        $(document).ready(function() {
+            $('.thumbs-up-button, .thumbs-down-button').click(function() {
+                var buttonId = $(this).attr('id');
+                $('#' + buttonId).closest('th').hide();
+                $('#' + buttonId).closest('tr').find('.thumbs-up-button, .thumbs-down-button').hide();
+                localStorage.setItem(buttonId, 'hidden');
+            });
+
+            $('.thumbs-up-button, .thumbs-down-button').each(function() {
+                var buttonId = $(this).attr('id');
+                var isHidden = localStorage.getItem(buttonId);
+                if (isHidden === 'hidden') {
+                    $('#' + buttonId).closest('th').hide();
+                    $('#' + buttonId).closest('tr').find('.thumbs-up-button, .thumbs-down-button').hide();
+                }
+            });
+        });
+    </script>
 </main>
 </body>
 </html>
