@@ -7,6 +7,20 @@
     <div class="top-image-bar mt-10 w-screen">
         <img src="https://cdn.jsdelivr.net/gh/LeeYulhee/projectlion_img/teamsteam/teamsteam-banner.png" alt="" class="">
     </div>
+
+    <table>
+        <tr>
+            <th>제목</th>
+            <th>마감까지 남은 시간</th>
+        </tr>
+        <!-- 매칭 리스트를 반복하여 표시 -->
+        <th:block th:each="matching : ${matchingList}">
+            <tr>
+                <td th:text="${matching.title}"></td>
+                <td th:text="${matching.getDeadlineDuration()}"></td>
+            </tr>
+        </th:block>
+    </table>
 </main>
 </body>
 </html>

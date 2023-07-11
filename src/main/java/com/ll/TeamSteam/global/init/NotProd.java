@@ -19,6 +19,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Configuration
 @Profile({"local", "test"})
 @Slf4j
@@ -86,7 +88,7 @@ public class NotProd {
                     int startTime = 20;
                     int endTime = 269770;
 
-                    Matching matching = matchingService.create(user2, title, content, genre, gameTagId, gender, capacity, startTime, endTime, null);
+                    Matching matching = matchingService.create(user2, title, content, genre, gameTagId, gender, capacity, startTime, endTime, LocalDateTime.now().plusHours(3));
                     ChatRoom chatRoom = chatRoomService.createAndConnect(matching.getTitle(), matching, user2.getId());
                 }
             }
