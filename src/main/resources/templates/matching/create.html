@@ -3,88 +3,114 @@
 <head>
     <title>매칭 등록</title>
     <style>
-        label {
-            color: white;
-        }
-
-        input[type="text"], textarea {
-            border: 1px solid gray;
-            color: #1F2227;
-        }
-
-        input[type="number"], textarea {
-            border: 1px solid gray;
-            color: #1F2227;
-        }
-
-        div > select {
-            color: black;
+        .submit-button:hover {
+            background-color: #2f77b6 !important;
         }
     </style>
 </head>
 <body>
 
 <main layout:fragment="main">
-<!--<h1>상품 등록</h1>-->
-<form th:object="${createForm}" th:action="@{/match/create}" method="POST" style="margin: 10px 40px">
-    <label for="title">제목 :</label><br>
-    <input type="text" id="title" th:field="*{title}"><br><br>
 
-    <label for="content">내용 :</label><br>
-    <input type="text" id="content" th:field="*{content}"><br><br>
+    <form th:object="${createForm}" th:action="@{/match/create}" method="POST" style="min-height: calc(100vh - 64px)">
 
-    <label for="capacity">매칭 인원 :</label><br>
-    <input type="number" id="capacity" th:field="*{capacity}"><br><br>
-    <div>
-        <label for="gameTag">게임 태그</label><br>
-        <select id="gameTag" th:field="*{gameTagId}">
-            <option value="">선택하세요</option>
-            <option th:each="gameTag : ${userGameTags}" th:value="${gameTag.appid}" th:text="${gameTag.name}"></option>
-        </select><br><br>
+        <div class="flex flex-col justify-center items-center" style="min-height: calc(100vh - 64px)">
 
-        <label for="genreTag">장르 태그</label><br>
-        <select id="genreTag" th:field="*{genre}">
-            <option value="">선택하세요</option>
-            <option th:each="genreTag : ${userGenreTags}" th:value="${genreTag.genre}" th:text="${genreTag.genre}"></option>
-        </select><br><br>
+            <!--제목-->
+            <div class="mt-20 w-8/12">
+                <label for="title">제목</label>
+                <input type="text" placeholder="제목을 입력하세요" id="title" th:field="*{title}" class="rounded-lg p-4 h-12 w-full" style="background-color: #30405F;">
+            </div>
 
-        <label for="gender">성별</label><br>
-        <select id="gender" name="gender" th:field="*{gender}">
-            <option value="DC">성별무관</option>
-            <option value="F">여성</option>
-            <option value="M">남성</option>
-        </select><br><br>
-    </div>
-    <div>
-        <label for="startTime">시작 시간</label><br>
-        <select id="startTime" th:field="*{startTime}">
-            <option th:each="hour : ${#numbers.sequence(0, 24)}" th:value="${hour}" th:text="${hour}"></option>
-        </select><br><br>
-    </div>
-    <div>
-        <label for="endTime">끝나는 시간</label><br>
-        <select id="endTime" th:field="*{endTime}">
-            <option th:each="hour : ${#numbers.sequence(0, 24)}" th:value="${hour}" th:text="${hour}"></option>
-        </select><br><br>
-    </div>
+            <!--태그 설정-->
+            <div class="flex mt-10 w-8/12 justify-center">
 
-    <div>
-        <label for="deadline">마감 시간</label><br>
-        <select id="deadline" name="deadline" onchange="setSelectedHours()">
-            <option value="0">제한 없음</option>
-            <option value="1">1시간 후</option>
-            <option value="2">2시간 후</option>
-            <option value="3">3시간 후</option>
-            <option value="6">6시간 후</option>
-            <option value="12">12시간 후</option>
-            <option value="24">1일 후</option>
-        </select><br><br>
-    </div>
-    <input type="hidden" id="selectedHours" name="selectedHours" value="0">
+                <!--게임 태그-->
+                <div>
+                    <label for="gameTag" class="block">게임 태그</label>
+                    <select id="gameTag" th:field="*{gameTagId}" class="h-12 w-52 p-4 mr-6 rounded-lg" style="background-color: #30405F;">
+                        <option value="">선택하세요</option>
+                        <option th:each="gameTag : ${userGameTags}" th:value="${gameTag.appid}" th:text="${gameTag.name}"></option>
+                    </select>
+                </div>
 
+                <!--장르 태그-->
+                <div>
+                    <label for="genreTag" class="block">장르 태그</label>
+                    <select id="genreTag" th:field="*{genre}" class="h-12 w-44 p-4 mr-6 rounded-lg" style="background-color: #30405F;">
+                        <option value="">선택하세요</option>
+                        <option th:each="genreTag : ${userGenreTags}" th:value="${genreTag.genre}" th:text="${genreTag.genre}"></option>
+                    </select>
+                </div>
 
-    <button type="submit" onclick="showSuccessMessage()" style="background-color: #1F2227; color: white; font-size: 1.2em; padding: 10px 20px; border-radius: 10px">등록</button>
-</form>
+                <!--매칭 인원-->
+                <div>
+                    <label for="capacity" class="block">매칭 인원</label>
+                    <input type="number" id="capacity" th:field="*{capacity}" class="h-12 w-36 p-4 mr-6 rounded-lg" style="background-color: #30405F;">
+                </div>
+
+                <!--성별 설정-->
+                <div>
+                    <label for="gender" class="block">모집 성별</label>
+                    <select id="gender" name="gender" th:field="*{gender}" class="h-12 w-36 p-4 mr-6 rounded-lg" style="background-color: #30405F;">
+                        <option value="DC">성별무관</option>
+                        <option value="F">여성</option>
+                        <option value="M">남성</option>
+                    </select>
+                </div>
+
+                <!--시작 시간-->
+                <div>
+                    <label for="startTime" class="block">시작 시간</label>
+                    <select id="startTime" th:field="*{startTime}" class="h-12 w-36 p-4 mr-6 rounded-lg" style="background-color: #30405F;">
+                        <option th:each="hour : ${#numbers.sequence(0, 24)}" th:value="${hour}" th:text="${hour}"></option>
+                    </select>
+                </div>
+
+                <!--종료 시간-->
+                <div>
+                    <label for="endTime" class="block">종료 시간</label>
+                    <select id="endTime" th:field="*{endTime}" class="h-12 w-36 p-4 mr-6 rounded-lg" style="background-color: #30405F;">
+                        <option th:each="hour : ${#numbers.sequence(0, 24)}" th:value="${hour}" th:text="${hour}"></option>
+                    </select>
+                </div>
+
+                <!--모집 마감 시간-->
+                <div>
+                    <label for="deadline" class="block">모집 마감 시간</label>
+                    <select id="deadline" name="deadline" onchange="setSelectedHours()" class="h-12 w-36 p-4 rounded-lg" style="background-color: #30405F;">
+                        <option value="0">제한 없음</option>
+                        <option value="1">1시간 후</option>
+                        <option value="2">2시간 후</option>
+                        <option value="3">3시간 후</option>
+                        <option value="6">6시간 후</option>
+                        <option value="12">12시간 후</option>
+                        <option value="24">1일 후</option>
+                    </select>
+
+                </div>
+
+            </div>
+            <!--태그 끝-->
+
+            <!--내용-->
+            <div class="mt-10 w-8/12">
+                <label for="content">내용</label>
+                <textarea cols="45" rows="15" id="content" placeholder="내용을 입력하세요" th:field="*{content}" class="rounded-lg resize-none p-4 w-full" style="background-color: #30405F;"></textarea>
+            </div>
+            <!--내용 끝-->
+
+            <!--등록 버튼-->
+            <div class="mt-10 w-8/12">
+                <div class="flex justify-end">
+                    <button type="submit" onclick="showSuccessMessage()" class="submit-button p-2 w-32 rounded-lg" style="background-color: #4ea4d9;">등록</button>
+                </div>
+            </div>
+            <!--등록 버튼 끝-->
+
+        </div>
+
+    </form>
 
 <script>
     function setSelectedHours() {
