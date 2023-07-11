@@ -50,7 +50,7 @@
 <main layout:fragment="main">
     <div class="card lg:card-side bg-base-100 shadow-xl custom-card" style="height: 400px; overflow: auto; display: flex;">
         <div>
-        <figure class="ml-8 mt-8" style="width: 150px;">
+        <figure class="ml-8 mt-8" style="width: 200px;">
             <div class="w-48 h-48">
                 <img th:src="${targetUser.getAvatar()}" class="w-full h-full object-cover">
             </div>
@@ -58,7 +58,7 @@
         </div>
         <div class="card-body" style="display: flex; margin-top: 1px;">
             <h1 class="my-2 text-3xl" th:text="${targetUser.getUsername()}" style="color: #dddddd;"></h1>
-            <div class="ml-4" style="width: calc(100% - 150px);">
+            <div class="ml-4" style="width: calc(100% - 200px);">
                         <div class="flex pt-4" style="display: flex; flex-direction: column">
                         <div class="table-cell">
                             <div class="flex flex-wrap">
@@ -83,10 +83,12 @@
             </div>
             <div class="card-actions justify-end">
                 <form th:action="@{/user/profile/editprofile}" method="post">
-                    <button th:if="${loginedId == targetUser.getId()}" type="submit" class="btn btn-primary">Edit Tag</button>
+                    <button th:if="${loginedId == targetUser.getId()}" class="btn btn-accent">Edit Tag</button>
+                    <input type="submit" value="">
                 </form>
                 <form th:action="@{/user/profile/{userId}/addFriend(userId=${targetUser.id})}" method="post">
-                    <button th:if="${loginedId != targetUser.getId()}" type="submit" class="btn btn-primary">친구추가</button>
+                    <button th:if="${loginedId != targetUser.getId()}" class="btn btn-accent">친구추가</button>
+                    <input type="submit" value="">
                 </form>
             </div>
         </div>
@@ -155,16 +157,18 @@
                             </td>
                             <th>
                                 <label>
-                                    <a th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()} +'/'+ ${1}}"
-                                       class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded">
+                                    <a th:id="'thumbsUpButton_' + ${recentlyUser.getMatchingPartner().getUser().getId()}"
+                                       th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()} +'/'+ ${1}}"
+                                       class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded thumbs-up-button">
                                         <i class="fa fa-thumbs-up fa-lg"></i>
                                     </a>
                                 </label>
                             </th>
                             <th>
                                 <label>
-                                    <a th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()} +'/'+ ${0}}"
-                                       class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded">
+                                    <a th:id="'thumbsDownButton_' + ${recentlyUser.getMatchingPartner().getUser().getId()}"
+                                       th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()} +'/'+ ${0}}"
+                                       class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded thumbs-down-button">
                                         <i class="fa fa-thumbs-down fa-lg"></i>
                                     </a>
                                 </label>
@@ -198,19 +202,36 @@
             <div class="m-8 flex justify-center">
                 <div class="pagination">
                     <ul class="flex space-x-4 flex-row">
-                        <li th:class="${currentPage == 0 ? 'disabled' : ''}">
-                            <a th:if="${currentPage != 0}" th:href="@{/user/profile/{userId}(userId=${userId},page=${currentPage - 1},size=${size})}">&laquo; 이전</a>
-                            <span th:if="${currentPage == 0}">&laquo; 이전</span>
+                        <li th:if="${currentPage != 0}" th:class="${currentPage == 0 ? 'disabled' : ''}">
+                            <a th:href="@{/user/profile/{userId}(userId=${userId},page=${currentPage - 1}, size=${size})}">&laquo; 이전 </a>
                         </li>
-                        <li th:class="${currentPage == totalPages - 1 ? 'disabled' : ''}">
-                            <a th:if="${currentPage != totalPages - 1}" th:href="@{/user/profile/{userId}(userId=${userId},page=${currentPage + 1},size=${size})}">다음 &raquo;</a>
-                            <span th:if="${currentPage == totalPages - 1}">다음 &raquo;</span>
+                        <li th:if="${currentPage != totalPages - 1}" th:class="${currentPage == totalPages - 2 ? 'disabled' : ''}">
+                            <a th:href="@{/user/profile/{userId}(userId=${userId},page=${currentPage + 1}, size=${size})}">다음 &raquo;</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
+    <script th:inline="javascript">
+        $(document).ready(function() {
+            $('.thumbs-up-button, .thumbs-down-button').click(function() {
+                var buttonId = $(this).attr('id');
+                $('#' + buttonId).closest('th').hide();
+                $('#' + buttonId).closest('tr').find('.thumbs-up-button, .thumbs-down-button').hide();
+                localStorage.setItem(buttonId, 'hidden');
+            });
+
+            $('.thumbs-up-button, .thumbs-down-button').each(function() {
+                var buttonId = $(this).attr('id');
+                var isHidden = localStorage.getItem(buttonId);
+                if (isHidden === 'hidden') {
+                    $('#' + buttonId).closest('th').hide();
+                    $('#' + buttonId).closest('tr').find('.thumbs-up-button, .thumbs-down-button').hide();
+                }
+            });
+        });
+    </script>
 </main>
 </body>
 </html>

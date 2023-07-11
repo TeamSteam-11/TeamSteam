@@ -10,6 +10,7 @@ import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
 import com.ll.TeamSteam.domain.friend.entity.Friend;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
+import com.ll.TeamSteam.domain.recentlyUser.service.RecentlyUserService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.rq.Rq;
@@ -45,6 +46,8 @@ public class ChatRoomController {
     private final SimpMessageSendingOperations template;
     private final ChatUserService chatUserService;
     private final UserService userService;
+
+    private final RecentlyUserService recentlyUserService;
 
     /**
      * 방 조회

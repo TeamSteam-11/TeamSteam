@@ -6,18 +6,16 @@
         .custom-card{
             background-color: #202d3e;
             border:0px;
-
         }
     </style>
 </head>
 <body>
 <main layout:fragment="main">
-    <form action="/user/createGameTag/save-gametag" method="post" th:action="@{/user/createGameTag/save-gametag}" th:object="${selectedGamesForm}">
-    <div class="m-auto container">
-        <div class="flex justify-center">
-            <p class="m-8 text-2xl">선호하는 게임을 선택해주세요!</p>
-        </div>
-        <form action="/user/createGameTag/save-gametag" method="post">
+    <form id="gameTagForm" action="/user/createGameTag/save-gametag" method="post" th:action="@{/user/createGameTag/save-gametag}">
+        <div class="m-auto container">
+            <div class="flex justify-center">
+                <p class="m-8 text-2xl">선호하는 게임을 선택해주세요!</p>
+            </div>
             <div class="m-8 grid grid-cols-3  gap-x-8 gap-y-4">
                 <div th:each="game : ${gameList}">
                     <div class="card card-compact w-96 bg-base-100 shadow-xl custom-card">
@@ -28,33 +26,105 @@
                         <div class="card-body">
                             <h2 class="card-title" th:text="${game.name}"></h2>
                             <div class="card-actions justify-end">
-                                <input type="checkbox" class="checkbox checkbox-info checkbox-lg" name="selectedGames" th:value="${game.appid}"/>
+                                <input type="checkbox" class="checkbox checkbox-success checkbox-lg" name="selectedGames" th:value="${game.appid}" />
+                                <input type="hidden" name="selectedGames" id="selectedGamesInput" />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="m-8 flex justify-center">
-                <div class="pagination">
-                    <ul class="flex space-x-4 flex-row">
-                        <li th:class="${currentPage == 0 ? 'disabled' : ''}">
-                            <a th:if="${currentPage != 0}" th:href="@{/user/createGameTag(page=${currentPage - 1}, size=${size})}">&laquo; 이전</a>
-                            <span th:if="${currentPage == 0}">&laquo; 이전</span>
-                        </li>
-                        <li th:class="${currentPage == totalPages - 1 ? 'disabled' : ''}">
-                            <a th:if="${currentPage != totalPages - 1}" th:href="@{/user/createGameTag(page=${currentPage + 1}, size=${size})}">다음 &raquo;</a>
-                            <span th:if="${currentPage == totalPages - 1}">다음 &raquo;</span>
-                        </li>
-                    </ul>
+                <div class="m-8 flex justify-center">
+                    <div class="pagination">
+                        <ul class="flex space-x-4 flex-row">
+                            <li th:if="${currentPage != 0}" th:class="${currentPage == 0 ? 'disabled' : ''}">
+                                <a th:href="@{/user/createGameTag(page=${currentPage - 1}, size=${size})}">&laquo; 이전 </a>
+                            </li>
+                            <li th:if="${currentPage != totalPages - 1}" th:class="${currentPage == totalPages - 2 ? 'disabled' : ''}">
+                                <a th:href="@{/user/createGameTag(page=${currentPage + 1}, size=${size})}">다음 &raquo;</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="flex justify-end">
+                    <button id="saveButton" class="btn btn-accent">저장</button>
                 </div>
             </div>
-            <div class="flex justify-end">
-                <button type="submit" class="btn btn-primary">게임 저장</button>
-            </div>
-
-        </form>
-    </div>
+        </div>
     </form>
+    <script>
+
+        // 선택한 게임들을 세션 스토리지에 저장하는 함수
+        function saveSelectedGamesToStorage() {
+            sessionStorage.setItem('selectedGames', JSON.stringify(selectedGames));
+        }
+
+        // 세션 스토리지에서 선택한 게임들을 로드하는 함수
+        function loadSelectedGamesFromStorage() {
+            var selectedGamesStr = sessionStorage.getItem('selectedGames');
+            if (selectedGamesStr) {
+                selectedGames = JSON.parse(selectedGamesStr);
+            }
+        }
+
+        // 선택한 게임들을 저장할 배열
+        var selectedGames = [];
+
+        // 페이지 로드 시 세션 스토리지에서 선택한 게임들 로드
+        loadSelectedGamesFromStorage();
+
+        // 체크박스 변경 시 선택한 게임 목록 업데이트
+        var checkboxes = document.querySelectorAll('input[type="checkbox"][name="selectedGames"]');
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                var gameId = this.value;
+                if (this.checked) {
+                    // 체크한 게임이 이미 선택된 게임 목록에 없을 경우에만 추가
+                    if (!selectedGames.includes(gameId)) {
+                        selectedGames.push(gameId);
+                    }
+                } else {
+                    // 체크 해제한 게임 제거
+                    var index = selectedGames.indexOf(gameId);
+                    if (index > -1) {
+                        selectedGames.splice(index, 1);
+                    }
+                }
+                // 선택한 게임 목록을 세션 스토리지에 저장
+                saveSelectedGamesToStorage();
+            });
+        });
+
+        // 저장 버튼 클릭 시 선택한 게임들을 서버로 전송
+        document.getElementById('saveButton').addEventListener('click', function () {
+            // 이미 hidden input이 있는 경우, 제거
+            var existingHiddenInput = document.getElementById('selectedGamesInput');
+            if (existingHiddenInput) {
+                existingHiddenInput.remove();
+            }
+
+            // 선택한 게임들을 hidden input으로 추가하여 서버로 전송
+            var hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'selectedGames';
+            hiddenInput.value = selectedGames.join(',');
+            document.getElementById('gameTagForm').appendChild(hiddenInput);
+
+            document.getElementById('gameTagForm').addEventListener('submit', function (event) {
+                // 선택한 게임 목록이 비어있으면 폼 제출을 중단하고 경고 메시지를 보여줌
+                if (selectedGames == null || selectedGames.length === 0) {
+                    event.preventDefault(); // 폼 제출 중단
+                    alert("선택한 게임이 없습니다! 게임을 선택해주세요");
+                    return;
+                }
+                // 폼 제출
+                document.getElementById('gameTagForm').submit();
+            });
+
+
+            // 폼 제출 후 해당 세션 스토리지 삭제
+            sessionStorage.removeItem('selectedGames');
+        });
+    </script>
 </main>
 </body>
 

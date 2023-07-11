@@ -12,6 +12,7 @@ import com.ll.TeamSteam.domain.steam.service.SteamService;
 import com.ll.TeamSteam.domain.user.entity.Gender;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
+import com.ll.TeamSteam.global.rq.Rq;
 import com.ll.TeamSteam.global.rsData.RsData;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
@@ -66,6 +67,8 @@ public class UserController {
     private final RecentlyUserService recentlyUserService;
 
     private final NotificationService notificationService;
+
+    private final Rq rq;
 
     @GetMapping("/user/login")
     public String login(Model model) {
@@ -170,7 +173,8 @@ public class UserController {
 
 
     @GetMapping(value = "/user/createGameTag", produces = MediaType.TEXT_HTML_VALUE)
-    public String userGameListSave(@RequestParam(defaultValue = "0") int page,
+    public String userGameListSave(
+        @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "9") int size,
         @AuthenticationPrincipal SecurityUser user, Model model
         ) throws ParseException {
@@ -194,23 +198,26 @@ public class UserController {
 
     }
 
+
     @PostMapping(value = "/user/createGameTag/save-gametag")
-    public String saveGameTags(@RequestParam(value = "selectedGames", required = false) List<Integer> selectedGames,
-                               @AuthenticationPrincipal SecurityUser user) {
-
-        /**
-         * TODO 게임목록을 1개도 못불러왔을 때 안내페이지로 이동하게 만들기 // 프로필설정을 바꿔야한다던가, 게임이 0개라고 안내
-         */
-
-        //게임목록에서 아무것도 체크하지 않았을 시 리다이렉트
-        if(selectedGames == null) return "redirect:/user/createGameTag";
+    public String saveGameTags(
+        @RequestParam(value = "selectedGames", required = false) String selectedGames,
+        @AuthenticationPrincipal SecurityUser user,
+        HttpSession session) {
 
         String steamId = user.getSteamId();
-        userService.saveSelectedGames(selectedGames, steamId);
+        List<Integer> selectedGameIds = Arrays.stream(selectedGames.split(","))
+            .filter(s -> !s.isEmpty()) // 빈 문자열 필터링
+            .map(Integer::parseInt)
+            .collect(Collectors.toList());
+
+        // 선택한 게임 목록을 세션에 저장
+        session.setAttribute("selectedGames", selectedGameIds);
+
+        userService.saveSelectedGames(selectedGameIds, steamId);
 
         return "redirect:/main/home";
     }
-
 
     @GetMapping("/user/checkFirstVisit")
     public String checkLogin(@AuthenticationPrincipal SecurityUser user) {
@@ -267,8 +274,7 @@ public class UserController {
 
         User targetUser = userService.findById(userId).orElseThrow();
 
-        String steamId = user.getSteamId();
-        List<SteamGameLibrary> haveGameListData = steamService.getUserGameList(steamId);
+        List<SteamGameLibrary> haveGameListData = steamService.getUserGameList(targetUser.getSteamId());
 
         int totalItems = haveGameListData.size();
         int totalPages = (int) Math.ceil((double) totalItems / size);
@@ -277,8 +283,6 @@ public class UserController {
         int end = Math.min(start + size, totalItems);
         List<SteamGameLibrary> pagedGameList = haveGameListData.subList(start, end);
 
-
-        recentlyUserService.updateRecentlyUser(userId);
         List<RecentlyUser> recentlyUserList =recentlyUserService.findAllByUserId(userId);
 
         List<Friend> friendsList = userService.getFriends(user.getId());
@@ -301,7 +305,13 @@ public class UserController {
 
 
     @GetMapping("/user/profile/{userId}/{like}")
-    public String getLike(@PathVariable long userId, @PathVariable int like, RedirectAttributes redirectAttributes,@AuthenticationPrincipal SecurityUser user) {
+    public String getLike(
+        @PathVariable long userId,
+        @PathVariable int like,
+        RedirectAttributes redirectAttributes,
+        @AuthenticationPrincipal SecurityUser user) {
+
+
         userService.updateTemperature(userId, like);
 
         Long profileuserId = user.getId();

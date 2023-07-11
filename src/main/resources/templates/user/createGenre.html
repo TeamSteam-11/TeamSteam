@@ -11,32 +11,42 @@
 </head>
 <body>
 <main layout:fragment="main">
-<form th:action="@{/user/createGenre}" method="post">
-    <label>
-        <input type="radio" name="gender" value="남성">
-        남자
-    </label>
-    <br>
-    <label>
-        <input type="radio" name="gender" value="여성">
-        여자
-    </label>
-    <br><br>
-    <hr3>장르 태그를 선택해주세요</hr3>
-    <hr style="border-color: #dddddd; border-width: 2px">
-    <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; margin-top:3px">
-        <th:block th:each="genreTag : ${genreTags}">
-            <label class="badge bg-green-800 badge-accent inline max-w-[10rem] ml-3 hover:cursor-pointer">
-                <input type="checkbox" name="gameGenre" th:value="${genreTag}" th:text="${genreTag}" style="display: none" onchange="toggleCheckbox(this)">
-            </label>
-            <br>
-        </th:block>
-    </div>
+    <form th:action="@{/user/createGenre}" method="post">
+        <div class="m-auto container">
+            <div class="flex justify-center">
+                <p class="m-8 text-2xl">성별을 선택해주세요</p>
+            </div>
+            <div class="flex space-x-4 justify-center">
+                <label>
+                    <i class="fa-solid fa-mars fa-2xl" style="color: #80aeff;"></i>
+                    <input type="radio" name="gender" value="남성" class="radio radio-info" />
+                </label>
+                <label>
+                    <i class="fa-solid fa-venus fa-2xl" style="color: #ff94eb;"></i>
+                    <input type="radio" name="gender" value="여성" class="radio radio-secondary" />
+                </label>
+            </div>
+            <br><br>
+            <hr style="border-color: #dddddd; border-width: 2px">
+            <div class="flex justify-center">
+                <p class="m-8 text-2xl">선호하는 게임 장르를 선택해주세요</p>
+            </div>
+            <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; margin-top:5px">
+                <th:block th:each="genreTag : ${genreTags}">
+                    <label class="badge bg-green-800 badge-lg badge-accent inline max-w-[10rem] m-2 hover:cursor-pointer">
+                        <input type="checkbox" name="gameGenre" th:value="${genreTag}" th:text="${genreTag}" style="display: none" onchange="toggleCheckbox(this)">
+                    </label>
+                    <br>
+                </th:block>
+            </div>
 
-    <br><br>
-    <button class="btn btn-accent">제출</button>
-    <input type="submit" value="">
-</form>
+            <br><br>
+            <div class="flex justify-end">
+                <button class="btn btn-accent">다음</button>
+                <input type="submit" value="">
+            </div>
+        </div>
+    </form>
 
     <script>
         function toggleCheckbox(checkbox) {
