@@ -1,5 +1,4 @@
-<!doctype html>
-<html lang="ko" xmlns="http://www.w3.org/1999/html">
+<html layout:decorate="~{common/layout.html}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -28,10 +27,8 @@
   gtag('config', 'G-S4BCVC7KVR');
 </script>
 <body>
+<main layout:fragment="main">
 
-<!-- 로고 이미지 -->
-
-<img src="/minigame/images/logo.png" style="width: 80px;height: 80px" alt="로고" id="logo">
 
 <div class="content">
 
@@ -72,26 +69,11 @@
 
             </div>
         </div>
-        <div class="side-ad">
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2103530159465170"
-                 crossorigin="anonymous"></script>
-            <!-- 수직반응 -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-2103530159465170"
-                 data-ad-slot="7117882934"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-            
-        </div>
     </div>
 
 </div>
 <script src="/minigame/js/minigame.js"></script>
 
-
+</main>
 </body>
 </html>
