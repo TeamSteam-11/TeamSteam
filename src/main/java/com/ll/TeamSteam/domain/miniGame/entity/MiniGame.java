@@ -20,4 +20,8 @@ public class MiniGame extends BaseEntity {
     private User user;
 
     private Long score;
+
+    public void updateScore(Long score) {
+        this.score = score;
+    }
 }
