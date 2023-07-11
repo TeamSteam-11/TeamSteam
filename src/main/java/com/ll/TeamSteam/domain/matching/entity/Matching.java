@@ -86,6 +86,10 @@ public class Matching extends BaseEntity {
         return result;
     }
 
+    public Long getRemainingCapacity() {
+        return capacity - participant;
+    }
+
     // 현재는 사용 x
     public void deleteMatchingPartner(MatchingPartner matchingPartner){
         this.getMatchingPartners().remove(matchingPartner);

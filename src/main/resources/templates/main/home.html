@@ -2,7 +2,23 @@
 <head>
     <title>TEAMSTEAM 홈화면</title>
     <style>
+        .matching-list {
+            display: flex;
+        }
+
         .matching-deadline {
+            padding: 30px;
+            margin-top: 40px;
+            margin-left: 50px;
+            width: 450px;
+            background-color: #1F2227;
+            color: white;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .matching-participant {
             padding: 30px;
             margin-top: 40px;
             margin-left: 50px;
@@ -25,22 +41,40 @@
         <img src="https://cdn.jsdelivr.net/gh/LeeYulhee/projectlion_img/teamsteam/teamsteam-banner.png" alt="" class="">
     </div>
 
-    <div class="matching-deadline">
-        <h1 style="font-size: 25px; margin-bottom: 10px; border-bottom-color: white">마감 시간 임박 매칭</h1>
-        <hr>
-        <table style="margin-top: 10px">
-            <tr>
-<!--                <th>제목</th>-->
-<!--                <th>마감까지 남은 시간</th>-->
-            </tr>
-            <!-- 매칭 리스트를 반복하여 표시 -->
-            <th:block th:each="matching : ${matchingList}">
+    <div class="matching-list">
+        <div class="matching-deadline">
+            <h1 style="font-size: 25px; margin-bottom: 10px; border-bottom-color: white">마감 시간 임박 매칭</h1>
+            <hr>
+            <table style="margin-top: 10px">
                 <tr>
-                    <td th:text="${matching.title}"></td>
-                    <td th:text="${matching.getDeadlineDuration()}"></td>
+    <!--                <th>제목</th>-->
+    <!--                <th>마감까지 남은 시간</th>-->
                 </tr>
-            </th:block>
-        </table>
+                <th:block th:each="matching : ${matchingListSortedByDeadline}">
+                    <tr>
+                        <td th:text="${matching.title}"></td>
+                        <td th:text="${matching.getDeadlineDuration()}"></td>
+                    </tr>
+                </th:block>
+            </table>
+        </div>
+
+        <div class="matching-participant">
+            <h1 style="font-size: 25px; margin-bottom: 10px; border-bottom-color: white">마감 인원 임박 매칭</h1>
+            <hr>
+            <table style="margin-top: 10px">
+                <tr>
+                    <!--                <th>제목</th>-->
+                    <!--                <th>마감까지 남은 인원</th>-->
+                </tr>
+                <th:block th:each="matching : ${matchingListSortedByParticipant}">
+                    <tr>
+                        <td th:text="${matching.title}"></td>
+                        <td th:text="${matching.getRemainingCapacity()}"></td>
+                    </tr>
+                </th:block>
+            </table>
+        </div>
     </div>
 
 </main>
