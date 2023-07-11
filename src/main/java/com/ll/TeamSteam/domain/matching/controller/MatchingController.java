@@ -1,5 +1,6 @@
 package com.ll.TeamSteam.domain.matching.controller;
 
+import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
@@ -270,9 +271,19 @@ public class MatchingController {
              throw new IllegalArgumentException("너 이미 매칭파트너에 참여중이야");
         }
 
+        ChatRoom chatRoom = chatRoomService.findById(matchingId);
+        RsData rsData = chatRoomService.canAddChatRoomUser(chatRoom, user.getId(), matching);
+        log.info("rsData.getData = {} ", rsData.getData());
+
+        if (rsData.isError()){
+            return rq.historyBack("강퇴당한 모임입니다.");
+        }
+
+        if (rsData.isFail()){
+            return rq.historyBack("이미 가득찬 방입니다.");
+        }
+
         matchingPartnerService.addPartner(matching.getId(), user.getId());
-
-
 
         return String.format("redirect:/match/detail/%d", matchingId);
     }
@@ -327,10 +338,6 @@ public class MatchingController {
         GenreTagType genreType = null;
         if (genreTypeStr != null && !genreTypeStr.isEmpty()) {
             genreType = GenreTagType.ofCode(genreTypeStr);
-        }
-
-        if (genreTypeStr.isEmpty() && startTime == null && gender.isEmpty()) {
-            return "redirect:/match/list";
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));

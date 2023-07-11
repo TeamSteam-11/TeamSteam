@@ -35,4 +35,8 @@ public class RsData<T> {
     public boolean isFail() {
         return !isSuccess();
     }
+
+    public boolean isError() {
+        return resultCode.startsWith("E-");
+    }
 }
