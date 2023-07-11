@@ -45,7 +45,6 @@ public class MatchingController {
     private final UserRepository userRepository;
     private final ChatRoomService chatRoomService;
     private final MatchingPartnerService matchingPartnerService;
-
     private final RecentlyUserService recentlyUserService;
 
     @GetMapping("/list")

@@ -1,6 +1,5 @@
 package com.ll.TeamSteam.domain.matching.service;
 
-import com.fasterxml.jackson.databind.deser.DataFormatReaders;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.entity.SearchQuery;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
@@ -20,6 +19,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -160,4 +160,12 @@ public class MatchingService {
         return approachingDeadlineList;
     }
 
+    public List<Matching> getSortedMatchingByParticipant() {
+        List<Matching> matchingList = matchingRepository.findAll();
+
+        // capacity에서 participant를 뺀 값을 기준으로 정렬
+        return matchingList.stream()
+                .sorted(Comparator.comparing(matching -> matching.getRemainingCapacity()))
+                .collect(Collectors.toList());
+    }
 }

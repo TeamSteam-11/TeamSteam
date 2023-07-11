@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.LongSummaryStatistics;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,7 +29,10 @@ public class HomeController {
     @GetMapping("/main/home")
     public String showHome(Model model) {
         List<Matching> approachingDeadlineList = matchingService.getApproachingDeadlineMatchingList();
-        model.addAttribute("matchingList", approachingDeadlineList);
+        model.addAttribute("matchingListSortedByDeadline", approachingDeadlineList);
+
+        List<Matching> sortedByParticipantList = matchingService.getSortedMatchingByParticipant();
+        model.addAttribute("matchingListSortedByParticipant", sortedByParticipantList);
 
         return "main/home";
     }
