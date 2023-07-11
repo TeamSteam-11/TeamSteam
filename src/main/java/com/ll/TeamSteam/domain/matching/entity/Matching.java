@@ -81,8 +81,12 @@ public class Matching extends BaseEntity {
         long hours = duration.toHours();
         long minutes = duration.toMinutes() % 60;
         long seconds = duration.getSeconds() % 60;
-        String result = String.format("%d시간 %d분 %d초", hours, minutes, seconds);
 
+        if (hours <= 0 && minutes <= 0 && seconds <= 0) {
+            return null;
+        }
+
+        String result = String.format("%d시간 %d분 %d초", hours, minutes, seconds);
         return result;
     }
 

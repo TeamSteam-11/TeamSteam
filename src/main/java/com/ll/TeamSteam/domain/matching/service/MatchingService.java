@@ -146,14 +146,21 @@ public class MatchingService {
 
         for (Matching matching : matchingList) {
             String deadlineDuration = matching.getDeadlineDuration();
-            if (!deadlineDuration.isEmpty()) {
+            if (deadlineDuration != null && !deadlineDuration.isEmpty()) {
                 approachingDeadlineList.add(matching);
             }
         }
 
         Comparator<Matching> deadlineComparator = Comparator.comparing(matching -> {
-            Duration duration = Duration.between(LocalDateTime.now(), matching.getDeadlineDate());
-            return duration;
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime deadlineDate = matching.getDeadlineDate();
+            if (now != null && deadlineDate != null) {
+                return Duration.between(now, deadlineDate);
+            }
+            return Duration.ZERO;
+
+//            Duration duration = Duration.between(LocalDateTime.now(), matching.getDeadlineDate());
+//            return duration;
         });
         Collections.sort(approachingDeadlineList, deadlineComparator);
 
