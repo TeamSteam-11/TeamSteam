@@ -82,6 +82,7 @@
 </head>
 <body>
 <main layout:fragment="main">
+    <h1 class="mt-5 ">best manners user</h1>
     <!--TOP3까지 직접 출력-->
     <container
             style="display: flex; flex-direction: row; height: 48vh; justify-content: space-evenly; margin-top: 25px;">
@@ -108,9 +109,16 @@
                     </div>
                 </div>
                 <div class="card-actions" style="display:flex; align-content: center; justify-content: center;">
-                    <a th:href="'/user/profile/'+${oneToThreeUserList.get(1).getId()}">
-                        <button class="btn-rank btn-primary items-center">Go Profile</button>
-                    </a>
+                    <div th:if="${@rq.isLogin()}">
+                        <a th:href="'/user/profile/'+${oneToThreeUserList.get(1).getId()}">
+                            <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
+                        </a>
+                    </div>
+                    <div th:if="${!@rq.isLogin()}" class="tooltip tooltip-error" data-tip="Login Plz!">
+                        <a href="/user/login">
+                            <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -137,9 +145,16 @@
                     </div>
                 </div>
                 <div class="card-actions" style="display:flex; align-content: center; justify-content: center;">
-                    <a th:href="'/user/profile/'+${oneToThreeUserList.get(0).getId()}">
-                        <button class="btn-rank btn-primary items-center">Go Profile</button>
-                    </a>
+                    <div th:if="${@rq.isLogin()}">
+                        <a th:href="'/user/profile/'+${oneToThreeUserList.get(0).getId()}">
+                            <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
+                        </a>
+                    </div>
+                    <div th:if="${!@rq.isLogin()}" class="tooltip tooltip-error" data-tip="Login Plz!">
+                        <a href="/user/login">
+                            <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -166,9 +181,16 @@
                     </div>
                 </div>
                 <div class="card-actions" style="display:flex; align-content: center; justify-content: center;">
-                    <a th:href="'/user/profile/'+${oneToThreeUserList.get(2).getId()}">
-                        <button class="btn-rank btn-primary items-center">Go Profile</button>
-                    </a>
+                    <div th:if="${@rq.isLogin()}">
+                        <a th:href="'/user/profile/'+${oneToThreeUserList.get(2).getId()}">
+                            <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
+                        </a>
+                    </div>
+                    <div th:if="${!@rq.isLogin()}" class="tooltip tooltip-error" data-tip="Login Plz!">
+                        <a href="/user/login">
+                            <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -222,9 +244,16 @@
                     <progress class="progress progress-accent w-56 progress-custom" th:value="${fourToSevenUser.getTemperature()}" max="100"></progress>
                 </td>
                 <td>
-                    <a th:href="'/user/profile/'+${fourToSevenUser.getId()}">
-                        <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
-                    </a>
+                    <div th:if="${!@rq.isLogin()}" class="tooltip tooltip-error" data-tip="Login Plz!">
+                        <a th:href="'/user/profile/'+${fourToSevenUser.getId()}" onclick="return false;">
+                            <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
+                        </a>
+                    </div>
+                    <div th:if="${@rq.isLogin()}">
+                        <a th:href="'/user/profile/'+${fourToSevenUser.getId()}">
+                            <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
+                        </a>
+                    </div>
                 </td>
             </tr>
             </tbody>
