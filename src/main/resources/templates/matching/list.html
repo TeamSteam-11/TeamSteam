@@ -154,7 +154,7 @@
 <div style="display: flex; justify-content: center; flex-wrap: wrap; width: 100%">
     <a th:each="matching : ${matchingList}" th:href="@{|/match/detail/${matching.id}|}"
        class="card w-96 bg-base-100 shadow-xl"
-       style="background-color: #1F2227; color: white; box-shadow: 3px 3px 5px #C0C0C0; margin: 30px;">
+       style="background-color: #1F2227; color: white; box-shadow: 3px 3px 5px black; margin: 30px;">
         <div class="card-body" style="margin: 10px">
             <div style="display: flex">
                 <div style="display: flex; flex-direction: column">
@@ -180,10 +180,9 @@
             </div><br>
             <div>
                 <div class="badge badge-secondary">시간</div>
-                <span th:if="${matching.startTime} != 0" th:text="${matching.startTime} + ' : 00 ~'"></span>
-                <span th:if="${matching.startTime} == 0" text="시간무관">시간무관 ~</span>
-                <span th:if="${matching.endTime} != 0" th:text="${matching.endTime} + ' : 00'"></span>
-                <span th:if="${matching.endTime} == 0" text="시간무관">시간무관</span>
+                <span th:if="${matching.startTime} != 0" th:text="${matching.startTime} + ' : 00'"></span>
+                <span th:if="${matching.startTime} == 0" text="시간무관">시간무관 </span>
+                <span th:if="${matching.endTime} != 0" th:text="' ~ ' + ${matching.endTime} + ' : 00'"></span>
             </div>
             <div>
                 <div class="badge badge-secondary">성별</div>

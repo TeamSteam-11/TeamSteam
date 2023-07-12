@@ -3,213 +3,197 @@
 <head>
     <title>Matching Detail</title>
     <style>
-        body {
-            color:white;
+        .button-group > a:hover {
+            background-color:#2e3239 !important;
+            cursor:pointer;
         }
 
-        .container {
-            width: 80%;
-            margin: 40px auto;
-            padding: 20px;
-            /*border: 1px solid #ccc;*/
-            box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
-        }
-
-        .information-card {
-            display: flex;
-            width: 80%;
-            height: 80px;
-        }
-
-        .user-profile {
-            width: 50px;
-            height: 50px;
-        }
-
-        .user-name {
-            margin: 10px;
-        }
-
-        .title {
-            font-size: large;
-            color: #9E9D9D;
-            margin-left: 30px;
-            margin-bottom: 20px;
-        }
-
-        .matching-information {
-            height: 400px;
-        }
-
-        .content-box {
-            height: auto;
-            margin: 10px;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-            color: #9E9D9D;
-        }
-
-        .content {
-            width: 100%;
-            height: 300px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .matching-owner {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .participant-button {
-            display: flex;
-            justify-content: flex-end;
-            margin-right: 10%;
-        }
-
-        .mini-profile {
-            display: flex;
-            width: 300px;
-            margin-left: 10%;
-            margin-right: 10%;
-        }
-
-        .tag-table {
-            background-color: transparent;
-            border-color: transparent;
+        .button-group > form > button:hover {
+            background-color:#2e3239 !important;
+            cursor:pointer;
         }
     </style>
 </head>
 <body>
+
 <main layout:fragment="main">
-    <div class="container">
-        <div class="information-card">
-            <img class="user-profile" th:src="${matching.user.getAvatar()}">
-            <span class="user-name" th:text="${matching.user.username}"></span>
-            <span class="badge badge-outline" style="float: right" th:text="|${matching.participant} / ${matching.capacity}|"></span>
-        </div>
-        <!-- YYYY년 M월 d일 h시 m분으로 변경 -->
-        <span style="float: right" th:text="${#temporals.format(matching.getModifyDate(), 'yyyy/MM/dd hh:mm')}"></span>
 
-        <div class="matching-information">
-            <span class="title" th:text="${matching.title}">제목</span>
-            <div class="content-box">
+    <div class="flex justify-center">
 
-                <div>
-                    <span class="badge bg-green-500 badge-accent inline max-w-[10rem]" th:text="${matching.getGenre()}"></span>
-                    <span class="badge bg-sky-500 badge-accent inline max-w-[10rem]" th:text="${matching.gameTagName}">게임 제목</span>
-                    <span style="float:right" th:text="${matching.getDeadlineDuration() != null ? matching.getDeadlineDuration() : '마감완료'}"></span>
+        <div class="mt-10 w-4/5">
+
+            <!-- 작성자 부분 -->
+            <div class="flex mt-7 justify-between">
+
+                <!--작성자 왼쪽 부분-->
+                <div class="flex justify-start items-center">
+                    <img th:src="${matching.user.getAvatar()}" class="user-profile w-10 h-10 object-cover m-3 rounded-xl">
+                    <div>
+                        <div class="flex items-center mb-1">
+                            <div class="user-name" th:text="${matching.user.username}"></div>
+
+                            <!--장르 태그-->
+                            <div class="bg-black bg-opacity-20 h-7 ml-2 p-2 text-xs flex items-center justify-center rounded-xl" th:text="${matching.getGenre()}" style="min-width: 64px"></div>
+
+                            <!--게임 태그-->
+                            <div class="bg-black bg-opacity-20 h-7 ml-2 p-2 text-xs flex items-center justify-center rounded-xl" th:text="${matching.gameTagName}" style="min-width: 64px"> </div>
+
+                            <!--모집 성별-->
+                            <div class="bg-black bg-opacity-20 h-7 ml-2 p-2 text-xs flex items-center justify-center rounded-xl" style="min-width: 64px"> 모집 성별 :
+                              <span th:switch="${matching.gender}">
+                                <span class="ml-1" th:case="'F'">여성</span>
+                                <span class="ml-1" th:case="'M'">남성</span>
+                                <span class="ml-1" th:case="'DC'">성별무관</span>
+                              </span>
+                            </div>
+                        </div>
+
+                        <!--작성일자-->
+                        <div class="flex">
+                            <div class="text-xs mr-2" th:text="${#temporals.format(matching.getModifyDate(), 'yyyy/MM/dd hh:mm')}"></div>
+                        </div>
+                    </div>
+                    <!--작성일자 끝-->
+
+                </div>
+                <!--작성자 왼쪽 부분 끝-->
+
+                <!--작성자 오른쪽 부분-->
+                <div class="flex items-center">
+
+                    <!--모집 인원-->
+                    <div class="flex items-center mr-3">
+                        <i class="fas fa-user-friends text-xl"></i>
+                        <div class="text-base ml-2" th:text="|${matching.participant} / ${matching.capacity}|"></div>
+                    </div>
+                    <!--모집 인원 끝-->
+
+                    <!-- 모집 마감 시간-->
+                    <div class="flex items-center">
+                        <i class="fas fa-hourglass-start"></i>
+                        <div class="text-base ml-2" th:text="${matching.getDeadlineDuration() != null ? matching.getDeadlineDuration() : '마감완료'}"></div>
+                    </div>
+                    <!-- 모집 마감 시간 끝-->
+
+                </div>
+                <!--작성자 왼쪽 부분-->
+
+            </div>
+            <!-- 작성자 부분 끝 -->
+
+            <!-- 제목 -->
+            <div class="title text-3xl m-5" th:text="${matching.title}"></div>
+
+            <!-- 게시글 내용 -->
+            <div id="contentBox" class="content m-4 p-4 shadow-xl flex justify-center items-center rounded-xl" style="height:600px; max-height:600px; overflow:auto;">
+                <div id="content" th:text="${matching.content}"></div>
+            </div>
+
+            <!-- 수정/삭제 버튼 -->
+            <div class="button-group flex justify-end mt-6">
+
+
+                <!--삭제 버튼-->
+                <form th:if="${@rq.isLogin()}" th:action="@{/match/detail/delete/{id}(id=${matching.id})}" method="post">
+                    <button type="submit" class="rounded-xl h-12 p-4 w-28 ml-4 mr-2 text-sm flex items-center justify-center" style="background-color: #1F2227;"
+                            th:if="${matching.user.id == @rq.user.id}"
+                            onclick="return confirm('해당 게시물을 삭제하시겠습니까?')">삭제
+                    </button>
+                </form>
+
+                <!--수정 버튼-->
+                <form th:if="${@rq.isLogin()}" th:action="@{/match/modify/{id}(id=${matching.id})}">
+                    <button type="submit" class="rounded-xl h-12 p-4 w-28 ml-4 mr-2 text-sm flex items-center justify-center" style="background-color: #1F2227;"
+                            th:if="${matching.user.id == @rq.user.id}"
+                            onclick="return confirm('해당 게시물을 수정하시겠습니까?')">수정
+                    </button>
+                </form>
+
+                <!--참여 버튼-->
+                <a class="rounded-xl h-12 p-4 w-28 ml-4 mr-2 text-sm flex items-center justify-center" style="background-color: #1F2227;" th:if="${!alreadyWithPartner && matching.getDeadlineDuration() != null}"
+                   th:href="@{|/match/detail/${matching.getId()}/addPartner|}">
+                    <span class="text-center">참여하기</span>
+                </a>
+
+                <!-- 매칭 파트너인 경우에 채팅 참여하기 버튼 활성화됨 -> 미니 프로필도 보이게 하기 -->
+                <a class="rounded-xl h-12 p-4 w-32 ml-4 mr-2 text-sm flex items-center justify-center" style="background-color: #1F2227;" th:if="${alreadyWithPartner}" th:href="@{|/match/detail/${matching.getId()}/moveChatRoom|}">채팅 참여하기</a>
+
+
+            </div>
+            <!-- 수정/삭제 버튼 끝-->
+
+            <!--참여자 목록 시작-->
+            <div class="mini-profile" th:if="${alreadyWithPartner}">
+
+                <!--참여자 목록 구분-->
+                <div class="border-b flex justify-center p-4 mt-8">
+                    참여자 목록
                 </div>
 
-                <span class="content" th:text="${matching.content}">내용</span>
+                <!--미니 프로필-->
+                <div class="mt-6 mb-6 flex flex-wrap">
 
-                <div class="matching-owner">
-                    <form th:if="${@rq.isLogin()}" th:action="@{/match/detail/delete/{id}(id=${matching.id})}" method="post">
-                        <button type="submit" class="btn btn-light border" style="background-color: #1F2227; color: white"
-                                th:if="${matching.user.id == @rq.user.id}"
-                                onclick="return confirm('해당 게시물을 삭제하시겠습니까?')">삭제
-                        </button>
-                    </form>
-                    <form th:if="${@rq.isLogin()}" th:action="@{/match/modify/{id}(id=${matching.id})}">
-                        <button type="submit" class="btn btn-light border"
-                                th:if="${matching.user.id == @rq.user.id}"
-                                onclick="return confirm('해당 게시물을 수정하시겠습니까?')">수정
-                        </button>
-                    </form>
+                    <!--1번 프로필-->
+                    <div class="w-1/5 h-72 rounded-xl flex-shrink-0 shadow-2xl" style="background-color: #202d3e;" th:each="matchingPartner : ${matching.matchingPartners}">
+
+                        <!--프로필 내용 시작-->
+                        <div class="flex flex-col justify-center min-h-full p-4" style="min-height: 18rem;" th:if="${matchingPartner.inChatRoomTrueFalse}">
+                            <div class="flex justify-start items-center ml-2 mb-2 border-b">
+                                <img th:src="${matchingPartner.getUser().getAvatar()}" class="w-10 h-10 object-cover mr-3 mb-3 rounded-xl">
+                                <div>
+                                    <div class="flex items-center">
+                                        <div class="text-xl mb-3" th:text="${matchingPartner.getUser().getUsername()}">참여자</div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!--장르 태그-->
+                            <div class="flex flex-wrap">
+                                <div class="m-1 p-2 h-7 text-xs flex items-center justify-center rounded-xl" th:each="genreTag: ${matchingPartner.getUser().getUserTag().getGenreTag()}"
+                                     th:text="${genreTag.getGenre()}" style="min-width: 64px; background-color: #22C55E;"></div>
+                            </div>
+                            <!--장르 태그 끝-->
+
+                            <!--게임 태그-->
+                            <div class="flex flex-wrap">
+                                <div class="m-1 p-2 h-7 text-xs flex items-center justify-center rounded-xl"  th:each="gameTag: ${matchingPartner.getUser().getUserTag().getGameTag()}"
+                                     th:text="${gameTag.getName()}" style="min-width: 64px; background-color: #0EA5E9;">
+                                    게임 태그
+                                </div>
+                            </div>
+                            <!--게임 태그-->
+
+                            <!--매너온도-->
+                            <div>
+                                <div class="flex items-center m-2 mt-2">
+                                    <i class="fas fa-thermometer-half text-2xl mr-2"></i>
+                                    <div class="text-base mr-2">매너온도 : </div>
+                                    <div class="text-base" th:text="${matchingPartner.getUser().getTemperature()}"></div>
+                                </div>
+                                <div class="ml-2">
+                                    <progress class="progress progress-accent progress-custom" th:value="${matchingPartner.getUser().getTemperature()}" max="100">
+                                    </progress>
+                                </div>
+                            </div>
+                            <!--매너온도 끝-->
+
+                        </div>
+                        <!--프로필 내용 끝-->
+
+                    </div>
+                    <!--1번 프로필 끝-->
                 </div>
 
             </div>
+
+
+
         </div>
-
-<!--        <div>-->
-<!--            <span th:text="${matching.getDeadlineDuration()}"></span> 후 마감-->
-<!--        </div>-->
-        <p><strong>모집 성별:</strong>
-            <span th:switch="${matching.gender}">
-              <span th:case="'F'">여성</span>
-              <span th:case="'M'">남성</span>
-              <span th:case="'DC'">성별무관</span>
-            </span>
-
-
-        <p><strong>참여 인원:</strong> <span th:text="${matching.participant}">참여 인원</span></p>
-        <p><strong>수용 인원:</strong> <span th:text="${matching.capacity}">수용 인원</span></p>
-        <p><strong>모집 성별:</strong>
-            <span th:switch="${matching.gender}">
-              <span th:case="'F'">여성</span>
-              <span th:case="'M'">남성</span>
-              <span th:case="'DC'">성별무관</span>
-            </span>
-        </p>
-
     </div>
 
-<!--<div>-->
-<!--    <form th:if="${@rq.isLogin()}" th:action="@{/match/detail/delete/{id}(id=${matching.id})}" method="post">-->
-<!--        <button type="submit" class="btn btn-light border" style="background-color: #1F2227; color: white"-->
-<!--                th:if="${matching.user.id == @rq.user.id}"-->
-<!--                onclick="return confirm('해당 게시물을 삭제하시겠습니까?')">삭제-->
-<!--        </button>-->
-<!--    </form>-->
-<!--    <form th:if="${@rq.isLogin()}" th:action="@{/match/modify/{id}(id=${matching.id})}">-->
-<!--        <button type="submit" class="btn btn-light border"-->
-<!--                th:if="${matching.user.id == @rq.user.id}"-->
-<!--                onclick="return confirm('해당 게시물을 수정하시겠습니까?')">수정-->
-<!--        </button>-->
-<!--    </form>-->
-<!--</div>-->
-
-<div class="participant-button">
-    <!-- 매칭 파트너가 아닐 때 && 마감시간까지 남은 시간이 0이 아닐 때 버튼 활성화 -->
-    <a class="!bg-black p-3 text-white hover:cursor-pointer"
-       th:if="${!alreadyWithPartner && matching.getDeadlineDuration() != null}"
-       th:href="@{|/match/detail/${matching.getId()}/addPartner|}">참여하기</a>
-
-    <!-- 매칭 파트너인 경우에 채팅 참여하기 버튼 활성화됨 -> 미니 프로필도 보이게 하기 -->
-    <a class="!bg-black p-3 text-white hover:cursor-pointer" th:if="${alreadyWithPartner}" th:href="@{|/match/detail/${matching.getId()}/moveChatRoom|}">채팅 참여하기</a>
-</div>
-
-    <div class="mini-profile" th:if="${alreadyWithPartner}">
-        <a th:each="matchingPartner : ${matching.matchingPartners}" class="card w-96 bg-base-100 shadow-xl"
-           style="background-color: #1F2227; color: white; box-shadow: 3px 3px 5px #C0C0C0; margin: 30px;">
-            <div class="card-body" th:if="${matchingPartner.inChatRoomTrueFalse}" style="margin: 10px">
-                <div style="display: flex">
-                    <img th:src="${matchingPartner.getUser().getAvatar()}">
-                    <span th:text="${matchingPartner.getUser().getUsername()}" style="margin-left: 10px"></span>
-                </div>
-
-                <div>
-                    <table class="tag-table">
-                        <tbody>
-                        <tr th:each="genreTag: ${matchingPartner.getUser().getUserTag().getGenreTag()}">
-                        <td>
-                            <span class="badge bg-green-500 badge-accent inline max-w-[10rem]"
-                              th:text="${genreTag.getGenre()}"></span>
-                        </td>
-                        </tr>
-                        <tr th:each="gameTag: ${matchingPartner.getUser().getUserTag().getGameTag()}">
-                        <td>
-                            <span class="badge bg-sky-500 badge-accent inline max-w-[10rem]"
-                              th:text="${gameTag.getName()}">게임 제목</span>
-                        </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="pt-4">
-                    <p class="mb-2">매너온도 : <span th:text="${matchingPartner.getUser().getTemperature()}"></span></p>
-                    <progress class="progress progress-accent w-56 progress-custom" th:value="${matchingPartner.getUser().getTemperature()}" max="100">
-                    </progress>
-                </div>
-
-            </div>
-        </a>
-
-    </div>
 
 </main>
+
 </body>
 </html>

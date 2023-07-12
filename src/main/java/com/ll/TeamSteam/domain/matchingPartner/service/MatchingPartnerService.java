@@ -2,6 +2,7 @@ package com.ll.TeamSteam.domain.matchingPartner.service;
 
 import java.util.List;
 
+import com.ll.TeamSteam.domain.chatRoom.exception.NoChatRoomException;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
@@ -41,7 +42,7 @@ public class MatchingPartnerService {
         Matching matching = matchingService.findById(matchingId).orElseThrow();
 
         if (matching.getId() == null) {
-            throw new IllegalArgumentException("매칭이 존재하지 않음");
+            throw new NoChatRoomException("매칭이 존재하지 않음");
         }
 
         return matchingPartnerRepository.existsByMatchingAndUser(matching, user);
@@ -53,7 +54,7 @@ public class MatchingPartnerService {
         Matching matching = matchingService.findById(matchingId).orElseThrow();
 
         if (matching.getId() == null) {
-            throw new IllegalArgumentException("매칭이 존재하지 않음");
+            throw new NoChatRoomException("매칭이 존재하지 않음");
         }
 
         /**
@@ -79,7 +80,7 @@ public class MatchingPartnerService {
         Matching matching = matchingService.findById(matchingId).orElseThrow();
 
         if (matching.getId() == null) {
-            throw new IllegalArgumentException("매칭이 존재하지 않음");
+            throw new NoChatRoomException("매칭이 존재하지 않음");
         }
 
         MatchingPartner matchingPartner = matchingPartnerRepository.findByMatchingAndUser(matching, user)

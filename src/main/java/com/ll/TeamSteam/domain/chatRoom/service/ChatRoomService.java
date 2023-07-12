@@ -3,6 +3,8 @@ package com.ll.TeamSteam.domain.chatRoom.service;
 import com.ll.TeamSteam.domain.chatMessage.entity.ChatMessage;
 import com.ll.TeamSteam.domain.chatRoom.dto.ChatRoomDto;
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
+import com.ll.TeamSteam.domain.chatRoom.exception.KickedUserEnterException;
+import com.ll.TeamSteam.domain.chatRoom.exception.NoChatRoomException;
 import com.ll.TeamSteam.domain.chatRoom.repository.ChatRoomRepository;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUserType;
@@ -32,7 +34,7 @@ import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.EXIT;
 import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.KICKED;
 
 @Service
-//@Transactional(readOnly = true)
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class ChatRoomService {
@@ -69,7 +71,8 @@ public class ChatRoomService {
     }
 
     public ChatRoom findById(Long roomId) {
-        return chatRoomRepository.findById(roomId).orElseThrow();
+        return chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new NoChatRoomException("방이 존재하지 않습니다."));
     }
 
     @Transactional
@@ -130,7 +133,7 @@ public class ChatRoomService {
                 .forEach(recentlyUserService::updateRecentlyUser);
 
             if(whatIsTrueFalse) {
-                return RsData.of("F-2", "모임 으으으으악 정원 초과!");
+                return RsData.of("F-2", "모임 정원 초과!");
             }
         }
 
@@ -149,7 +152,8 @@ public class ChatRoomService {
 
     public RsData checkChatUserType(ChatUser chatUser) {
         if (chatUser.getType().equals(KICKED)) {
-            return RsData.of("E-1", "강퇴당한 모임입니다!");
+            throw new KickedUserEnterException("강퇴당한 모임입니다.");
+//            return RsData.of("E-1", "강퇴당한 모임입니다!");
         }
 
         return RsData.of("S-1", "기존 모임 채팅방에 참여합니다.");
@@ -165,7 +169,7 @@ public class ChatRoomService {
         log.info("OwnerId = {}", owner.getId());
 
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+                .orElseThrow(() -> new NoChatRoomException("존재하지 않는 방입니다."));
 
         if(!chatRoom.getOwner().equals(owner)) {
             throw new IllegalArgumentException("방 삭제 권한이 없습니다.");
@@ -186,7 +190,7 @@ public class ChatRoomService {
     @Transactional
     public void exitChatRoom(Long roomId, Long userId) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+                .orElseThrow(() -> new NoChatRoomException("존재하지 않는 방입니다."));
         log.info("userId = {} ", userId);
 
         // 해당 유저의 ChatUser를 제거합니다.
@@ -230,7 +234,7 @@ public class ChatRoomService {
     @Transactional
     public void kickChatUser(Long roomId, Long chatUserId, SecurityUser user) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+                .orElseThrow(() -> new NoChatRoomException("존재하지 않는 방입니다."));
 
         checkOwner(chatRoom, user.getId());
 
@@ -307,7 +311,7 @@ public class ChatRoomService {
     @Transactional
     public RsData<User> inviteUser(Long roomId, SecurityUser user, Long userId) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+                .orElseThrow(() -> new NoChatRoomException("존재하지 않는 방입니다."));
 
         log.info("chatRoom = {} ", chatRoom);
 
@@ -318,7 +322,9 @@ public class ChatRoomService {
 
         // return 값 바꿀 거면 수정하기
         if (chatUserByUserId == null){
-            return RsData.of("F-1", "현재 당신은 %s 방에 들어있지 않습니다.".formatted(chatRoom.getName()));
+            // 만약에 문제가 된다면 아래껄로 수정 해야함
+            throw new IllegalArgumentException("현재 당신은 %s 방에 들어있지 않습니다.".formatted(chatRoom.getName()));
+//            return RsData.of("F-1", "현재 당신은 %s 방에 들어있지 않습니다.".formatted(chatRoom.getName()));
         }
 
         User invitedUser = userService.findByIdElseThrow(userId);
@@ -334,7 +340,7 @@ public class ChatRoomService {
 
     public boolean isDuplicateInvite(Long roomId, Long invitingUserId, Long invitedUserId) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+                .orElseThrow(() -> new NoChatRoomException("존재하지 않는 방입니다."));
 
         // 현재 로그인된 사용자가 방에 있는지 확인하는 로직
         User invitingUser = userService.findByIdElseThrow(invitingUserId);
