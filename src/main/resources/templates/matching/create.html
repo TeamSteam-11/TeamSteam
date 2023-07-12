@@ -19,7 +19,8 @@
             <!--제목-->
             <div class="mt-20 w-8/12">
                 <label for="title">제목</label>
-                <input type="text" placeholder="제목을 입력하세요" id="title" th:field="*{title}" class="rounded-lg p-4 h-12 w-full" style="background-color: #30405F;">
+                <input type="text" placeholder="제목을 입력하세요" id="title" th:field="*{title}"
+                       class="rounded-lg p-4 h-12 w-full" style="background-color: #30405F;">
             </div>
 
             <!--태그 설정-->
@@ -28,31 +29,37 @@
                 <!--게임 태그-->
                 <div>
                     <label for="gameTag" class="block">게임 태그</label>
-                    <select id="gameTag" th:field="*{gameTagId}" class="h-12 w-52 p-4 mr-6 rounded-lg" style="background-color: #30405F;">
+                    <select id="gameTag" th:field="*{gameTagId}" class="h-12 w-52 p-4 mr-6 rounded-lg"
+                            style="background-color: #30405F;">
                         <option value="">선택하세요</option>
-                        <option th:each="gameTag : ${userGameTags}" th:value="${gameTag.appid}" th:text="${gameTag.name}"></option>
+                        <option th:each="gameTag : ${userGameTags}" th:value="${gameTag.appid}"
+                                th:text="${gameTag.name}"></option>
                     </select>
                 </div>
 
                 <!--장르 태그-->
                 <div>
                     <label for="genreTag" class="block">장르 태그</label>
-                    <select id="genreTag" th:field="*{genre}" class="h-12 w-44 p-4 mr-6 rounded-lg" style="background-color: #30405F;">
+                    <select id="genreTag" th:field="*{genre}" class="h-12 w-44 p-4 mr-6 rounded-lg"
+                            style="background-color: #30405F;">
                         <option value="">선택하세요</option>
-                        <option th:each="genreTag : ${userGenreTags}" th:value="${genreTag.genre}" th:text="${genreTag.genre}"></option>
+                        <option th:each="genreTag : ${userGenreTags}" th:value="${genreTag.genre}"
+                                th:text="${genreTag.genre}"></option>
                     </select>
                 </div>
 
                 <!--매칭 인원-->
                 <div>
                     <label for="capacity" class="block">매칭 인원</label>
-                    <input type="number" id="capacity" th:field="*{capacity}" class="h-12 w-36 p-4 mr-6 rounded-lg" style="background-color: #30405F;" oninput="checkCapacity()" min="1" max="5">
+                    <input type="number" id="capacity" th:field="*{capacity}" class="h-12 w-36 p-4 mr-6 rounded-lg"
+                           style="background-color: #30405F;" oninput="checkCapacity()" min="1" max="5">
                 </div>
 
                 <!--성별 설정-->
                 <div>
                     <label for="gender" class="block">모집 성별</label>
-                    <select id="gender" name="gender" th:field="*{gender}" class="h-12 w-36 p-4 mr-6 rounded-lg" style="background-color: #30405F;">
+                    <select id="gender" name="gender" th:field="*{gender}" class="h-12 w-36 p-4 mr-6 rounded-lg"
+                            style="background-color: #30405F;">
                         <option value="DC">성별무관</option>
                         <option value="F">여성</option>
                         <option value="M">남성</option>
@@ -62,25 +69,37 @@
                 <!--시작 시간-->
                 <div>
                     <label for="startTime" class="block">시작 시간</label>
-                    <select id="startTime" th:field="*{startTime}" class="h-12 w-36 p-4 mr-6 rounded-lg" style="background-color: #30405F;">
+                    <select id="startTime" th:field="*{startTime}" class="h-12 w-36 p-4 mr-6 rounded-lg"
+                            style="background-color: #30405F;">
+
+                        <option value="-1">선택하세요</option>
                         <option value="0" text="시간무관">시간무관</option>
-                        <option th:each="hour : ${#numbers.sequence(1, 24)}" th:value="${hour}" th:text="${hour}"></option>
+                        <option th:each="hour : ${#numbers.sequence(1, 24)}" th:value="${hour}"
+                                th:text="${hour}"></option>
                     </select>
                 </div>
 
                 <!--종료 시간-->
                 <div>
                     <label for="endTime" class="block">종료 시간</label>
-                    <select id="endTime" th:field="*{endTime}" class="h-12 w-36 p-4 mr-6 rounded-lg" style="background-color: #30405F;">
+                    <!--                    <select  id="endTime" th:field="*{endTime}" class="h-12 w-36 p-4 mr-6 rounded-lg" style="background-color: #30405F;">-->
+                    <!--                        <option value="0" text="시간무관">시간무관</option>-->
+                    <!--                        <option th:each="hour : ${#numbers.sequence(1, 24)}" th:value="${hour}" th:text="${hour}"></option>-->
+                    <!--                    </select>-->
+                    <select id="endTime" th:field="*{endTime}" class="h-12 w-36 p-4 mr-6 rounded-lg"
+                            style="background-color: #30405F;">
+                        <option value="-1">선택하세요</option>
                         <option value="0" text="시간무관">시간무관</option>
-                        <option th:each="hour : ${#numbers.sequence(1, 24)}" th:value="${hour}" th:text="${hour}"></option>
+                        <option th:each="hour : ${#numbers.sequence(1, 24)}" th:value="${hour}"
+                                th:text="${hour}"></option>
                     </select>
                 </div>
 
                 <!--모집 마감 시간-->
                 <div>
                     <label for="deadline" class="block">모집 마감 시간</label>
-                    <select id="deadline" name="deadline" onchange="setSelectedHours()" class="h-12 w-36 p-4 rounded-lg" style="background-color: #30405F;">
+                    <select id="deadline" name="deadline" onchange="setSelectedHours()" class="h-12 w-36 p-4 rounded-lg"
+                            style="background-color: #30405F;">
                         <option value="0">제한 없음</option>
                         <option value="1">1시간 후</option>
                         <option value="2">2시간 후</option>
@@ -97,14 +116,17 @@
             <!--내용-->
             <div class="mt-10 w-8/12">
                 <label for="content">내용</label>
-                <textarea cols="45" rows="15" id="content" placeholder="내용을 입력하세요" th:field="*{content}" class="rounded-lg resize-none p-4 w-full" style="background-color: #30405F;"></textarea>
+                <textarea cols="45" rows="15" id="content" placeholder="내용을 입력하세요" th:field="*{content}"
+                          class="rounded-lg resize-none p-4 w-full" style="background-color: #30405F;"></textarea>
             </div>
             <!--내용 끝-->
 
             <!--등록 버튼-->
             <div class="mt-10 w-8/12">
                 <div class="flex justify-end">
-                    <button type="submit" onclick="showSuccessMessage()" class="submit-button p-2 w-32 rounded-lg" style="background-color: #4ea4d9;">등록</button>
+                    <button type="submit" onclick="showSuccessMessage()" class="submit-button p-2 w-32 rounded-lg"
+                            style="background-color: #4ea4d9;">등록
+                    </button>
                 </div>
             </div>
             <!--등록 버튼 끝-->
@@ -113,28 +135,67 @@
 
     </form>
 
-<script>
-    function setSelectedHours() {
-        var selectedValue = document.getElementById("deadline").value;
-        document.getElementById("selectedHours").value = selectedValue;
-    }
-
-    function showSuccessMessage() {
-        toastNotice("입력하신 매칭이 등록되었습니다.")
-    }
-
-</script>
-    <!--capacity가 0이하로 떨어지는거 방지-->
     <script>
+        function setSelectedHours() {
+            var selectedValue = document.getElementById("deadline").value;
+            document.getElementById("selectedHours").value = selectedValue;
+        }
+
+        function showSuccessMessage() {
+            toastNotice("입력하신 매칭이 등록되었습니다.")
+        }
+
+        <!--capacity가 0이하로 떨어지는거 방지-->
         function checkCapacity() {
             var capacityInput = document.getElementById('capacity');
             if (capacityInput.value <= 0) {
                 capacityInput.value = 1;
             }
-            if(capacityInput.value >= 6){
+            if (capacityInput.value >= 6) {
                 capacityInput.value = 5;
             }
         }
+
+        // startTime 값이 변경될 때마다 호출되는 함수
+        function handleStartTimeChange() {
+            var startTime = document.getElementById("startTime").value;
+            var endTimeSelect = document.getElementById("endTime");
+
+            if (startTime == "0") {
+                console.log("이거지금실행돼?")
+                // startTime 값이 0일 경우 endTime 드롭다운을 비활성화하고 값을 0으로 설정
+                console.log(endTimeSelect.value)
+                endTimeSelect.value = "0"
+                endTimeSelect.disabled = true;
+                console.log(endTimeSelect.value)
+            } else {
+                // startTime 값이 0이 아닐 경우 endTime 드롭다운을 활성화
+                endTimeSelect.disabled = false;
+            }
+        }
+
+        // function handleEndTimeChange() {
+        //     var startTime = document.getElementById("startTime").value;
+        //     var endTimeSelect = document.getElementById("endTime");
+        //
+        //     if (startTime == "0") {
+        //         console.log("이거지금실행돼?")
+        //         // startTime 값이 0일 경우 endTime 드롭다운을 비활성화하고 값을 0으로 설정
+        //         endTimeSelect.value = "0"
+        //         endTimeSelect.disabled = true;
+        //     } else {
+        //         // startTime 값이 0이 아닐 경우 endTime 드롭다운을 활성화
+        //         endTimeSelect.disabled = false;
+        //     }
+        // }
+
+        // startTime 값이 변경될 때 handleStartTimeChange 함수 호출
+        document.getElementById("startTime").addEventListener("change", handleStartTimeChange);
+
+        // 페이지 로드 시 초기 설정 수행
+        handleStartTimeChange();
+
+
     </script>
 </main>
 </body>

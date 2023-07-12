@@ -44,9 +44,9 @@ public class Matching extends BaseEntity {
 
     private Long participant; // 참가자 수
 
-    private int startTime; // 원하는 시간대 시작
+    private Integer startTime; // 원하는 시간대 시작
 
-    private int endTime; // 원하는 시간대 끝
+    private Integer endTime; // 원하는 시간대 끝
 
     private LocalDateTime deadlineDate; // 마감 시간
 
@@ -62,7 +62,7 @@ public class Matching extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void update(String title, String content, GenreTagType genre, String gender, Long capacity, int startTime, int endTime) {
+    public void update(String title, String content, GenreTagType genre, String gender, Long capacity, Integer startTime, Integer endTime) {
         this.title = title;
         this.content = content;
         this.genre = genre;

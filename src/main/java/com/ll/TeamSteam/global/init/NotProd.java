@@ -200,8 +200,8 @@ public class NotProd {
                     int gameTagId = 41000;
                     String gender = "성별무관";
                     long capacity = 4L;
-                    int startTime = 20;
-                    int endTime = 22;
+                    Integer startTime = 20;
+                    Integer endTime = 22;
 
                     Matching matching = matchingService.create(user1, title, content, genre, gameTagId, gender, capacity, startTime, endTime, LocalDateTime.now().plusHours(3));
                     chatRoomService.createAndConnect(matching.getTitle(), matching, user1.getId());

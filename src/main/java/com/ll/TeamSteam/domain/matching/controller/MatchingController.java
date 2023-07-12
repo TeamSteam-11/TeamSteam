@@ -92,7 +92,6 @@ public class MatchingController {
     public static class CreateForm {
         @NotBlank
         private String title;
-        @NotBlank
         private String content;
         @NotNull
         private GenreTagType genre;
@@ -102,8 +101,12 @@ public class MatchingController {
         @Max(value = 5)
         private Long capacity;
         private String gender;
-        private int startTime;
-        private int endTime;
+        @NotNull
+        @Min(value = 0)
+        private Integer startTime;
+        @NotNull
+        @Min(value = 0)
+        private Integer endTime;
         private int selectedHours;
 
         public CreateForm() {
@@ -113,8 +116,8 @@ public class MatchingController {
             this.gameTagId=1;
             this.capacity = 1L;
             this.gender = "성별무관";
-            this.startTime = 0;
-            this.endTime = 24;
+            this.startTime = null;
+            this.endTime = 0;
             this.selectedHours = 0;
         }
     }
@@ -127,6 +130,10 @@ public class MatchingController {
         if (bindingResult.hasErrors()) {
             // 유효성 검사 오류가 있을 시 등록 페이지로 다시 이동
 //            return "redirect:/match/create";
+            log.info("createForm = {} ", createForm);
+            log.info("createForm = {} ", createForm.getStartTime());
+            log.info("createForm = {} ", createForm.getEndTime());
+
             return rq.redirectWithMsg("/match/create", "필수 값이 입력되지 않았습니다");
         }
 
