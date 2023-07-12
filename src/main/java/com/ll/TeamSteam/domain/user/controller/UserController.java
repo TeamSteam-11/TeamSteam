@@ -290,6 +290,8 @@ public class UserController {
 
         long loginedId = user.getId();//프로필 본인인지 아닌지 검증하는 용도
 
+        //친구 검증
+        boolean isFriend =userService.isFriend(userId,loginedId);
 
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
@@ -298,6 +300,7 @@ public class UserController {
         model.addAttribute("loginedId", loginedId);
         model.addAttribute("friendsList", friendsList);
         model.addAttribute("recentlyUserList",recentlyUserList);
+        model.addAttribute("isFriend", isFriend);
 
         return "user/profile";
 
