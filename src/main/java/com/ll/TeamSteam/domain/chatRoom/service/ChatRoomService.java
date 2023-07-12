@@ -62,6 +62,9 @@ public class ChatRoomService {
         log.info("matching = {}", matching);
 
         savedChatRoom.addChatUser(owner);
+        // 방장은 들어가자마자 COMMON으로 타입 수정
+        ChatUser chatUser = findChatUserByUserId(chatRoom, ownerId);
+        chatUser.changeUserCommonType();
 
         return savedChatRoom;
     }
@@ -123,14 +126,6 @@ public class ChatRoomService {
         if(!getChatUser(chatRoom, userId).isEmpty() && !matching.canAddParticipant()) {
             boolean whatIsTrueFalse = isExitUser(chatRoom, userId);
             log.info("whatIsTrueFalse = {}", whatIsTrueFalse);
-
-            //방에 있는 사용자들 최근 매칭된 유저로 업데이트
-            List<ChatUser> chatUserList = chatUserService.findByChatRoomId(chatRoom.getId());
-
-            chatUserList.stream()
-                .map(ChatUser::getUser)
-                .map(User::getId)
-                .forEach(recentlyUserService::updateRecentlyUser);
 
             if(whatIsTrueFalse) {
                 return RsData.of("F-2", "모임 정원 초과!");
