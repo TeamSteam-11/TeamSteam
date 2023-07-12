@@ -69,14 +69,14 @@
             </div>
             <div class="ml-4" style="width: calc(100% - 200px);">
                 <div class="flex pt-4" style="display: flex; flex-direction: column">
-                    <div class="table-cell">
+                    <div class="table-cell m-2">
                         <div class="flex flex-wrap">
                             <div th:if="${!targetUser.getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${targetUser.getUserTag().getGameTag()}" class="badge bg-sky-500 badge-accent inline max-w-[10rem]">
                                 <span th:text="${targetUserGameTag.getName()}"></span>
                             </div>
                         </div>
                     </div>
-                    <div class="table-cell">
+                    <div class="table-cell m-2">
                         <div class="flex flex-wrap">
                             <div th:if="${!targetUser.getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${targetUser.getUserTag().getGenreTag()}" class="badge bg-green-500 badge-accent inline max-w-[10rem]">
                                 <span th:text="${targetUserGenreTag.getGenre()}"></span>
