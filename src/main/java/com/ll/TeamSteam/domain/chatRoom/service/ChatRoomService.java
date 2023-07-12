@@ -3,6 +3,7 @@ package com.ll.TeamSteam.domain.chatRoom.service;
 import com.ll.TeamSteam.domain.chatMessage.entity.ChatMessage;
 import com.ll.TeamSteam.domain.chatRoom.dto.ChatRoomDto;
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
+import com.ll.TeamSteam.domain.chatRoom.exception.KickedUserEnterException;
 import com.ll.TeamSteam.domain.chatRoom.repository.ChatRoomRepository;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUserType;
@@ -130,7 +131,7 @@ public class ChatRoomService {
                 .forEach(recentlyUserService::updateRecentlyUser);
 
             if(whatIsTrueFalse) {
-                return RsData.of("F-2", "모임 으으으으악 정원 초과!");
+                return RsData.of("F-2", "모임 정원 초과!");
             }
         }
 
@@ -149,7 +150,8 @@ public class ChatRoomService {
 
     public RsData checkChatUserType(ChatUser chatUser) {
         if (chatUser.getType().equals(KICKED)) {
-            return RsData.of("E-1", "강퇴당한 모임입니다!");
+            throw new KickedUserEnterException("강퇴당한 모임입니다.");
+//            return RsData.of("E-1", "강퇴당한 모임입니다!");
         }
 
         return RsData.of("S-1", "기존 모임 채팅방에 참여합니다.");
@@ -318,7 +320,9 @@ public class ChatRoomService {
 
         // return 값 바꿀 거면 수정하기
         if (chatUserByUserId == null){
-            return RsData.of("F-1", "현재 당신은 %s 방에 들어있지 않습니다.".formatted(chatRoom.getName()));
+            // 만약에 문제가 된다면 아래껄로 수정 해야함
+            throw new IllegalArgumentException("현재 당신은 %s 방에 들어있지 않습니다.".formatted(chatRoom.getName()));
+//            return RsData.of("F-1", "현재 당신은 %s 방에 들어있지 않습니다.".formatted(chatRoom.getName()));
         }
 
         User invitedUser = userService.findByIdElseThrow(userId);

@@ -47,8 +47,6 @@ public class ChatRoomController {
     private final ChatUserService chatUserService;
     private final UserService userService;
 
-    private final RecentlyUserService recentlyUserService;
-
     /**
      * 방 조회
      */
@@ -168,7 +166,8 @@ public class ChatRoomController {
         ChatRoom chatRoom = chatRoomService.findById(roomId);
 
         if (chatUserList == null) {
-            return rq.historyBack("해당 방에 참가하지 않았습니다.");
+            throw new IllegalArgumentException("해당 방에 참가하지 않았습니다.");
+//            return rq.historyBack("해당 방에 참가하지 않았습니다.");
         }
 
         User currentUser = userService.findById(user.getId()).orElseThrow(null);
@@ -184,13 +183,18 @@ public class ChatRoomController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{roomId}/inviteList")
     public String inviteList(Model model, @PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user) {
-        List<User> userList = userService.findAll();
+        // 해당 유저가 채팅방에 있는지 확인
+        List<ChatUser> chatUserList = chatUserService.findByChatRoomIdAndChatUser(roomId, user.getId());
+
+        if (chatUserList == null) {
+            throw new IllegalArgumentException("해당 방에 참가하지 않았습니다.");
+//            return rq.historyBack("해당 방에 참가하지 않았습니다.");
+        }
 
         User currentUser = userService.findByIdElseThrow(user.getId());
         List<Friend> friendList = currentUser.getFriendList();
         ChatRoom chatRoom = chatRoomService.findById(roomId);
 
-        log.info("userList = {}", userList);
         model.addAttribute("chatRoom", chatRoom);
         model.addAttribute("user", currentUser);
         model.addAttribute("friendList", friendList);
