@@ -9,11 +9,22 @@
     </style>
 </head>
 <body>
-<main layout:fragment="main">
+<main layout:fragment="main" style="min-height: calc(100vh - 64px)">
 
-    <form th:object="${createForm}" method="POST" style="min-height: calc(100vh - 64px)">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-        <div class="flex flex-col justify-center items-center" style="min-height: calc(100vh - 64px)">
+    <!-- 메뉴 이미지 -->
+    <div class="top-image-bar w-full relative">
+        <img src="https://cdn.jsdelivr.net/gh/LeeYulhee/projectlion_img/teamsteam/handshakeBanner.png" class="w-full">
+        <div class="absolute bottom-0" style="bottom: 35%; left:10%;">
+            <div class="relative max-w-2xl w-full px-4 h-12">
+                <div class="text-2xl">매칭 글 수정</div>
+                <div class="text-sm mt-1">작성한 글을 수정해보세요</div>
+            </div>
+        </div>
+    </div>
+
+    <form th:object="${createForm}" method="POST" class="mt-20">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <div class="flex flex-col justify-center items-center">
 
             <!--제목-->
             <div class="mt-20 w-8/12">

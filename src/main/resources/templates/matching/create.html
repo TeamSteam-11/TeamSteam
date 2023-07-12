@@ -10,11 +10,22 @@
 </head>
 <body>
 
-<main layout:fragment="main">
+<main layout:fragment="main" style="min-height: calc(100vh - 64px)">
 
-    <form th:object="${createForm}" th:action="@{/match/create}" method="POST" style="min-height: calc(100vh - 64px)">
+    <!-- 메뉴 이미지 -->
+    <div class="top-image-bar w-full relative">
+        <img src="https://cdn.jsdelivr.net/gh/LeeYulhee/projectlion_img/teamsteam/handshakeBanner.png" class="w-full">
+        <div class="absolute bottom-0" style="bottom: 35%; left:10%;">
+            <div class="relative max-w-2xl w-full px-4 h-12">
+                <div class="text-2xl">매칭 글 작성</div>
+                <div class="text-sm mt-1">글을 작성해서 직접 게임 친구를 찾아보세요</div>
+            </div>
+        </div>
+    </div>
 
-        <div class="flex flex-col justify-center items-center" style="min-height: calc(100vh - 64px)">
+    <form th:object="${createForm}" th:action="@{/match/create}" method="POST" class="mt-20">
+
+        <div class="flex flex-col justify-center items-center">
 
             <!--제목-->
             <div class="mt-20 w-8/12">

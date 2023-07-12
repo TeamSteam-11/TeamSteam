@@ -36,6 +36,17 @@
 
 <main layout:fragment="main">
 
+    <!-- 메뉴 이미지 -->
+    <div class="top-image-bar w-full relative">
+        <img src="https://cdn.jsdelivr.net/gh/LeeYulhee/projectlion_img/teamsteam/testBanner2.png" class="w-full">
+        <div class="absolute bottom-0" style="bottom: 35%; left:10%;">
+            <div class="relative max-w-2xl w-full px-4 h-12">
+                <div class="text-2xl">매칭 조회</div>
+                <div class="text-sm mt-1">함께 게임할 동료를 찾아보세요</div>
+            </div>
+        </div>
+    </div>
+
     <div class="flex justify-center">
 
         <div class="mt-10 w-4/5">
@@ -153,10 +164,10 @@
                 <div class="mt-6 mb-6 flex flex-wrap">
 
                     <!--1번 프로필-->
-                    <div class="w-1/5 h-72 rounded-xl flex-shrink-0 shadow-2xl" style="background-color: #202d3e;" th:each="matchingPartner : ${matching.matchingPartners}">
+                    <div class="w-1/5 h-72 rounded-xl flex-shrink-0 shadow-2xl" style="background-color: #202d3e;" th:each="matchingPartner : ${matching.matchingPartners}" th:if="${matchingPartner.inChatRoomTrueFalse}">
 
                         <!--프로필 내용 시작-->
-                        <div class="flex flex-col justify-center min-h-full p-4" style="min-height: 18rem;" th:if="${matchingPartner.inChatRoomTrueFalse}">
+                        <div class="flex flex-col justify-center min-h-full p-4" style="min-height: 18rem;" >
                             <div class="flex justify-start items-center ml-2 mb-2 border-b">
                                 <img th:src="${matchingPartner.getUser().getAvatar()}" class="w-10 h-10 object-cover mr-3 mb-3 rounded-xl">
                                 <div>
