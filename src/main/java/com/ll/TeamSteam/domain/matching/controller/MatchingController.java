@@ -269,6 +269,7 @@ public class MatchingController {
 
         // 이미 저장된 사람은 중복 저장되지 않도록 처리
         if (alreadyWithPartner) {
+            // 추후 수정
 //             throw new IllegalArgumentException("너 이미 매칭파트너에 참여중이야");
             return "redirect:/main/error";
         }
@@ -299,6 +300,7 @@ public class MatchingController {
         boolean alreadyWithPartner = matchingPartnerService.isDuplicatedMatchingPartner(matching.getId(), user.getId());
 
         if (!alreadyWithPartner) {
+            // 추후 수정
             return "redirect:/main/error";
         }
 

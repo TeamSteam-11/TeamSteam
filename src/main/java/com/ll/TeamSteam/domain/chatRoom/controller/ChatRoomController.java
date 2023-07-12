@@ -180,6 +180,7 @@ public class ChatRoomController {
         return "chat/userList";
     }
 
+    // exception 추가해야함
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{roomId}/inviteList")
     public String inviteList(Model model, @PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user) {
