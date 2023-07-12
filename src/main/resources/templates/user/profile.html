@@ -96,7 +96,8 @@
                     <input type="submit" value="">
                 </form>
                 <form th:action="@{/user/profile/{userId}/addFriend(userId=${targetUser.id})}" method="post">
-                    <button th:if="${loginedId != targetUser.getId()}" class="btn btn-accent">친구추가</button>
+                    <button th:if="${loginedId != targetUser.getId() and !isFriend}" class="btn btn-accent">친구추가</button>
+                    <button th:if="${loginedId != targetUser.getId() and isFriend}" disabled></button>
                     <input type="submit" value="">
                 </form>
             </div>
