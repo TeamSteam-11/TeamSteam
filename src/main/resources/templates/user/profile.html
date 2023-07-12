@@ -103,7 +103,7 @@
             </div>
         </div>
     </div>
-    <div th:if="${loginedId == targetUser.getId()}">
+    <div style="margin-top: 20px" th:if="${loginedId == targetUser.getId()}">
         <div class="flex justify-between mx-8">
             <div class="overflow-x-auto">
                 <h2 class="text-xl font-semibold mb-4">친구 목록</h2>
@@ -200,8 +200,8 @@
     <div class="card lg:card-side bg-base-100 shadow-xl custom-card2 ">
         <div class="card-body">
             <h2 class="card-title" style="color: #dddddd;">Game Library</h2>
-            <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                <div th:each="game : ${gameList}" class="card">
+            <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
+                <div th:each="game : ${gameList}" class="card" style="max-width: 100%; max-height: 100%;">
                     <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${game.appid} + '/header.jpg'}"
                          alt="게임 이미지" class="card-img-top">
                     <div class="card-body">
@@ -209,6 +209,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="m-8 flex justify-center">
                 <div class="pagination">
                     <ul class="flex space-x-4 flex-row">

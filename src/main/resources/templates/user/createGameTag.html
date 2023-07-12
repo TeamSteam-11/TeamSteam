@@ -16,19 +16,15 @@
             <div class="flex justify-center">
                 <p class="m-8 text-2xl">선호하는 게임을 선택해주세요!</p>
             </div>
-            <div class="m-8 grid grid-cols-3  gap-x-8 gap-y-4">
-                <div th:each="game : ${gameList}">
-                    <div class="card card-compact w-96 bg-base-100 shadow-xl custom-card">
-                        <figure>
-                            <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${game.appid} + '/header.jpg'}"
-                                 alt="게임 이미지" />
-                        </figure>
-                        <div class="card-body">
-                            <h2 class="card-title" th:text="${game.name}"></h2>
-                            <div class="card-actions justify-end">
-                                <input type="checkbox" class="checkbox checkbox-success checkbox-lg" name="selectedGames" th:value="${game.appid}" />
-                                <input type="hidden" name="selectedGames" id="selectedGamesInput" />
-                            </div>
+            <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
+                <div th:each="game : ${gameList}" class="card card-compact w-96 bg-base-100 shadow-xl custom-card" style="max-width: 100%; max-height: 100%;">
+                    <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${game.appid} + '/header.jpg'}"
+                         alt="게임 이미지" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${game.name}"></h5>
+                        <div class="card-actions justify-end">
+                            <input type="checkbox" class="checkbox checkbox-success checkbox-lg" name="selectedGames" th:value="${game.appid}" />
+                            <input type="hidden" name="selectedGames" id="selectedGamesInput" />
                         </div>
                     </div>
                 </div>
