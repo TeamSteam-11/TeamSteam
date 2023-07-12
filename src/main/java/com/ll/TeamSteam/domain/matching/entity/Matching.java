@@ -6,10 +6,7 @@ import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -27,17 +24,18 @@ import static jakarta.persistence.FetchType.LAZY;
 @SuperBuilder
 public class Matching extends BaseEntity {
 
-    @NotNull
+    @NotBlank
     private String title;
 
-    @NotNull
+    @NotBlank
     private String content;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private GenreTagType genre;
 
+    @NotNull
     private Integer gameTagId;
-
     private String gameTagName;
 
     @Min(value = 1)

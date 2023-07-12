@@ -16,6 +16,10 @@ import com.ll.TeamSteam.global.rsData.RsData;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import com.ll.TeamSteam.domain.user.entity.User;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -86,10 +90,16 @@ public class MatchingController {
     @Getter
     @Setter
     public static class CreateForm {
+        @NotBlank
         private String title;
+        @NotBlank
         private String content;
+        @NotNull
         private GenreTagType genre;
+        @NotNull
         private Integer gameTagId;
+        @Min(value = 1)
+        @Max(value = 5)
         private Long capacity;
         private String gender;
         private int startTime;
@@ -116,7 +126,8 @@ public class MatchingController {
 
         if (bindingResult.hasErrors()) {
             // 유효성 검사 오류가 있을 시 등록 페이지로 다시 이동
-            return "redirect:/match/create";
+//            return "redirect:/match/create";
+            return rq.redirectWithMsg("/match/create", "필수 값이 입력되지 않았습니다");
         }
 
         Long userId = user.getId();

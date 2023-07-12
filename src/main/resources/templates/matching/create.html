@@ -63,7 +63,8 @@
                 <div>
                     <label for="startTime" class="block">시작 시간</label>
                     <select id="startTime" th:field="*{startTime}" class="h-12 w-36 p-4 mr-6 rounded-lg" style="background-color: #30405F;">
-                        <option th:each="hour : ${#numbers.sequence(0, 24)}" th:value="${hour}" th:text="${hour}"></option>
+                        <option value="0" text="시간무관">시간무관</option>
+                        <option th:each="hour : ${#numbers.sequence(1, 24)}" th:value="${hour}" th:text="${hour}"></option>
                     </select>
                 </div>
 
@@ -71,7 +72,8 @@
                 <div>
                     <label for="endTime" class="block">종료 시간</label>
                     <select id="endTime" th:field="*{endTime}" class="h-12 w-36 p-4 mr-6 rounded-lg" style="background-color: #30405F;">
-                        <option th:each="hour : ${#numbers.sequence(0, 24)}" th:value="${hour}" th:text="${hour}"></option>
+                        <option value="0" text="시간무관">시간무관</option>
+                        <option th:each="hour : ${#numbers.sequence(1, 24)}" th:value="${hour}" th:text="${hour}"></option>
                     </select>
                 </div>
 
