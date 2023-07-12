@@ -1,6 +1,7 @@
 package com.ll.TeamSteam.global.error;
 
 import com.ll.TeamSteam.domain.chatRoom.exception.KickedUserEnterException;
+import com.ll.TeamSteam.domain.chatRoom.exception.NoChatRoomException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +28,7 @@ public class GlobalExceptionHandler {
     public String noSuchElementException(Exception e, Model model){
         model.addAttribute("errorMessage",e.getMessage());
         log.info("e.getMessage = {} ", e.getMessage());
-        return "error/noChatroomError";
+        return "error/commonError";
     }
 
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
@@ -44,6 +45,7 @@ public class GlobalExceptionHandler {
         return "error/commonError";
     }
 
+    // 커스텀
     @ExceptionHandler(value = KickedUserEnterException.class)
     public String KickedUserEnterException(Exception e, Model model){
         model.addAttribute("errorMessage",e.getMessage());
@@ -56,5 +58,14 @@ public class GlobalExceptionHandler {
         model.addAttribute("errorMessage",e.getMessage());
         log.info("e.getMessage = {} ", e.getMessage());
         return "error/commonError";
+    }
+
+
+    // 커스텀
+    @ExceptionHandler(value = NoChatRoomException.class)
+    public String NoChatRoomException(Exception e, Model model){
+        model.addAttribute("errorMessage",e.getMessage());
+        log.info("e.getMessage = {} ", e.getMessage());
+        return "error/noChatroomError";
     }
 }
