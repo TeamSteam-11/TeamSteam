@@ -58,7 +58,7 @@
                 <th:block th:each="matching : ${matchingListSortedByDeadline}">
                     <tr th:attr="onclick='window.location.href=\'' + @{/match/detail/} + ${matching.id} + '\''"
                         style="cursor: pointer" class="highlight-row">
-                        <td th:text="${matching.title}"></td>
+                        <td th:text="${#strings.length(matching.title) > 15 ? #strings.substring(matching.title, 0, 15) + '...' : matching.title}"></td>
                         <td th:text="${matching.getDeadlineDuration()}"></td>
                     </tr>
                 </th:block>
@@ -76,7 +76,7 @@
                 <th:block th:each="matching : ${matchingListSortedByParticipant}">
                     <tr th:attr="onclick='window.location.href=\'' + @{/match/detail/} + ${matching.id} + '\''"
                         style="cursor: pointer" class="highlight-row">
-                        <td th:text="${matching.title}"></td>
+                        <td th:text="${#strings.length(matching.title) > 15 ? #strings.substring(matching.title, 0, 15) + '...' : matching.title}"></td>
                         <td th:text="${matching.getRemainingCapacity()}"></td>
                     </tr>
                 </th:block>
