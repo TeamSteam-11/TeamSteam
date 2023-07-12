@@ -6,6 +6,10 @@ import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -23,7 +27,10 @@ import static jakarta.persistence.FetchType.LAZY;
 @SuperBuilder
 public class Matching extends BaseEntity {
 
+    @NotNull
     private String title;
+
+    @NotNull
     private String content;
 
     @Enumerated(EnumType.STRING)
@@ -33,6 +40,8 @@ public class Matching extends BaseEntity {
 
     private String gameTagName;
 
+    @Min(value = 1)
+    @Max(value = 5)
     private Long capacity; // 모집 인원
 
     private Long participant; // 참가자 수

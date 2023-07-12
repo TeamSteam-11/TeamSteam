@@ -46,7 +46,7 @@
                 <!--매칭 인원-->
                 <div>
                     <label for="capacity" class="block">매칭 인원</label>
-                    <input type="number" id="capacity" th:field="*{capacity}" class="h-12 w-36 p-4 mr-6 rounded-lg" style="background-color: #30405F;">
+                    <input type="number" id="capacity" th:field="*{capacity}" class="h-12 w-36 p-4 mr-6 rounded-lg" style="background-color: #30405F;" oninput="checkCapacity()" min="1" max="5">
                 </div>
 
                 <!--성별 설정-->
@@ -120,8 +120,20 @@
     function showSuccessMessage() {
         toastNotice("입력하신 매칭이 등록되었습니다.")
     }
-</script>
 
+</script>
+    <!--capacity가 0이하로 떨어지는거 방지-->
+    <script>
+        function checkCapacity() {
+            var capacityInput = document.getElementById('capacity');
+            if (capacityInput.value <= 0) {
+                capacityInput.value = 1;
+            }
+            if(capacityInput.value >= 6){
+                capacityInput.value = 5;
+            }
+        }
+    </script>
 </main>
 </body>
 </html>
