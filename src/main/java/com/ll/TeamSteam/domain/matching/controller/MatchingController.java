@@ -1,6 +1,7 @@
 package com.ll.TeamSteam.domain.matching.controller;
 
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
+import com.ll.TeamSteam.domain.chatRoom.exception.KickedUserEnterException;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.exception.MatchingPartnerNotFoundException;
@@ -151,8 +152,7 @@ public class MatchingController {
 
         // 매칭 등록 실패 시
         if (matching == null) {
-//            throw new IllegalArgumentException("게시글이 작성되지 않았습니다.");
-            return "redirect:/main/error";
+            throw new IllegalArgumentException("게시글이 작성되지 않았습니다.");
         }
 
         log.info("createRsData.getId = {}", matching.getId());
@@ -269,8 +269,8 @@ public class MatchingController {
 
         // 이미 저장된 사람은 중복 저장되지 않도록 처리
         if (alreadyWithPartner) {
-//             throw new IllegalArgumentException("너 이미 매칭파트너에 참여중이야");
-            return "redirect:/main/error";
+            // 추후 수정
+             throw new IllegalArgumentException("너 이미 매칭파트너에 참여중이야");
         }
 
         ChatRoom chatRoom = chatRoomService.findById(matchingId);
@@ -278,7 +278,7 @@ public class MatchingController {
         log.info("rsData.getData = {} ", rsData.getData());
 
         if (rsData.isError()){
-            return rq.historyBack("강퇴당한 모임입니다.");
+            throw new KickedUserEnterException("강퇴당한 모임입니다.");
         }
 
         if (rsData.isFail()){
@@ -299,7 +299,8 @@ public class MatchingController {
         boolean alreadyWithPartner = matchingPartnerService.isDuplicatedMatchingPartner(matching.getId(), user.getId());
 
         if (!alreadyWithPartner) {
-            return "redirect:/main/error";
+            // 추후 수정
+            throw new IllegalArgumentException("매칭 파트너로 중복되어 있지 않아");
         }
 
         try {

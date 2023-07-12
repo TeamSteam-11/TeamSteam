@@ -29,6 +29,10 @@
             color:white;
             background-color: rgba(31, 34, 39, 0.5);
         }
+
+        .highlight-row:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -52,7 +56,8 @@
     <!--                <th>마감까지 남은 시간</th>-->
                 </tr>
                 <th:block th:each="matching : ${matchingListSortedByDeadline}">
-                    <tr>
+                    <tr th:attr="onclick='window.location.href=\'' + @{/match/detail/} + ${matching.id} + '\''"
+                        style="cursor: pointer" class="highlight-row">
                         <td th:text="${matching.title}"></td>
                         <td th:text="${matching.getDeadlineDuration()}"></td>
                     </tr>
@@ -69,7 +74,8 @@
 <!--                    <th>마감까지 남은 인원</th>-->
                 </tr>
                 <th:block th:each="matching : ${matchingListSortedByParticipant}">
-                    <tr>
+                    <tr th:attr="onclick='window.location.href=\'' + @{/match/detail/} + ${matching.id} + '\''"
+                        style="cursor: pointer" class="highlight-row">
                         <td th:text="${matching.title}"></td>
                         <td th:text="${matching.getRemainingCapacity()}"></td>
                     </tr>
