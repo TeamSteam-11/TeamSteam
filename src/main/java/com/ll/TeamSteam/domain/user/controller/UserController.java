@@ -81,40 +81,40 @@ public class UserController {
 
     @GetMapping("/login/check")
     public String startSession(@RequestParam(value = "openid.ns") String openidNs,
-                               @RequestParam(value = "openid.mode") String openidMode,
-                               @RequestParam(value = "openid.op_endpoint") String openidOpEndpoint,
-                               @RequestParam(value = "openid.claimed_id") String openidClaimedId,
-                               @RequestParam(value = "openid.identity") String openidIdentity,
-                               @RequestParam(value = "openid.return_to") String openidReturnTo,
-                               @RequestParam(value = "openid.response_nonce") String openidResponseNonce,
-                               @RequestParam(value = "openid.assoc_handle") String openidAssocHandle,
-                               @RequestParam(value = "openid.signed") String openidSigned,
-                               @RequestParam(value = "openid.sig") String openidSig,
-                               HttpServletRequest request,
-                               HttpServletResponse response) throws InterruptedException {
+        @RequestParam(value = "openid.mode") String openidMode,
+        @RequestParam(value = "openid.op_endpoint") String openidOpEndpoint,
+        @RequestParam(value = "openid.claimed_id") String openidClaimedId,
+        @RequestParam(value = "openid.identity") String openidIdentity,
+        @RequestParam(value = "openid.return_to") String openidReturnTo,
+        @RequestParam(value = "openid.response_nonce") String openidResponseNonce,
+        @RequestParam(value = "openid.assoc_handle") String openidAssocHandle,
+        @RequestParam(value = "openid.signed") String openidSigned,
+        @RequestParam(value = "openid.sig") String openidSig,
+        HttpServletRequest request,
+        HttpServletResponse response) throws InterruptedException {
 
 
         log.info("openidResponseNonce = {} ", openidResponseNonce);
 
         ResponseEntity<String> block = WebClient.create("https://steamcommunity.com")
-                .get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/openid/login")
-                        .queryParam("openid.ns", openidNs)
-                        .queryParam("openid.mode", "check_authentication")
-                        .queryParam("openid.op_endpoint", openidOpEndpoint)
-                        .queryParam("openid.claimed_id", openidClaimedId)
-                        .queryParam("openid.identity", openidIdentity)
-                        .queryParam("openid.return_to", openidReturnTo)
-                        .queryParam("openid.response_nonce", openidResponseNonce)
-                        .queryParam("openid.assoc_handle", openidAssocHandle)
-                        .queryParam("openid.signed", openidSigned)
-                        .queryParam("openid.sig", openidSig)
-                        .build()
-                )
-                .retrieve()
-                .toEntity(String.class)
-                .block();
+            .get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/openid/login")
+                .queryParam("openid.ns", openidNs)
+                .queryParam("openid.mode", "check_authentication")
+                .queryParam("openid.op_endpoint", openidOpEndpoint)
+                .queryParam("openid.claimed_id", openidClaimedId)
+                .queryParam("openid.identity", openidIdentity)
+                .queryParam("openid.return_to", openidReturnTo)
+                .queryParam("openid.response_nonce", openidResponseNonce)
+                .queryParam("openid.assoc_handle", openidAssocHandle)
+                .queryParam("openid.signed", openidSigned)
+                .queryParam("openid.sig", openidSig)
+                .build()
+            )
+            .retrieve()
+            .toEntity(String.class)
+            .block();
 
 
         log.info("block = {} ", block);
@@ -142,10 +142,10 @@ public class UserController {
         }
 
         SecurityUser user = SecurityUser.builder()
-                .id(userService.findBySteamId(steamId).get().getId())
-                .username(userService.findBySteamId(steamId).get().getUsername())
-                .steamId(steamId)
-                .build();
+            .id(userService.findBySteamId(steamId).get().getId())
+            .username(userService.findBySteamId(steamId).get().getUsername())
+            .steamId(steamId)
+            .build();
 
         log.info("user.getId() = {} ", user.getId());
         log.info("user.getUsername() = {}", user.getUsername());
@@ -179,7 +179,7 @@ public class UserController {
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "15") int size,
         @AuthenticationPrincipal SecurityUser user, Model model
-        ) throws ParseException {
+    ) throws ParseException {
 
         String steamId = user.getSteamId();
         List<SteamGameLibrary> haveGameListData = steamService.getUserGameList(steamId);
@@ -263,7 +263,7 @@ public class UserController {
 
     @PostMapping("/user/createGenre")
     public String genreFormPost(@RequestParam(required = false) String gender, @RequestParam(value = "gameGenre", required = false) String[] gameGenres,
-                                @AuthenticationPrincipal SecurityUser user) {
+        @AuthenticationPrincipal SecurityUser user) {
         Long id = user.getId();
 
         if(gender == null || gameGenres == null){
@@ -273,8 +273,8 @@ public class UserController {
 
         // GenreTagType enum으로 변환하여 리스트로 저장
         List<GenreTagType> genreTagTypes = Arrays.stream(gameGenres)
-                .map(GenreTagType::valueOf)
-                .collect(Collectors.toList());
+            .map(GenreTagType::valueOf)
+            .collect(Collectors.toList());
 
         // DB에 저장
         userService.updateUserData(gender, genreTagTypes, id);
@@ -303,7 +303,7 @@ public class UserController {
         int start = page * size;
         int end = Math.min(start + size, totalItems);
         List<SteamGameLibrary> pagedGameList = haveGameListData.subList(start, end);
-
+        recentlyUserService.updateRecentlyUser(targetUser.getId());
         List<RecentlyUser> recentlyUserList =recentlyUserService.findAllByUserId(userId);
 
         List<Friend> friendsList = userService.getFriends(user.getId());
@@ -353,7 +353,7 @@ public class UserController {
         User invitingUser = userService.findByIdElseThrow(loginedId);
         User invitedUser = userService.findByIdElseThrow(userId);
         if (!userService.isFriend(invitingUser.getId(), invitedUser.getId())
-                && !notificationService.isDupNotification(invitingUser, invitedUser)){
+            && !notificationService.isDupNotification(invitingUser, invitedUser)){
             //이미 친구인지, 이미 친구신청을 보내놨는지 검증
             notificationService.makeFriend(invitingUser, invitedUser);
 
