@@ -29,7 +29,7 @@ public class MatchingService {
     public final GameTagRepository gameTagRepository;
 
     // 매칭 등록 기능
-    public Matching create(User user, String title, String content, GenreTagType genreTag, Integer gameTagId, String gender, Long capacity, int startTime, int endTime, LocalDateTime deadlineDate) {
+    public Matching create(User user, String title, String content, GenreTagType genreTag, Integer gameTagId, String gender, Long capacity, Integer startTime, Integer endTime, LocalDateTime deadlineDate) {
 
         Optional<GameTag> gameTag = gameTagRepository.findByAppid(gameTagId);
         String gameTagName = "게임이름을 불러올 수 없습니다";
@@ -80,7 +80,7 @@ public class MatchingService {
     }
 
     @Transactional
-    public RsData<Matching> modify(Matching matching, String title, String content, GenreTagType genreTag, String gender, Long capacity, int startTime, int endTime, int selectedHours) {
+    public RsData<Matching> modify(Matching matching, String title, String content, GenreTagType genreTag, String gender, Long capacity, Integer startTime, Integer endTime, int selectedHours) {
         try {
             matching.update(title, content, genreTag, gender, capacity, startTime, endTime);
 

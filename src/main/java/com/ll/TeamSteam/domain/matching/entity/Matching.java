@@ -6,6 +6,7 @@ import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,26 +25,30 @@ import static jakarta.persistence.FetchType.LAZY;
 @SuperBuilder
 public class Matching extends BaseEntity {
 
+    @NotBlank
     private String title;
 
     @NotBlank
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private GenreTagType genre;
 
+    @NotNull
     private Integer gameTagId;
-
     private String gameTagName;
 
+    @Min(value = 1)
+    @Max(value = 5)
     private Long capacity; // 모집 인원
 
     private Long participant; // 참가자 수
 
-    private int startTime; // 원하는 시간대 시작
+    private Integer startTime; // 원하는 시간대 시작
 
-    private int endTime; // 원하는 시간대 끝
+    private Integer endTime; // 원하는 시간대 끝
 
     private LocalDateTime deadlineDate; // 마감 시간
 
@@ -59,7 +64,7 @@ public class Matching extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void update(String title, String content, GenreTagType genre, String gender, Long capacity, int startTime, int endTime) {
+    public void update(String title, String content, GenreTagType genre, String gender, Long capacity, Integer startTime, Integer endTime) {
         this.title = title;
         this.content = content;
         this.genre = genre;

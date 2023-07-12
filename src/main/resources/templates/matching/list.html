@@ -111,7 +111,7 @@
 
             <select id="time-select" name="starttime" class="h-12 p-4 rounded-lg mr-2" onchange="submitForm()" style="background-color: #525964;">
                 <option value="" selected>시작 시간</option>
-                <option value="0" th:selected="${starttime == 0}">0시</option>
+                <option value="0" th:selected="${starttime == 0}">시간무관</option>
                 <option value="1" th:selected="${starttime == 1}">1시</option>
                 <option value="2" th:selected="${starttime == 2}">2시</option>
                 <option value="3" th:selected="${starttime == 3}">3시</option>
@@ -180,8 +180,9 @@
             </div><br>
             <div>
                 <div class="badge badge-secondary">시간</div>
-                <span th:text="${matching.startTime}"></span> : 00 ~
-                <span th:text="${matching.endTime}"></span> : 00
+                <span th:if="${matching.startTime} != 0" th:text="${matching.startTime} + ' : 00'"></span>
+                <span th:if="${matching.startTime} == 0" text="시간무관">시간무관 </span>
+                <span th:if="${matching.endTime} != 0" th:text="' ~ ' + ${matching.endTime} + ' : 00'"></span>
             </div>
             <div>
                 <div class="badge badge-secondary">성별</div>
