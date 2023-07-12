@@ -44,8 +44,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -240,7 +242,21 @@ public class UserController {
             return "redirect:/error/commonError";
         }
 
-        model.addAttribute("genreTags",GenreTagType.values());
+        Set<String> action = new HashSet<>(Arrays.asList("일인칭슈팅", "삼인칭슈팅", "격투", "슛뎀업", "아케이드", "러너", "핵앤슬래시"));
+        Set<String> rpg = new HashSet<>(Arrays.asList("JRPG", "로그라이크", "액션RPG", "어드벤처RPG", "전략RPG", "현대RPG", "파티"));
+        Set<String> strategy = new HashSet<>(Arrays.asList("군사", "대전략", "도시", "실시간전략", "카드", "타워디펜스", "턴제전략"));
+        Set<String> adventure = new HashSet<>(Arrays.asList("매트로베니아", "비주얼노벨", "캐주얼", "퍼즐", "풍부한스토리", "히든오브젝트"));
+        Set<String> simulation = new HashSet<>(Arrays.asList("건설", "농업", "샌드박스", "생활", "연애", "우주", "취미"));
+        Set<String> sportsAndRacing = new HashSet<>(Arrays.asList("스포츠", "낚시", "레이싱", "스포츠시뮬레이션"));
+
+        model.addAttribute("action", action);
+        model.addAttribute("rpg", rpg);
+        model.addAttribute("strategy", strategy);
+        model.addAttribute("adventure", adventure);
+        model.addAttribute("simulation", simulation);
+        model.addAttribute("sportsAndRacing", sportsAndRacing);
+        model.addAttribute("action", action);
+        model.addAttribute("rpg", rpg);
 
         return "user/createGenre";
     }
@@ -359,7 +375,22 @@ public class UserController {
     public String editProfile(@AuthenticationPrincipal SecurityUser user, Model model) {
         //프로필만 업데이트
         userService.updateUserAvatar(getUserInfo(user.getSteamId()), user.getId());
-        model.addAttribute("genreTags",GenreTagType.values());
+
+        Set<String> action = new HashSet<>(Arrays.asList("일인칭슈팅", "삼인칭슈팅", "격투", "슛뎀업", "아케이드", "러너", "핵앤슬래시"));
+        Set<String> rpg = new HashSet<>(Arrays.asList("JRPG", "로그라이크", "액션RPG", "어드벤처RPG", "전략RPG", "현대RPG", "파티"));
+        Set<String> strategy = new HashSet<>(Arrays.asList("군사", "대전략", "도시", "실시간전략", "카드", "타워디펜스", "턴제전략"));
+        Set<String> adventure = new HashSet<>(Arrays.asList("매트로베니아", "비주얼노벨", "캐주얼", "퍼즐", "풍부한스토리", "히든오브젝트"));
+        Set<String> simulation = new HashSet<>(Arrays.asList("건설", "농업", "샌드박스", "생활", "연애", "우주", "취미"));
+        Set<String> sportsAndRacing = new HashSet<>(Arrays.asList("스포츠", "낚시", "레이싱", "스포츠시뮬레이션"));
+
+        model.addAttribute("action", action);
+        model.addAttribute("rpg", rpg);
+        model.addAttribute("strategy", strategy);
+        model.addAttribute("adventure", adventure);
+        model.addAttribute("simulation", simulation);
+        model.addAttribute("sportsAndRacing", sportsAndRacing);
+        model.addAttribute("action", action);
+        model.addAttribute("rpg", rpg);
 
         return "user/createGenre";
     }
