@@ -36,4 +36,12 @@ public class HomeController {
 
         return "main/home";
     }
+
+    @GetMapping("/main/error")
+    public String error(){
+        // 에러 처리 페이지
+
+        return "common/error";
+    }
+
 }
