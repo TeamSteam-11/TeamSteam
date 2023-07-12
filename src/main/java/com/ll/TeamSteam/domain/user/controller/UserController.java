@@ -234,7 +234,12 @@ public class UserController {
 
 
     @GetMapping("user/createGenre")
-    public String createGenre(Model model){
+    public String createGenre(Model model,@AuthenticationPrincipal SecurityUser user){
+
+        if(user.getId() == null){
+            return "redirect:/error/commonError";
+        }
+
         model.addAttribute("genreTags",GenreTagType.values());
 
         return "user/createGenre";
