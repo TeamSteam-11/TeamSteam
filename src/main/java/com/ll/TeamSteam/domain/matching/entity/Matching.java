@@ -6,6 +6,7 @@ import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -24,6 +25,9 @@ import static jakarta.persistence.FetchType.LAZY;
 public class Matching extends BaseEntity {
 
     private String title;
+
+    @NotBlank
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Enumerated(EnumType.STRING)
