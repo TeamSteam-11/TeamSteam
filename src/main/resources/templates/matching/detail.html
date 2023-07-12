@@ -12,6 +12,24 @@
             background-color:#2e3239 !important;
             cursor:pointer;
         }
+        .scroll {
+            overflow: auto;
+        }
+        .scroll::-webkit-scrollbar {
+            width: 10px;
+        }
+        .scroll::-webkit-scrollbar-thumb {
+            background-color: #2f3542;
+            border-radius: 15px;
+        }
+        .scroll::-webkit-scrollbar-track {
+            background-color: grey;
+            border-radius: 15px;
+            box-shadow: inset 0px 0px 5px white;
+        }
+        li:active a {
+            background-color: #1F2227;
+        }
     </style>
 </head>
 <body>
@@ -40,7 +58,7 @@
 
                             <!--모집 성별-->
                             <div class="bg-black bg-opacity-20 h-7 ml-2 p-2 text-xs flex items-center justify-center rounded-xl" style="min-width: 64px"> 모집 성별 :
-                              <span th:switch="${matching.gender}">
+                                <span th:switch="${matching.gender}">
                                 <span class="ml-1" th:case="'F'">여성</span>
                                 <span class="ml-1" th:case="'M'">남성</span>
                                 <span class="ml-1" th:case="'DC'">성별무관</span>
@@ -85,7 +103,8 @@
             <div class="title text-3xl m-5" th:text="${matching.title}"></div>
 
             <!-- 게시글 내용 -->
-            <div id="contentBox" class="content m-4 p-4 shadow-xl flex justify-center items-center rounded-xl" style="height:600px; max-height:600px; overflow:auto;">
+            <div id="contentBox" class="content m-4 p-4 shadow-xl flex justify-center items-center rounded-xl scroll"
+                 style="height:600px; max-height:600px; white-space: normal; overflow:auto; overflow-wrap: anywhere;">
                 <div id="content" th:text="${matching.content}"></div>
             </div>
 
@@ -192,7 +211,17 @@
         </div>
     </div>
 
+    <script>
+        window.onload = function() {
+            var contentBox = document.getElementById('contentBox');
+            var content = document.getElementById('content');
 
+            if(content.offsetHeight > contentBox.offsetHeight) {
+                contentBox.classList.remove('items-center');
+                contentBox.classList.add('items-start');
+            }
+        };
+    </script>
 </main>
 <footer layout:fragment="footer" class="footer items-center p-4 text-neutral-content">
     <div class="items-center grid-flow-col">

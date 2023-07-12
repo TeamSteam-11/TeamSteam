@@ -17,11 +17,9 @@ import com.ll.TeamSteam.global.rq.Rq;
 import com.ll.TeamSteam.global.rsData.RsData;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import com.ll.TeamSteam.domain.user.entity.User;
+import jakarta.persistence.Column;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -92,21 +90,24 @@ public class MatchingController {
     @Getter
     @Setter
     public static class CreateForm {
-        @NotBlank
+        @NotBlank(message = "제목은 필수항목입니다.")
+        @Size(max= 50) // 최소 길이, 최대 길이 제한
         private String title;
+        @NotBlank(message = "내용 필수항목입니다.")
+        @Column(columnDefinition = "TEXT")
         private String content;
-        @NotNull
+        @NotNull(message = "장르는 필수항목입니다.")
         private GenreTagType genre;
-        @NotNull
+        @NotNull(message = "게임태그는 필수항목입니다.")
         private Integer gameTagId;
-        @Min(value = 1)
-        @Max(value = 5)
+        @Min(value = 2)
+        @Max(value = 5, message = "모집인원의 범위를 벗어났습니다.")
         private Long capacity;
         private String gender;
-        @NotNull
+        @NotNull(message = "시작시간은 필수항목입니다.")
         @Min(value = 0)
         private Integer startTime;
-        @NotNull
+        @NotNull(message = "끝나는 시간은 필수항목입니다.")
         @Min(value = 0)
         private Integer endTime;
         private int selectedHours;
@@ -116,9 +117,9 @@ public class MatchingController {
             this.content = "내용";
             this.genre =GenreTagType.valueOf("삼인칭슈팅");
             this.gameTagId=1;
-            this.capacity = 1L;
+            this.capacity = 2L;
             this.gender = "성별무관";
-            this.startTime = null;
+            this.startTime = 0;
             this.endTime = 0;
             this.selectedHours = 0;
         }
@@ -126,18 +127,9 @@ public class MatchingController {
 
     // 매칭 등록 기능 구현
     @PostMapping("/create")
-    public String matchingCreate(@Valid CreateForm createForm, BindingResult bindingResult,
+    public String matchingCreate(@Valid CreateForm createForm,
                                  @AuthenticationPrincipal SecurityUser user) {
 
-        if (bindingResult.hasErrors()) {
-            // 유효성 검사 오류가 있을 시 등록 페이지로 다시 이동
-//            return "redirect:/match/create";
-            log.info("createForm = {} ", createForm);
-            log.info("createForm = {} ", createForm.getStartTime());
-            log.info("createForm = {} ", createForm.getEndTime());
-
-            return rq.redirectWithMsg("/match/create", "필수 값이 입력되지 않았습니다");
-        }
 
         Long userId = user.getId();
 

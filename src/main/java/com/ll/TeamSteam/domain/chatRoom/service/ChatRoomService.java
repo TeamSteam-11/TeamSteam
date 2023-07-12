@@ -62,6 +62,9 @@ public class ChatRoomService {
         log.info("matching = {}", matching);
 
         savedChatRoom.addChatUser(owner);
+        // 방장은 들어가자마자 COMMON으로 타입 수정
+        ChatUser chatUser = findChatUserByUserId(chatRoom, ownerId);
+        chatUser.changeUserCommonType();
 
         return savedChatRoom;
     }
