@@ -2,6 +2,7 @@ package com.ll.TeamSteam.domain.matching.controller;
 
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.chatRoom.exception.KickedUserEnterException;
+import com.ll.TeamSteam.domain.chatRoom.exception.NoChatRoomException;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.exception.MatchingPartnerNotFoundException;
@@ -169,7 +170,8 @@ public class MatchingController {
     @GetMapping("/detail/{matchingId}")
     public String matchingDetail(Model model, @PathVariable Long matchingId) {
 
-        Matching matching = matchingService.findById(matchingId).orElse(null);
+        Matching matching = matchingService.findById(matchingId)
+                .orElseThrow(() -> new NoChatRoomException("현재 존재하지 않는 방입니다."));
 
         boolean alreadyWithPartner = false;
 

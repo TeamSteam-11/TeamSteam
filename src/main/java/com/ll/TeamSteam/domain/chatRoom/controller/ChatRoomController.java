@@ -4,6 +4,7 @@ import com.ll.TeamSteam.domain.chatMessage.dto.response.SignalResponse;
 import com.ll.TeamSteam.domain.chatMessage.service.ChatMessageService;
 import com.ll.TeamSteam.domain.chatRoom.dto.ChatRoomDto;
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
+import com.ll.TeamSteam.domain.chatRoom.exception.NoChatRoomException;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
