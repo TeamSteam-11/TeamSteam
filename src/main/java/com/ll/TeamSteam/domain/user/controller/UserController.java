@@ -358,9 +358,4 @@ public class UserController {
 
         return "user/createGenre";
     }
-
-
-    public List<User> findAll() {
-        return userService.findAll();
-    }
 }

@@ -168,12 +168,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-
-    @Transactional(readOnly = true)
-    public List<User> findAll() {
-        return userRepository.findAll();
-    }
-
     @Transactional
     public void addFriends(Long targetId,Long loginedId){
 
