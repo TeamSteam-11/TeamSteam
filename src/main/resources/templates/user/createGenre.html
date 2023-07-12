@@ -16,7 +16,7 @@
             <div class="flex justify-center">
                 <p class="m-8 text-2xl">성별을 선택해주세요</p>
             </div>
-            <div class="flex space-x-4 justify-center">
+            <div class="flex space-x-11 justify-center">
                 <label>
                     <i class="fa-solid fa-mars fa-2xl" style="color: #80aeff;"></i>
                     <input type="radio" name="gender" value="남성" class="radio radio-info" />
@@ -32,12 +32,83 @@
                 <p class="m-8 text-2xl">선호하는 게임 장르를 선택해주세요</p>
             </div>
             <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; margin-top:5px">
-                <th:block th:each="genreTag : ${genreTags}">
-                    <label class="badge bg-green-800 badge-lg badge-accent inline max-w-[10rem] m-2 hover:cursor-pointer">
-                        <input type="checkbox" name="gameGenre" th:value="${genreTag}" th:text="${genreTag}" style="display: none" onchange="toggleCheckbox(this)">
-                    </label>
-                    <br>
-                </th:block>
+                <div class="container mx-auto mt-5">
+                    <div class="flex space-x-20 justify-center mb-28">
+                        <!-- 액션 그룹 -->
+                        <div class="genre-group">
+                            <div class="text-2xl font-semibold mb-2">액션</div>
+                            <div class="flex flex-col gap-2 mb-10">
+                                <th:block th:each="genreTag : ${action}">
+                                    <label class="badge bg-green-800 badge-lg badge-accent inline max-w-[10rem] m-2 hover:cursor-pointer">
+                                        <input type="checkbox" name="gameGenre" th:value="${genreTag}" th:text="${genreTag}" style="display: none" onchange="toggleCheckbox(this)">
+                                    </label>
+                                </th:block>
+                            </div>
+                        </div>
+
+                        <!-- 롤플레잉 그룹 -->
+                        <div class="genre-group">
+                            <div class="text-2xl font-semibold mb-2">롤플레잉</div>
+                            <div class="flex flex-col gap-2 mb-10">
+                                <th:block th:each="genreTag : ${rpg}">
+                                    <label class="badge bg-green-800 badge-lg badge-accent inline max-w-[10rem] m-2 hover:cursor-pointer">
+                                        <input type="checkbox" name="gameGenre" th:value="${genreTag}" th:text="${genreTag}" style="display: none" onchange="toggleCheckbox(this)">
+                                    </label>
+                                </th:block>
+                            </div>
+                        </div>
+
+                        <!-- 전략 그룹 -->
+                        <div class="genre-group">
+                            <div class="text-2xl font-semibold mb-2">전략</div>
+                            <div class="flex flex-col gap-2 mb-10">
+                                <th:block th:each="genreTag : ${strategy}">
+                                    <label class="badge bg-green-800 badge-lg badge-accent inline max-w-[10rem] m-2 hover:cursor-pointer">
+                                        <input type="checkbox" name="gameGenre" th:value="${genreTag}" th:text="${genreTag}" style="display: none" onchange="toggleCheckbox(this)">
+                                    </label>
+                                </th:block>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-20 justify-center">
+                        <!-- 어드벤처 그룹 -->
+                        <div class="genre-group">
+                            <div class="text-2xl font-semibold mb-2">어드벤처</div>
+                            <div class="flex flex-col gap-2 mb-10">
+                                <th:block th:each="genreTag : ${adventure}">
+                                    <label class="badge bg-green-800 badge-lg badge-accent inline max-w-[10rem] m-2 hover:cursor-pointer">
+                                        <input type="checkbox" name="gameGenre" th:value="${genreTag}" th:text="${genreTag}" style="display: none" onchange="toggleCheckbox(this)">
+                                    </label>
+                                </th:block>
+                            </div>
+                        </div>
+
+                        <!-- 시뮬레이션 그룹 -->
+                        <div class="genre-group">
+                            <div class="text-2xl font-semibold mb-2">시뮬레이션</div>
+                            <div class="flex flex-col gap-2 mb-10">
+                                <th:block th:each="genreTag : ${simulation}">
+                                    <label class="badge bg-green-800 badge-lg badge-accent inline max-w-[10rem] m-2 hover:cursor-pointer">
+                                        <input type="checkbox" name="gameGenre" th:value="${genreTag}" th:text="${genreTag}" style="display: none" onchange="toggleCheckbox(this)">
+                                    </label>
+                                </th:block>
+                            </div>
+                        </div>
+
+                        <!-- 스포츠 및 레이싱 그룹 -->
+                        <div class="genre-group">
+                            <div class="text-2xl font-semibold mb-2">스포츠 및 레이싱</div>
+                            <div class="flex flex-col gap-2 mb-10">
+                                <th:block th:each="genreTag : ${sportsAndRacing}">
+                                    <label class="badge bg-green-800 badge-lg badge-accent inline max-w-[10rem] m-2 hover:cursor-pointer">
+                                        <input type="checkbox" name="gameGenre" th:value="${genreTag}" th:text="${genreTag}" style="display: none" onchange="toggleCheckbox(this)">
+                                    </label>
+                                </th:block>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <br><br>
