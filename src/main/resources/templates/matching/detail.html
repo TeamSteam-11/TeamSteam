@@ -268,7 +268,7 @@
 
                             <!--장르 태그-->
                             <div class="flex flex-wrap">
-                                <div class="m-1 p-2 h-7 text-xs flex items-center justify-center rounded-xl"
+                                <div class="m-1 p-2 text-xs flex items-center justify-center rounded-xl"
                                      th:each="genreTag: ${matchingPartner.getUser().getUserTag().getGenreTag()}"
                                      th:text="${genreTag.getGenre()}"
                                      style="min-width: 64px; background-color: #22C55E;"></div>
@@ -277,7 +277,7 @@
 
                             <!--게임 태그-->
                             <div class="flex flex-wrap">
-                                <div class="m-1 p-2 h-7 text-xs flex items-center justify-center rounded-xl"
+                                <div class="m-1 p-2 text-xs flex items-center justify-center rounded-xl"
                                      th:each="gameTag: ${matchingPartner.getUser().getUserTag().getGameTag()}"
                                      th:text="${gameTag.getName()}" style="min-width: 64px; background-color: #0EA5E9;">
                                     게임 태그
