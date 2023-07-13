@@ -59,7 +59,8 @@
                 <!--매칭 인원-->
                 <div>
                     <label for="capacity" class="block">매칭 인원</label>
-                    <input type="number" id="capacity" th:field="*{capacity}" th:value="${matching.getCapacity()}" class="h-12 w-36 p-4 mr-6 rounded-lg" style="background-color: #30405F;">
+                    <input type="number" id="capacity" th:field="*{capacity}" th:value="${matching.getCapacity()}" class="h-12 w-36 p-4 mr-6 rounded-lg"
+                           style="background-color: #30405F;"  min="2" max="5" oninput="checkCapacity()">
                 </div>
 
                 <!--성별 설정-->
@@ -139,6 +140,16 @@
     function submitFormAndRedirect() {
         showSuccessMessage();
         document.querySelector('form').submit();
+    }
+
+    function checkCapacity() {
+        var capacityInput = document.getElementById('capacity');
+        if (capacityInput.value <= 1) {
+            capacityInput.value = 2;
+        }
+        if (capacityInput.value >= 6) {
+            capacityInput.value = 5;
+        }
     }
 </script>
 

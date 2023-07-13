@@ -247,28 +247,30 @@
                 <div class="mt-6 mb-6 flex flex-wrap">
 
                     <!--1번 프로필-->
-                    <div class="w-1/5 h-72 rounded-xl flex-shrink-0 shadow-2xl" style="background-color: #202d3e;"
+                    <div class="w-1/5 rounded-xl flex-shrink-0 shadow-2xl" style="background-color: #202d3e;"
                          th:each="matchingPartner : ${matching.matchingPartners}"
                          th:if="${matchingPartner.inChatRoomTrueFalse}">
 
                         <!--프로필 내용 시작-->
                         <div class="flex flex-col justify-center min-h-full p-4" style="min-height: 18rem;">
+                            <a th:href="@{'/user/profile/' + ${matchingPartner.getUser().getId()}}" class="hover:underline">
                             <div class="flex justify-start items-center ml-2 mb-2 border-b">
-                                <img th:src="${matchingPartner.getUser().getAvatar()}"
-                                     class="w-10 h-10 object-cover mr-3 mb-3 rounded-xl">
-                                <div>
-                                    <div class="flex items-center">
-                                        <div class="text-xl mb-3" th:text="${matchingPartner.getUser().getUsername()}">
-                                            참여자
+
+                                    <img th:src="${matchingPartner.getUser().getAvatar()}"
+                                         class="w-10 h-10 object-cover mr-3 mb-3 rounded-xl">
+                                    <div>
+                                        <div class="flex items-center">
+                                            <div class="text-xl mb-3" th:text="${matchingPartner.getUser().getUsername()}">
+                                                참여자
+                                            </div>
                                         </div>
                                     </div>
-
-                                </div>
                             </div>
+                            </a>
 
                             <!--장르 태그-->
                             <div class="flex flex-wrap">
-                                <div class="m-1 p-2 h-7 text-xs flex items-center justify-center rounded-xl"
+                                <div class="m-1 p-2 text-xs flex items-center justify-center rounded-xl"
                                      th:each="genreTag: ${matchingPartner.getUser().getUserTag().getGenreTag()}"
                                      th:text="${genreTag.getGenre()}"
                                      style="min-width: 64px; background-color: #22C55E;"></div>
@@ -277,7 +279,7 @@
 
                             <!--게임 태그-->
                             <div class="flex flex-wrap">
-                                <div class="m-1 p-2 h-7 text-xs flex items-center justify-center rounded-xl"
+                                <div class="m-1 p-2 text-xs flex items-center justify-center rounded-xl"
                                      th:each="gameTag: ${matchingPartner.getUser().getUserTag().getGameTag()}"
                                      th:text="${gameTag.getName()}" style="min-width: 64px; background-color: #0EA5E9;">
                                     게임 태그
