@@ -136,9 +136,16 @@
                                 </div>
                             <th>
                                 <label>
+                                    <a th:href="'/user/profile/'+${friend.getFriend().getId()}">
+                                        <button class="btn glass btn-xs"> Profile</button>
+                                    </a>
+                                </label>
+                            </th>
+                            <th>
+                                <label>
                                     <a th:href="@{'/user/profile/' + ${friend.getFriend().getId()} +'/deleteFriend'}"
                                        class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded">
-                                        친구 삭제
+                                        삭제
                                     </a>
                                 </label>
                             </th>
@@ -169,6 +176,13 @@
                                     </div>
                                 </div>
                             </td>
+                            <th>
+                                <label>
+                                    <a th:href="'/user/profile/'+${recentlyUser.getMatchingPartner().getUser().getId()}">
+                                        <button class="btn glass btn-xs"> Profile</button>
+                                    </a>
+                                </label>
+                            </th>
                             <td>
                                 <p class="mb-2">매너온도:
                                     <span th:text="${recentlyUser.getMatchingPartner().getUser().getTemperature()}"></span>
