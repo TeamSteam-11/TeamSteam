@@ -83,7 +83,7 @@
                 <div class="flex pt-4" style="display: flex; flex-direction: column">
                     <div class="table-cell m-2">
                         <div class="flex flex-wrap">
-                            <div th:if="${!targetUser.getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${targetUser.getUserTag().getGameTag()}" class="badge bg-sky-500 badge-accent inline max-w-[10rem]">
+                            <div th:if="${!targetUser.getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${targetUser.getUserTag().getGameTag()}" class="badge bg-sky-500 badge-accent inline max-w">
                                 <span th:text="${targetUserGameTag.getName()}"></span>
                             </div>
                         </div>
@@ -143,9 +143,10 @@
                             </th>
                             <th>
                                 <label>
-                                    <a th:href="@{'/user/profile/' + ${friend.getFriend().getId()} +'/deleteFriend'}"
-                                       class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded">
-                                        삭제
+                                    <a th:href="@{'/user/profile/' + ${friend.getFriend().getId()} +'/deleteFriend'}">
+                                        <button class="btn btn-square btn-outline">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                                        </button>
                                     </a>
                                 </label>
                             </th>
