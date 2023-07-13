@@ -7,6 +7,7 @@ import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.exception.MatchingPartnerNotFoundException;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
+import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
 import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.recentlyUser.service.RecentlyUserService;
@@ -312,13 +313,17 @@ public class MatchingController {
 
         if (!alreadyWithPartner) {
             // 추후 수정
-            throw new IllegalArgumentException("매칭 파트너로 중복되어 있지 않아");
+            throw new IllegalArgumentException("매칭 파트너로 등록되어 있지 않아");
         }
 
-        try {
-            matchingPartnerService.updateTrue(matching.getId(), user.getId());
-        } catch (MatchingPartnerNotFoundException e) {
-            return "redirect:/main/error";
+        MatchingPartner matchingPartner = matchingPartnerService.findByMatchingIdAndUserId(matchingId, user.getId());
+
+        if(matchingPartner.isInChatRoomTrueFalse()) {
+            return String.format("redirect:/chat/rooms/%d", matchingId);
+        }
+
+        if (!matching.canAddParticipant()) {
+            throw new IllegalArgumentException("채팅방 정원이 가득 찼습니다");
         }
 
         matchingPartnerService.updateTrue(matching.getId(), user.getId());
