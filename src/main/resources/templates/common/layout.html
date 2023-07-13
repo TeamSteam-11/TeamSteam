@@ -80,7 +80,7 @@
             margin-top: 150px; /* 원하는 간격 크기로 조정 */
         }
 
-        .btn-ghost:hover {
+        #nav-noti:hover {
             background-color: transparent !important;
         }
 
@@ -117,7 +117,7 @@
                 </a>
             </li>
             <li class="menu-1__li-icon">
-                <a href="/notification/list" class="h-full flex items-center px-2 btn btn-ghost btn-circle">
+                <a href="/notification/list" id="nav-noti" class="h-full flex items-center px-2 btn btn-ghost btn-circle">
                     <div class="indicator">
                         <span><i id="noti-icon" class="far fa-envelope"></i></span>
                         <span data-test="hasUnreadNotifications" th:if="${@rq.hasUnreadNotifications}"
