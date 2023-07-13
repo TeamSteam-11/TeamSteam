@@ -31,7 +31,7 @@ public class MatchingService {
     // 매칭 등록 기능
     public Matching create(User user, String title, String content, GenreTagType genreTag, Integer gameTagId, String gender, Long capacity, Integer startTime, Integer endTime, LocalDateTime deadlineDate) {
 
-        Optional<GameTag> gameTag = gameTagRepository.findByAppid(gameTagId);
+        Optional<GameTag> gameTag = gameTagRepository.findByAppidAndUserTagId(gameTagId, user.getUserTag().getId());
         String gameTagName = "게임이름을 불러올 수 없습니다";
         if(gameTag.isPresent()){
             GameTag gameTag1 = gameTag.orElseThrow();
