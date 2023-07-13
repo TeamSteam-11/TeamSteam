@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface GameTagRepository extends JpaRepository<GameTag, Long> {
     Optional<GameTag> findByUserTagId(Long id);
     void deleteByUserTag(UserTag userTag);
-    Optional<GameTag> findByAppid(Integer appid);
+    Optional<GameTag> findByAppidAndUserTagId(Integer appid, Long userTagId);
 }
