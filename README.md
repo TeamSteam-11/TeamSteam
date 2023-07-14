@@ -118,7 +118,7 @@
       <td align="center">매칭 등록</td>
     </tr>
     <tr>
-      <td align="center"><a href="https://ibb.co/mHZ4ynR"><img src="https://i.ibb.co/mHZ4ynR/image.png" alt="image" border="0"></a></td>
+      <td align="center"><a href="https://ibb.co/mHZ4ynR"><img src="https://i.ibb.co/y8vqkzN/image.png" alt="image" border="0"></a></td>
       <td align="center"><a href="https://ibb.co/TLtZ4HS"><img src="https://i.ibb.co/BNBmygx/image.png" alt="image" border="0"></a></td>
     </tr>
     <tr>
