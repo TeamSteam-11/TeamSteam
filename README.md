@@ -103,48 +103,47 @@
     </tr>
     <tr>
       <td align="center"><a href="https://ibb.co/7kKy5tt"><img src="https://i.ibb.co/y4qs1FF/image.png" alt="image" border="0"></a></td>
-      <td align="center"><a href="https://ibb.co/z69P2qf"><img src="https://i.ibb.co/WV8BzmK/image.png" alt="image" border="0"></a></td>
+      <td align="center"><a href="https://ibb.co/xgNCqbW"><img src="https://i.ibb.co/KsJ0xgd/image.png" alt="image" border="0"></a></a></td>
     </tr>
     <tr>
       <td align="center">장르 태그 설정 페이지</td>
       <td align="center">게임 태그 설정 이미지</td>
     </tr>
     <tr>
-      <td align="center"><a href="https://ibb.co/TKhp75y"><img src="https://i.ibb.co/cbTMZdq/image.png" alt="image" border="0"></a></td>
-      <td align="center"><a href="https://ibb.co/tB1RRgn"><img src="https://i.ibb.co/JnSZZV8/image.png" alt="image" border="0"></a></td>
+      <td align="center"><a href="https://ibb.co/QrkQLvN"><img src="https://i.ibb.co/vZhqp4P/image.png" alt="image" border="0"></a></td>
+      <td align="center"><a href="https://ibb.co/Bsk6m3p"><img src="https://i.ibb.co/tCR2SKG/image.png" alt="image" border="0"></a></td>
     </tr>
     <tr>
       <td align="center">매칭 목록</td>
       <td align="center">매칭 등록</td>
     </tr>
     <tr>
-      <td align="center"><a href="https://ibb.co/88t0Sgh"><img src="https://i.ibb.co/Yjw3qBr/image.png" alt="image" border="0"></a></td>
-      <td align="center"><a href="https://ibb.co/F6zyP5f"><img src="https://i.ibb.co/0qr6wCW/image.png" alt="image" border="0"></a>
-</td>
+      <td align="center"><a href="https://ibb.co/mHZ4ynR"><img src="https://i.ibb.co/mHZ4ynR/image.png" alt="image" border="0"></a></td>
+      <td align="center"><a href="https://ibb.co/TLtZ4HS"><img src="https://i.ibb.co/BNBmygx/image.png" alt="image" border="0"></a></td>
     </tr>
     <tr>
       <td align="center">매칭 상세 - 참여 전</td>
       <td align="center">매칭 상세 - 참여 후</td>
     </tr>
     <tr>
-      <td align="center"><a href="https://ibb.co/nQyWRyW"><img src="https://i.ibb.co/p4TmnTm/image.png" alt="image" border="0"></a></td>
-      <td align="center"><a href="https://ibb.co/jf10k4q"><img src="https://i.ibb.co/zx09VfC/image.png" alt="image" border="0"></a></td>
+      <td align="center"><a href="https://ibb.co/10r6qm6"><img src="https://i.ibb.co/2FvNtkN/image.png" alt="image" border="0"></a></td>
+      <td align="center"><a href="https://ibb.co/sgr5GTp"><img src="https://i.ibb.co/10xs5CY/image.png" alt="image" border="0"></a></td>
     </tr>
     <tr>
       <td align="center">채팅방</td>
       <td align="center">채팅 참여자 목록</td>
     </tr>
     <tr>
-      <td align="center"><a href="https://ibb.co/qW6rQGd"><img src="https://i.ibb.co/ZY9MDsV/image.png" alt="image" border="0"></a></td>
-      <td align="center"><a href="https://ibb.co/ctSC4Zk"><img src="https://i.ibb.co/RPkBRsY/image.png" alt="image" border="0"></a></td>
+      <td align="center"><a href="https://ibb.co/Zzy8qzy"><img src="https://i.ibb.co/tpysVpy/image.png" alt="image" border="0"></a></td>
+      <td align="center"><a href="https://ibb.co/q1VWZbQ"><img src="https://i.ibb.co/MNQGXq0/image.png" alt="image" border="0"></a></td>
     </tr>
     <tr>
       <td align="center">유저 프로필</td>
       <td align="center">명예의 전당</td>
     </tr>
     <tr>
-      <td align="center"><a href="https://ibb.co/THcGjzB"><img src="https://i.ibb.co/SKNgYqX/image.png" alt="image" border="0"></a></td>
-      <td align="center"><a href="https://ibb.co/D1zj9q3"><img src="https://i.ibb.co/b6QGsfp/image.png" alt="image" border="0"></a></td>
+      <td align="center"><a href="https://ibb.co/wBrhwkd"><img src="https://i.ibb.co/Gn3Qt6d/image.png" alt="image" border="0"></a></td>
+      <td align="center"><a href="https://ibb.co/WgmrRFC"><img src="https://i.ibb.co/qkTH296/image.png" alt="image" border="0"></a></td>
     </tr>
  </table>
 
