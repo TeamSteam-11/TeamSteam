@@ -8,9 +8,6 @@
     <p>
         <a href="https://www.teamsteam.site" target="_blank">사이트 방문하기</a>
     </p>
-    <a href="https://www.notion.so/11-TeamSteam-f980e630d95c448c95a08e72078b776d?pvs=4" target="_blank">팀노션</a> &nbsp; &nbsp; |&nbsp; &nbsp;
-    <a href="https://www.notion.so/3e3eff4cb09b4f119a71612c4a98f4e7?pvs=4" target="_blank">해커톤 발표자료</a>
-    <br /><br />
     <br /><br />
     <img src="https://img.shields.io/badge/java-007396?logo=java&logoColor=white">
     <img src="https://img.shields.io/badge/SpringBoot-6DB33F?logo=SpringBoot&logoColor=white">
