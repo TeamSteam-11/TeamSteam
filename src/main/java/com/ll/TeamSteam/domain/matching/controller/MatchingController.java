@@ -130,23 +130,14 @@ public class MatchingController {
     @PostMapping("/create")
     public String matchingCreate(@Valid CreateForm createForm,
                                  @AuthenticationPrincipal SecurityUser user) {
-
-
         Long userId = user.getId();
 
         User user1 = userRepository.findById(userId).orElseThrow();
 
-        // 사용자가 선택한 마감 시간을 설정하여 매칭 생성에 사용
-        LocalDateTime deadlineDate;
         LocalDateTime modifyDate = LocalDateTime.now();
         int selectedHours = createForm.getSelectedHours();
-        if (selectedHours > 0) {
-            deadlineDate = matchingService.setDeadline(modifyDate, selectedHours);
-        } else {
-            // 마감 시간을 '제한 없음'으로 선택 시 매칭 마감일이 30일 이후로 저장됨
-            deadlineDate = modifyDate.plusDays(30);
-        }
 
+        LocalDateTime deadlineDate = matchingService.calculateDeadline(modifyDate, selectedHours);
 
         // 서비스에서 추가 기능 구현
         Matching matching = matchingService.create(

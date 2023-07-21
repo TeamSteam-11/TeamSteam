@@ -10,6 +10,8 @@ import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
 import com.ll.TeamSteam.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.internal.util.privilegedactions.LoadClass;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -63,6 +65,18 @@ public class MatchingService {
     // 마감 시간 구현
     public LocalDateTime setDeadline(LocalDateTime modifyDate, int selectedHours) {
         return modifyDate.plusHours(selectedHours);
+    }
+
+    // 사용자가 선택한 마감 시간을 설정하여 매칭 생성에 사용
+    public LocalDateTime calculateDeadline(LocalDateTime modifyDate, int selectedHours) {
+        LocalDateTime deadlineDate;
+        if (selectedHours > 0) {
+            deadlineDate = setDeadline(modifyDate, selectedHours);
+        } else {
+            // 마감 시간을 '제한 없음'으로 선택 시 매칭 마감일이 30일 이후로 저장됨
+            deadlineDate = modifyDate.plusDays(30);
+        }
+        return deadlineDate;
     }
 
     public Page<Matching> getMatchingList(Pageable pageable) {
