@@ -30,7 +30,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
-
+//전부 서비스로 수정
     private final UserRepository userRepository;
 
     private final UserTagRepository userTagRepository;
@@ -50,24 +50,47 @@ public class UserService {
     }
 
 
-    @Transactional
     public void create(UserInfoResponse userInfo) {
 
         User createdUser = createUser(userInfo);
-        userRepository.save(createdUser);
+        userSave(createdUser);
 
         UserTag userTag = UserTag.builder().user(createdUser).build();
-        userTagRepository.save(userTag);
-
         GenreTag genreTag = GenreTag.builder().userTag(userTag).build();
-        genreTagRepository.save(genreTag);
-
         GameTag gameTag = GameTag.builder().userTag(userTag).build();
-        gameTagRepository.save(gameTag);
-
         SteamGameLibrary steamGameLibrary = SteamGameLibrary.builder().user(createdUser).build();
+
+        //서비스 만들어서 서비스단에서 저장
+
+        userTagSave(userTag);
+
+
+        genreTagRepository.save(genreTag);
+        gameTagRepository.save(gameTag);
         steamGameLibraryRepository.save(steamGameLibrary);
     }
+    @Transactional
+    public void userTagSave(UserTag userTag){
+
+        userTagRepository.save(userTag);
+    }
+
+    @Transactional
+    public void genreTagSave(GenreTag genreTag){
+
+    }
+
+    @Transactional
+    public void gameTagSave(){
+
+    }
+
+    @Transactional
+    public void steamGameLibrarySave(){
+
+    }
+
+
 
     public User createUser(UserInfoResponse userInfo) {
         String username = userInfo.getResponse().getPlayers().get(0).getPersonaname();
@@ -91,7 +114,9 @@ public class UserService {
 
         User user = findById(id).orElseThrow();
         UserTag userTag = userTagRepository.findByUserId(id).orElseThrow();
-        genreTagRepository.deleteAll(userTag.getGenreTag());
+//수정 예정
+        deleteAllGenreTag(userTag);
+        // genreTagRepository.deleteAll(userTag.getGenreTag());
 
         //장르태그
         List<GenreTag> genreTags = new ArrayList<>();
@@ -111,9 +136,14 @@ public class UserService {
         user.setType(Gender.valueOf(gender));
 
         // 변경된 데이터 저장
-        userRepository.save(user);
+        userSave(user);
         userTagRepository.save(userTag);
 
+    }
+
+    @Transactional
+    public void deleteAllGenreTag(UserTag userTag){
+        genreTagRepository.deleteAll(userTag.getGenreTag());
     }
 
     @Transactional(readOnly = true)
@@ -131,8 +161,6 @@ public class UserService {
         UserTag userTag = userTagRepository.findByUserId(userId).orElseThrow();
         gameTagRepository.deleteAll(userTag.getGameTag());
         if(!steamGameLibraryRepository.findAllByUserId(userId).isEmpty()){
-            log.info("steamGameLibraryRepository.findAllByUserId(userId).isEmpty() = {}", steamGameLibraryRepository.findAllByUserId(userId).isEmpty());
-            log.info("userId = {}", userId);
             steamGameLibraryRepository.deleteByUserId(userId);
         }
 
@@ -151,8 +179,6 @@ public class UserService {
 
     @Transactional
     public void updateTemperature(Long userId, int like) {
-        log.info("like = {} ", like);
-//        log.info("user.getTemperature = {}", user.getTemperature());
         User user = findById(userId).orElseThrow();
         int updateTemperature = user.getTemperature();
 
@@ -165,7 +191,7 @@ public class UserService {
 
         user.setTemperature(updateTemperature);
 
-        userRepository.save(user);
+        userSave(user);
     }
 
     @Transactional
@@ -187,10 +213,6 @@ public class UserService {
 
             friendRepository.save(meToFriends);
             friendRepository.save(friendToMe);
-        }
-        else{//친구일 때
-
-
         }
     }
     @Transactional
@@ -257,4 +279,10 @@ public class UserService {
 
         userRepository.save(user);
     }
+
+    @Transactional
+    public void userSave(User user){
+        userRepository.save(user);
+    }
+
 }
