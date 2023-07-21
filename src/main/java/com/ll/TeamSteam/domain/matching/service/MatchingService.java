@@ -177,7 +177,7 @@ public class MatchingService {
         return matchingRepository.findAll(pageable);
     }
 
-    public List<Matching> getApproachingDeadlineMatchingList() {
+    public List<Matching> getSortedMatchingByDeadline() {
         List<Matching> matchingList = matchingRepository.findAll();
         List<Matching> approachingDeadlineList = new ArrayList<>();
 
@@ -195,10 +195,8 @@ public class MatchingService {
                 return Duration.between(now, deadlineDate);
             }
             return Duration.ZERO;
-
-//            Duration duration = Duration.between(LocalDateTime.now(), matching.getDeadlineDate());
-//            return duration;
         });
+
         Collections.sort(approachingDeadlineList, deadlineComparator);
 
         return approachingDeadlineList.stream()

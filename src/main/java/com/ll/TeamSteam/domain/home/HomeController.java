@@ -27,7 +27,7 @@ public class HomeController {
 
     @GetMapping("/main/home")
     public String showHome(Model model) {
-        List<Matching> approachingDeadlineList = matchingService.getApproachingDeadlineMatchingList();
+        List<Matching> approachingDeadlineList = matchingService.getSortedMatchingByDeadline();
         model.addAttribute("matchingListSortedByDeadline", approachingDeadlineList);
 
         List<Matching> sortedByParticipantList = matchingService.getSortedMatchingByParticipant();
