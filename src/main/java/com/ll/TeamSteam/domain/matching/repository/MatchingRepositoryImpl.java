@@ -8,12 +8,15 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 public class MatchingRepositoryImpl implements MatchingRepositoryCustom{
@@ -43,14 +46,19 @@ public class MatchingRepositoryImpl implements MatchingRepositoryCustom{
         // 정렬 조건 생성
         OrderSpecifier<?> orderSpecifier = sortMatching(pageable);
 
-        QueryResults<Matching> results = queryFactory.selectFrom(matching)
+        // fetch()와 select(Expressions.ONE).fetchOne()를 따로 사용
+        List<Matching> results = queryFactory.selectFrom(matching)
                 .where(predicate)
                 .orderBy(orderSpecifier) // 외부에서 정렬 조건을 넘겨받음
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetchResults();
+                .fetch();
 
-        return new PageImpl<>(results.getResults(), pageable, results.getTotal());
+        Long total = queryFactory.select(Expressions.ONE.count()).from(matching)
+                .where(predicate)
+                .fetchOne();
+
+        return new PageImpl<>(results, pageable, total);
     }
 
     private OrderSpecifier<?> sortMatching(Pageable page) {
