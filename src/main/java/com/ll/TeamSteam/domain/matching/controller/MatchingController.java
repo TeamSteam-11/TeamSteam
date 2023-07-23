@@ -368,6 +368,7 @@ public class MatchingController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
         Page<Matching> matchingList = matchingService.filterMatching(genreType, startTime,gender, pageable);
+
         model.addAttribute("matchingList", matchingList);
         model.addAttribute("currentPage", page);
         model.addAttribute("genretype", genreTypeStr); // This line is changed

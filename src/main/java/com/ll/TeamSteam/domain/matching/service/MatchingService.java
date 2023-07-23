@@ -137,30 +137,7 @@ public class MatchingService {
 
     // 쿼리 DSL
     public Page<Matching> filterMatching(GenreTagType genreType, Integer startTime, String gender, Pageable pageable) {
-
-        if (genreType != null && startTime != null) {
-            // 장르와 시간
-            return matchingRepository.findByGenreAndStartTime(genreType, startTime, pageable);
-        } else if (genreType != null) {
-            // 장르
-            return matchingRepository.findByGenre(genreType, pageable);
-        } else if (startTime != null) {
-            // 시작시간
-            return matchingRepository.findByStartTime(startTime, pageable);
-        } else if (!gender.isEmpty()) {
-            // 성별
-            return matchingRepository.findByGender(gender, pageable);
-        } else if (genreType != null && gender.isEmpty()) {
-            // 장르와 성별
-            return matchingRepository.findByGenreAndGender(genreType, gender, pageable);
-        } else if (startTime != null && gender.isEmpty()) {
-            // 성별과 시간
-            return matchingRepository.findByStartTimeAndGender(startTime, gender, pageable);
-        } else if (genreType != null && startTime != null && gender.isEmpty()){
-            // 장르, 성별, 시간
-            return matchingRepository.findByGenreAndStartTimeAndGender(genreType, startTime, gender, pageable);
-        }
-        return matchingRepository.findAll(pageable);
+        return matchingRepository.filterByGenreAndStartTimeAndGender(genreType, startTime, gender, pageable);
     }
 
     public List<Matching> getApproachingDeadlineMatchingList() {
