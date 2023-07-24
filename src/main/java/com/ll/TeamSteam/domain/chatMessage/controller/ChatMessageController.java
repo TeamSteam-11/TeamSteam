@@ -29,7 +29,6 @@ import static com.ll.TeamSteam.domain.chatMessage.entity.ChatMessageType.MESSAGE
 @RequiredArgsConstructor
 public class ChatMessageController {
     private final ChatMessageService chatMessageService;
-    private final UserService userService;
 
     @MessageMapping("/chats/{roomId}/sendMessage") // app/chats/{roomId}/sendMessage
     @SendTo("/topic/chats/{roomId}") // 다시보내는 경로? enableSimpleBroker
