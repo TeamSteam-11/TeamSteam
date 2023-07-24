@@ -284,7 +284,7 @@ public class MatchingController {
              throw new IllegalArgumentException("너 이미 매칭파트너에 참여중이야");
         }
 
-        ChatRoom chatRoom = chatRoomService.findById(matchingId);
+        ChatRoom chatRoom = chatRoomService.findByRoomId(matchingId);
         RsData rsData = chatRoomService.canAddChatRoomUser(chatRoom, user.getId(), matching);
         log.info("rsData.getData = {} ", rsData.getData());
 

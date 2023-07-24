@@ -56,29 +56,24 @@ public class ChatRoomService {
 
         savedChatRoom.addChatUser(owner);
 
-        ChatUser chatUser = findChatUserByUserId(chatRoom, ownerId);
+        ChatUser chatUser = chatUserService.findChatUserByUserId(chatRoom, ownerId);
         chatUser.changeUserCommonType();
 
         return savedChatRoom;
-    }
-
-    public ChatRoom findById(Long roomId) {
-        return chatRoomRepository.findById(roomId)
-                .orElseThrow(() -> new NoChatRoomException("방이 존재하지 않습니다."));
     }
 
     @Transactional
     public ChatRoomDto validEnterChatRoom(Long roomId, long userId) {
         User user = userService.findByIdElseThrow(userId);
 
-        ChatRoom chatRoom = findById(roomId);
+        ChatRoom chatRoom = findByRoomId(roomId);
         Matching matching = chatRoom.getMatching();
 
         matchingPartnerService.validNotMatchingPartner(matching, user);
 
         addChatRoomUser(chatRoom, user, userId);
 
-        findChatUserByUserId(chatRoom, user.getId());
+        chatUserService.findChatUserByUserId(chatRoom, user.getId());
 
         return ChatRoomDto.fromChatRoom(chatRoom, user);
     }
@@ -132,8 +127,7 @@ public class ChatRoomService {
     public void validRemoveChatRoom(Long roomId, Long OwnerId) {
         User owner = userService.findByIdElseThrow(OwnerId);
 
-        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
-                .orElseThrow(() -> new NoChatRoomException("존재하지 않는 방입니다."));
+        ChatRoom chatRoom = findByRoomId(roomId);
 
         if(!chatRoom.getOwner().equals(owner)) {
             throw new IllegalArgumentException("방 삭제 권한이 없습니다.");
@@ -147,16 +141,11 @@ public class ChatRoomService {
         chatRoomRepository.delete(chatRoom);
     }
 
-
-    /**
-     * 유저가 방 나가기
-     */
     @Transactional
     public void validExitChatRoom(Long roomId, Long userId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
-                .orElseThrow(() -> new NoChatRoomException("존재하지 않는 방입니다."));
+        ChatRoom chatRoom = findByRoomId(roomId);
 
-        ChatUser chatUser = findChatUserByUserId(chatRoom, userId);
+        ChatUser chatUser = chatUserService.findChatUserByUserId(chatRoom, userId);
 
         if(chatUser.getChatRoom().getOwner().getId() == userId){
             throw new IllegalArgumentException("방장은 방에서 나갈 수 없어");
@@ -169,15 +158,7 @@ public class ChatRoomService {
             // 수동으로 연관관계 끊어주기
             // chatRoom.getMatching().deleteMatchingPartner(matchingPartner);
             matchingPartnerRepository.delete(matchingPartner);
-
         }
-    }
-
-    public ChatUser findChatUserByUserId(ChatRoom chatRoom, Long userId) {
-        return chatRoom.getChatUsers().stream()
-                .filter(chatUser -> chatUser.getUser().getId().equals(userId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("너 ChatUser 아니야!"));
     }
 
     @Transactional
@@ -188,14 +169,12 @@ public class ChatRoomService {
 
     @Transactional
     public void kickChatUserAndChangeType(Long roomId, Long chatUserId, SecurityUser user) {
-        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
-                .orElseThrow(() -> new NoChatRoomException("존재하지 않는 방입니다."));
+        ChatRoom chatRoom = findByRoomId(roomId);
 
         checkChatRoomOwner(chatRoom, user.getId());
 
         ChatUser chatUser = chatUserService.findById(chatUserId);
         User kickUser = chatUser.getUser();
-
         Long originUserId = kickUser.getId();
 
         chatUser.changeType();
@@ -221,7 +200,6 @@ public class ChatRoomService {
         }
     }
 
-    // 버그 없는지 확인 : 메서드 두 개 통합
     @Transactional
     public void updateChatUserType(Long roomId, Long userId) {
         ChatRoom chatRoom = chatUserService.findByRoomId(roomId);
@@ -244,19 +222,18 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public RsData<User> validInviteChatRoom(Long roomId, SecurityUser user, Long userId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
-                .orElseThrow(() -> new NoChatRoomException("존재하지 않는 방입니다."));
+    public RsData<User> validInviteChatRoom(Long roomId, SecurityUser user, Long invitedUserId) {
+        ChatRoom chatRoom = findByRoomId(roomId);
 
         Long invitingUserId = user.getId();
         User invitingUser = userService.findByIdElseThrow(invitingUserId);
-        ChatUser chatUserByUserId = findChatUserByUserId(chatRoom, invitingUserId);
+        ChatUser chatUserByUserId = chatUserService.findChatUserByUserId(chatRoom, invitingUserId);
 
         if (chatUserByUserId == null){
             throw new IllegalArgumentException("현재 당신은 %s 방에 들어있지 않습니다.".formatted(chatRoom.getName()));
         }
 
-        User invitedUser = userService.findByIdElseThrow(userId);
+        User invitedUser = userService.findByIdElseThrow(invitedUserId);
 
         if (invitingUser.getId() == invitedUser.getId()) {
             return RsData.of("F-2", "본인을 초대할 수 없습니다");
@@ -268,11 +245,10 @@ public class ChatRoomService {
     }
 
     public boolean isDuplicatedInvitation(Long roomId, Long invitingUserId, Long invitedUserId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
-                .orElseThrow(() -> new NoChatRoomException("존재하지 않는 방입니다."));
+        ChatRoom chatRoom = findByRoomId(roomId);
 
         User invitingUser = userService.findByIdElseThrow(invitingUserId);
-        ChatUser chatUserByUserId = findChatUserByUserId(chatRoom, invitingUserId);
+        ChatUser chatUserByUserId = chatUserService.findChatUserByUserId(chatRoom, invitingUserId);
 
         if (chatUserByUserId == null){
             throw new IllegalArgumentException("현재 당신은 %s 방에 들어있지 않습니다.".formatted(chatRoom.getName()));
@@ -301,5 +277,10 @@ public class ChatRoomService {
         } else {
             return false;
         }
+    }
+
+    public ChatRoom findByRoomId(Long roomId) {
+        return chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new NoChatRoomException("방이 존재하지 않습니다."));
     }
 }

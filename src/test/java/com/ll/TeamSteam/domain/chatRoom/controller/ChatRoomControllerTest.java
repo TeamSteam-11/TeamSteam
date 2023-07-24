@@ -83,12 +83,12 @@ class ChatRoomControllerTest {
         matchingPartnerService.addPartner(validRoomId, validUserId);
         matchingPartnerService.updateTrue(validRoomId, validUserId);
 
-        ChatRoom chatRoom = chatRoomService.findById(validRoomId);
+        ChatRoom chatRoom = chatRoomService.findByRoomId(validRoomId);
 
         chatRoomService.validEnterChatRoom(validRoomId, validUserId); // 채팅방에 참가하는 로직
 
         chatRoomService.validExitChatRoom(validRoomId, validUserId);
-        ChatUser chatUser = chatRoomService.findChatUserByUserId(chatRoom, validUserId);
+        ChatUser chatUser = chatUserService.findChatUserByUserId(chatRoom, validUserId);
 
         assertEquals(EXIT, chatUser.getType());
     }
@@ -108,7 +108,7 @@ class ChatRoomControllerTest {
 
         chatRoomService.validEnterChatRoom(validRoomId, validUserId);
 
-        ChatRoom chatRoom = chatRoomService.findById(validRoomId);
+        ChatRoom chatRoom = chatRoomService.findByRoomId(validRoomId);
 
         User kickedUser = userService.findById(validUserId).orElseThrow();
 
@@ -116,7 +116,7 @@ class ChatRoomControllerTest {
 
         chatRoomService.kickChatUserAndChangeType(validRoomId, chatUserKicked.getId(), user);
 
-        ChatUser chatUser = chatRoomService.findChatUserByUserId(chatRoom, validUserId);
+        ChatUser chatUser = chatUserService.findChatUserByUserId(chatRoom, validUserId);
 
         assertEquals(KICKED, chatUser.getType());
     }
@@ -136,7 +136,7 @@ class ChatRoomControllerTest {
 
         chatRoomService.validEnterChatRoom(validRoomId, validUserId);
 
-        ChatRoom chatRoom = chatRoomService.findById(validRoomId);
+        ChatRoom chatRoom = chatRoomService.findByRoomId(validRoomId);
 
         User kickedUser = userService.findById(validUserId).orElseThrow();
 
@@ -152,7 +152,7 @@ class ChatRoomControllerTest {
         Long validUserId = 2L;
 
         User currentUser = userService.findByIdElseThrow(validUserId);
-        ChatRoom chatRoom = chatRoomService.findById(validRoomId);
+        ChatRoom chatRoom = chatRoomService.findByRoomId(validRoomId);
 
         assertThrows(IllegalArgumentException.class, () -> chatRoomService.validEnterChatRoom(chatRoom.getId(), currentUser.getId()));
     }
@@ -164,7 +164,7 @@ class ChatRoomControllerTest {
         Long validUserId = 3L;
         SecurityUser user = new SecurityUser(4L, "user4", "7777777"); // 방장
 
-        ChatRoom chatRoom = chatRoomService.findById(validRoomId);
+        ChatRoom chatRoom = chatRoomService.findByRoomId(validRoomId);
         User currentUser = userService.findByIdElseThrow(validUserId);
 
         assertThrows(IllegalArgumentException.class, () -> chatRoomService.validInviteChatRoom(chatRoom.getId(), user, currentUser.getId()));

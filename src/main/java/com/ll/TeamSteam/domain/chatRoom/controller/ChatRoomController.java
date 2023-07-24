@@ -50,7 +50,7 @@ public class ChatRoomController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/rooms/{roomId}")
     public String enterChatRoom(@PathVariable Long roomId, Model model, @AuthenticationPrincipal SecurityUser user) {
-        ChatRoom chatRoom = chatRoomService.findById(roomId);
+        ChatRoom chatRoom = chatRoomService.findByRoomId(roomId);
         Matching matching = chatRoom.getMatching();
 
         RsData rsData = chatRoomService.canAddChatRoomUser(chatRoom, user.getId(), matching);
@@ -101,7 +101,7 @@ public class ChatRoomController {
     @DeleteMapping("/rooms/{roomId}")
     public String exitChatRoom(@PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user){
 
-        ChatRoom chatRoom = chatRoomService.findById(roomId);
+        ChatRoom chatRoom = chatRoomService.findByRoomId(roomId);
 
         ChatRoomDto chatRoomDto = chatRoomService.validEnterChatRoom(roomId, user.getId());
 
@@ -132,7 +132,7 @@ public class ChatRoomController {
     @DeleteMapping("/{roomId}/kick/{chatUserId}")
     public String kickChatUser(@PathVariable Long roomId, @PathVariable Long chatUserId,
                                  @AuthenticationPrincipal SecurityUser user){
-        ChatRoom chatRoom = chatRoomService.findById(roomId);
+        ChatRoom chatRoom = chatRoomService.findByRoomId(roomId);
         chatRoomService.kickChatUserAndChangeType(roomId, chatUserId, user);
 
         return ("redirect:/chat/%d/userList").formatted(chatRoom.getId());
@@ -146,7 +146,7 @@ public class ChatRoomController {
     public String chatUserList(Model model, @PathVariable Long roomId,
                              @AuthenticationPrincipal SecurityUser user) {
         List<ChatUser> chatUserList = chatUserService.findByChatRoomIdAndChatUser(roomId, user.getId());
-        ChatRoom chatRoom = chatRoomService.findById(roomId);
+        ChatRoom chatRoom = chatRoomService.findByRoomId(roomId);
 
         if (chatUserList == null) {
             throw new IllegalArgumentException("해당 방에 참가하지 않았습니다.");
@@ -175,7 +175,7 @@ public class ChatRoomController {
 
         User currentUser = userService.findByIdElseThrow(user.getId());
         List<Friend> friendList = currentUser.getFriendList();
-        ChatRoom chatRoom = chatRoomService.findById(roomId);
+        ChatRoom chatRoom = chatRoomService.findByRoomId(roomId);
 
         model.addAttribute("chatRoom", chatRoom);
         model.addAttribute("user", currentUser);
@@ -192,7 +192,7 @@ public class ChatRoomController {
     public ResponseEntity<Boolean> inviteChatRoom(@PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user,
                                                   @PathVariable Long userId, Model model){
         // DB에서 이미 정보가 있는지 없는지 조회
-        ChatRoom chatRoom = chatRoomService.findById(roomId);
+        ChatRoom chatRoom = chatRoomService.findByRoomId(roomId);
         boolean alreadyInvited = chatRoomService.isDuplicatedInvitation(chatRoom.getId(), user.getId(), userId);
         log.info("alreadyInvited = {} ", alreadyInvited);
 

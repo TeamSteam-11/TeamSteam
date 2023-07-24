@@ -28,7 +28,7 @@ public class ChatMessageService {
 
     public ChatMessage createAndSave(String content, Long senderId, Long chatRoomId, ChatMessageType type) {
 
-        ChatRoom chatRoom = chatRoomService.findById(chatRoomId);
+        ChatRoom chatRoom = chatRoomService.findByRoomId(chatRoomId);
 
         ChatUser sender = chatRoom.getChatUsers().stream()
                 .filter(chatUser -> chatUser.getUser().getId().equals(senderId))
@@ -42,7 +42,7 @@ public class ChatMessageService {
 
     public List<ChatMessageDto> getByChatRoomIdAndUserIdAndFromId(Long roomId, Long userId, Long fromId) {
 
-        ChatRoom chatRoom = chatRoomService.findById(roomId);
+        ChatRoom chatRoom = chatRoomService.findByRoomId(roomId);
 
         chatRoom.getChatUsers().stream()
                 .filter(chatUser -> chatUser.getUser().getId().equals(userId))

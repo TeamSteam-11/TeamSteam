@@ -23,10 +23,6 @@ public class ChatUserService {
         return chatUserRepository.findById(chatRoomUserId).orElseThrow();
     }
 
-    public List<ChatUser> findByChatRoomId(Long chatRoomId) {
-        return chatUserRepository.findByChatRoomId(chatRoomId);
-    }
-
     public List<ChatUser> findByChatRoomIdAndChatUser(Long roomId, Long userId) {
         ChatRoom chatRoom = findByRoomId(roomId);
         ChatUser chatUser = findChatUserByUserId(chatRoom, userId);
@@ -38,30 +34,16 @@ public class ChatUserService {
         return chatUserRepository.findByChatRoomId(roomId);
     }
 
-    private ChatUser findChatUserByUserId(ChatRoom chatRoom, Long userId) {
+    public ChatUser findChatUserByUserId(ChatRoom chatRoom, Long userId) {
         return chatRoom.getChatUsers().stream()
                 .filter(chatUser -> chatUser.getUser().getId().equals(userId))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException("너 ChatUser 아니야!"));
     }
 
     public ChatRoom findByRoomId(Long roomId) {
 
         return chatRoomRepository.findById(roomId).orElseThrow();
-    }
-
-    // OwnerID 비교
-    public List<ChatUser> findByChatRoomOwnerIdAndChatUser(Long roomId, Long userId) {
-        ChatRoom chatRoom = findByRoomId(roomId);
-        Long ownerId = chatRoom.getOwner().getId();
-        log.info("ownerId = {} ", ownerId);
-
-
-        if (ownerId != userId){
-            return null;
-        }
-
-        return chatUserRepository.findByChatRoomId(roomId);
     }
 
     public ChatUser findByChatRoomAndUser(ChatRoom chatRoom, User user) {
