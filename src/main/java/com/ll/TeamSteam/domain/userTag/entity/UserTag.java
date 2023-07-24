@@ -1,8 +1,8 @@
-package com.ll.TeamSteam.domain.userTag;
+package com.ll.TeamSteam.domain.userTag.entity;
 
 import com.ll.TeamSteam.domain.user.entity.User;
-import com.ll.TeamSteam.domain.userTag.gameTag.GameTag;
-import com.ll.TeamSteam.domain.userTag.genreTag.GenreTag;
+import com.ll.TeamSteam.domain.gameTag.entity.GameTag;
+import com.ll.TeamSteam.domain.genreTag.entity.GenreTag;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;

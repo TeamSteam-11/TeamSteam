@@ -2,18 +2,16 @@ package com.ll.TeamSteam.domain.user.controller;
 
 
 import com.ll.TeamSteam.domain.friend.entity.Friend;
-import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.notification.service.NotificationService;
 import com.ll.TeamSteam.domain.recentlyUser.entity.RecentlyUser;
 import com.ll.TeamSteam.domain.recentlyUser.service.RecentlyUserService;
 import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
-import com.ll.TeamSteam.domain.steam.service.SteamService;
+import com.ll.TeamSteam.domain.steam.service.SteamGameLibraryService;
 import com.ll.TeamSteam.domain.user.entity.Gender;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.rq.Rq;
-import com.ll.TeamSteam.global.rsData.RsData;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
 import jakarta.servlet.http.Cookie;
@@ -25,11 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.minidev.json.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -64,7 +57,7 @@ public class UserController {
 
     private final UserService userService;
 
-    private final SteamService steamService;
+    private final SteamGameLibraryService steamGameLibraryService;
 
     private final RecentlyUserService recentlyUserService;
 
@@ -182,7 +175,7 @@ public class UserController {
     ) throws ParseException {
 
         String steamId = user.getSteamId();
-        List<SteamGameLibrary> haveGameListData = steamService.getUserGameList(steamId);
+        List<SteamGameLibrary> haveGameListData = steamGameLibraryService.getUserGameList(steamId);
 
         int totalItems = haveGameListData.size();
         int totalPages = (int) Math.ceil((double) totalItems / size);
@@ -283,7 +276,7 @@ public class UserController {
 
     public UserInfoResponse getUserInfo(String steamId) {
 
-        return steamService.getUserInformation(steamId);
+        return steamGameLibraryService.getUserInformation(steamId);
     }
 
 
@@ -295,7 +288,7 @@ public class UserController {
 
         User targetUser = userService.findById(userId).orElseThrow();
 
-        List<SteamGameLibrary> haveGameListData = steamService.getUserGameList(targetUser.getSteamId());
+        List<SteamGameLibrary> haveGameListData = steamGameLibraryService.getUserGameList(targetUser.getSteamId());
 
         int totalItems = haveGameListData.size();
         int totalPages = (int) Math.ceil((double) totalItems / size);

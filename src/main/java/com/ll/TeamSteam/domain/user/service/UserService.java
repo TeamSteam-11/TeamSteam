@@ -2,18 +2,23 @@ package com.ll.TeamSteam.domain.user.service;
 
 import com.ll.TeamSteam.domain.friend.entity.Friend;
 import com.ll.TeamSteam.domain.friend.repository.FriendRepository;
+import com.ll.TeamSteam.domain.friend.service.FriendService;
+import com.ll.TeamSteam.domain.gameTag.service.GameTagService;
+import com.ll.TeamSteam.domain.genreTag.service.GenreTagService;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
 import com.ll.TeamSteam.domain.steam.repository.SteamGameLibraryRepository;
+import com.ll.TeamSteam.domain.steam.service.SteamGameLibraryService;
 import com.ll.TeamSteam.domain.user.entity.Gender;
 import com.ll.TeamSteam.domain.user.entity.User;
-import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
-import com.ll.TeamSteam.domain.userTag.genreTag.GenreTagRepository;
+import com.ll.TeamSteam.domain.gameTag.repository.GameTagRepository;
+import com.ll.TeamSteam.domain.genreTag.repository.GenreTagRepository;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
-import com.ll.TeamSteam.domain.userTag.UserTagRepository;
-import com.ll.TeamSteam.domain.userTag.UserTag;
-import com.ll.TeamSteam.domain.userTag.gameTag.GameTag;
-import com.ll.TeamSteam.domain.userTag.genreTag.GenreTag;
+import com.ll.TeamSteam.domain.userTag.repository.UserTagRepository;
+import com.ll.TeamSteam.domain.userTag.entity.UserTag;
+import com.ll.TeamSteam.domain.gameTag.entity.GameTag;
+import com.ll.TeamSteam.domain.genreTag.entity.GenreTag;
+import com.ll.TeamSteam.domain.userTag.service.UserTagService;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,18 +35,18 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
-//전부 서비스로 수정
+
     private final UserRepository userRepository;
+    //전부 서비스로 수정
+    private UserTagService userTagService;
 
-    private final UserTagRepository userTagRepository;
+    private GameTagService gameTagService;
 
-    private final GameTagRepository gameTagRepository;
+    private GenreTagService genreTagService;
 
-    private final GenreTagRepository genreTagRepository;
+    private SteamGameLibraryService steamGameLibraryService;
 
-    private final SteamGameLibraryRepository steamGameLibraryRepository;
-
-    private final FriendRepository friendRepository;
+    private final FriendService friendService;
 
 
     @Transactional(readOnly = true)
@@ -62,35 +67,11 @@ public class UserService {
 
         //서비스 만들어서 서비스단에서 저장
 
-        userTagSave(userTag);
-
-
-        genreTagRepository.save(genreTag);
-        gameTagRepository.save(gameTag);
-        steamGameLibraryRepository.save(steamGameLibrary);
+        userTagService.save(userTag);
+        genreTagService.save(genreTag);
+        gameTagService.save(gameTag);
+        steamGameLibraryService.save(steamGameLibrary);
     }
-    @Transactional
-    public void userTagSave(UserTag userTag){
-
-        userTagRepository.save(userTag);
-    }
-
-    @Transactional
-    public void genreTagSave(GenreTag genreTag){
-
-    }
-
-    @Transactional
-    public void gameTagSave(){
-
-    }
-
-    @Transactional
-    public void steamGameLibrarySave(){
-
-    }
-
-
 
     public User createUser(UserInfoResponse userInfo) {
         String username = userInfo.getResponse().getPlayers().get(0).getPersonaname();
@@ -113,7 +94,7 @@ public class UserService {
     public void updateUserData(String gender, List<GenreTagType> genreTagTypes, Long id) {
 
         User user = findById(id).orElseThrow();
-        UserTag userTag = userTagRepository.findByUserId(id).orElseThrow();
+        UserTag userTag = userTagService.findByUserId(id);
 //수정 예정
         deleteAllGenreTag(userTag);
         // genreTagRepository.deleteAll(userTag.getGenreTag());
@@ -129,7 +110,7 @@ public class UserService {
             genreTags.add(genreTag);
         }
 
-        genreTagRepository.saveAll(genreTags);
+        genreTagService.saveAll(genreTags);
 
 
         // Gender 업데이트
@@ -137,13 +118,13 @@ public class UserService {
 
         // 변경된 데이터 저장
         userSave(user);
-        userTagRepository.save(userTag);
+        userTagService.save(userTag);
 
     }
 
     @Transactional
     public void deleteAllGenreTag(UserTag userTag){
-        genreTagRepository.deleteAll(userTag.getGenreTag());
+        genreTagService.deleteAll(userTag.getGenreTag());
     }
 
     @Transactional(readOnly = true)
@@ -158,10 +139,10 @@ public class UserService {
 
         User user = findBySteamId(steamId).orElseThrow();
         Long userId = user.getId();
-        UserTag userTag = userTagRepository.findByUserId(userId).orElseThrow();
-        gameTagRepository.deleteAll(userTag.getGameTag());
-        if(!steamGameLibraryRepository.findAllByUserId(userId).isEmpty()){
-            steamGameLibraryRepository.deleteByUserId(userId);
+        UserTag userTag = userTagService.findByUserId(userId);
+        gameTagService.deleteAll(userTag.getGameTag());
+        if(!steamGameLibraryService.findAllByUserId(userId).isEmpty()){
+            steamGameLibraryService.deleteByUserId(userId);
         }
 
         for (SteamGameLibrary game : gameList) {
@@ -174,7 +155,7 @@ public class UserService {
             gameLibraries.add(newGameLibrary);
         }
 
-        steamGameLibraryRepository.saveAll(gameLibraries);
+        steamGameLibraryService.saveAll(gameLibraries);
     }
 
     @Transactional
@@ -211,8 +192,8 @@ public class UserService {
                     .friend(loginedUser)
                     .build();
 
-            friendRepository.save(meToFriends);
-            friendRepository.save(friendToMe);
+            friendService.save(meToFriends);
+            friendService.save(friendToMe);
         }
     }
     @Transactional
@@ -222,12 +203,12 @@ public class UserService {
             User loginedUser = findByIdElseThrow(loginedId);
 
             // 내가 친구인 관계 삭제
-            Friend meToFriend = friendRepository.findByUserAndFriend(loginedUser, targetUser);
-            friendRepository.delete(meToFriend);
+            Friend meToFriend = friendService.findByUserAndFriend(loginedUser, targetUser);
+            friendService.delete(meToFriend);
 
             // 상대방이 나를 친구로 추가한 관계 삭제
-            Friend friendToMe = friendRepository.findByUserAndFriend(targetUser, loginedUser);
-            friendRepository.delete(friendToMe);
+            Friend friendToMe = friendService.findByUserAndFriend(targetUser, loginedUser);
+            friendService.delete(friendToMe);
         }
     }
 
@@ -245,21 +226,21 @@ public class UserService {
 
         User user = userRepository.findBySteamId(steamId).orElseThrow();
 
-        gameTagRepository.deleteByUserTag(user.getUserTag());
+        gameTagService.deleteByUserTag(user.getUserTag());
 
 
         Set<Integer> distinctGameIds = new HashSet<>(); // 중복을 제거하기 위한 Set
 
         for (Integer appId : selectedGames) {
             if (!distinctGameIds.contains(appId)) { // 중복된 게임 ID가 아닌 경우에만 처리
-                SteamGameLibrary gameLibrary = steamGameLibraryRepository.findByAppidAndUserId(appId, user.getId());
+                SteamGameLibrary gameLibrary = steamGameLibraryService.findByAppidAndUserId(appId, user.getId());
                 if (gameLibrary != null) {
                     GameTag gameTag = new GameTag();
                     gameTag.setAppid(gameLibrary.getAppid());
                     gameTag.setName(gameLibrary.getName());
                     gameTag.setUserTag(user.getUserTag());
 
-                    gameTagRepository.save(gameTag);
+                    gameTagService.save(gameTag);
                 }
                 distinctGameIds.add(appId); // 처리한 게임 ID를 추가
             }
@@ -268,7 +249,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<Friend> getFriends(Long userId) {
-        return friendRepository.findAllByUserId(userId);
+        return friendService.findAllByUserId(userId);
     }
 
     @Transactional

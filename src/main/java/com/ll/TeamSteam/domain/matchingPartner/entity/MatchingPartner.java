@@ -40,5 +40,15 @@ public class MatchingPartner extends BaseEntity {
         this.inChatRoomTrueFalse = inChatRoomTrueFalse;
     }
 
+    public void setUser (User user) {
+        if (this.user != null) {
+            this.user.getMatchingPartners().remove(this);
+        }
+        this.user = user;
+        user.getMatchingPartners().add(this);
+    }
 
+    public void setInChatRoomTrueFalse(boolean inChatRoomTrueFalse) {
+        this.inChatRoomTrueFalse =inChatRoomTrueFalse;
+    }
 }

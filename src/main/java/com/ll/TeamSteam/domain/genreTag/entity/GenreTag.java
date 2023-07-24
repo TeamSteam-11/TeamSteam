@@ -1,8 +1,7 @@
-package com.ll.TeamSteam.domain.userTag.genreTag;
+package com.ll.TeamSteam.domain.genreTag.entity;
 
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
-import com.ll.TeamSteam.domain.user.entity.Gender;
-import com.ll.TeamSteam.domain.userTag.UserTag;
+import com.ll.TeamSteam.domain.userTag.entity.UserTag;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

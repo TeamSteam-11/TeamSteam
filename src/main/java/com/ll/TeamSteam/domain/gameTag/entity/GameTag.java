@@ -1,6 +1,6 @@
-package com.ll.TeamSteam.domain.userTag.gameTag;
+package com.ll.TeamSteam.domain.gameTag.entity;
 
-import com.ll.TeamSteam.domain.userTag.UserTag;
+import com.ll.TeamSteam.domain.userTag.entity.UserTag;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
 
 import jakarta.persistence.Column;
