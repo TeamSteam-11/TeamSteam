@@ -11,7 +11,6 @@ import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.security.SecurityUser;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -24,13 +23,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 
 import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.EXIT;
 import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.KICKED;
 import static net.bytebuddy.matcher.ElementMatchers.is;
-import static org.assertj.core.api.Assertions.*;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -61,7 +57,7 @@ class ChatRoomControllerTest {
 
         Matching matching = matchingService.create(currentUser, "제목", "내용", GenreTagType.valueOf("삼인칭슈팅"), 41000, "성별무관", 4L, 20, 21, LocalDateTime.now().plusHours(3));
 
-        ChatRoom chatRoom = chatRoomService.createAndConnect("제목", matching, currentUser.getId());
+        ChatRoom chatRoom = chatRoomService.createChatRoomAndConnectMatching("제목", matching, currentUser.getId());
 
         assertTrue(chatRoom != null);  // 채팅방이 null이 아닌지 확인
         assertTrue(chatRoom.getMatching() == matching);
@@ -73,7 +69,7 @@ class ChatRoomControllerTest {
         Long invalidRoomId = 1L;
         Long invalidOwnerId = 5L;
 
-        assertThrows(IllegalArgumentException.class, () -> chatRoomService.remove(invalidRoomId, invalidOwnerId));
+        assertThrows(IllegalArgumentException.class, () -> chatRoomService.validRemoveChatRoom(invalidRoomId, invalidOwnerId));
     }
 
     @Test
@@ -89,9 +85,9 @@ class ChatRoomControllerTest {
 
         ChatRoom chatRoom = chatRoomService.findById(validRoomId);
 
-        chatRoomService.getByIdAndUserId(validRoomId, validUserId); // 채팅방에 참가하는 로직
+        chatRoomService.validEnterChatRoom(validRoomId, validUserId); // 채팅방에 참가하는 로직
 
-        chatRoomService.exitChatRoom(validRoomId, validUserId);
+        chatRoomService.validExitChatRoom(validRoomId, validUserId);
         ChatUser chatUser = chatRoomService.findChatUserByUserId(chatRoom, validUserId);
 
         assertEquals(EXIT, chatUser.getType());
@@ -110,7 +106,7 @@ class ChatRoomControllerTest {
         matchingPartnerService.addPartner(validRoomId, user.getId());
         matchingPartnerService.updateTrue(validRoomId, user.getId());
 
-        chatRoomService.getByIdAndUserId(validRoomId, validUserId);
+        chatRoomService.validEnterChatRoom(validRoomId, validUserId);
 
         ChatRoom chatRoom = chatRoomService.findById(validRoomId);
 
@@ -118,7 +114,7 @@ class ChatRoomControllerTest {
 
         ChatUser chatUserKicked = chatUserService.findByChatRoomAndUser(chatRoom, kickedUser);
 
-        chatRoomService.kickChatUser(validRoomId, chatUserKicked.getId(), user);
+        chatRoomService.kickChatUserAndChangeType(validRoomId, chatUserKicked.getId(), user);
 
         ChatUser chatUser = chatRoomService.findChatUserByUserId(chatRoom, validUserId);
 
@@ -138,7 +134,7 @@ class ChatRoomControllerTest {
         matchingPartnerService.addPartner(validRoomId, user.getId());
         matchingPartnerService.updateTrue(validRoomId, user.getId());
 
-        chatRoomService.getByIdAndUserId(validRoomId, validUserId);
+        chatRoomService.validEnterChatRoom(validRoomId, validUserId);
 
         ChatRoom chatRoom = chatRoomService.findById(validRoomId);
 
@@ -146,7 +142,7 @@ class ChatRoomControllerTest {
 
         ChatUser chatUserKicked = chatUserService.findByChatRoomAndUser(chatRoom, kickedUser);
 
-        assertThrows(IllegalArgumentException.class, () -> chatRoomService.kickChatUser(validRoomId, chatUserKicked.getId(), user));
+        assertThrows(IllegalArgumentException.class, () -> chatRoomService.kickChatUserAndChangeType(validRoomId, chatUserKicked.getId(), user));
     }
 
     @Test
@@ -158,7 +154,7 @@ class ChatRoomControllerTest {
         User currentUser = userService.findByIdElseThrow(validUserId);
         ChatRoom chatRoom = chatRoomService.findById(validRoomId);
 
-        assertThrows(IllegalArgumentException.class, () -> chatRoomService.getByIdAndUserId(chatRoom.getId(), currentUser.getId()));
+        assertThrows(IllegalArgumentException.class, () -> chatRoomService.validEnterChatRoom(chatRoom.getId(), currentUser.getId()));
     }
 
     @Test
@@ -171,7 +167,7 @@ class ChatRoomControllerTest {
         ChatRoom chatRoom = chatRoomService.findById(validRoomId);
         User currentUser = userService.findByIdElseThrow(validUserId);
 
-        assertThrows(IllegalArgumentException.class, () -> chatRoomService.inviteUser(chatRoom.getId(), user, currentUser.getId()));
+        assertThrows(IllegalArgumentException.class, () -> chatRoomService.validInviteChatRoom(chatRoom.getId(), user, currentUser.getId()));
     }
 
 }

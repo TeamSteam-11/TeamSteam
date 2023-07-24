@@ -4,14 +4,11 @@ import com.ll.TeamSteam.domain.chatMessage.dto.response.SignalResponse;
 import com.ll.TeamSteam.domain.chatMessage.service.ChatMessageService;
 import com.ll.TeamSteam.domain.chatRoom.dto.ChatRoomDto;
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
-import com.ll.TeamSteam.domain.chatRoom.exception.NoChatRoomException;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
 import com.ll.TeamSteam.domain.friend.entity.Friend;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
-import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
-import com.ll.TeamSteam.domain.recentlyUser.service.RecentlyUserService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.rq.Rq;
@@ -27,7 +24,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.ll.TeamSteam.domain.chatMessage.dto.response.SignalType.NEW_MESSAGE;
@@ -49,29 +45,11 @@ public class ChatRoomController {
     private final UserService userService;
 
     /**
-     * 방 조회
-     */
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/rooms")
-    public String showRooms(Model model) {
-
-        List<ChatRoom> chatRooms = chatRoomService.findAll();
-
-        model.addAttribute("chatRooms", chatRooms);
-        return "chat/rooms";
-    }
-
-    /**
      * 방 입장
      */
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/rooms/{roomId}")
-    public String showRoom(@PathVariable Long roomId, Model model, @AuthenticationPrincipal SecurityUser user) {
-
-        log.info("showRoom SecurityUser = {}", user);
-        log.info("user.getName = {}", user.getUsername());
-        log.info("user.getId = {}", user.getId());
-
+    public String enterChatRoom(@PathVariable Long roomId, Model model, @AuthenticationPrincipal SecurityUser user) {
         ChatRoom chatRoom = chatRoomService.findById(roomId);
         Matching matching = chatRoom.getMatching();
 
@@ -81,7 +59,7 @@ public class ChatRoomController {
             return rq.historyBack(rsData);
         }
 
-        ChatRoomDto chatRoomDto = chatRoomService.getByIdAndUserId(roomId, user.getId());
+        ChatRoomDto chatRoomDto = chatRoomService.validEnterChatRoom(roomId, user.getId());
 
         if (chatRoomDto.getType().equals(ROOMIN) || chatRoomDto.getType().equals(EXIT)){
             // 사용자가 방에 입장할 때 메시지 생성
@@ -98,7 +76,7 @@ public class ChatRoomController {
         }
 
         chatRoomService.updateChatUserType(roomId, user.getId());
-        chatRoomService.changeParticipant(chatRoom);
+        chatRoomService.changeParticipantsCount(chatRoom);
 
         model.addAttribute("chatRoom", chatRoomDto);
         model.addAttribute("user", user);
@@ -111,8 +89,8 @@ public class ChatRoomController {
      */
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/rooms/{roomId}")
-    public String removeRoom(@PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user) {
-        chatRoomService.remove(roomId, user.getId());
+    public String removeChatRoom(@PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user) {
+        chatRoomService.validRemoveChatRoom(roomId, user.getId());
         return "redirect:/match/list";
     }
 
@@ -125,7 +103,7 @@ public class ChatRoomController {
 
         ChatRoom chatRoom = chatRoomService.findById(roomId);
 
-        ChatRoomDto chatRoomDto = chatRoomService.getByIdAndUserId(roomId, user.getId());
+        ChatRoomDto chatRoomDto = chatRoomService.validEnterChatRoom(roomId, user.getId());
 
         if (chatRoomDto.getType().equals(COMMON)){
             // 사용자가 방에서 퇴장할 때 메시지 생성
@@ -141,34 +119,37 @@ public class ChatRoomController {
             template.convertAndSend("/topic/chats/" + chatRoom.getId(), signalResponseLeave);
         }
 
-        chatRoomService.exitChatRoom(roomId, user.getId());
-        chatRoomService.changeParticipant(chatRoom);
+        chatRoomService.validExitChatRoom(roomId, user.getId());
+        chatRoomService.changeParticipantsCount(chatRoom);
 
         return "redirect:/match/list";
     }
 
-    // 방장이 유저 강퇴시키기
+    /**
+     * 유저 강퇴시키기
+     */
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{roomId}/kick/{chatUserId}")
     public String kickChatUser(@PathVariable Long roomId, @PathVariable Long chatUserId,
                                  @AuthenticationPrincipal SecurityUser user){
         ChatRoom chatRoom = chatRoomService.findById(roomId);
-        chatRoomService.kickChatUser(roomId, chatUserId, user);
+        chatRoomService.kickChatUserAndChangeType(roomId, chatUserId, user);
 
         return ("redirect:/chat/%d/userList").formatted(chatRoom.getId());
     }
 
-    // 유저 정보 가져오기
+    /**
+     * 유저 정보 가져오기
+     */
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{roomId}/userList")
-    public String userList(Model model, @PathVariable Long roomId,
+    public String chatUserList(Model model, @PathVariable Long roomId,
                              @AuthenticationPrincipal SecurityUser user) {
         List<ChatUser> chatUserList = chatUserService.findByChatRoomIdAndChatUser(roomId, user.getId());
         ChatRoom chatRoom = chatRoomService.findById(roomId);
 
         if (chatUserList == null) {
             throw new IllegalArgumentException("해당 방에 참가하지 않았습니다.");
-//            return rq.historyBack("해당 방에 참가하지 않았습니다.");
         }
 
         User currentUser = userService.findById(user.getId()).orElseThrow(null);
@@ -180,16 +161,16 @@ public class ChatRoomController {
         return "chat/userList";
     }
 
-    // exception 추가해야함
+    /**
+     * 채팅방 유저 초대 목록
+     */
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{roomId}/inviteList")
-    public String inviteList(Model model, @PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user) {
-        // 해당 유저가 채팅방에 있는지 확인
+    public String friendListForInvitingChatRoom(Model model, @PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user) {
         List<ChatUser> chatUserList = chatUserService.findByChatRoomIdAndChatUser(roomId, user.getId());
 
         if (chatUserList == null) {
             throw new IllegalArgumentException("해당 방에 참가하지 않았습니다.");
-//            return rq.historyBack("해당 방에 참가하지 않았습니다.");
         }
 
         User currentUser = userService.findByIdElseThrow(user.getId());
@@ -203,13 +184,16 @@ public class ChatRoomController {
         return "chat/inviteList";
     }
 
+    /**
+     * 채팅방 유저 초대하기
+     */
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{roomId}/inviteUser/{userId}")
-    public ResponseEntity<Boolean> inviteUser(@PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user,
-                                              @PathVariable Long userId, Model model){
+    public ResponseEntity<Boolean> inviteChatRoom(@PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user,
+                                                  @PathVariable Long userId, Model model){
         // DB에서 이미 정보가 있는지 없는지 조회
         ChatRoom chatRoom = chatRoomService.findById(roomId);
-        boolean alreadyInvited = chatRoomService.isDuplicateInvite(chatRoom.getId(), user.getId(), userId);
+        boolean alreadyInvited = chatRoomService.isDuplicatedInvitation(chatRoom.getId(), user.getId(), userId);
         log.info("alreadyInvited = {} ", alreadyInvited);
 
         model.addAttribute("alreadyInvited", alreadyInvited);
@@ -219,7 +203,7 @@ public class ChatRoomController {
         }
 
         // DB 저장
-        chatRoomService.inviteUser(roomId, user, userId);
+        chatRoomService.validInviteChatRoom(roomId, user, userId);
 
         return ResponseEntity.ok(alreadyInvited);
     }
