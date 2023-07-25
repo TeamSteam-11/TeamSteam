@@ -53,11 +53,7 @@ public class ChatRoomController {
         ChatRoom chatRoom = chatRoomService.findByRoomId(roomId);
         Matching matching = chatRoom.getMatching();
 
-        RsData rsData = chatRoomService.canAddChatRoomUser(chatRoom, user.getId(), matching);
-
-        if (rsData.isFail()) {
-            return rq.historyBack(rsData);
-        }
+        chatRoomService.canAddChatRoomUser(chatRoom, user.getId(), matching);
 
         ChatRoomDto chatRoomDto = chatRoomService.validEnterChatRoom(roomId, user.getId());
 
@@ -134,6 +130,8 @@ public class ChatRoomController {
                                  @AuthenticationPrincipal SecurityUser user){
         ChatRoom chatRoom = chatRoomService.findByRoomId(roomId);
         chatRoomService.kickChatUserAndChangeType(roomId, chatUserId, user);
+
+        chatRoomService.changeParticipantsCount(chatRoom);
 
         return ("redirect:/chat/%d/userList").formatted(chatRoom.getId());
     }

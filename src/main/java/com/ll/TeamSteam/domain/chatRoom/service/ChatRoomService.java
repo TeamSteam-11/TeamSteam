@@ -3,6 +3,7 @@ package com.ll.TeamSteam.domain.chatRoom.service;
 import com.ll.TeamSteam.domain.chatMessage.entity.ChatMessage;
 import com.ll.TeamSteam.domain.chatRoom.dto.ChatRoomDto;
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
+import com.ll.TeamSteam.domain.chatRoom.exception.CanNotEnterException;
 import com.ll.TeamSteam.domain.chatRoom.exception.KickedUserEnterException;
 import com.ll.TeamSteam.domain.chatRoom.exception.NoChatRoomException;
 import com.ll.TeamSteam.domain.chatRoom.repository.ChatRoomRepository;
@@ -92,34 +93,34 @@ public class ChatRoomService {
         }
     }
 
-    public RsData canAddChatRoomUser(ChatRoom chatRoom, Long userId, Matching matching) {
+    public boolean canAddChatRoomUser(ChatRoom chatRoom, Long userId, Matching matching) {
 
         if(!getChatUser(chatRoom, userId).isEmpty() && !matching.canAddParticipant()) {
             boolean whatIsTrueFalse = isChatUserTypeExit(chatRoom, userId);
 
             if(whatIsTrueFalse) {
-                return RsData.of("F-2", "모임 정원 초과!");
+                throw new CanNotEnterException("매칭 전원 초과");
             }
         }
-        
+
         if (!getChatUser(chatRoom, userId).isEmpty()) {
             ChatUser chatUser = getChatUser(chatRoom, userId).get();
             return checkChatUserType(chatUser);
         }
 
         if (!matching.canAddParticipant()) {
-            return RsData.of("F-2", "모임 정원 초과!");
+            throw new CanNotEnterException("매칭 전원 초과");
         }
 
-        return RsData.of("S-1", "새로운 모임 채팅방에 참여합니다.");
+        return true;
     }
 
-    public RsData checkChatUserType(ChatUser chatUser) {
+    public boolean checkChatUserType(ChatUser chatUser) {
         if (chatUser.getType().equals(KICKED)) {
             throw new KickedUserEnterException("강퇴당한 모임입니다.");
         }
 
-        return RsData.of("S-1", "기존 모임 채팅방에 참여합니다.");
+        return true;
     }
 
     @Transactional

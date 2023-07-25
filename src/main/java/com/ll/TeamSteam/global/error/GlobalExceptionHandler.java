@@ -1,5 +1,6 @@
 package com.ll.TeamSteam.global.error;
 
+import com.ll.TeamSteam.domain.chatRoom.exception.CanNotEnterException;
 import com.ll.TeamSteam.domain.chatRoom.exception.KickedUserEnterException;
 import com.ll.TeamSteam.domain.chatRoom.exception.NoChatRoomException;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +48,7 @@ public class GlobalExceptionHandler {
 
     // 커스텀
     @ExceptionHandler(value = KickedUserEnterException.class)
-    public String KickedUserEnterException(Exception e, Model model){
+    public String kickedUserEnterException(Exception e, Model model){
         model.addAttribute("errorMessage",e.getMessage());
         log.info("e.getMessage = {} ", e.getMessage());
         return "error/kickedError";
@@ -63,9 +64,18 @@ public class GlobalExceptionHandler {
 
     // 커스텀
     @ExceptionHandler(value = NoChatRoomException.class)
-    public String NoChatRoomException(Exception e, Model model){
+    public String noChatRoomException(Exception e, Model model){
         model.addAttribute("errorMessage",e.getMessage());
         log.info("e.getMessage = {} ", e.getMessage());
         return "error/noChatroomError";
     }
+
+    // 커스텀
+    @ExceptionHandler(value = CanNotEnterException.class)
+    public String canNotEnterException(Exception e, Model model){
+        model.addAttribute("errorMessage",e.getMessage());
+        log.info("e.getMessage = {} ", e.getMessage());
+        return "error/commonError";
+    }
+
 }
