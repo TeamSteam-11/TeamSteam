@@ -101,15 +101,14 @@ public class ChatRoomService {
                 return RsData.of("F-2", "모임 정원 초과!");
             }
         }
-
-        // 이미 채팅방에 동일 유저가 존재하는 경우
+        
         if (!getChatUser(chatRoom, userId).isEmpty()) {
             ChatUser chatUser = getChatUser(chatRoom, userId).get();
             return checkChatUserType(chatUser);
         }
 
         if (!matching.canAddParticipant()) {
-            return RsData.of("F-2", "모임 정원 초과!"); // 참여자 수가 capacity 보다 많으면 참가 하지 못하도록
+            return RsData.of("F-2", "모임 정원 초과!");
         }
 
         return RsData.of("S-1", "새로운 모임 채팅방에 참여합니다.");

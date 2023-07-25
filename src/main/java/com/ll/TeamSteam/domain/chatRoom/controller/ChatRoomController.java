@@ -194,7 +194,6 @@ public class ChatRoomController {
         // DB에서 이미 정보가 있는지 없는지 조회
         ChatRoom chatRoom = chatRoomService.findByRoomId(roomId);
         boolean alreadyInvited = chatRoomService.isDuplicatedInvitation(chatRoom.getId(), user.getId(), userId);
-        log.info("alreadyInvited = {} ", alreadyInvited);
 
         model.addAttribute("alreadyInvited", alreadyInvited);
 
