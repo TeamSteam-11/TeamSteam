@@ -5,7 +5,6 @@ import com.ll.TeamSteam.domain.chatRoom.exception.KickedUserEnterException;
 import com.ll.TeamSteam.domain.chatRoom.exception.NoChatRoomException;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
-import com.ll.TeamSteam.domain.matching.exception.MatchingPartnerNotFoundException;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
 import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
@@ -34,7 +33,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -172,7 +170,7 @@ public class MatchingController {
         matchingPartnerService.addPartner(matching.getId(), user1.getId());
         matchingPartnerService.updateTrue(matching.getId(), user1.getId());
 
-        chatRoomService.createAndConnect(createForm.getTitle(), matching, user.getId());
+        chatRoomService.createChatRoomAndConnectMatching(createForm.getTitle(), matching, user.getId());
 
         // 등록 게시글 작성 후 매칭 목록 페이지로 이동
         return rq.redirectWithMsg("/match/list", "매칭이 게시글이 생성되었습니다.");
@@ -286,7 +284,7 @@ public class MatchingController {
              throw new IllegalArgumentException("너 이미 매칭파트너에 참여중이야");
         }
 
-        ChatRoom chatRoom = chatRoomService.findById(matchingId);
+        ChatRoom chatRoom = chatRoomService.findByRoomId(matchingId);
         RsData rsData = chatRoomService.canAddChatRoomUser(chatRoom, user.getId(), matching);
         log.info("rsData.getData = {} ", rsData.getData());
 
