@@ -37,7 +37,6 @@ import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.*;
 @RequestMapping("/chat")
 public class ChatRoomController {
 
-    private final Rq rq;
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
     private final SimpMessageSendingOperations template;
@@ -146,10 +145,6 @@ public class ChatRoomController {
         List<ChatUser> chatUserList = chatUserService.findByChatRoomIdAndChatUser(roomId, user.getId());
         ChatRoom chatRoom = chatRoomService.findByRoomId(roomId);
 
-        if (chatUserList == null) {
-            throw new NotInChatRoomException("해당 방에 참가하지 않았습니다.");
-        }
-
         User currentUser = userService.findById(user.getId()).orElseThrow(null);
 
         model.addAttribute("chatUserList", chatUserList);
@@ -165,11 +160,7 @@ public class ChatRoomController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{roomId}/inviteList")
     public String friendListForInvitingChatRoom(Model model, @PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user) {
-        List<ChatUser> chatUserList = chatUserService.findByChatRoomIdAndChatUser(roomId, user.getId());
-
-        if (chatUserList == null) {
-            throw new NotInChatRoomException("해당 방에 참가하지 않았습니다.");
-        }
+        chatUserService.findByChatRoomIdAndChatUser(roomId, user.getId());
 
         User currentUser = userService.findByIdElseThrow(user.getId());
         List<Friend> friendList = currentUser.getFriendList();
