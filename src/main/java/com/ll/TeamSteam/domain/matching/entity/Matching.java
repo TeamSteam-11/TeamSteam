@@ -112,4 +112,5 @@ public class Matching extends BaseEntity {
     public void setDeadlineDate(LocalDateTime deadlineDate) {
         this.deadlineDate = deadlineDate;
     }
+
 }

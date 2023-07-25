@@ -55,13 +55,13 @@ public class User extends BaseEntity {
     private UserTag userTag;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Friend> friendList;
+    private List<Friend> friendList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<MatchingPartner> matchingPartners;
+    private List<MatchingPartner> matchingPartners = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<RecentlyUser> recentlyUsers;
+    private List<RecentlyUser> recentlyUsers = new ArrayList<>();
 
 
 

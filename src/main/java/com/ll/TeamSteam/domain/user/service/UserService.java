@@ -21,6 +21,8 @@ import com.ll.TeamSteam.domain.genreTag.entity.GenreTag;
 import com.ll.TeamSteam.domain.userTag.service.UserTagService;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -61,16 +63,18 @@ public class UserService {
         userSave(createdUser);
 
         UserTag userTag = UserTag.builder().user(createdUser).build();
-        GenreTag genreTag = GenreTag.builder().userTag(userTag).build();
-        GameTag gameTag = GameTag.builder().userTag(userTag).build();
-        SteamGameLibrary steamGameLibrary = SteamGameLibrary.builder().user(createdUser).build();
+        userTagService.save(userTag);
 
+        GenreTag genreTag = GenreTag.builder().userTag(userTag).build();
+        genreTagService.save(genreTag);
+
+        GameTag gameTag = GameTag.builder().userTag(userTag).build();
+        gameTagService.save(gameTag);
+
+        SteamGameLibrary steamGameLibrary = SteamGameLibrary.builder().user(createdUser).build();
+        steamGameLibraryService.save(steamGameLibrary);
         //서비스 만들어서 서비스단에서 저장
 
-        userTagService.save(userTag);
-        genreTagService.save(genreTag);
-        gameTagService.save(gameTag);
-        steamGameLibraryService.save(steamGameLibrary);
     }
 
     public User createUser(UserInfoResponse userInfo) {

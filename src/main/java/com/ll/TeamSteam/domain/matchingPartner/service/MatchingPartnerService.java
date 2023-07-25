@@ -94,5 +94,10 @@ public class MatchingPartnerService {
     public MatchingPartner findByMatchingIdAndUserId (Long matchingId, Long userId) {
         return matchingPartnerRepository.findByMatchingIdAndUserId(matchingId, userId);
     }
+
+    @Transactional
+    public void saveAll(List<MatchingPartner> matchingPartners){
+        matchingPartnerRepository.saveAll(matchingPartners);
+    }
 }
 

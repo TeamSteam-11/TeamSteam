@@ -179,4 +179,8 @@ public class MatchingService {
                 .limit(6)
                 .collect(Collectors.toList());
     }
+
+    public void save(Matching matching) {
+        matchingRepository.save(matching);
+    }
 }
