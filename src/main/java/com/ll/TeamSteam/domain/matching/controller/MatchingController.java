@@ -1,6 +1,7 @@
 package com.ll.TeamSteam.domain.matching.controller;
 
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
+import com.ll.TeamSteam.domain.chatRoom.exception.CanNotEnterException;
 import com.ll.TeamSteam.domain.chatRoom.exception.KickedUserEnterException;
 import com.ll.TeamSteam.domain.chatRoom.exception.NoChatRoomException;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
@@ -320,7 +321,7 @@ public class MatchingController {
         }
 
         if (!matching.canAddParticipant()) {
-            throw new IllegalArgumentException("채팅방 정원이 가득 찼습니다");
+            throw new CanNotEnterException("채팅방 정원이 가득 찼습니다");
         }
 
         matchingPartnerService.updateTrue(matching.getId(), user.getId());

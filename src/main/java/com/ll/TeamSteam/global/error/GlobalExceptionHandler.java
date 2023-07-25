@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
     public String canNotEnterException(Exception e, Model model){
         model.addAttribute("errorMessage",e.getMessage());
         log.info("e.getMessage = {} ", e.getMessage());
-        return "error/commonError";
+        return "error/canNotEnterChatRoom";
     }
 
 }
