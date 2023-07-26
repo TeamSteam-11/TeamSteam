@@ -41,6 +41,8 @@ public class QUser extends EntityPathBase<User> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifyDate = _super.modifyDate;
 
+    public final ListPath<com.ll.TeamSteam.domain.recentlyUser.entity.RecentlyUser, com.ll.TeamSteam.domain.recentlyUser.entity.QRecentlyUser> recentlyUsers = this.<com.ll.TeamSteam.domain.recentlyUser.entity.RecentlyUser, com.ll.TeamSteam.domain.recentlyUser.entity.QRecentlyUser>createList("recentlyUsers", com.ll.TeamSteam.domain.recentlyUser.entity.RecentlyUser.class, com.ll.TeamSteam.domain.recentlyUser.entity.QRecentlyUser.class, PathInits.DIRECT2);
+
     public final ListPath<com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary, com.ll.TeamSteam.domain.steam.entity.QSteamGameLibrary> steamGameLibrary = this.<com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary, com.ll.TeamSteam.domain.steam.entity.QSteamGameLibrary>createList("steamGameLibrary", com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary.class, com.ll.TeamSteam.domain.steam.entity.QSteamGameLibrary.class, PathInits.DIRECT2);
 
     public final StringPath steamId = createString("steamId");
@@ -51,7 +53,7 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath username = createString("username");
 
-    public final com.ll.TeamSteam.domain.userTag.QUserTag userTag;
+    public final com.ll.TeamSteam.domain.userTag.entity.QUserTag userTag;
 
     public QUser(String variable) {
         this(User.class, forVariable(variable), INITS);
@@ -71,7 +73,7 @@ public class QUser extends EntityPathBase<User> {
 
     public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.userTag = inits.isInitialized("userTag") ? new com.ll.TeamSteam.domain.userTag.QUserTag(forProperty("userTag"), inits.get("userTag")) : null;
+        this.userTag = inits.isInitialized("userTag") ? new com.ll.TeamSteam.domain.userTag.entity.QUserTag(forProperty("userTag"), inits.get("userTag")) : null;
     }
 
 }

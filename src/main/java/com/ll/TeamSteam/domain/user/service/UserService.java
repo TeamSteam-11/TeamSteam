@@ -99,8 +99,14 @@ public class UserService {
 
         User user = findById(id).orElseThrow();
         UserTag userTag = userTagService.findByUserId(id);
-//수정 예정
-        deleteAllGenreTag(userTag);
+
+        //userTag가 비어있을 때는 태그를 삭제하지 않음
+        if(Optional.ofNullable(userTag).isPresent()) {
+            if (Optional.ofNullable(userTag.getGenreTag()).isPresent()) {
+                deleteAllGenreTag(userTag);
+            }
+        }
+//        deleteAllGenreTag(userTag);
         // genreTagRepository.deleteAll(userTag.getGenreTag());
 
         //장르태그
@@ -128,6 +134,8 @@ public class UserService {
 
     @Transactional
     public void deleteAllGenreTag(UserTag userTag){
+        //Optional로 감싸 null인지 체크 후 널이 아닐 때만 deleteAll
+//        Optional<UserTag> userTagcheck = Optional.ofNullable(userTag);
         genreTagService.deleteAll(userTag.getGenreTag());
     }
 
