@@ -43,82 +43,116 @@ import com.ll.TeamSteam.global.security.UserInfoResponse;
 @SpringBootTest
 @Transactional
 public class UserServiceTest {
-	@Mock
+	@Autowired
 	private UserRepository userRepository;
-	@Mock
-	private UserTagService userTagService;
-	@Mock
-	private GameTagService gameTagService;
-	@Mock
-	private GenreTagService genreTagService;
-	@Mock
-	private SteamGameLibraryService steamGameLibraryService;
-	@Mock
-	private FriendService friendService;
-
-	// 의존성 주입을 위해 목(Mock) 객체 생성
-	@InjectMocks
+	@Autowired
 	private UserService userService;
 
 
 	@BeforeEach
 		// 아래 메서드는 각 테스트케이스가 실행되기 전에 실행된다.
 	void beforeEach() {
-		MockitoAnnotations.initMocks(this);
-		// 모든 데이터 삭제
-		// userRepository.deleteAll();
+		UserInfoResponse.User user = UserInfoResponse.User.builder()
+				.steamid("11331")
+				.personaname("JohnDoe")
+				.profilestate(1)
+				.avatarmedium("https://example.com/avatar.jpg")
+				.build();
 
-		// 목(Mock) 객체 초기화
-		// recentlyUserService = new RecentlyUserService(userService, matchingPartnerService, recentlyUserRepository);
+		UserInfoResponse response = UserInfoResponse.builder()
+				.response(UserInfoResponse.Response.builder()
+						.players(Collections.singletonList(user))
+						.build())
+				.build();
 
+		userService.create(response);
+
+		UserInfoResponse.User user2 = UserInfoResponse.User.builder()
+				.steamid("11332")
+				.personaname("JohnDoe")
+				.profilestate(1)
+				.avatarmedium("https://example.com/avatar.jpg")
+				.build();
+
+		UserInfoResponse response2 = UserInfoResponse.builder()
+				.response(UserInfoResponse.Response.builder()
+						.players(Collections.singletonList(user2))
+						.build())
+				.build();
+
+		userService.create(response2);
 	}
 
 
 	@Test
 	@DisplayName("유저 create()")
 	void t001(){
-		UserInfoResponse.User user = UserInfoResponse.User.builder()
-			.steamid("123456789")
-			.personaname("JohnDoe")
-			.profilestate(1)
-			.avatarmedium("https://example.com/avatar.jpg")
-			.build();
 
-		UserInfoResponse response = UserInfoResponse.builder()
-			.response(UserInfoResponse.Response.builder()
-				.players(Collections.singletonList(user))
-				.build())
-			.build();
+		userService.findBySteamId("11331");
+		assertThat(userService.findBySteamId("11331").isPresent());
+	}
+
+	@Test
+	@DisplayName("유저 updateUserData()")
+	void t002(){
+		//given
+		User updateUser = userService.findBySteamId("11331").orElseThrow();
+		List<GenreTagType> genreTagTypes = new ArrayList<>();
+		genreTagTypes.add(GenreTagType.건설);
+		//when
+		userService.updateUserData("남성", genreTagTypes, updateUser.getId());
+
+
+		//then
+		assertThat(updateUser.getType()).isEqualTo(Gender.남성);
+
+	}
 
 
 
-		userService.create(response);
-		userService.findBySteamId("123456789");
-		assertThat(userService.findBySteamId("123456789").isPresent());
+	@Test
+	@DisplayName("유저 updateGameList")
+	void t003() {
 
 	}
 
 	@Test
-	@DisplayName("유저 create()")
-	void t002(){
-		UserInfoResponse.User user = UserInfoResponse.User.builder()
-			.steamid("123456789")
-			.personaname("JohnDoe")
-			.profilestate(1)
-			.avatarmedium("https://example.com/avatar.jpg")
-			.build();
+	@DisplayName("유저 updateTemperature")
+	void t004(){
+		//given
+		User updateUser = userService.findBySteamId("11331").orElseThrow();
+		int tempTemperature = updateUser.getTemperature();
 
-		UserInfoResponse response = UserInfoResponse.builder()
-			.response(UserInfoResponse.Response.builder()
-				.players(Collections.singletonList(user))
-				.build())
-			.build();
+		userService.updateTemperature(updateUser.getId(), 1);
+		userService.updateTemperature(updateUser.getId(), 1);
+		userService.updateTemperature(updateUser.getId(), 0);
 
 
+		//then
+		assertThat(updateUser.getTemperature()).isEqualTo(tempTemperature+1);
 
-		userService.create(response);
-		userService.findBySteamId("123456789");
-		assertThat(userService.findBySteamId("123456789").isPresent());
+	}
+	@Test
+	@DisplayName("유저 addFriends")
+	void t005() {
+
+	}
+
+	@Test
+	@DisplayName("유저 deleteFriend")
+	void t006() {
+
+	}
+
+	@Test
+	@DisplayName("유저 isFriend")
+	void t007() {
+
+	}
+
+	@Test
+	@DisplayName("유저 getFriends")
+	void t008() {
 
 	}
 
