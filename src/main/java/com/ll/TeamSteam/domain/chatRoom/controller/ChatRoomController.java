@@ -56,19 +56,7 @@ public class ChatRoomController {
 
         ChatRoomDto chatRoomDto = chatRoomService.validEnterChatRoom(roomId, user.getId());
 
-        if (chatRoomDto.getType().equals(ROOMIN) || chatRoomDto.getType().equals(EXIT)){
-            // 사용자가 방에 입장할 때 메시지 생성
-            String enterMessage = " < " + user.getUsername() + "님이 입장하셨습니다. >";
-            chatMessageService.createAndSave(enterMessage, user.getId(), roomId, ENTER);
-
-            // 실시간으로 입장 메시지 전송
-            SignalResponse signalResponse = SignalResponse.builder()
-                    .type(NEW_MESSAGE)
-                    .message(enterMessage)  // 입장 메시지 설정
-                    .build();
-
-            template.convertAndSend("/topic/chats/" + chatRoom.getId(), signalResponse);
-        }
+        chatMessageService.enterMessage(chatRoomDto, user, roomId);
 
         chatRoomService.updateChatUserType(roomId, user.getId());
         chatRoomService.changeParticipantsCount(chatRoom);
@@ -100,19 +88,7 @@ public class ChatRoomController {
 
         ChatRoomDto chatRoomDto = chatRoomService.validEnterChatRoom(roomId, user.getId());
 
-        if (chatRoomDto.getType().equals(COMMON)){
-            // 사용자가 방에서 퇴장할 때 메시지 생성
-            String exitMessage = " < " + user.getUsername() + "님이 퇴장하셨습니다. >";
-            chatMessageService.createAndSave(exitMessage, user.getId(), roomId, LEAVE);
-
-            // 실시간으로 퇴장 메시지 전송
-            SignalResponse signalResponseLeave = SignalResponse.builder()
-                    .type(NEW_MESSAGE)
-                    .message(exitMessage)  // 퇴장 메시지 설정
-                    .build();
-
-            template.convertAndSend("/topic/chats/" + chatRoom.getId(), signalResponseLeave);
-        }
+        chatMessageService.leaveMessage(chatRoomDto, user, roomId);
 
         chatRoomService.validExitChatRoom(roomId, user.getId());
         chatRoomService.changeParticipantsCount(chatRoom);
