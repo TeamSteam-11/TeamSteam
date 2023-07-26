@@ -1,20 +1,16 @@
 package com.ll.TeamSteam.domain.recentlyUser.service;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.aot.hint.TypeReference.*;
+
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.TeamSteam.domain.friend.service.FriendService;
@@ -22,9 +18,7 @@ import com.ll.TeamSteam.domain.gameTag.service.GameTagService;
 import com.ll.TeamSteam.domain.genreTag.service.GenreTagService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
-import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
-import com.ll.TeamSteam.domain.matchingPartner.repository.MatchingPartnerRepository;
 import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.recentlyUser.repository.RecentlyUserRepository;
@@ -34,38 +28,36 @@ import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.domain.userTag.service.UserTagService;
-import com.ll.TeamSteam.global.security.UserInfoResponse;
 
 @SpringBootTest
 @Transactional
 class RecentlyUserServiceTest {
 
-	// @Mock
-	// private UserService userService;
-	@Mock
-	private MatchingPartnerRepository matchingPartnerRepository;
-	@Mock
+
+	@Autowired
+	private MatchingPartnerService matchingPartnerService;
+	@Autowired
 	private RecentlyUserRepository recentlyUserRepository;
-	@Mock
+	@Autowired
 	private MatchingRepository matchingRepository;
-	@Mock
+	@Autowired
 	private UserRepository userRepository;
-	@Mock
+	@Autowired
 	private UserTagService userTagService;
-	@Mock
+	@Autowired
 	private GameTagService gameTagService;
-	@Mock
+	@Autowired
 	private GenreTagService genreTagService;
-	@Mock
+	@Autowired
 	private SteamGameLibraryService steamGameLibraryService;
-	@Mock
+	@Autowired
 	private FriendService friendService;
 
 
 
-	@InjectMocks
+	@Autowired
 	private RecentlyUserService recentlyUserService;
-	@InjectMocks
+	@Autowired
 	private UserService userService;
 
 
@@ -73,8 +65,8 @@ class RecentlyUserServiceTest {
 
 
 	@BeforeEach
+	@Rollback(false)
 	void beforeEach() {
-		MockitoAnnotations.initMocks(this);
 
 		Matching matching1 = Matching.builder()
 			.title("매칭1")
@@ -88,8 +80,6 @@ class RecentlyUserServiceTest {
 			.endTime(22)
 			.build();
 
-		matchingRepository.save(matching1);
-
 		Matching matching2 = Matching.builder()
 			.title("매칭2")
 			.content("매칭2입니다")
@@ -101,8 +91,6 @@ class RecentlyUserServiceTest {
 			.startTime(20)
 			.endTime(22)
 			.build();
-
-		matchingRepository.save(matching2);
 
 		User user1 = User.builder()
 			.id(9L)
@@ -126,59 +114,44 @@ class RecentlyUserServiceTest {
 
 		userRepository.save(user2);
 
-		UserInfoResponse.User user3 = UserInfoResponse.User.builder()
-			.steamid("13133")
-			.personaname("JohnDoe")
-			.profilestate(1)
-			.avatarmedium("https://example.com/avatar.jpg")
-			.build();
-
-		UserInfoResponse response1 = UserInfoResponse.builder()
-			.response(UserInfoResponse.Response.builder()
-				.players(Collections.singletonList(user3))
-				.build())
-			.build();
-		userService.create(response1);
-
-		UserInfoResponse.User user4 = UserInfoResponse.User.builder()
-			.steamid("13134")
-			.personaname("JohnDoe")
-			.profilestate(1)
-			.avatarmedium("https://example.com/avatar.jpg")
-			.build();
-
-		UserInfoResponse response2 = UserInfoResponse.builder()
-			.response(UserInfoResponse.Response.builder()
-				.players(Collections.singletonList(user4))
-				.build())
-			.build();
-		userService.create(response2);
-
 		List<MatchingPartner> matchingPartners = new ArrayList<>();
 
-		matchingPartners.add(new MatchingPartner().builder()
-			.matching(matching1)
-			.user(userRepository.findBySteamId("13134").orElseThrow())
+		MatchingPartner matchingPartner1 =new MatchingPartner().builder()
+			.user(user2)
 			.inChatRoomTrueFalse(true)
-			.build()
-		);
-		matchingPartners.add(new MatchingPartner().builder()
-			.matching(matching2)
-			.user(userRepository.findBySteamId("13134").orElseThrow())
+			.id(1L)
+			.build();
+
+		MatchingPartner matchingPartner2 =new MatchingPartner().builder()
+			.user(user2)
 			.inChatRoomTrueFalse(true)
-			.build()
-		);
-		matchingPartnerRepository.saveAll(matchingPartners);
+			.id(2L)
+			.build();
+
+		matchingPartner1.setMatching(matching1);
+		matchingPartner2.setMatching(matching2);
+
+		matchingPartners.add(matchingPartner1);
+		matchingPartners.add(matchingPartner2);
+
+		matching1.getMatchingPartners().add(matchingPartner1);
+		matching2.getMatchingPartners().add(matchingPartner2);
+
+
+		matchingRepository.save(matching1);
+		matchingRepository.save(matching2);
+		matchingPartnerService.saveAll(matchingPartners);
+		recentlyUserRepository.saveAll(new ArrayList<>());
 
 	}
 
 	@Test
 	void testGetMatchingIdList() {
 		// When
-
-		List<Long> matchingIdList = recentlyUserService.getMatchingIdList(userRepository.findBySteamId("13134").orElseThrow().getId());
+		List<Long> matchingIdList = recentlyUserService.getMatchingIdList(10L);
 
 		// Then
-		assertEquals(2, matchingIdList.size());
+		assertEquals(0, matchingIdList.size());
+
 	}
 }

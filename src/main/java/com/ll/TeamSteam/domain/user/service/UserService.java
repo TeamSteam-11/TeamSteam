@@ -40,13 +40,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     //전부 서비스로 수정
-    private UserTagService userTagService;
+    private final UserTagService userTagService;
 
-    private GameTagService gameTagService;
+    private final GameTagService gameTagService;
 
-    private GenreTagService genreTagService;
+    private final GenreTagService genreTagService;
 
-    private SteamGameLibraryService steamGameLibraryService;
+    private final SteamGameLibraryService steamGameLibraryService;
 
     private final FriendService friendService;
 

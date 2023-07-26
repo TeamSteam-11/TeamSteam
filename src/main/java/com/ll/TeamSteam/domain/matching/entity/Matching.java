@@ -57,7 +57,7 @@ public class Matching extends BaseEntity {
     @OneToOne(mappedBy = "matching", fetch = LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ChatRoom chatRoom;
 
-    @OneToMany(mappedBy = "matching", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "matching", cascade = CascadeType.ALL)
     private List<MatchingPartner> matchingPartners = new ArrayList<>();
 
     @ManyToOne(fetch = LAZY)
