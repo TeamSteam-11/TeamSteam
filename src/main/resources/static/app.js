@@ -81,11 +81,13 @@ function drawMessages(messages) {
                     <div class="chat-image avatar">
                         
                     </div>
-                    <div class="chat-header flex items-center mb-1">
-                        <div class="w-9 mr-1">
-                            <img src="${message.sender.avatar}" alt="${message.sender.username}'s avatar" class="rounded-lg"/>
-                        </div>
-                        ${message.sender.username}
+                    <div class="chat-header mb-1">
+                        <a href="/user/profile/${message.sender.user_id}" class="flex items-center">
+                            <div class="w-9 mr-1">
+                                <img src="${message.sender.avatar}" alt="${message.sender.username}'s avatar" class="rounded-lg"/>
+                            </div>
+                            ${message.sender.username}
+                        </a>
                     </div>
                     <div class="chat-bubble">${message.content}</div>
                     <div class="chat-footer message-time">
