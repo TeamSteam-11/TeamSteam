@@ -6,10 +6,13 @@ import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class MatchingControllerTest {
     @Autowired
     private MatchingRepository matchingRepository;
@@ -339,6 +343,26 @@ public class MatchingControllerTest {
                 .andExpect(handler().handlerType(MatchingController.class))
                 .andExpect(handler().methodName("matchingCreate"))
                 .andExpect(status().is4xxClientError());
+    }
+
+    // NotProd.java의 @Configuration 어노테이션을 주석처리해야 통과
+    @Test
+    @DisplayName("매칭 삭제")
+    void t013() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/match/detail/delete/1")
+                        .with(csrf())
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(MatchingController.class))
+                .andExpect(handler().methodName("deleteMatching"))
+                .andExpect(status().is2xxSuccessful());
+
+        assertThat(matchingService.findById(1L).isPresent()).isEqualTo(false);
     }
 
 }
