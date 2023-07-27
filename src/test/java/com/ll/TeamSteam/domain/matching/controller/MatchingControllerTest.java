@@ -238,7 +238,7 @@ public class MatchingControllerTest {
     }
 
     @Test
-    @DisplayName("매칭 등록 실패_startTime 값이 범위를 벗어남")
+    @DisplayName("매칭 등록 실패_startTime의 Min값보다 작은 수가 입력됨")
     void t009() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
@@ -252,6 +252,84 @@ public class MatchingControllerTest {
                         .param("capacity", "3")
                         .param("startTime", "-1")
                         .param("endTime", "12")
+                        .param("deadlineDate", "3")
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(MatchingController.class))
+                .andExpect(handler().methodName("matchingCreate"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("매칭 등록 실패_startTime의 Max값보다 큰 수가 입력됨")
+    void t010() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/match/create")
+                        .with(csrf())
+                        .param("user", "user1")
+                        .param("title", "title1")
+                        .param("content", "content1")
+                        .param("genre", "삼인칭슈팅")
+                        .param("gameTagId", "41000")
+                        .param("capacity", "3")
+                        .param("startTime", "25")
+                        .param("endTime", "12")
+                        .param("deadlineDate", "3")
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(MatchingController.class))
+                .andExpect(handler().methodName("matchingCreate"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("매칭 등록 실패_endTime의 Min값보다 작은 수가 입력됨")
+    void t011() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/match/create")
+                        .with(csrf())
+                        .param("user", "user1")
+                        .param("title", "title1")
+                        .param("content", "content1")
+                        .param("genre", "삼인칭슈팅")
+                        .param("gameTagId", "41000")
+                        .param("capacity", "3")
+                        .param("startTime", "9")
+                        .param("endTime", "-1")
+                        .param("deadlineDate", "3")
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(MatchingController.class))
+                .andExpect(handler().methodName("matchingCreate"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("매칭 등록 실패_endTime의 Max값보다 큰 수가 입력됨")
+    void t012() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/match/create")
+                        .with(csrf())
+                        .param("user", "user1")
+                        .param("title", "title1")
+                        .param("content", "content1")
+                        .param("genre", "삼인칭슈팅")
+                        .param("gameTagId", "41000")
+                        .param("capacity", "3")
+                        .param("startTime", "9")
+                        .param("endTime", "25")
                         .param("deadlineDate", "3")
                 )
                 .andDo(print());
