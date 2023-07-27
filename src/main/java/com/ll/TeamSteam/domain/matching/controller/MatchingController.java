@@ -106,9 +106,11 @@ public class MatchingController {
         private String gender;
         @NotNull(message = "시작시간은 필수항목입니다.")
         @Min(value = 0)
+        @Max(value = 24)
         private Integer startTime;
         @NotNull(message = "끝나는 시간은 필수항목입니다.")
         @Min(value = 0)
+        @Max(value = 24)
         private Integer endTime;
         private int selectedHours;
 
