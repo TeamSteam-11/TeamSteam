@@ -1,6 +1,7 @@
 package com.ll.TeamSteam.domain.matching.controller;
 
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
+import com.ll.TeamSteam.domain.chatRoom.exception.CanNotEnterException;
 import com.ll.TeamSteam.domain.chatRoom.exception.KickedUserEnterException;
 import com.ll.TeamSteam.domain.chatRoom.exception.NoChatRoomException;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
@@ -285,16 +286,15 @@ public class MatchingController {
         }
 
         ChatRoom chatRoom = chatRoomService.findByRoomId(matchingId);
-        RsData rsData = chatRoomService.canAddChatRoomUser(chatRoom, user.getId(), matching);
-        log.info("rsData.getData = {} ", rsData.getData());
+        chatRoomService.canAddChatRoomUser(chatRoom, user.getId(), matching);
 
-        if (rsData.isError()){
-            throw new KickedUserEnterException("강퇴당한 모임입니다.");
-        }
-
-        if (rsData.isFail()){
-            return rq.historyBack("이미 가득찬 방입니다.");
-        }
+//        if (rsData.isError()){
+//            throw new KickedUserEnterException("강퇴당한 모임입니다.");
+//        }
+//
+//        if (!canAddChatRoomUser1){
+//            return rq.historyBack("이미 가득찬 방입니다.");
+//        }
 
         matchingPartnerService.addPartner(matching.getId(), user.getId());
 
@@ -321,7 +321,7 @@ public class MatchingController {
         }
 
         if (!matching.canAddParticipant()) {
-            throw new IllegalArgumentException("채팅방 정원이 가득 찼습니다");
+            throw new CanNotEnterException("채팅방 정원이 가득 찼습니다");
         }
 
         matchingPartnerService.updateTrue(matching.getId(), user.getId());

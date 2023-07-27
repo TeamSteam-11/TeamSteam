@@ -1,6 +1,7 @@
 package com.ll.TeamSteam.domain.chatUser.service;
 
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
+import com.ll.TeamSteam.domain.chatRoom.exception.NotInChatRoomException;
 import com.ll.TeamSteam.domain.chatRoom.repository.ChatRoomRepository;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.chatUser.repository.ChatUserRepository;
@@ -28,7 +29,7 @@ public class ChatUserService {
         ChatUser chatUser = findChatUserByUserId(chatRoom, userId);
 
         if (chatUser == null) {
-            return null;
+            throw new NotInChatRoomException("해당 방에 참가하지 않았어!");
         }
 
         return chatUserRepository.findByChatRoomId(roomId);
@@ -38,7 +39,7 @@ public class ChatUserService {
         return chatRoom.getChatUsers().stream()
                 .filter(chatUser -> chatUser.getUser().getId().equals(userId))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("너 ChatUser 아니야!"));
+                .orElseThrow(() -> new NotInChatRoomException("해당 방에 참가하지 않았어!"));
     }
 
     public ChatRoom findByRoomId(Long roomId) {

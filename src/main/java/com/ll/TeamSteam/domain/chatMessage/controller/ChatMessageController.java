@@ -51,7 +51,6 @@ public class ChatMessageController {
     public List<ChatMessageDto> findAll(
             @PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user,
             @RequestParam(defaultValue = "0") Long fromId) {
-        log.info("findAll SecurityUser = {}", user);
 
         List<ChatMessageDto> chatMessageDtos =
                 chatMessageService.getByChatRoomIdAndUserIdAndFromId(roomId, user.getId(), fromId);

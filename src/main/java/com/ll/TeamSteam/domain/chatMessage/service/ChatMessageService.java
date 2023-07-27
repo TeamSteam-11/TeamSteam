@@ -1,20 +1,29 @@
 package com.ll.TeamSteam.domain.chatMessage.service;
 
 import com.ll.TeamSteam.domain.chatMessage.dto.ChatMessageDto;
+import com.ll.TeamSteam.domain.chatMessage.dto.response.SignalResponse;
 import com.ll.TeamSteam.domain.chatMessage.entity.ChatMessage;
 import com.ll.TeamSteam.domain.chatMessage.entity.ChatMessageType;
 import com.ll.TeamSteam.domain.chatMessage.repository.ChatMessageRepository;
+import com.ll.TeamSteam.domain.chatRoom.dto.ChatRoomDto;
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
+import com.ll.TeamSteam.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+
+import static com.ll.TeamSteam.domain.chatMessage.dto.response.SignalType.NEW_MESSAGE;
+import static com.ll.TeamSteam.domain.chatMessage.entity.ChatMessageType.ENTER;
+import static com.ll.TeamSteam.domain.chatMessage.entity.ChatMessageType.LEAVE;
+import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.*;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +34,7 @@ public class ChatMessageService {
 
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomService chatRoomService;
+    private final SimpMessageSendingOperations template;
 
     public ChatMessage createAndSave(String content, Long senderId, Long chatRoomId, ChatMessageType type) {
 
@@ -57,5 +67,40 @@ public class ChatMessageService {
                 .toList();
 
         return ChatMessageDto.fromChatMessages(list);
+    }
+
+
+    public void enterMessage(ChatRoomDto chatRoomDto, SecurityUser user, Long roomId) {
+
+        ChatRoom chatRoom = chatRoomService.findByRoomId(roomId);
+
+        if (chatRoomDto.getType().equals(ROOMIN) || chatRoomDto.getType().equals(EXIT)){
+            String enterMessage = " < " + user.getUsername() + "님이 입장하셨습니다. >";
+            createAndSave(enterMessage, user.getId(), roomId, ENTER);
+
+            SignalResponse signalResponse = SignalResponse.builder()
+                    .type(NEW_MESSAGE)
+                    .message(enterMessage)
+                    .build();
+
+            template.convertAndSend("/topic/chats/" + chatRoom.getId(), signalResponse);
+        }
+    }
+
+    public void leaveMessage(ChatRoomDto chatRoomDto, SecurityUser user, Long roomId) {
+
+        ChatRoom chatRoom = chatRoomService.findByRoomId(roomId);
+
+        if (chatRoomDto.getType().equals(COMMON)){
+            String exitMessage = " < " + user.getUsername() + "님이 퇴장하셨습니다. >";
+            createAndSave(exitMessage, user.getId(), roomId, LEAVE);
+
+            SignalResponse signalResponseLeave = SignalResponse.builder()
+                    .type(NEW_MESSAGE)
+                    .message(exitMessage)
+                    .build();
+
+            template.convertAndSend("/topic/chats/" + chatRoom.getId(), signalResponseLeave);
+        }
     }
 }
