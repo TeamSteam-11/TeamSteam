@@ -91,6 +91,31 @@ public class SteamGameLibraryService {
 
     }
 
+    public String getBaseUrl(String steamId, String role){
+        String url = "";
+        if(role.equals("gameList")) { // 이렇게까지 해야할까... ㅋㅋㅋㅋㅋㅋ 한번봐주세요
+            url = getGameListUrl();
+        }
+        if(role.equals("userInfo")){
+            url = getUserInfoUrl();
+        }
+        UriComponents builder = UriComponentsBuilder
+            .fromHttpUrl(url)
+            .buildAndExpand(apiKey, steamId);
+
+        return builder.toUriString();
+    }
+
+    public String getGameListUrl(){
+        return baseUrl + "/IPlayerService/GetOwnedGames/v0001/?key={apiKey}&steamid={steam_id}" +
+            "&include_appinfo=true&format=json";
+    }
+
+    public String getUserInfoUrl(){
+        return baseUrl
+            + "/ISteamUser/GetPlayerSummaries/v2?key={apiKey}&steamids={steam_id}";
+    }
+
     public void save(SteamGameLibrary steamGameLibrary) {
          steamGameLibraryRepository.save(steamGameLibrary);
     }

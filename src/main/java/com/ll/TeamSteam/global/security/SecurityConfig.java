@@ -2,13 +2,63 @@ package com.ll.TeamSteam.global.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.client.RestTemplate;
 
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import jakarta.servlet.DispatcherType;
+import lombok.RequiredArgsConstructor;
+
+// @Configuration
+// @EnableWebSecurity
+// @EnableMethodSecurity(prePostEnabled = true)
+// public class SecurityConfig {
+//
+//     @Bean
+//     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//         http
+//             .authorizeRequests(authorize ->
+//                 authorize.mvcMatchers("/**").permitAll()
+//             )
+//             .formLogin(formLogin ->
+//                 formLogin
+//                     .loginPage("/user/login")
+//                     .defaultSuccessUrl("/", true)
+//             )
+//             .logout(logout ->
+//                 logout
+//                     .logoutUrl("/user/logout")
+//                     .logoutSuccessUrl("/")
+//                     .invalidateHttpSession(true)
+//             );
+//         return http.build();
+//     }
+// }
+// @Configuration
+// @EnableWebSecurity
+// public class SecurityConfig {
+//     @Bean
+//     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//         http
+//             .authorizeHttpRequests(authorize -> authorize
+//                 .requestMatchers("/**").permitAll()
+//                 .anyRequest().authenticated()
+//             )
+//             .formLogin(formLogin -> formLogin
+//                 .loginPage("/user/login")
+//                 .permitAll()
+//             )
+//             .rememberMe(Customizer.withDefaults());
+//
+//         return http.build();
+//     }
 
 @Configuration
 @EnableWebSecurity

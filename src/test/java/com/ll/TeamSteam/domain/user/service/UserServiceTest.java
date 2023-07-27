@@ -1,20 +1,43 @@
 package com.ll.TeamSteam.domain.user.service;
+import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import com.ll.TeamSteam.domain.friend.entity.Friend;
+import com.ll.TeamSteam.domain.friend.service.FriendService;
+import com.ll.TeamSteam.domain.gameTag.entity.GameTag;
+import com.ll.TeamSteam.domain.gameTag.service.GameTagService;
+import com.ll.TeamSteam.domain.genreTag.entity.GenreTag;
+import com.ll.TeamSteam.domain.genreTag.service.GenreTagService;
+import com.ll.TeamSteam.domain.matching.entity.Matching;
+import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
+import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
+import com.ll.TeamSteam.domain.recentlyUser.entity.RecentlyUser;
+import com.ll.TeamSteam.domain.recentlyUser.repository.RecentlyUserRepository;
+import com.ll.TeamSteam.domain.recentlyUser.service.RecentlyUserService;
+import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
+import com.ll.TeamSteam.domain.steam.service.SteamGameLibraryService;
 import com.ll.TeamSteam.domain.user.entity.Gender;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
+import com.ll.TeamSteam.domain.userTag.entity.UserTag;
+import com.ll.TeamSteam.domain.userTag.service.UserTagService;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
 
 @SpringBootTest
@@ -25,39 +48,87 @@ public class UserServiceTest {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private UserTagService userTagService;
+
+	@Autowired
+	private GameTagService gameTagService;
+
+	@Autowired
+	private GenreTagService genreTagService;
+
+	@Autowired
+	private FriendService friendService;
 
 	@BeforeEach
 		// 아래 메서드는 각 테스트케이스가 실행되기 전에 실행된다.
 	void beforeEach() {
 		UserInfoResponse.User user = UserInfoResponse.User.builder()
-				.steamid("11331")
-				.personaname("JohnDoe")
-				.profilestate(1)
-				.avatarmedium("https://example.com/avatar.jpg")
-				.build();
+			.steamid("11331")
+			.personaname("JohnDoe")
+			.profilestate(1)
+			.avatarmedium("https://example.com/avatar.jpg")
+			.build();
 
 		UserInfoResponse response = UserInfoResponse.builder()
-				.response(UserInfoResponse.Response.builder()
-						.players(Collections.singletonList(user))
-						.build())
-				.build();
+			.response(UserInfoResponse.Response.builder()
+				.players(Collections.singletonList(user))
+				.build())
+			.build();
 
 		userService.create(response);
 
 		UserInfoResponse.User user2 = UserInfoResponse.User.builder()
-				.steamid("11332")
-				.personaname("JohnDoe")
-				.profilestate(1)
-				.avatarmedium("https://example.com/avatar.jpg")
-				.build();
+			.steamid("11332")
+			.personaname("JohnDoe")
+			.profilestate(1)
+			.avatarmedium("https://example.com/avatar.jpg")
+			.build();
 
 		UserInfoResponse response2 = UserInfoResponse.builder()
-				.response(UserInfoResponse.Response.builder()
-						.players(Collections.singletonList(user2))
-						.build())
-				.build();
+			.response(UserInfoResponse.Response.builder()
+				.players(Collections.singletonList(user2))
+				.build())
+			.build();
 
 		userService.create(response2);
+
+		UserInfoResponse.User user3 = UserInfoResponse.User.builder()
+			.steamid("11333")
+			.personaname("JohnDoe")
+			.profilestate(1)
+			.avatarmedium("https://example.com/avatar.jpg")
+			.build();
+
+		UserInfoResponse response3 = UserInfoResponse.builder()
+			.response(UserInfoResponse.Response.builder()
+				.players(Collections.singletonList(user3))
+				.build())
+			.build();
+
+		userService.create(response3);
+
+		User user2Data = userService.findBySteamId("11332").orElseThrow();
+
+		UserTag user2Tag = new UserTag();
+		ArrayList<GameTag> gameTags = new ArrayList<>();
+		ArrayList<GenreTag> genreTag = new ArrayList<>();
+		user2Tag.setGenreTag(genreTag);
+		user2Tag.setGameTag(gameTags);
+
+		user2Data.setUserTag(user2Tag);
+
+		genreTagService.saveAll(user2Tag.getGenreTag());
+		gameTagService.saveAll(user2Tag.getGameTag());
+
+		userTagService.save(user2Tag);
+
+		userService.userSave(user2Data);
+
+		userService.addFriends(userService.findBySteamId("11332").get().getId(),
+			userService.findBySteamId("11333").get().getId());
+		//유저2와 3은 친구
+
 	}
 
 
@@ -88,13 +159,19 @@ public class UserServiceTest {
 
 
 	@Test
-	@DisplayName("유저 updateGameList")
+	@DisplayName("유저 updateGameList()")
 	void t003() {
+		List<SteamGameLibrary> gameLibraries = new ArrayList<>();
+		String steamId = "11332";
+
+		SteamGameLibrary game1 = new SteamGameLibrary(4000, "game1");
+		gameLibraries.add(game1);
+		userService.updateGameList(gameLibraries, steamId);
 
 	}
 
 	@Test
-	@DisplayName("유저 updateTemperature")
+	@DisplayName("유저 updateTemperature()")
 	void t004(){
 		//given
 		User updateUser = userService.findBySteamId("11331").orElseThrow();
@@ -110,27 +187,36 @@ public class UserServiceTest {
 
 	}
 	@Test
-	@DisplayName("유저 addFriends")
+	@DisplayName("유저 addFriends()")
 	void t005() {
+		userService.addFriends(userService.findBySteamId("11331").get().getId(),
+			userService.findBySteamId("11332").get().getId());
 
+		assertThat(userService.isFriend(userService.findBySteamId("11331").get().getId(),
+			userService.findBySteamId("11332").get().getId())).isTrue();
 	}
 
 	@Test
-	@DisplayName("유저 deleteFriend")
-	void t006() {
+	@DisplayName("유저 deleteFriend()")
+	void t006() {//이미 친추되어있는 2와 3을 지우기
+		userService.deleteFriend(userService.findBySteamId("11332").get().getId(),
+			userService.findBySteamId("11333").get().getId());
 
+		assertThat(userService.isFriend(userService.findBySteamId("11331").get().getId(),
+			userService.findBySteamId("11332").get().getId())).isFalse();
 	}
 
 	@Test
-	@DisplayName("유저 isFriend")
+	@DisplayName("유저 isFriend()")
 	void t007() {
-
+		assertThat(userService.isFriend(userService.findBySteamId("11332").get().getId(),
+			userService.findBySteamId("11333").get().getId())).isTrue();
 	}
 
 	@Test
-	@DisplayName("유저 getFriends")
+	@DisplayName("유저 getFriends()")
 	void t008() {
-
+		assertThat(userService.getFriends(userService.findBySteamId("11332").get().getId())).isNotEmpty();
 	}
 
 

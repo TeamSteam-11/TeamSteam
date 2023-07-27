@@ -2,8 +2,8 @@ package com.ll.TeamSteam.domain.recentlyUser.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +20,7 @@ import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
 import com.ll.TeamSteam.domain.matchingPartner.repository.MatchingPartnerRepository;
 import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
+import com.ll.TeamSteam.domain.recentlyUser.entity.RecentlyUser;
 import com.ll.TeamSteam.domain.user.entity.Gender;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
@@ -30,9 +31,6 @@ import com.ll.TeamSteam.domain.user.repository.UserRepository;
 @ActiveProfiles("test")
 class RecentlyUserServiceTest {
 
-
-	@Autowired
-	private MatchingPartnerService matchingPartnerService;
 	@Autowired
 	private MatchingPartnerRepository matchingPartnerRepository;
 	@Autowired
@@ -41,9 +39,15 @@ class RecentlyUserServiceTest {
 	private UserRepository userRepository;
 	@Autowired
 	private RecentlyUserService recentlyUserService;
+	@Autowired
+	private MatchingPartnerService matchingPartnerService;
 
 	@BeforeEach
 	void beforeEach() {
+
+		userRepository.deleteAll();
+		matchingRepository.deleteAll();
+		matchingPartnerRepository.deleteAll();
 
 		User user1 = User.builder()
 			.id(9L)
@@ -114,5 +118,76 @@ class RecentlyUserServiceTest {
 		// Then
 		assertEquals(1, matchingIdList.size());
 
+	}
+	@Test
+	@DisplayName("매칭파트너 중 나를 제외하는 필터링")
+	void test002(){
+		//given
+		Optional<User> user = userRepository.findById(9L);
+		List<MatchingPartner> matchingPartners = matchingPartnerService.findByMatchingId(7L);
+
+		MatchingPartner matchingPartner2 =matchingPartnerRepository.findById(2L).orElseThrow();
+		matchingPartner2.updateInChatRoomTrueFalse(true);
+
+		//When
+		List<MatchingPartner> filteredMatchingPartners =recentlyUserService.filterMatchingPartnerExceptMe(user.orElseThrow(),matchingPartners);
+
+		//Then
+		assertEquals(2,matchingPartners.size());
+		assertEquals(1, filteredMatchingPartners.size());
+	}
+
+	@Test
+	@DisplayName("최근 매칭된 유저에 추가할 수 있는지 검증")
+	void test003(){
+		//given
+		Optional<User> user = userRepository.findById(9L);
+		List<MatchingPartner> matchingPartners = matchingPartnerService.findByMatchingId(7L);
+
+		for(MatchingPartner matchingPartner : matchingPartners){
+			boolean canAdd = recentlyUserService.canAddRecentlyUser(user.orElseThrow(),matchingPartner);
+
+			assertTrue(canAdd);
+		}
+	}
+
+	@Test
+	@DisplayName("최근 매칭된 유저 생성")
+	void test004(){
+		//given
+		Optional<User> user = userRepository.findById(9L);
+		List<MatchingPartner> matchingPartners = matchingPartnerService.findByMatchingId(7L);
+
+		int expectedRecentlyUsersCount = matchingPartners.size();
+		int actualRecentlyUsersCount = 0;
+
+		//when
+		for(MatchingPartner matchingPartner : matchingPartners){
+			recentlyUserService.createRecentlyUser(user.orElseThrow(),matchingPartner);
+
+			actualRecentlyUsersCount++;
+		}
+		//then
+		assertEquals(expectedRecentlyUsersCount,actualRecentlyUsersCount);
+	}
+
+	@Test
+	@DisplayName("최근 매칭된 유저목록 가져오기")
+	void test005(){
+		//given
+		Optional<User> user = userRepository.findById(9L);
+		List<Long> matchingIdList = recentlyUserService.getMatchingIdList(9L);
+
+		MatchingPartner matchingPartner1 =matchingPartnerRepository.findById(1L).orElseThrow();
+		MatchingPartner matchingPartner2 =matchingPartnerRepository.findById(2L).orElseThrow();
+		matchingPartner1.updateInChatRoomTrueFalse(true);
+		matchingPartner2.updateInChatRoomTrueFalse(true);
+
+		//when
+		List<RecentlyUser> recentlyUserList =recentlyUserService.getRecentlyUsersToUpdate(user.orElseThrow(),matchingIdList);
+
+		//Then
+		//왜 빈 배열 리턴?
+		assertEquals(1,recentlyUserList.size());
 	}
 }

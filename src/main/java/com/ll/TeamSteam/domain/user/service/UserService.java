@@ -152,7 +152,9 @@ public class UserService {
         User user = findBySteamId(steamId).orElseThrow();
         Long userId = user.getId();
         UserTag userTag = userTagService.findByUserId(userId);
-        gameTagService.deleteAll(userTag.getGameTag());
+        if(Optional.ofNullable(userTag.getGameTag()).isPresent()) { //존재하면 지움
+            gameTagService.deleteAll(userTag.getGameTag());
+        }
         if(!steamGameLibraryService.findAllByUserId(userId).isEmpty()){
             steamGameLibraryService.deleteByUserId(userId);
         }

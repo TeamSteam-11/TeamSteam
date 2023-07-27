@@ -6,18 +6,15 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@Builder
 public class UserInfoResponse {
     private Response response;
 
     @Data
-    @Builder
     public static class Response {
         private List<User> players;
     }
 
     @Data
-    @Builder
     public static class User {
         private String steamid;
         private String personaname;

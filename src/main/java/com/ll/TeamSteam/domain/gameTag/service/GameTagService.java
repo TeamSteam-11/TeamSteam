@@ -22,6 +22,8 @@ public class GameTagService {
 		gameTagRepository.save(gameTag);
 	}
 
+	public void saveAll(List<GameTag> gameTags){ gameTagRepository.saveAll(gameTags);}
+
 	public void deleteAll(List<GameTag> gameTag) {
 		gameTagRepository.deleteAll(gameTag);
 	}

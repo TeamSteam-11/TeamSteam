@@ -53,16 +53,20 @@ public class RecentlyUserService {
 
 		Long userId = user.getId();
 
-		return matchingPartners.stream()
+		List<MatchingPartner> matchingPartnerList = matchingPartners.stream()
 			.filter(u -> u.isInChatRoomTrueFalse() == true)
 			.filter(t -> t.getUser().getId() != userId)
 			.collect(Collectors.toList());
+
+		log.info("matchingPartnerList = {}", matchingPartnerList);
+
+		return matchingPartnerList;
 	}
 
 
 	public List<RecentlyUser> getRecentlyUsersToUpdate(User user, List<Long> matchingIdList) {
 
-		return matchingIdList.stream()
+		List<RecentlyUser> recentlyUserList = matchingIdList.stream()
 			.flatMap(matchingListId -> {
 				List<MatchingPartner> matchingPartners = matchingPartnerService.findByMatchingId(matchingListId);
 				return filterMatchingPartnerExceptMe(user, matchingPartners).stream();
@@ -70,9 +74,13 @@ public class RecentlyUserService {
 			.filter(matchingPartner -> canAddRecentlyUser(user, matchingPartner))
 			.map(matchingPartner -> createRecentlyUser(user, matchingPartner))
 			.collect(Collectors.toList());
+
+		log.info("recentlyUserList = {}", recentlyUserList);
+
+		return recentlyUserList;
 	}
 
-	private boolean canAddRecentlyUser(User user, MatchingPartner matchingPartner) {
+	public boolean canAddRecentlyUser(User user, MatchingPartner matchingPartner) {
 
 		return !existsByUserAndMatchingPartner(user, matchingPartner) && !anotherMatchingExists(user, matchingPartner);
 	}
