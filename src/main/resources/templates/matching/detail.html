@@ -35,6 +35,11 @@
         li:active a {
             background-color: #1F2227;
         }
+
+        .disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body>
@@ -222,7 +227,8 @@
                 <a class="rounded-xl h-12 p-4 w-28 ml-4 mr-2 text-sm flex items-center justify-center"
                    style="background-color: #1F2227;"
                    th:if="${!alreadyWithPartner && matching.getDeadlineDuration() != null}"
-                   th:href="@{|/match/detail/${matching.getId()}/addPartner|}">
+                   th:href="@{|/match/detail/${matching.getId()}/addPartner|}"
+                   th:classappend="${matching.participant >= matching.capacity} ? 'disabled' : ''">
                     <span class="text-center">참여하기</span>
                 </a>
 

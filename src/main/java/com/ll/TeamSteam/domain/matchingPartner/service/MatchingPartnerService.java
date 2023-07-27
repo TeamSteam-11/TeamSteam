@@ -97,9 +97,18 @@ public class MatchingPartnerService {
         return matchingPartnerRepository.findByMatchingIdAndUserId(matchingId, userId);
     }
 
+
     @Transactional
     public void saveAll(List<MatchingPartner> matchingPartners){
         matchingPartnerRepository.saveAll(matchingPartners);
+    }
+  
+    public void validNotMatchingPartner(Matching matching, User user) {
+        matching.getMatchingPartners().stream()
+                .filter(matchingPartner -> matchingPartner.getUser().getId().equals(user.getId()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("너 매칭 파트너 아니야"));
+
     }
 }
 
