@@ -40,7 +40,7 @@ public class Matching extends BaseEntity {
     private Integer gameTagId;
     private String gameTagName;
 
-    @Min(value = 1)
+    @Min(value = 2)
     @Max(value = 5)
     private Long capacity; // 모집 인원
 
