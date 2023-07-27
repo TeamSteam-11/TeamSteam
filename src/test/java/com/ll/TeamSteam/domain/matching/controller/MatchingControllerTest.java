@@ -1,10 +1,13 @@
 package com.ll.TeamSteam.domain.matching.controller;
 
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
+import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -13,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +48,9 @@ public class MatchingControllerTest {
     private ChatRoomService chatRoomService;
     @Autowired
     private MockMvc mvc;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Test
     @DisplayName("매칭 등록")
@@ -364,5 +372,47 @@ public class MatchingControllerTest {
 
         assertThat(matchingService.findById(1L).isPresent()).isEqualTo(false);
     }
+
+    @Test
+    @DisplayName("매칭 수정 폼")
+    @WithMockUser("user1")
+    void t014() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(get("/match/modify/1"))
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(MatchingController.class))
+                .andExpect(handler().methodName("modifyMatching"))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    /*
+    테스트 실패
+    @Test
+    @DisplayName("매칭 수정")
+    @WithMockUser("user1")
+    void t015() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/match/modify/1")
+                        .with(csrf())
+                        .param("title", "modifyMatching")
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(MatchingController.class))
+                .andExpect(handler().methodName("modify"))
+                .andExpect(status().is2xxSuccessful());
+
+        entityManager.flush();
+
+        assertThat(matchingRepository.findById(1L).get().getTitle()).isEqualTo("modifyMatching");
+    }
+    */
 
 }
