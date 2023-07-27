@@ -199,7 +199,7 @@ public class NotProd {
                     GenreTagType genre = GenreTagType.valueOf("삼인칭슈팅");
                     int gameTagId = 41000;
                     String gender = "성별무관";
-                    long capacity = 4L;
+                    long capacity = 2L;
                     Integer startTime = 20;
                     Integer endTime = 22;
 
