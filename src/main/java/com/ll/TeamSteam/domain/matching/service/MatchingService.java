@@ -40,7 +40,6 @@ public class MatchingService {
             gameTagName = gameTag1.getName();
         }
 
-
         Matching matching = Matching
                 .builder()
                 .user(user)

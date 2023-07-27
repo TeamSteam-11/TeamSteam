@@ -5,7 +5,6 @@ import com.ll.TeamSteam.domain.chatRoom.exception.KickedUserEnterException;
 import com.ll.TeamSteam.domain.chatRoom.exception.NoChatRoomException;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
-import com.ll.TeamSteam.domain.matching.exception.MatchingPartnerNotFoundException;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
 import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
