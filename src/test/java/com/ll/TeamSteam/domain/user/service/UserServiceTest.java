@@ -1,39 +1,25 @@
 package com.ll.TeamSteam.domain.user.service;
-import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ll.TeamSteam.domain.friend.entity.Friend;
 import com.ll.TeamSteam.domain.friend.service.FriendService;
 import com.ll.TeamSteam.domain.gameTag.entity.GameTag;
 import com.ll.TeamSteam.domain.gameTag.service.GameTagService;
 import com.ll.TeamSteam.domain.genreTag.entity.GenreTag;
 import com.ll.TeamSteam.domain.genreTag.service.GenreTagService;
-import com.ll.TeamSteam.domain.matching.entity.Matching;
-import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
-import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
-import com.ll.TeamSteam.domain.recentlyUser.entity.RecentlyUser;
-import com.ll.TeamSteam.domain.recentlyUser.repository.RecentlyUserRepository;
-import com.ll.TeamSteam.domain.recentlyUser.service.RecentlyUserService;
 import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
-import com.ll.TeamSteam.domain.steam.service.SteamGameLibraryService;
 import com.ll.TeamSteam.domain.user.entity.Gender;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
@@ -65,50 +51,57 @@ public class UserServiceTest {
 	@BeforeEach
 		// 아래 메서드는 각 테스트케이스가 실행되기 전에 실행된다.
 	void beforeEach() {
-		UserInfoResponse.User user = UserInfoResponse.User.builder()
-			.steamid("11331")
-			.personaname("JohnDoe")
-			.profilestate(1)
-			.avatarmedium("https://example.com/avatar.jpg")
-			.build();
 
-		UserInfoResponse response = UserInfoResponse.builder()
-			.response(UserInfoResponse.Response.builder()
-				.players(Collections.singletonList(user))
-				.build())
-			.build();
+		// UserInfoResponse.User user1 = new UserInfoResponse.User();
+		// user1.setAvatarmedium("https://example.com/avatar.jpg");
+		// user1.setProfilestate(1);
+		// user1.setPersonaname("JohnDoe");
+		// user1.setSteamid("11331");
+		//
+		// UserInfoResponse.Response response1 = new UserInfoResponse.Response();
+		// response1.setPlayers(Collections.singletonList(user1));
 
-		userService.create(response);
+		UserInfoResponse.User user = new UserInfoResponse.User();
+		user.setAvatarmedium("https://example.com/avatar.jpg");
+		user.setProfilestate(1);
+		user.setPersonaname("JohnDoe");
+		user.setSteamid("11331");
 
-		UserInfoResponse.User user2 = UserInfoResponse.User.builder()
-			.steamid("11332")
-			.personaname("JohnDoe")
-			.profilestate(1)
-			.avatarmedium("https://example.com/avatar.jpg")
-			.build();
+		UserInfoResponse.Response response = new UserInfoResponse.Response();
+		response.setPlayers(Collections.singletonList(user));
 
-		UserInfoResponse response2 = UserInfoResponse.builder()
-			.response(UserInfoResponse.Response.builder()
-				.players(Collections.singletonList(user2))
-				.build())
-			.build();
+		UserInfoResponse userInfoResponse = new UserInfoResponse();
+		userInfoResponse.setResponse(response);
 
-		userService.create(response2);
+		userService.create(userInfoResponse);
 
-		UserInfoResponse.User user3 = UserInfoResponse.User.builder()
-			.steamid("11333")
-			.personaname("JohnDoe")
-			.profilestate(1)
-			.avatarmedium("https://example.com/avatar.jpg")
-			.build();
+		UserInfoResponse.User user2 = new UserInfoResponse.User();
+		user2.setAvatarmedium("https://example.com/avatar.jpg");
+		user2.setProfilestate(1);
+		user2.setPersonaname("JohnDoe");
+		user2.setSteamid("11332");
 
-		UserInfoResponse response3 = UserInfoResponse.builder()
-			.response(UserInfoResponse.Response.builder()
-				.players(Collections.singletonList(user3))
-				.build())
-			.build();
+		UserInfoResponse.Response response2 = new UserInfoResponse.Response();
+		response2.setPlayers(Collections.singletonList(user2));
 
-		userService.create(response3);
+		UserInfoResponse userInfoResponse2 = new UserInfoResponse();
+		userInfoResponse2.setResponse(response2);
+
+		userService.create(userInfoResponse2);
+
+		UserInfoResponse.User user3 = new UserInfoResponse.User();
+		user3.setAvatarmedium("https://example.com/avatar.jpg");
+		user3.setProfilestate(1);
+		user3.setPersonaname("JohnDoe");
+		user3.setSteamid("11333");
+
+		UserInfoResponse.Response response3 = new UserInfoResponse.Response();
+		response3.setPlayers(Collections.singletonList(user3));
+
+		UserInfoResponse userInfoResponse3 = new UserInfoResponse();
+		userInfoResponse3.setResponse(response3);
+
+		userService.create(userInfoResponse3);
 
 		User user2Data = userService.findBySteamId("11332").orElseThrow();
 
@@ -166,7 +159,7 @@ public class UserServiceTest {
 		List<SteamGameLibrary> gameLibraries = new ArrayList<>();
 		String steamId = "11332";
 
-		SteamGameLibrary game1 = new SteamGameLibrary(4000, "game1");
+		SteamGameLibrary game1 = new SteamGameLibrary(41000, "game1");
 		gameLibraries.add(game1);
 		userService.updateGameList(gameLibraries, steamId);
 

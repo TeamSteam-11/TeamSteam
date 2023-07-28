@@ -107,7 +107,12 @@ public class UserService {
         //         deleteAllGenreTag(userTag);
         //     }
         // }
-       deleteAllGenreTag(userTag);
+
+        if(userTag != null && userTag.getGenreTag() != null){
+            deleteAllGenreTag(userTag);
+        }
+
+        // deleteAllGenreTag(userTag);
         // genreTagRepository.deleteAll(userTag.getGenreTag());
 
         //장르태그
@@ -116,9 +121,9 @@ public class UserService {
         log.info("genreTags ={}",genreTags.size());
         for (GenreTagType genreTagType : genreTagTypes) {
             GenreTag genreTag = GenreTag.builder()
-                    .genre(genreTagType)
-                    .userTag(userTag)
-                    .build();
+                .genre(genreTagType)
+                .userTag(userTag)
+                .build();
 
             log.info("genreTag ={}",genreTag);
             log.info("genreTag ={}",userTag != null);
@@ -149,8 +154,8 @@ public class UserService {
     @Transactional
     public void deleteAllGenreTag(UserTag userTag){
         //Optional로 감싸 null인지 체크 후 널이 아닐 때만 deleteAll
-//        Optional<UserTag> userTagcheck = Optional.ofNullable(userTag);
-        log.info("userService.userTag", userTag.getGenreTag());
+        //        Optional<UserTag> userTagcheck = Optional.ofNullable(userTag);
+
         genreTagService.deleteAll(userTag.getGenreTag());
     }
 
@@ -167,9 +172,9 @@ public class UserService {
         User user = findBySteamId(steamId).orElseThrow();
         Long userId = user.getId();
         UserTag userTag = userTagService.findByUserId(userId);
-        // if(Optional.ofNullable(userTag.getGameTag()).isPresent()) { //존재하면 지움
+        if(Optional.ofNullable(userTag.getGameTag()).isPresent()) {
             gameTagService.deleteAll(userTag.getGameTag());
-        // }
+        }
         if(!steamGameLibraryService.findAllByUserId(userId).isEmpty()){
             log.info("steamGameLibraryService.findAllByUserId(userId).isEmpty() = {}", steamGameLibraryService.findAllByUserId(userId).isEmpty());
             log.info("userId = {}", userId);
@@ -215,13 +220,13 @@ public class UserService {
             //서로 저장
 
             Friend meToFriends = Friend.builder()
-                    .user(loginedUser)
-                    .friend(targetUser)
-                    .build();
+                .user(loginedUser)
+                .friend(targetUser)
+                .build();
             Friend friendToMe = Friend.builder()
-                    .user(targetUser)
-                    .friend(loginedUser)
-                    .build();
+                .user(targetUser)
+                .friend(loginedUser)
+                .build();
 
             friendService.save(meToFriends);
             friendService.save(friendToMe);
@@ -258,6 +263,8 @@ public class UserService {
         User user = userRepository.findBySteamId(steamId).orElseThrow();
 
         gameTagService.deleteByUserTag(user.getUserTag());
+
+
 
         Set<Integer> distinctGameIds = new HashSet<>(); // 중복을 제거하기 위한 Set
 
