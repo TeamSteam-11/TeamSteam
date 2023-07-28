@@ -54,6 +54,7 @@ public class MatchingController {
                                @RequestParam(defaultValue = "DESC") String direction,
                                /*@PageableDefault(sort = "createDate", direction = Sort.Direction.DESC, size = 12) Pageable pageable,*/
                                Model model) {
+
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
         Page<Matching> matchingList = matchingService.getMatchingList(pageable);
         model.addAttribute("matchingList", matchingList);
@@ -65,6 +66,7 @@ public class MatchingController {
 
     @GetMapping("/create")
     public String matchingCreate(@AuthenticationPrincipal SecurityUser user, Model model) {
+
         CreateForm createForm = new CreateForm();
 
         if (!rq.isLogin()) {
@@ -85,6 +87,7 @@ public class MatchingController {
     @PostMapping("/create")
     public String matchingCreate(@Valid CreateForm createForm,
                                  @AuthenticationPrincipal SecurityUser user) {
+
         Long userId = user.getId();
 
         User user1 = userRepository.findById(userId).orElseThrow();
@@ -206,6 +209,7 @@ public class MatchingController {
     @GetMapping("/detail/{matchingId}/addPartner")
     public String addPartner(@PathVariable Long matchingId, @AuthenticationPrincipal SecurityUser user,
                              Model model){
+
         Matching matching = matchingService.findById(matchingId).orElseThrow();
 
         // 로그인 하지 않은 유저가 매칭파트너 신청을 했을 경우 로그인 페이지로 redirect
@@ -245,6 +249,7 @@ public class MatchingController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/detail/{matchingId}/moveChatRoom")
     public String moveChatRoom(@PathVariable Long matchingId, @AuthenticationPrincipal SecurityUser user){
+
         Matching matching = matchingService.findById(matchingId).orElseThrow();
 
         // true 면 matching partner에 저장되어있고, false 면 없음
