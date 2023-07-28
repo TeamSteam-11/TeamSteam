@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,6 +34,7 @@ import com.ll.TeamSteam.domain.user.repository.UserRepository;
 @ActiveProfiles("test")
 class RecentlyUserServiceTest {
 
+
 	@Autowired
 	private MatchingPartnerRepository matchingPartnerRepository;
 	@Autowired
@@ -41,16 +45,17 @@ class RecentlyUserServiceTest {
 	private RecentlyUserService recentlyUserService;
 	@Autowired
 	private MatchingPartnerService matchingPartnerService;
-
+	// @AfterEach
+	// void afterEach(){
+	// 	userRepository.deleteAll();
+	// 	matchingRepository.deleteAll();
+	// 	matchingPartnerRepository.deleteAll();
+	//
+	// }
 	@BeforeEach
 	void beforeEach() {
 
-		userRepository.deleteAll();
-		matchingRepository.deleteAll();
-		matchingPartnerRepository.deleteAll();
-
 		User user1 = User.builder()
-			.id(9L)
 			.username("user1")
 			.steamId("13131")
 			.type(Gender.남성)
@@ -61,7 +66,6 @@ class RecentlyUserServiceTest {
 		userRepository.save(user1);
 
 		User user2 = User.builder()
-			.id(10L)
 			.username("user2")
 			.steamId("13132")
 			.type(Gender.여성)
@@ -111,9 +115,10 @@ class RecentlyUserServiceTest {
 	@DisplayName("유저의 매칭아이디리스트 가져오기")
 	void test001() {
 		//given
-		Long userId =9L;
+		String steamId ="13131";
+		User user = userRepository.findBySteamId(steamId).orElseThrow();
 		// When
-		List<Long> matchingIdList = recentlyUserService.getMatchingIdList(userId);
+		List<Long> matchingIdList = recentlyUserService.getMatchingIdList(user.getId());
 
 		// Then
 		assertEquals(1, matchingIdList.size());
@@ -123,7 +128,7 @@ class RecentlyUserServiceTest {
 	@DisplayName("매칭파트너 중 나를 제외하는 필터링")
 	void test002(){
 		//given
-		Optional<User> user = userRepository.findById(9L);
+		Optional<User> user = userRepository.findBySteamId("13131");
 		List<MatchingPartner> matchingPartners = matchingPartnerService.findByMatchingId(7L);
 
 		MatchingPartner matchingPartner2 =matchingPartnerRepository.findById(2L).orElseThrow();
@@ -141,7 +146,7 @@ class RecentlyUserServiceTest {
 	@DisplayName("최근 매칭된 유저에 추가할 수 있는지 검증")
 	void test003(){
 		//given
-		Optional<User> user = userRepository.findById(9L);
+		Optional<User> user = userRepository.findBySteamId("13131");
 		List<MatchingPartner> matchingPartners = matchingPartnerService.findByMatchingId(7L);
 
 		for(MatchingPartner matchingPartner : matchingPartners){
@@ -155,7 +160,7 @@ class RecentlyUserServiceTest {
 	@DisplayName("최근 매칭된 유저 생성")
 	void test004(){
 		//given
-		Optional<User> user = userRepository.findById(9L);
+		Optional<User> user = userRepository.findBySteamId("13131");
 		List<MatchingPartner> matchingPartners = matchingPartnerService.findByMatchingId(7L);
 
 		int expectedRecentlyUsersCount = matchingPartners.size();
@@ -175,7 +180,7 @@ class RecentlyUserServiceTest {
 	@DisplayName("최근 매칭된 유저목록 가져오기")
 	void test005(){
 		//given
-		Optional<User> user = userRepository.findById(9L);
+		Optional<User> user = userRepository.findBySteamId("13131");
 		List<Long> matchingIdList = recentlyUserService.getMatchingIdList(9L);
 
 		MatchingPartner matchingPartner1 =matchingPartnerRepository.findById(1L).orElseThrow();
