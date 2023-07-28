@@ -1,11 +1,7 @@
 package com.ll.TeamSteam.domain.matching.controller;
 
-import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
-import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
-import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
-import com.ll.TeamSteam.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
@@ -15,15 +11,12 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -35,17 +28,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class MatchingControllerTest {
     @Autowired
-    private MatchingRepository matchingRepository;
-    @Autowired
-    private MatchingController matchingController;
-    @Autowired
     private MatchingService matchingService;
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private MatchingPartnerService matchingPartnerService;
-    @Autowired
-    private ChatRoomService chatRoomService;
+    private MatchingRepository matchingRepository;
     @Autowired
     private MockMvc mvc;
 
@@ -390,7 +375,7 @@ public class MatchingControllerTest {
     }
 
     /*
-    테스트 실패
+    // 테스트 실패
     @Test
     @DisplayName("매칭 수정")
     @WithMockUser("user1")
