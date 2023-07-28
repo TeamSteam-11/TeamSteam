@@ -5,6 +5,7 @@ import net.minidev.json.parser.ParseException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -91,31 +92,31 @@ public class SteamGameLibraryService {
 
     }
 
-    public String getBaseUrl(String steamId, String role){
-        String url = "";
-        if(role.equals("gameList")) { // 이렇게까지 해야할까... ㅋㅋㅋㅋㅋㅋ 한번봐주세요
-            url = getGameListUrl();
-        }
-        if(role.equals("userInfo")){
-            url = getUserInfoUrl();
-        }
-        UriComponents builder = UriComponentsBuilder
-            .fromHttpUrl(url)
-            .buildAndExpand(apiKey, steamId);
-
-        return builder.toUriString();
-    }
-
-    public String getGameListUrl(){
-        return baseUrl + "/IPlayerService/GetOwnedGames/v0001/?key={apiKey}&steamid={steam_id}" +
-            "&include_appinfo=true&format=json";
-    }
-
-    public String getUserInfoUrl(){
-        return baseUrl
-            + "/ISteamUser/GetPlayerSummaries/v2?key={apiKey}&steamids={steam_id}";
-    }
-
+    // public String getBaseUrl(String steamId, String role){
+    //     String url = "";
+    //     if(role.equals("gameList")) { // 이렇게까지 해야할까... ㅋㅋㅋㅋㅋㅋ 한번봐주세요
+    //         url = getGameListUrl();
+    //     }
+    //     if(role.equals("userInfo")){
+    //         url = getUserInfoUrl();
+    //     }
+    //     UriComponents builder = UriComponentsBuilder
+    //         .fromHttpUrl(url)
+    //         .buildAndExpand(apiKey, steamId);
+    //
+    //     return builder.toUriString();
+    // }
+    //
+    // public String getGameListUrl(){
+    //     return baseUrl + "/IPlayerService/GetOwnedGames/v0001/?key={apiKey}&steamid={steam_id}" +
+    //         "&include_appinfo=true&format=json";
+    // }
+    //
+    // public String getUserInfoUrl(){
+    //     return baseUrl
+    //         + "/ISteamUser/GetPlayerSummaries/v2?key={apiKey}&steamids={steam_id}";
+    // }
+    @Transactional
     public void save(SteamGameLibrary steamGameLibrary) {
          steamGameLibraryRepository.save(steamGameLibrary);
     }
@@ -123,11 +124,11 @@ public class SteamGameLibraryService {
     public List<SteamGameLibrary> findAllByUserId(Long userId) {
         return steamGameLibraryRepository.findAllByUserId(userId);
     }
-
+    @Transactional
     public void deleteByUserId(Long userId) {
         steamGameLibraryRepository.deleteByUserId(userId);
     }
-
+    @Transactional
     public void saveAll(List<SteamGameLibrary> gameLibraries) {
         steamGameLibraryRepository.saveAll(gameLibraries);
     }

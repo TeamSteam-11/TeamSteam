@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -42,6 +43,7 @@ import com.ll.TeamSteam.global.security.UserInfoResponse;
 
 @SpringBootTest
 @Transactional
+@ActiveProfiles("test")
 public class UserServiceTest {
 	@Autowired
 	private UserRepository userRepository;

@@ -269,8 +269,10 @@ public class UserController {
             .map(GenreTagType::valueOf)
             .collect(Collectors.toList());
 
+        log.info("genretypes ={}", genreTagTypes.size());
         // DB에 저장
         userService.updateUserData(gender, genreTagTypes, id);
+
         return "redirect:/user/createGameTag";
     }
 

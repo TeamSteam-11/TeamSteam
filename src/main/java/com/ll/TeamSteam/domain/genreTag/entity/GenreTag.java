@@ -1,5 +1,7 @@
 package com.ll.TeamSteam.domain.genreTag.entity;
 
+import static jakarta.persistence.FetchType.*;
+
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.userTag.entity.UserTag;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
@@ -19,7 +21,7 @@ public class GenreTag extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private GenreTagType genre;
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     private UserTag userTag;
 
 }

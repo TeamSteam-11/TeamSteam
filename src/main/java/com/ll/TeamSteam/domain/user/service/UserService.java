@@ -98,35 +98,49 @@ public class UserService {
     public void updateUserData(String gender, List<GenreTagType> genreTagTypes, Long id) {
 
         User user = findById(id).orElseThrow();
+        log.info("user ={}",user);
         UserTag userTag = userTagService.findByUserId(id);
-
+        log.info("userTag ={}",userTag);
         //userTag가 비어있을 때는 태그를 삭제하지 않음
-        if(Optional.ofNullable(userTag).isPresent()) {
-            if (Optional.ofNullable(userTag.getGenreTag()).isPresent()) {
-                deleteAllGenreTag(userTag);
-            }
-        }
-//        deleteAllGenreTag(userTag);
+        // if(Optional.ofNullable(userTag).isPresent()) {
+        //     if (Optional.ofNullable(userTag.getGenreTag()).isPresent()) {
+        //         deleteAllGenreTag(userTag);
+        //     }
+        // }
+       deleteAllGenreTag(userTag);
         // genreTagRepository.deleteAll(userTag.getGenreTag());
 
         //장르태그
         List<GenreTag> genreTags = new ArrayList<>();
-
+        log.info("genreTag ={}",genreTagTypes.size());
+        log.info("genreTags ={}",genreTags.size());
         for (GenreTagType genreTagType : genreTagTypes) {
             GenreTag genreTag = GenreTag.builder()
                     .genre(genreTagType)
                     .userTag(userTag)
                     .build();
+
+            log.info("genreTag ={}",genreTag);
+            log.info("genreTag ={}",userTag != null);
+            log.info("genreTag ={}",userTag.getGenreTag() != null);
             genreTags.add(genreTag);
         }
-
+        log.info("genreTags ={}",genreTags.size());
+        log.info("genreTags ={}",genreTags.get(0).getId());
+        log.info("genreTags.get(0).getGenre() ={}",genreTags.get(0).getGenre());
+        log.info("genreTags.getUserTag().getId() ={}",genreTags.get(0).getUserTag().getId());
+        log.info("genreTags ={}",genreTags.size());
+        log.info("genreTagService.saveAll(genreTags) ={}",genreTags);
         genreTagService.saveAll(genreTags);
+
+
 
 
         // Gender 업데이트
         user.setType(Gender.valueOf(gender));
 
         // 변경된 데이터 저장
+        userTag.setGenreTag(genreTags);
         userSave(user);
         userTagService.save(userTag);
 
@@ -136,6 +150,7 @@ public class UserService {
     public void deleteAllGenreTag(UserTag userTag){
         //Optional로 감싸 null인지 체크 후 널이 아닐 때만 deleteAll
 //        Optional<UserTag> userTagcheck = Optional.ofNullable(userTag);
+        log.info("userService.userTag", userTag.getGenreTag());
         genreTagService.deleteAll(userTag.getGenreTag());
     }
 
@@ -152,10 +167,12 @@ public class UserService {
         User user = findBySteamId(steamId).orElseThrow();
         Long userId = user.getId();
         UserTag userTag = userTagService.findByUserId(userId);
-        if(Optional.ofNullable(userTag.getGameTag()).isPresent()) { //존재하면 지움
+        // if(Optional.ofNullable(userTag.getGameTag()).isPresent()) { //존재하면 지움
             gameTagService.deleteAll(userTag.getGameTag());
-        }
+        // }
         if(!steamGameLibraryService.findAllByUserId(userId).isEmpty()){
+            log.info("steamGameLibraryService.findAllByUserId(userId).isEmpty() = {}", steamGameLibraryService.findAllByUserId(userId).isEmpty());
+            log.info("userId = {}", userId);
             steamGameLibraryService.deleteByUserId(userId);
         }
 
@@ -241,7 +258,6 @@ public class UserService {
         User user = userRepository.findBySteamId(steamId).orElseThrow();
 
         gameTagService.deleteByUserTag(user.getUserTag());
-
 
         Set<Integer> distinctGameIds = new HashSet<>(); // 중복을 제거하기 위한 Set
 
