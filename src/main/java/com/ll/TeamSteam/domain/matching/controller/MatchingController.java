@@ -179,7 +179,7 @@ public class MatchingController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{matchingId}")
-    public String modify(@Valid CreateForm createForm, @PathVariable Long matchingId, @AuthenticationPrincipal SecurityUser user) {
+    public String modifyMatching(@Valid CreateForm createForm, @PathVariable Long matchingId, @AuthenticationPrincipal SecurityUser user) {
 
         Matching matching = matchingService.findById(matchingId).orElse(null);
 

@@ -384,19 +384,19 @@ public class MatchingControllerTest {
         ResultActions resultActions = mvc
                 .perform(post("/match/modify/1")
                         .with(csrf())
-                        .param("title", "modifyMatching")
+                        .param("title", "modifyTitle")
                 )
                 .andDo(print());
 
         // THEN
         resultActions
                 .andExpect(handler().handlerType(MatchingController.class))
-                .andExpect(handler().methodName("modify"))
+                .andExpect(handler().methodName("modifyMatching"))
                 .andExpect(status().is2xxSuccessful());
 
         entityManager.flush();
 
-        assertThat(matchingRepository.findById(1L).get().getTitle()).isEqualTo("modifyMatching");
+        assertThat(matchingRepository.findById(1L).get().getTitle()).isEqualTo("modifyTitle");
     }
     */
 
