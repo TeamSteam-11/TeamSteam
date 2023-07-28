@@ -1,5 +1,7 @@
 package com.ll.TeamSteam.domain.matching.service;
 
+import com.fasterxml.jackson.databind.deser.DataFormatReaders;
+import com.ll.TeamSteam.domain.matching.entity.CreateForm;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.entity.SearchQuery;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
@@ -10,8 +12,6 @@ import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
 import com.ll.TeamSteam.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.internal.util.privilegedactions.LoadClass;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -213,4 +213,21 @@ public class MatchingService {
                 .limit(6)
                 .collect(Collectors.toList());
     }
+
+    public CreateForm setCreateForm(Matching matching) {
+        CreateForm createForm = new CreateForm();
+
+        createForm.setTitle(matching.getTitle());
+        createForm.setContent(matching.getContent());
+        createForm.setGenre(matching.getGenre());
+        createForm.setGameTagId(matching.getGameTagId());
+        createForm.setGender(matching.getGender());
+        createForm.setCapacity(matching.getCapacity());
+        createForm.setStartTime(matching.getStartTime());
+        createForm.setEndTime(matching.getEndTime());
+        createForm.setSelectedHours(calculateSelectedHours(matching.getId(), matching.getDeadlineDate()));
+
+        return createForm;
+    }
+
 }

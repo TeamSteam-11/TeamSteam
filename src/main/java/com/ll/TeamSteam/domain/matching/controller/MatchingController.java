@@ -4,6 +4,7 @@ import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.chatRoom.exception.KickedUserEnterException;
 import com.ll.TeamSteam.domain.chatRoom.exception.NoChatRoomException;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
+import com.ll.TeamSteam.domain.matching.entity.CreateForm;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner;
@@ -17,13 +18,8 @@ import com.ll.TeamSteam.global.rq.Rq;
 import com.ll.TeamSteam.global.rsData.RsData;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import com.ll.TeamSteam.domain.user.entity.User;
-import jakarta.persistence.Column;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +29,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -70,61 +65,20 @@ public class MatchingController {
 
     @GetMapping("/create")
     public String matchingCreate(@AuthenticationPrincipal SecurityUser user, Model model) {
+        CreateForm createForm = new CreateForm();
 
         if (!rq.isLogin()) {
             return "redirect:/user/login";
         }
 
         // CreateForm 객체를 모델에 추가
-        model.addAttribute("createForm", new CreateForm());
+        model.addAttribute("createForm", createForm);
         List<GameTag> userGameTags = userRepository.findById(user.getId()).orElseThrow().getUserTag().getGameTag();
         List<GenreTag> userGenreTags = userRepository.findById(user.getId()).orElseThrow().getUserTag().getGenreTag();
         model.addAttribute("userGameTags", userGameTags);
         model.addAttribute("userGenreTags", userGenreTags);
 
         return "matching/create";
-    }
-
-    // 입력받은 매칭 글 가져오기
-    @AllArgsConstructor
-    @Getter
-    @Setter
-    public static class CreateForm {
-        @NotBlank(message = "제목은 필수항목입니다.")
-        @Size(max= 50) // 최소 길이, 최대 길이 제한
-        private String title;
-        @NotBlank(message = "내용 필수항목입니다.")
-        @Column(columnDefinition = "TEXT")
-        private String content;
-        @NotNull(message = "장르는 필수항목입니다.")
-        private GenreTagType genre;
-        @NotNull(message = "게임태그는 필수항목입니다.")
-        private Integer gameTagId;
-        @Min(value = 2)
-        @Max(value = 5, message = "모집인원의 범위를 벗어났습니다.")
-        private Long capacity;
-        private String gender;
-        @NotNull(message = "시작시간은 필수항목입니다.")
-        @Min(value = 0)
-        @Max(value = 24)
-        private Integer startTime;
-        @NotNull(message = "끝나는 시간은 필수항목입니다.")
-        @Min(value = 0)
-        @Max(value = 24)
-        private Integer endTime;
-        private int selectedHours;
-
-        public CreateForm() {
-            this.title = "제목";
-            this.content = "내용";
-            this.genre =GenreTagType.valueOf("삼인칭슈팅");
-            this.gameTagId=1;
-            this.capacity = 2L;
-            this.gender = "성별무관";
-            this.startTime = 0;
-            this.endTime = 0;
-            this.selectedHours = 0;
-        }
     }
 
     // 매칭 등록 기능 구현
@@ -205,26 +159,20 @@ public class MatchingController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{matchingId}")
-    public String modifyMatching(@PathVariable Long matchingId, CreateForm createForm, Model model, @AuthenticationPrincipal SecurityUser user) {
+    public String modifyMatching(@PathVariable Long matchingId, Model model, @AuthenticationPrincipal SecurityUser user) {
 
         Matching matching = matchingService.findById(matchingId).orElse(null);
 
-        createForm.setTitle(matching.getTitle());
-        createForm.setContent(matching.getContent());
-        createForm.setGenre(matching.getGenre());
-        createForm.setGameTagId(matching.getGameTagId());
-        createForm.setGender(matching.getGender());
-        createForm.setCapacity(matching.getCapacity());
-        createForm.setStartTime(matching.getStartTime());
-        createForm.setEndTime(matching.getEndTime());
-        createForm.setSelectedHours(matchingService.calculateSelectedHours(matchingId, matching.getDeadlineDate()));
+        if (matching != null) {
+            CreateForm createForm = matchingService.setCreateForm(matching);
+            model.addAttribute("createForm", createForm);
+            model.addAttribute("matching", matching);
 
-        model.addAttribute("matching", matching);
-
-        List<GameTag> userGameTags = userRepository.findById(user.getId()).orElseThrow().getUserTag().getGameTag();
-        List<GenreTag> userGenreTags = userRepository.findById(user.getId()).orElseThrow().getUserTag().getGenreTag();
-        model.addAttribute("userGameTags", userGameTags);
-        model.addAttribute("userGenreTags", userGenreTags);
+            List<GameTag> userGameTags = userRepository.findById(user.getId()).orElseThrow().getUserTag().getGameTag();
+            List<GenreTag> userGenreTags = userRepository.findById(user.getId()).orElseThrow().getUserTag().getGenreTag();
+            model.addAttribute("userGameTags", userGameTags);
+            model.addAttribute("userGenreTags", userGenreTags);
+        }
 
         return "matching/modify";
     }
@@ -241,7 +189,6 @@ public class MatchingController {
 
         RsData<Matching> modifyRsData = matchingService.modify(matching, createForm.getTitle(), createForm.getContent(),
                 createForm.getGenre(), createForm.getGender(), createForm.getCapacity(), createForm.getStartTime(), createForm.getEndTime(), createForm.getSelectedHours());
-
 
         chatRoomService.updateChatRoomName(matching.getChatRoom(), matching.getTitle());
 
