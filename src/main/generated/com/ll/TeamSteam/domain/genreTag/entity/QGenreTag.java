@@ -1,4 +1,4 @@
-package com.ll.TeamSteam.domain.userTag.genreTag;
+package com.ll.TeamSteam.domain.genreTag.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QGenreTag extends EntityPathBase<GenreTag> {
 
-    private static final long serialVersionUID = 309708897L;
+    private static final long serialVersionUID = -930106055L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -35,7 +35,7 @@ public class QGenreTag extends EntityPathBase<GenreTag> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifyDate = _super.modifyDate;
 
-    public final com.ll.TeamSteam.domain.userTag.QUserTag userTag;
+    public final com.ll.TeamSteam.domain.userTag.entity.QUserTag userTag;
 
     public QGenreTag(String variable) {
         this(GenreTag.class, forVariable(variable), INITS);
@@ -55,7 +55,7 @@ public class QGenreTag extends EntityPathBase<GenreTag> {
 
     public QGenreTag(Class<? extends GenreTag> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.userTag = inits.isInitialized("userTag") ? new com.ll.TeamSteam.domain.userTag.QUserTag(forProperty("userTag"), inits.get("userTag")) : null;
+        this.userTag = inits.isInitialized("userTag") ? new com.ll.TeamSteam.domain.userTag.entity.QUserTag(forProperty("userTag"), inits.get("userTag")) : null;
     }
 
 }

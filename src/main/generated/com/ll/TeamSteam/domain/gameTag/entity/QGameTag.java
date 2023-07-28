@@ -1,4 +1,4 @@
-package com.ll.TeamSteam.domain.userTag.gameTag;
+package com.ll.TeamSteam.domain.gameTag.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QGameTag extends EntityPathBase<GameTag> {
 
-    private static final long serialVersionUID = -572099211L;
+    private static final long serialVersionUID = -1179346895L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -37,7 +37,7 @@ public class QGameTag extends EntityPathBase<GameTag> {
 
     public final StringPath name = createString("name");
 
-    public final com.ll.TeamSteam.domain.userTag.QUserTag userTag;
+    public final com.ll.TeamSteam.domain.userTag.entity.QUserTag userTag;
 
     public QGameTag(String variable) {
         this(GameTag.class, forVariable(variable), INITS);
@@ -57,7 +57,7 @@ public class QGameTag extends EntityPathBase<GameTag> {
 
     public QGameTag(Class<? extends GameTag> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.userTag = inits.isInitialized("userTag") ? new com.ll.TeamSteam.domain.userTag.QUserTag(forProperty("userTag"), inits.get("userTag")) : null;
+        this.userTag = inits.isInitialized("userTag") ? new com.ll.TeamSteam.domain.userTag.entity.QUserTag(forProperty("userTag"), inits.get("userTag")) : null;
     }
 
 }

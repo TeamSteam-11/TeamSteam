@@ -8,6 +8,7 @@ import com.ll.TeamSteam.global.baseEntity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -56,7 +57,6 @@ public class Matching extends BaseEntity {
 
     @OneToOne(mappedBy = "matching", fetch = LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ChatRoom chatRoom;
-
     @OneToMany(mappedBy = "matching", cascade = CascadeType.REMOVE)
     private List<MatchingPartner> matchingPartners = new ArrayList<>();
 
@@ -112,4 +112,5 @@ public class Matching extends BaseEntity {
     public void setDeadlineDate(LocalDateTime deadlineDate) {
         this.deadlineDate = deadlineDate;
     }
+
 }

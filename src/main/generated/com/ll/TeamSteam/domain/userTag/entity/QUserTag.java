@@ -1,4 +1,4 @@
-package com.ll.TeamSteam.domain.userTag;
+package com.ll.TeamSteam.domain.userTag.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QUserTag extends EntityPathBase<UserTag> {
 
-    private static final long serialVersionUID = -940484702L;
+    private static final long serialVersionUID = 792852817L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -27,9 +27,9 @@ public class QUserTag extends EntityPathBase<UserTag> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
-    public final ListPath<com.ll.TeamSteam.domain.userTag.gameTag.GameTag, com.ll.TeamSteam.domain.userTag.gameTag.QGameTag> gameTag = this.<com.ll.TeamSteam.domain.userTag.gameTag.GameTag, com.ll.TeamSteam.domain.userTag.gameTag.QGameTag>createList("gameTag", com.ll.TeamSteam.domain.userTag.gameTag.GameTag.class, com.ll.TeamSteam.domain.userTag.gameTag.QGameTag.class, PathInits.DIRECT2);
+    public final ListPath<com.ll.TeamSteam.domain.gameTag.entity.GameTag, com.ll.TeamSteam.domain.gameTag.entity.QGameTag> gameTag = this.<com.ll.TeamSteam.domain.gameTag.entity.GameTag, com.ll.TeamSteam.domain.gameTag.entity.QGameTag>createList("gameTag", com.ll.TeamSteam.domain.gameTag.entity.GameTag.class, com.ll.TeamSteam.domain.gameTag.entity.QGameTag.class, PathInits.DIRECT2);
 
-    public final ListPath<com.ll.TeamSteam.domain.userTag.genreTag.GenreTag, com.ll.TeamSteam.domain.userTag.genreTag.QGenreTag> genreTag = this.<com.ll.TeamSteam.domain.userTag.genreTag.GenreTag, com.ll.TeamSteam.domain.userTag.genreTag.QGenreTag>createList("genreTag", com.ll.TeamSteam.domain.userTag.genreTag.GenreTag.class, com.ll.TeamSteam.domain.userTag.genreTag.QGenreTag.class, PathInits.DIRECT2);
+    public final ListPath<com.ll.TeamSteam.domain.genreTag.entity.GenreTag, com.ll.TeamSteam.domain.genreTag.entity.QGenreTag> genreTag = this.<com.ll.TeamSteam.domain.genreTag.entity.GenreTag, com.ll.TeamSteam.domain.genreTag.entity.QGenreTag>createList("genreTag", com.ll.TeamSteam.domain.genreTag.entity.GenreTag.class, com.ll.TeamSteam.domain.genreTag.entity.QGenreTag.class, PathInits.DIRECT2);
 
     //inherited
     public final NumberPath<Long> id = _super.id;

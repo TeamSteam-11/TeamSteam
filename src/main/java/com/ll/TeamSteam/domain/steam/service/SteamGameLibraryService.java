@@ -3,12 +3,9 @@ package com.ll.TeamSteam.domain.steam.service;
 
 import net.minidev.json.parser.ParseException;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -16,7 +13,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
-import com.ll.TeamSteam.global.rsData.RsData;
+import com.ll.TeamSteam.domain.steam.repository.SteamGameLibraryRepository;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -25,11 +22,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
-public class SteamService {
+public class SteamGameLibraryService {
 
     @Value("${steam.apiKey}")
     private String apiKey;
@@ -39,9 +38,7 @@ public class SteamService {
 
     private final RestTemplate restTemplate;
 
-    public SteamService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
+    private final SteamGameLibraryRepository steamGameLibraryRepository;
 
     public UserInfoResponse getUserInformation(String steamId) {
         String url = baseUrl
@@ -91,6 +88,53 @@ public class SteamService {
         }
 
         return gameList;
+
+
+    }
+
+    // public String getBaseUrl(String steamId, String role){
+    //     String url = "";
+    //     if(role.equals("gameList")) { // 이렇게까지 해야할까... ㅋㅋㅋㅋㅋㅋ 한번봐주세요
+    //         url = getGameListUrl();
+    //     }
+    //     if(role.equals("userInfo")){
+    //         url = getUserInfoUrl();
+    //     }
+    //     UriComponents builder = UriComponentsBuilder
+    //         .fromHttpUrl(url)
+    //         .buildAndExpand(apiKey, steamId);
+    //
+    //     return builder.toUriString();
+    // }
+    //
+    // public String getGameListUrl(){
+    //     return baseUrl + "/IPlayerService/GetOwnedGames/v0001/?key={apiKey}&steamid={steam_id}" +
+    //         "&include_appinfo=true&format=json";
+    // }
+    //
+    // public String getUserInfoUrl(){
+    //     return baseUrl
+    //         + "/ISteamUser/GetPlayerSummaries/v2?key={apiKey}&steamids={steam_id}";
+    // }
+    @Transactional
+    public void save(SteamGameLibrary steamGameLibrary) {
+         steamGameLibraryRepository.save(steamGameLibrary);
+    }
+
+    public List<SteamGameLibrary> findAllByUserId(Long userId) {
+        return steamGameLibraryRepository.findAllByUserId(userId);
+    }
+    @Transactional
+    public void deleteByUserId(Long userId) {
+        steamGameLibraryRepository.deleteByUserId(userId);
+    }
+    @Transactional
+    public void saveAll(List<SteamGameLibrary> gameLibraries) {
+        steamGameLibraryRepository.saveAll(gameLibraries);
+    }
+
+    public SteamGameLibrary findByAppidAndUserId(Integer appId, Long userId) {
+       return steamGameLibraryRepository.findByAppidAndUserId(appId, userId);
     }
 }
 
