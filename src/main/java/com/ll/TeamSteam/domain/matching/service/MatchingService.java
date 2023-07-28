@@ -183,4 +183,8 @@ public class MatchingService {
     public void save(Matching matching) {
         matchingRepository.save(matching);
     }
+
+    public Optional<Matching> findByTitle(String title){
+        return matchingRepository.findByTitle(title);
+    }
 }
