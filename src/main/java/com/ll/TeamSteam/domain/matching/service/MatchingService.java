@@ -6,8 +6,8 @@ import com.ll.TeamSteam.domain.matching.entity.SearchQuery;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.entity.User;
-import com.ll.TeamSteam.domain.userTag.gameTag.GameTag;
-import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
+import com.ll.TeamSteam.domain.gameTag.entity.GameTag;
+import com.ll.TeamSteam.domain.gameTag.repository.GameTagRepository;
 import com.ll.TeamSteam.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -149,30 +149,7 @@ public class MatchingService {
 
     // 쿼리 DSL
     public Page<Matching> filterMatching(GenreTagType genreType, Integer startTime, String gender, Pageable pageable) {
-
-        if (genreType != null && startTime != null) {
-            // 장르와 시간
-            return matchingRepository.findByGenreAndStartTime(genreType, startTime, pageable);
-        } else if (genreType != null) {
-            // 장르
-            return matchingRepository.findByGenre(genreType, pageable);
-        } else if (startTime != null) {
-            // 시작시간
-            return matchingRepository.findByStartTime(startTime, pageable);
-        } else if (!gender.isEmpty()) {
-            // 성별
-            return matchingRepository.findByGender(gender, pageable);
-        } else if (genreType != null && gender.isEmpty()) {
-            // 장르와 성별
-            return matchingRepository.findByGenreAndGender(genreType, gender, pageable);
-        } else if (startTime != null && gender.isEmpty()) {
-            // 성별과 시간
-            return matchingRepository.findByStartTimeAndGender(startTime, gender, pageable);
-        } else if (genreType != null && startTime != null && gender.isEmpty()){
-            // 장르, 성별, 시간
-            return matchingRepository.findByGenreAndStartTimeAndGender(genreType, startTime, gender, pageable);
-        }
-        return matchingRepository.findAll(pageable);
+        return matchingRepository.filterByGenreAndStartTimeAndGender(genreType, startTime, gender, pageable);
     }
 
     public List<Matching> getSortedMatchingByDeadline() {
@@ -211,6 +188,10 @@ public class MatchingService {
                 .sorted(Comparator.comparing(Matching::getRemainingCapacity))
                 .limit(6)
                 .collect(Collectors.toList());
+    }
+
+    public void save(Matching matching) {
+        matchingRepository.save(matching);
     }
 
     public CreateForm setCreateForm(Matching matching) {

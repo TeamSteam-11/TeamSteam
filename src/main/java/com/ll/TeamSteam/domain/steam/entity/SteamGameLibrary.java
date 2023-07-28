@@ -9,11 +9,13 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Getter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
+// @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 public class SteamGameLibrary extends BaseEntity{
 	@Column(name = "appid")

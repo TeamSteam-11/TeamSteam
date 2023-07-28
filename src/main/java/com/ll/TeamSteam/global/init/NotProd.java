@@ -4,14 +4,15 @@ import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
+import com.ll.TeamSteam.domain.user.entity.Gender;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
-import com.ll.TeamSteam.domain.userTag.UserTag;
-import com.ll.TeamSteam.domain.userTag.UserTagRepository;
-import com.ll.TeamSteam.domain.userTag.gameTag.GameTag;
-import com.ll.TeamSteam.domain.userTag.gameTag.GameTagRepository;
-import com.ll.TeamSteam.domain.userTag.genreTag.GenreTag;
-import com.ll.TeamSteam.domain.userTag.genreTag.GenreTagRepository;
+import com.ll.TeamSteam.domain.userTag.entity.UserTag;
+import com.ll.TeamSteam.domain.userTag.repository.UserTagRepository;
+import com.ll.TeamSteam.domain.gameTag.entity.GameTag;
+import com.ll.TeamSteam.domain.gameTag.repository.GameTagRepository;
+import com.ll.TeamSteam.domain.genreTag.entity.GenreTag;
+import com.ll.TeamSteam.domain.genreTag.repository.GenreTagRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -46,6 +47,7 @@ public class NotProd {
                         .id(1L)
                         .username("user1")
                         .steamId("12412412411")
+                        .type(Gender.남성)
                         .temperature(37)
                         .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
                         .build();
@@ -57,6 +59,7 @@ public class NotProd {
                         .id(2L)
                         .username("user2")
                         .steamId("12412412412")
+                        .type(Gender.여성)
                         .temperature(40)
                         .avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
                         .build();
@@ -199,12 +202,12 @@ public class NotProd {
                     GenreTagType genre = GenreTagType.valueOf("삼인칭슈팅");
                     int gameTagId = 41000;
                     String gender = "성별무관";
-                    long capacity = 4L;
+                    long capacity = 2L;
                     Integer startTime = 20;
                     Integer endTime = 22;
 
                     Matching matching = matchingService.create(user1, title, content, genre, gameTagId, gender, capacity, startTime, endTime, LocalDateTime.now().plusHours(3));
-                    chatRoomService.createAndConnect(matching.getTitle(), matching, user1.getId());
+                    chatRoomService.createChatRoomAndConnectMatching(matching.getTitle(), matching, user1.getId());
 
                 }
             }

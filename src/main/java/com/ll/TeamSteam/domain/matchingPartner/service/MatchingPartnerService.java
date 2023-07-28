@@ -33,6 +33,8 @@ public class MatchingPartnerService {
             .inChatRoomTrueFalse(false)
             .build();
 
+
+
         matchingPartnerRepository.save(matchingPartner);
     }
 
@@ -93,6 +95,20 @@ public class MatchingPartnerService {
     @Transactional
     public MatchingPartner findByMatchingIdAndUserId (Long matchingId, Long userId) {
         return matchingPartnerRepository.findByMatchingIdAndUserId(matchingId, userId);
+    }
+
+
+    @Transactional
+    public void saveAll(List<MatchingPartner> matchingPartners) {
+        matchingPartnerRepository.saveAll(matchingPartners);
+    }
+
+    public void validNotMatchingPartner(Matching matching, User user) {
+        matching.getMatchingPartners().stream()
+                .filter(matchingPartner -> matchingPartner.getUser().getId().equals(user.getId()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("너 매칭 파트너 아니야"));
+
     }
 }
 

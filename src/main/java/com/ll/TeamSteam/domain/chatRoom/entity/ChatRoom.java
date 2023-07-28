@@ -40,7 +40,7 @@ public class ChatRoom extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private User owner;
 
-    @OneToMany(mappedBy = "chatRoom",  cascade = PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "chatRoom", cascade = PERSIST, orphanRemoval = true)
     @Builder.Default
     private Set<ChatUser> chatUsers = new HashSet<>();
 
@@ -68,10 +68,6 @@ public class ChatRoom extends BaseEntity {
                 .build();
 
         chatUsers.add(chatUser);
-    }
-
-    public void removeChatUser(ChatUser chatUser) {
-        chatUsers.remove(chatUser);
     }
 
     public void updateName(String name){

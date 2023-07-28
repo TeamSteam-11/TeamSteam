@@ -1,5 +1,6 @@
 package com.ll.TeamSteam.global.security;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;

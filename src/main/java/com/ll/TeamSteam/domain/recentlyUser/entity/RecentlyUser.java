@@ -26,4 +26,21 @@ public class RecentlyUser extends BaseEntity {
 
     @ManyToOne(fetch = LAZY, cascade = CascadeType.REMOVE)
     private MatchingPartner matchingPartner;
+
+    public void setUser (User user) {
+        if (this.user != null) {
+            this.user.getRecentlyUsers().remove(this);
+        }
+        this.user = user;
+        user.getRecentlyUsers().add(this);
+    }
+
+    public void setMatchingPartner (MatchingPartner matchingPartner) {
+        if (this.matchingPartner != null) {
+            this.matchingPartner.getRecentlyUserList().remove(this);
+        }
+        this.matchingPartner = matchingPartner;
+        matchingPartner.getRecentlyUserList().add(this);
+    }
+
 }
