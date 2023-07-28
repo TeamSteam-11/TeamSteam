@@ -99,10 +99,17 @@ public class MatchingPartnerService {
 
 
     @Transactional
+<<<<<<< HEAD
     public void saveAll(List<MatchingPartner> matchingPartners) {
         matchingPartnerRepository.saveAll(matchingPartners);
     }
 
+=======
+    public void saveAll(List<MatchingPartner> matchingPartners){
+        matchingPartnerRepository.saveAll(matchingPartners);
+    }
+  
+>>>>>>> 60ad1432b24fa43849ba443dbc135185f2a9eb55
     public void validNotMatchingPartner(Matching matching, User user) {
         matching.getMatchingPartners().stream()
                 .filter(matchingPartner -> matchingPartner.getUser().getId().equals(user.getId()))
