@@ -202,12 +202,12 @@ public class NotProd {
                     GenreTagType genre = GenreTagType.valueOf("삼인칭슈팅");
                     int gameTagId = 41000;
                     String gender = "성별무관";
-                    long capacity = 4L;
+                    long capacity = 2L;
                     Integer startTime = 20;
                     Integer endTime = 22;
 
                     Matching matching = matchingService.create(user1, title, content, genre, gameTagId, gender, capacity, startTime, endTime, LocalDateTime.now().plusHours(3));
-                    chatRoomService.createAndConnect(matching.getTitle(), matching, user1.getId());
+                    chatRoomService.createChatRoomAndConnectMatching(matching.getTitle(), matching, user1.getId());
 
                 }
             }

@@ -44,19 +44,12 @@ public class ChatRoomDto implements Serializable {
     public static ChatRoomDto fromChatRoom(ChatRoom chatRoom, User user) {
         UserDto userDto = UserDto.fromUser(chatRoom.getOwner());
 
-        log.info("user = {} ", user);
-
         ChatUser chatUser = chatRoom.getChatUsers().stream()
                 .filter(cm -> cm.getUser().getId().equals(user.getId()))
                 .findFirst()
                 .orElse(null);
 
-        log.info("chatUserId = {}", chatUser.getId());
-        log.info("userId = {}", user.getId());
-
         ChatUserType nowType = chatUser.getType();
-
-        log.info("nowType = {}", nowType);
 
         ChatRoomDto chatRoomDto = ChatRoomDto.builder()
                 .id(chatRoom.getId())

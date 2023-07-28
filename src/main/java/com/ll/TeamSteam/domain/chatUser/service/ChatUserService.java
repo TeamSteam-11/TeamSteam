@@ -1,6 +1,7 @@
 package com.ll.TeamSteam.domain.chatUser.service;
 
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
+import com.ll.TeamSteam.domain.chatRoom.exception.NotInChatRoomException;
 import com.ll.TeamSteam.domain.chatRoom.repository.ChatRoomRepository;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.chatUser.repository.ChatUserRepository;
@@ -23,45 +24,27 @@ public class ChatUserService {
         return chatUserRepository.findById(chatRoomUserId).orElseThrow();
     }
 
-    public List<ChatUser> findByChatRoomId(Long chatRoomId) {
-        return chatUserRepository.findByChatRoomId(chatRoomId);
-    }
-
     public List<ChatUser> findByChatRoomIdAndChatUser(Long roomId, Long userId) {
         ChatRoom chatRoom = findByRoomId(roomId);
         ChatUser chatUser = findChatUserByUserId(chatRoom, userId);
 
         if (chatUser == null) {
-            return null;
+            throw new NotInChatRoomException("해당 방에 참가하지 않았어!");
         }
 
         return chatUserRepository.findByChatRoomId(roomId);
     }
 
-    private ChatUser findChatUserByUserId(ChatRoom chatRoom, Long userId) {
+    public ChatUser findChatUserByUserId(ChatRoom chatRoom, Long userId) {
         return chatRoom.getChatUsers().stream()
                 .filter(chatUser -> chatUser.getUser().getId().equals(userId))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new NotInChatRoomException("해당 방에 참가하지 않았어!"));
     }
 
     public ChatRoom findByRoomId(Long roomId) {
 
         return chatRoomRepository.findById(roomId).orElseThrow();
-    }
-
-    // OwnerID 비교
-    public List<ChatUser> findByChatRoomOwnerIdAndChatUser(Long roomId, Long userId) {
-        ChatRoom chatRoom = findByRoomId(roomId);
-        Long ownerId = chatRoom.getOwner().getId();
-        log.info("ownerId = {} ", ownerId);
-
-
-        if (ownerId != userId){
-            return null;
-        }
-
-        return chatUserRepository.findByChatRoomId(roomId);
     }
 
     public ChatUser findByChatRoomAndUser(ChatRoom chatRoom, User user) {
