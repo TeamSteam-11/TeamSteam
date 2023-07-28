@@ -184,35 +184,38 @@ class ChatRoomControllerTest {
         assertThrows(NotInChatRoomException.class, () -> chatRoomService.validInviteChatRoom(chatRoom.getId(), user, currentUser.getId()));
     }
 
-//    @Test
-//    @DisplayName("인원이 가득찬 방에 들어가려고 했을 경우 IllegalException")
-//    void testEnterFullChatRoom() throws  Exception{
-//        ChatRoom chatRoom = chatRoomService.findByRoomId(1L);
-//        Matching matching = matchingService.findById(1L).orElse(null);
-//        SecurityUser user = new SecurityUser(1L, "user2", "8888888888"); // 방장
-//        User user2 = userService.findByIdElseThrow(2L);
-//        User user3 = userService.findByIdElseThrow(3L);
-//
-//        // 방장과 user2가 매칭 파트너 신청
-//        matchingPartnerService.addPartner(chatRoom.getId(), user.getId());
-//        matchingPartnerService.addPartner(chatRoom.getId(), user2.getId());
-//        matchingPartnerService.addPartner(chatRoom.getId(), user3.getId());
-//        matchingPartnerService.updateTrue(chatRoom.getId(), user.getId());
-//        matchingPartnerService.updateTrue(chatRoom.getId(), user2.getId());
-//
-//        // 방장과 user2가 이미 방에 들어가잇는 시점
-//        chatRoomService.validEnterChatRoom(chatRoom.getId(), user.getId());
-//        chatRoomService.validEnterChatRoom(chatRoom.getId(), user2.getId());
-//
-//        // user2는 방에 들어갔다가 나간 상태 (EXIT 상태)
-//        chatRoomService.validExitChatRoom(chatRoom.getId(), user2.getId());
-//
-//        // user3가 방에 입장
-//        matchingPartnerService.updateTrue(chatRoom.getId(), user3.getId());
-//        chatRoomService.validEnterChatRoom(chatRoom.getId(), user3.getId());
-//
-//        // 인원이 가득차 IllegalException (매칭파트너 등록도 되지 않았음)
-//        assertThrows(IllegalArgumentException.class, () -> chatRoomService.validEnterChatRoom(chatRoom.getId(), user2.getId()));
-//    }
+    @Test
+    @DisplayName("인원이 가득찬 방에 들어가려고 했을 경우 CanNotEnterException")
+    void testEnterFullChatRoom() throws  Exception{
+        ChatRoom chatRoom = chatRoomService.findByRoomId(1L);
+        Matching matching = matchingService.findById(1L).orElse(null);
+        User user = userService.findByIdElseThrow(1L);
+        User user2 = userService.findByIdElseThrow(2L);
+        User user3 = userService.findByIdElseThrow(3L);
 
+        // 방장과 user2가 매칭 파트너 신청
+        matchingPartnerService.addPartner(chatRoom.getId(), user.getId());
+        matchingPartnerService.addPartner(chatRoom.getId(), user2.getId());
+        matchingPartnerService.addPartner(chatRoom.getId(), user3.getId());
+        matchingPartnerService.updateTrue(chatRoom.getId(), user.getId());
+        matchingPartnerService.updateTrue(chatRoom.getId(), user2.getId());
+
+        // 방장과 user2가 이미 방에 들어가잇는 시점
+        chatRoomService.validEnterChatRoom(chatRoom.getId(), user2.getId());
+
+        chatRoomService.updateChatUserType(chatRoom.getId(), user.getId());
+        chatRoomService.updateChatUserType(chatRoom.getId(), user2.getId());
+
+        // user2는 방에 들어갔다가 나간 상태 (EXIT 상태)
+        chatRoomService.validExitChatRoom(chatRoom.getId(), user2.getId());
+
+        // user3가 방에 입장
+        matchingPartnerService.updateTrue(chatRoom.getId(), user3.getId());
+        chatRoomService.validEnterChatRoom(chatRoom.getId(), user3.getId());
+        chatRoomService.updateChatUserType(chatRoom.getId(), user3.getId());
+
+        chatRoomService.changeParticipantsCount(chatRoom);
+
+        assertThrows(CanNotEnterException.class, () -> chatRoomService.canAddChatRoomUser(chatRoom, user2.getId(), matching));
+    }
 }
