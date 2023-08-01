@@ -34,6 +34,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import reactor.core.publisher.Mono;
 
 
 import java.util.Arrays;
@@ -84,41 +85,43 @@ public class UserController {
         @RequestParam(value = "openid.signed") String openidSigned,
         @RequestParam(value = "openid.sig") String openidSig,
         HttpServletRequest request,
-        HttpServletResponse response) throws InterruptedException {
+        HttpServletResponse httpResponse) throws InterruptedException {
 
 
         log.info("openidResponseNonce = {} ", openidResponseNonce);
 
-        ResponseEntity<String> block = WebClient.create("https://steamcommunity.com")
-            .get()
-            .uri(uriBuilder -> uriBuilder
-                .path("/openid/login")
-                .queryParam("openid.ns", openidNs)
-                .queryParam("openid.mode", "check_authentication")
-                .queryParam("openid.op_endpoint", openidOpEndpoint)
-                .queryParam("openid.claimed_id", openidClaimedId)
-                .queryParam("openid.identity", openidIdentity)
-                .queryParam("openid.return_to", openidReturnTo)
-                .queryParam("openid.response_nonce", openidResponseNonce)
-                .queryParam("openid.assoc_handle", openidAssocHandle)
-                .queryParam("openid.signed", openidSigned)
-                .queryParam("openid.sig", openidSig)
-                .build()
-            )
-            .retrieve()
-            .toEntity(String.class)
-            .block();
-
-
-        log.info("block = {} ", block);
-
-        //200이 나오지않아도 트루가 뜰 수 있음
-        boolean isTrue = Objects.requireNonNull(block).getBody().contains("true");
-
-        log.info("isTrue = {} ", isTrue);
-        if (!isTrue) {
-            return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=" + baseUrl + "/login/check&openid.realm=" + baseUrl + "&openid.mode=checkid_setup";
-        }
+        //로그인인증 체크과정 2xx가 나오면 정상작동
+        String block = WebClient.create("https://steamcommunity.com")
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/openid/login")
+                        .queryParam("openid.ns", openidNs)
+                        .queryParam("openid.mode", "check_authentication")
+                        .queryParam("openid.op_endpoint", openidOpEndpoint)
+                        .queryParam("openid.claimed_id", openidClaimedId)
+                        .queryParam("openid.identity", openidIdentity)
+                        .queryParam("openid.return_to", openidReturnTo)
+                        .queryParam("openid.response_nonce", openidResponseNonce)
+                        .queryParam("openid.assoc_handle", openidAssocHandle)
+                        .queryParam("openid.signed", openidSigned)
+                        .queryParam("openid.sig", openidSig)
+                        .build()
+                )
+                .exchangeToMono(response -> {
+                    if (response.statusCode().is2xxSuccessful()) { // 성공검증
+                        return response.bodyToMono(String.class);
+                    } else {
+                        // 요청이 실패한 경우 빈 Mono를 반환하거나 에러 처리를 수행할 수 있습니다.
+                        return Mono.error(new RuntimeException("요청 실패 - 상태 코드: " + response.statusCode()));
+                    }
+                })
+                .doOnSuccess(responseBody -> {
+                    System.out.println("응답 본문: " + responseBody);
+                })
+                .doOnError(error -> {
+                    System.err.println("에러 발생: " + error.getMessage());
+                })
+                .block();
 
         Pattern pattern = Pattern.compile("\\d+");
         Matcher matcher = pattern.matcher(openidIdentity);
@@ -160,7 +163,7 @@ public class UserController {
         Cookie cookie = new Cookie("JSESSIONID", session.getId());
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        response.addCookie(cookie);
+        httpResponse.addCookie(cookie);
 
         return "redirect:/user/checkFirstVisit";
 
