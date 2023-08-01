@@ -1,5 +1,6 @@
 package com.ll.TeamSteam.domain.matching.service;
 
+import com.ll.TeamSteam.domain.matching.entity.CreateForm;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.entity.SearchQuery;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
@@ -38,7 +39,6 @@ public class MatchingService {
             gameTagName = gameTag1.getName();
         }
 
-
         Matching matching = Matching
                 .builder()
                 .user(user)
@@ -63,6 +63,18 @@ public class MatchingService {
     // 마감 시간 구현
     public LocalDateTime setDeadline(LocalDateTime modifyDate, int selectedHours) {
         return modifyDate.plusHours(selectedHours);
+    }
+
+    // 사용자가 선택한 마감 시간을 설정하여 매칭 생성에 사용
+    public LocalDateTime calculateDeadline(LocalDateTime modifyDate, int selectedHours) {
+        LocalDateTime deadlineDate;
+        if (selectedHours > 0) {
+            deadlineDate = setDeadline(modifyDate, selectedHours);
+        } else {
+            // 마감 시간을 '제한 없음'으로 선택 시 매칭 마감일이 30일 이후로 저장됨
+            deadlineDate = modifyDate.plusDays(30);
+        }
+        return deadlineDate;
     }
 
     public Page<Matching> getMatchingList(Pageable pageable) {
@@ -140,7 +152,7 @@ public class MatchingService {
         return matchingRepository.filterByGenreAndStartTimeAndGender(genreType, startTime, gender, pageable);
     }
 
-    public List<Matching> getApproachingDeadlineMatchingList() {
+    public List<Matching> getSortedMatchingByDeadline() {
         List<Matching> matchingList = matchingRepository.findAll();
         List<Matching> approachingDeadlineList = new ArrayList<>();
 
@@ -158,10 +170,8 @@ public class MatchingService {
                 return Duration.between(now, deadlineDate);
             }
             return Duration.ZERO;
-
-//            Duration duration = Duration.between(LocalDateTime.now(), matching.getDeadlineDate());
-//            return duration;
         });
+
         Collections.sort(approachingDeadlineList, deadlineComparator);
 
         return approachingDeadlineList.stream()
@@ -184,7 +194,24 @@ public class MatchingService {
         matchingRepository.save(matching);
     }
 
+    public CreateForm setCreateForm(Matching matching) {
+        CreateForm createForm = new CreateForm();
+
+        createForm.setTitle(matching.getTitle());
+        createForm.setContent(matching.getContent());
+        createForm.setGenre(matching.getGenre());
+        createForm.setGameTagId(matching.getGameTagId());
+        createForm.setGender(matching.getGender());
+        createForm.setCapacity(matching.getCapacity());
+        createForm.setStartTime(matching.getStartTime());
+        createForm.setEndTime(matching.getEndTime());
+        createForm.setSelectedHours(calculateSelectedHours(matching.getId(), matching.getDeadlineDate()));
+
+        return createForm;
+    }
+
     public Optional<Matching> findByTitle(String title){
         return matchingRepository.findByTitle(title);
     }
+
 }
