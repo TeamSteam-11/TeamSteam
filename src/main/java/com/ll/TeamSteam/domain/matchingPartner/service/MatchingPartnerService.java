@@ -94,7 +94,7 @@ public class MatchingPartnerService {
 
     @Transactional
     public MatchingPartner findByMatchingIdAndUserId (Long matchingId, Long userId) {
-        return matchingPartnerRepository.findByMatchingIdAndUserId(matchingId, userId);
+        return matchingPartnerRepository.findByMatchingIdAndUserId(matchingId, userId).orElseThrow();
     }
 
 

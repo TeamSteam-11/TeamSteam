@@ -210,4 +210,7 @@ public class MatchingService {
         return createForm;
     }
 
+    public Optional<Matching> findByTitle(String title){
+        return matchingRepository.findByTitle(title);
+    }
 }

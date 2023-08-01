@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.Optional;
 
+import com.ll.TeamSteam.domain.user.service.UserService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,6 +43,8 @@ class RecentlyUserServiceTest {
 	private RecentlyUserService recentlyUserService;
 	@Autowired
 	private MatchingPartnerService matchingPartnerService;
+	@Autowired
+	private UserService userService;
 
 	@BeforeEach
 	void beforeEach() {
@@ -50,7 +54,6 @@ class RecentlyUserServiceTest {
 		matchingPartnerRepository.deleteAll();
 
 		User user1 = User.builder()
-			.id(9L)
 			.username("user1")
 			.steamId("13131")
 			.type(Gender.남성)
@@ -58,10 +61,9 @@ class RecentlyUserServiceTest {
 			.avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
 			.build();
 
-		userRepository.save(user1);
+		userService.userSave(user1);
 
 		User user2 = User.builder()
-			.id(10L)
 			.username("user2")
 			.steamId("13132")
 			.type(Gender.여성)
@@ -69,12 +71,11 @@ class RecentlyUserServiceTest {
 			.avatar("https://avatars.steamstatic.com/f80eb3343279cedd2534ae543c8386bfb1ca0223_medium.jpg")
 			.build();
 
-		userRepository.save(user2);
+		userService.userSave(user2);
 
 		Matching matching1 = Matching.builder()
 			.title("매칭1")
 			.content("매칭1입니다")
-			.id(7L)
 			.user(user1)
 			.genre(GenreTagType.건설)
 			.gameTagId(41000)
@@ -88,7 +89,6 @@ class RecentlyUserServiceTest {
 
 		MatchingPartner matchingPartner1 = MatchingPartner.builder()
 			.matching(matching1)
-			.id(1L)
 			.user(user1)
 			.inChatRoomTrueFalse(false)
 			.build();
@@ -97,7 +97,6 @@ class RecentlyUserServiceTest {
 
 		MatchingPartner matchingPartner2 = MatchingPartner.builder()
 			.matching(matching1)
-			.id(2L)
 			.user(user2)
 			.inChatRoomTrueFalse(false)
 			.build();
@@ -111,7 +110,8 @@ class RecentlyUserServiceTest {
 	@DisplayName("유저의 매칭아이디리스트 가져오기")
 	void test001() {
 		//given
-		Long userId =9L;
+		User user1 = userService.findBySteamId("13131").orElseThrow();
+		Long userId = user1.getId();
 		// When
 		List<Long> matchingIdList = recentlyUserService.getMatchingIdList(userId);
 
@@ -123,32 +123,47 @@ class RecentlyUserServiceTest {
 	@DisplayName("매칭파트너 중 나를 제외하는 필터링")
 	void test002(){
 		//given
-		Optional<User> user = userRepository.findById(9L);
-		List<MatchingPartner> matchingPartners = matchingPartnerService.findByMatchingId(7L);
+		User user1 = userService.findBySteamId("13131").orElseThrow();
+		User user2 = userService.findBySteamId("13132").orElseThrow();
+		Long userTwoId = user2.getId();
 
-		MatchingPartner matchingPartner2 =matchingPartnerRepository.findById(2L).orElseThrow();
+		Long matchingId = matchingRepository.findByTitle("매칭1").orElseThrow().getId();
+
+
+		MatchingPartner matchingPartner2 =matchingPartnerRepository.findByMatchingIdAndUserId(matchingId,userTwoId).orElseThrow();
 		matchingPartner2.updateInChatRoomTrueFalse(true);
+		matchingPartnerRepository.save(matchingPartner2);
 
+		List<MatchingPartner> matchingPartners = matchingPartnerService.findByMatchingId(matchingId);
 		//When
-		List<MatchingPartner> filteredMatchingPartners =recentlyUserService.filterMatchingPartnerExceptMe(user.orElseThrow(),matchingPartners);
+		List<MatchingPartner> filteredMatchingPartners =recentlyUserService.filterMatchingPartnerExceptMe(user1,matchingPartners);
 
 		//Then
-		assertEquals(2,matchingPartners.size());
+		assertEquals(2, matchingPartners.size());
 		assertEquals(1, filteredMatchingPartners.size());
 	}
 
+	//테스트 케이스를 두 개로 분리 해야함. existsByUserAndMatchingPartner, anotherMatchingExists
 	@Test
 	@DisplayName("최근 매칭된 유저에 추가할 수 있는지 검증")
 	void test003(){
 		//given
-		Optional<User> user = userRepository.findById(9L);
-		List<MatchingPartner> matchingPartners = matchingPartnerService.findByMatchingId(7L);
+		User user1 = userService.findBySteamId("13131").orElseThrow();
+		Long matchingId = matchingRepository.findByTitle("매칭1").orElseThrow().getId();
+		List<MatchingPartner> matchingPartners = matchingPartnerService.findByMatchingId(matchingId);
 
-		for(MatchingPartner matchingPartner : matchingPartners){
-			boolean canAdd = recentlyUserService.canAddRecentlyUser(user.orElseThrow(),matchingPartner);
+		boolean allCanAdd = true;
 
-			assertTrue(canAdd);
+		for (MatchingPartner matchingPartner : matchingPartners) {
+			boolean canAdd = recentlyUserService.canAddRecentlyUser(user1, matchingPartner);
+
+			if (!canAdd) {
+				allCanAdd = false;
+				break;
+			}
 		}
+
+		assertTrue(allCanAdd, "중복된 매칭된 유저는 추가될 수 없게");
 	}
 
 	@Test
@@ -175,19 +190,26 @@ class RecentlyUserServiceTest {
 	@DisplayName("최근 매칭된 유저목록 가져오기")
 	void test005(){
 		//given
-		Optional<User> user = userRepository.findById(9L);
-		List<Long> matchingIdList = recentlyUserService.getMatchingIdList(9L);
+		User user1 = userService.findBySteamId("13131").orElseThrow();
+		Long userId1 = user1.getId();
 
-		MatchingPartner matchingPartner1 =matchingPartnerRepository.findById(1L).orElseThrow();
-		MatchingPartner matchingPartner2 =matchingPartnerRepository.findById(2L).orElseThrow();
+		User user2 = userService.findBySteamId("13132").orElseThrow();
+		Long userId2 = user2.getId();
+
+		Long matchingId = matchingRepository.findByTitle("매칭1").orElseThrow().getId();
+
+		List<Long> matchingIdList = recentlyUserService.getMatchingIdList(userId1);
+
+		MatchingPartner matchingPartner1 =matchingPartnerRepository.findByMatchingIdAndUserId(matchingId,userId1).orElseThrow();
+		MatchingPartner matchingPartner2 =matchingPartnerRepository.findByMatchingIdAndUserId(matchingId,userId2).orElseThrow();
 		matchingPartner1.updateInChatRoomTrueFalse(true);
 		matchingPartner2.updateInChatRoomTrueFalse(true);
 
 		//when
-		List<RecentlyUser> recentlyUserList =recentlyUserService.getRecentlyUsersToUpdate(user.orElseThrow(),matchingIdList);
+		List<RecentlyUser> recentlyUserList =recentlyUserService.getRecentlyUsersToUpdate(user1,matchingIdList);
 
 		//Then
-		//왜 빈 배열 리턴?
+
 		assertEquals(1,recentlyUserList.size());
 	}
 }
