@@ -194,6 +194,7 @@ public class MatchingService {
         matchingRepository.save(matching);
     }
 
+<<<<<<< HEAD
     public CreateForm setCreateForm(Matching matching) {
         CreateForm createForm = new CreateForm();
 
@@ -210,4 +211,9 @@ public class MatchingService {
         return createForm;
     }
 
+=======
+    public Optional<Matching> findByTitle(String title){
+        return matchingRepository.findByTitle(title);
+    }
+>>>>>>> 841ab0abaec45a51f26ad94b5d0c3ae6dc3a161a
 }
