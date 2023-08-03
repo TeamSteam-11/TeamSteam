@@ -10,7 +10,7 @@
     .table {
       display: flex;
       justify-content: center;
-      margin-top: 50px;
+      margin-top: 30px;
     }
 
     .table thead tr:first-child th,
@@ -31,14 +31,33 @@
       bottom: 0;
       width: 100%;
     }
+    #chatRoomRadio:checked + label {
+      color: white;
+    }
+
+    #dmRadio:checked + label {
+      color: white;
+    }
   </style>
 </head>
 
 <body>
 
 <main layout:fragment="main">
+
+  <div class="mt-10 flex justify-center">
+    <input type="radio" id="chatRoomRadio" name="tableType" value="chatRoom" onclick="showTable('chatRoom')" class="peer hidden" checked>
+    <label for="chatRoomRadio" class="cursor-pointer mr-16 mt-2 text-base text-gray-500 hover:text-white">
+      매칭 채팅
+    </label>
+    <input type="radio" id="dmRadio" name="tableType" value="dm" onclick="showTable('dm')" class="peer hidden">
+    <label for="dmRadio" class="cursor-pointer mt-2 text-base text-gray-500 hover:text-white">
+      DM
+    </label>
+  </div>
+
   <div style="display: flex; justify-content: center;">
-    <table class="table shadow-2xl w-1/5 flex justify-center">
+    <table id="chatRoomTable" class="table shadow-2xl w-1/5 flex justify-center">
       <thead>
       <tr>
         <th>번호</th>
@@ -57,7 +76,7 @@
         </tr>
       </tbody>
     </table>
-    <table class="table shadow-2xl w-1/5 flex justify-center">
+    <table id="dmTable" class="table shadow-2xl w-1/5 flex justify-center" style="display: none;">
       <thead>
       <tr>
         <th>번호</th>
@@ -79,6 +98,18 @@
       </tbody>
     </table>
   </div>
+
+  <script type="text/javascript">
+    function showTable(tableType) {
+      if (tableType === 'chatRoom') {
+        document.getElementById('chatRoomTable').style.display = 'table';
+        document.getElementById('dmTable').style.display = 'none';
+      } else if (tableType === 'dm') {
+        document.getElementById('dmTable').style.display = 'table';
+        document.getElementById('chatRoomTable').style.display = 'none';
+      }
+    }
+  </script>
 </main>
 <footer layout:fragment="footer" class="footer items-center p-4 text-neutral-content">
   <div class="items-center grid-flow-col">
