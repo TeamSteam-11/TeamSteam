@@ -125,6 +125,13 @@
                     </div>
                 </a>
             </li>
+            <li class="menu-1__li-icon">
+                <a th:if="${@rq.isLogin()}" href="/dm/chatlist" class="h-full flex items-center px-2 btn btn-ghost btn-circle">
+                    <div class="indicator">
+                        <span><i class="far fa-comments"></i></span>
+                    </div>
+                </a>
+            </li>
             <li>
                 <a th:if="${@rq.isLogin()}" class="h-full flex items-center px-2" th:href="@{'/user/profile/' + ${@rq.getUser().getId()}}">
                     <img th:src="${@rq.getUser().getAvatar()}" class="w-8 h-8 rounded-full mr-2" />

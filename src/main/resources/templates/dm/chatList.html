@@ -1,7 +1,7 @@
 <html layout:decorate="~{common/layout.html}">
 
 <head>
-  <title>참여자 목록</title>
+  <title>채팅 목록</title>
   <style>
     body {
       color:white;
@@ -38,36 +38,23 @@
 
 <main layout:fragment="main">
   <div style="display: flex; justify-content: center;">
-    <table class="table shadow-2xl w-2/5 flex justify-center">
+    <table class="table shadow-2xl w-1/5 flex justify-center">
       <thead>
       <tr>
-        <th>프로필</th>
-        <th>아이디</th>
-        <th>입장일시</th>
-        <th>방장</th>
-        <th th:if="${currentUser.getId() == chatRoom.getOwner().getId()}">강퇴</th>
+        <th>번호</th>
+        <th>채팅방 이름</th>
+        <th>채팅방 입장</th>
       </tr>
       </thead>
       <tbody>
-      <tr th:each="chatUser, loop : ${chatUserList}" th:if="${chatUser.type == COMMON}">
-        <td class="flex justify-center">
-          <img th:src="${chatUser.getUser().getAvatar()}" alt="${user.username}'s avatar" class="rounded-lg w-10 h-10 m-auto"/>
-        </td>
-        <td th:text="${chatUser.getUser().getUsername()}"></td>
-        <td th:text="${#temporals.format(chatUser.createDate, 'yyyy/MM/dd hh:mm')}"></td>
-        <td>
-          <span th:if="${chatUser.user.id == chatRoom.owner.id}">
-            <i class="fa-solid fa-crown"></i>
-          </span>
-        </td>
-        <td th:if="${currentUser.getId() == chatRoom.getOwner().getId()}">
-          <form th:action="@{/chat/{roomId}/kick/{userId}(roomId=${chatRoom.id}, userId=${chatUser.id})}" th:if="${chatUser.chatRoom.owner.id != chatUser.user.id}"
-                method="post" onsubmit="if ( !confirm('해당 멤버를 강퇴하시겠습니까?\n(강퇴된 멤버는 모임에 다시 참여할 수 없습니다)') ) return false; disconnect()">
-            <input type="hidden" name="_method" value="delete">
-            <button type="submit" class="btn btn-sm btn-outline border-white text-white hover:bg-[#1F2227] hover:border-white">강퇴</button>
-          </form>
-        </td>
-      </tr>
+        <tr th:each="myChatRoom, loop : ${myChatRoomList}">
+          <td th:text="${myChatRoom.getId()}"></td>
+          <td th:text="${myChatRoom.getName()}"></td>
+          <td>
+            <a th:href="@{/chat/rooms/{roomId}(roomId=${myChatRoom.getId()})}"
+               class="btn btn-sm btn-outline border-white text-white hover:bg-[#1F2227] hover:border-white invite">입장</a>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>

@@ -27,8 +27,10 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.*;
 
@@ -280,5 +282,12 @@ public class ChatRoomService {
     public ChatRoom findByRoomId(Long roomId) {
         return chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new NoChatRoomException("방이 존재하지 않습니다."));
+    }
+
+    public List<ChatRoom> findChatRoomByUserId(Long userId) {
+        List<ChatUser> chatUsers = chatUserService.findByUserIdAndTypeIn(userId, ChatUserType.COMMON);
+        return chatUsers.stream()
+                .map(ChatUser::getChatRoom)
+                .collect(Collectors.toList());
     }
 }

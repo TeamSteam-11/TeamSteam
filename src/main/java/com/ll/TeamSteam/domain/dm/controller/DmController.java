@@ -1,5 +1,10 @@
 package com.ll.TeamSteam.domain.dm.controller;
 
+import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
+import com.ll.TeamSteam.domain.chatRoom.exception.NotInChatRoomException;
+import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
+import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
+import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
 import com.ll.TeamSteam.domain.dm.entity.Dm;
 import com.ll.TeamSteam.domain.dm.service.DmService;
 import com.ll.TeamSteam.domain.user.entity.User;
@@ -15,6 +20,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -25,6 +32,7 @@ public class DmController {
 
     private final DmService dmService;
     private final UserService userService;
+    private final ChatRoomService chatRoomService;
 
     /**
      * 방 생성 및 입장
@@ -75,5 +83,26 @@ public class DmController {
         model.addAttribute("user", user);
 
         return "dm/dmRoom";
+    }
+
+    /**
+    * 참여 중인 매칭 목록
+    */
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/chatlist")
+    public String chatList(Model model, @AuthenticationPrincipal SecurityUser user) {
+
+//        User loginUser = userService.findById(user.getId())
+//                .orElseThrow(() -> new IllegalArgumentException("User 정보가 없어."));
+
+        // TODO : userId로 chatUser를 받아와서 chatRoom 받아오기 (chatUserType이 COMMON인 방만 받아오기)
+        List<ChatRoom> myChatRoomList = chatRoomService.findChatRoomByUserId(user.getId());
+
+
+        // TODO : userId로 dmUser를 받아와서 Dm 받아오기
+
+        model.addAttribute("myChatRoomList", myChatRoomList);
+
+        return "dm/chatList";
     }
 }
