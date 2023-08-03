@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -73,5 +74,9 @@ public class DmService {
 
     public Optional<Dm> findByDmSenderAndDmReceiver(User dmSender, User dmReceiver) {
         return dmRepository.findByDmSenderAndDmReceiver(dmSender, dmReceiver);
+    }
+
+    public List<Dm> findByDmSenderIdOrDmReceiverId(Long dmSenderId, Long dmReceiverId) {
+        return dmRepository.findByDmSenderIdOrDmReceiverId(dmSenderId, dmReceiverId);
     }
 }

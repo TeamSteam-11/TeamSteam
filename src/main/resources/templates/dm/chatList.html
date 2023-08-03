@@ -48,13 +48,34 @@
       </thead>
       <tbody>
         <tr th:each="myChatRoom, loop : ${myChatRoomList}">
-          <td th:text="${myChatRoom.getId()}"></td>
+          <td th:text="${loop.count}"></td>
           <td th:text="${myChatRoom.getName()}"></td>
           <td>
             <a th:href="@{/chat/rooms/{roomId}(roomId=${myChatRoom.getId()})}"
                class="btn btn-sm btn-outline border-white text-white hover:bg-[#1F2227] hover:border-white invite">입장</a>
           </td>
         </tr>
+      </tbody>
+    </table>
+    <table class="table shadow-2xl w-1/5 flex justify-center">
+      <thead>
+      <tr>
+        <th>번호</th>
+        <th>채팅방 이름</th>
+        <th>채팅방 입장</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="myDm, loop : ${myDmList}">
+        <td th:text="${loop.count}"></td>
+        <td>
+          <span th:text="${myDm.getDmSender().getId() == user.getId() ? myDm.getDmReceiver().getUsername() : myDm.getDmSender().getUsername()} + ' 님의 채팅'"></span>
+        </td>
+        <td>
+          <a th:href="@{/dm/room/{roomId}(roomId=${myDm.getId()})}"
+             class="btn btn-sm btn-outline border-white text-white hover:bg-[#1F2227] hover:border-white invite">입장</a>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>
