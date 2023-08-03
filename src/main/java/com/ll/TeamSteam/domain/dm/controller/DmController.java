@@ -92,9 +92,10 @@ public class DmController {
     @GetMapping("/chatlist")
     public String chatList(Model model, @AuthenticationPrincipal SecurityUser user) {
 
-        // 원래 user의 id만 사용하는 거라 SecurityUser를 그대로 넘겼는데, 그러면 로그인 안 되어 있을 때 Security 로그인 화면이 뜸 -> 상의해보기
-        User loginUser = userService.findById(user.getId())
-                .orElseThrow(() -> new IllegalArgumentException("User 정보가 없어."));
+        // TODO : 상의하기(SecurityUser 객체를 넘길 건지, User 객체를 넘길 건지 -> 현재 알림 쪽도 SecurityUser인데 해당 부분도 로그인 안 한 상태에서 접근하면 Security 로그인 창이 뜨니 같이 얘기해보기(아니면 채팅 목록처럼 로그인해야 아이콘 뜨게 하기))
+        // user의 id만 사용하는 거라 SecurityUser를 그대로 넘겼는데, 그러면 로그인 안 되어 있을 때 Security 로그인 화면이 뜸 -> 상의해보기
+        // User loginUser = userService.findById(user.getId())
+        //        .orElseThrow(() -> new IllegalArgumentException("User 정보가 없어."));
 
         // userId로 chatUser를 받아와서 chatRoom 받아오기 (chatUserType이 COMMON인 방만 받아오기)
         List<ChatRoom> myChatRoomList = chatRoomService.findChatRoomByUserId(user.getId());
@@ -104,7 +105,7 @@ public class DmController {
 
         model.addAttribute("myChatRoomList", myChatRoomList);
         model.addAttribute("myDmList", myDmList);
-        model.addAttribute("user", loginUser);
+        model.addAttribute("user", user);
 
         return "dm/chatList";
     }
