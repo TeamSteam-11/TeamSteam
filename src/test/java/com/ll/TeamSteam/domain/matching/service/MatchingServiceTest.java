@@ -155,4 +155,34 @@ public class MatchingServiceTest {
         // assertThat(matching1.getDeadlineDate()).isEqualTo(testTime.plusDays(30));
     }
 
+    @Test
+    @DisplayName("modify - 실패")
+    void t007() {
+        User user1 = userService.findById(1L).get();
+        LocalDateTime testTime = LocalDateTime.now();
+
+        Matching matching1 = matchingService.create(user1, "matchingTest1", "content1", GenreTagType.격투, 41000, "남성", 3L, 5, 8, testTime);
+
+        int selectedHours = 2;
+
+        when(matchingRepository.save(any(Matching.class))).thenThrow(new RuntimeException("Test Exception"));
+
+        // WHEN
+        RsData<Matching> result = matchingService.modify(
+                matching1,
+                "newTitle",
+                "newContent",
+                GenreTagType.군사,
+                "여성",
+                4L,
+                10,
+                15,
+                selectedHours
+        );
+
+        // THEN
+        assertThat(result.getResultCode()).isEqualTo("F-1");
+        assertThat(result.getMsg()).isEqualTo("매칭 수정 중 오류가 발생했습니다.");
+    }
+
 }
