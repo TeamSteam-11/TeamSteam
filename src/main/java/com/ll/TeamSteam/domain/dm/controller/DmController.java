@@ -92,10 +92,9 @@ public class DmController {
     @GetMapping("/chatlist")
     public String chatList(Model model, @AuthenticationPrincipal SecurityUser user) {
 
-        // TODO : 상의하기(SecurityUser 객체를 넘길 건지, User 객체를 넘길 건지 -> 현재 알림 쪽도 SecurityUser인데 해당 부분도 로그인 안 한 상태에서 접근하면 Security 로그인 창이 뜨니 같이 얘기해보기(아니면 채팅 목록처럼 로그인해야 아이콘 뜨게 하기))
-        // user의 id만 사용하는 거라 SecurityUser를 그대로 넘겼는데, 그러면 로그인 안 되어 있을 때 Security 로그인 화면이 뜸 -> 상의해보기
-        // User loginUser = userService.findById(user.getId())
-        //        .orElseThrow(() -> new IllegalArgumentException("User 정보가 없어."));
+        // TODO : 상의하기(알림 채팅 목록처럼 로그인해야 아이콘 뜨게 하기 & @PreAuthorize("isAuthenticated()")에 걸리면 현재 Security 로그인 창이 뜨는데 해당 부분 수정하는 게 어떤지)
+        // TODO : 로직 정리
+        // TODO : 원래는 테이블이 비어있으면 테이블 헤드 안 뜨고 '참여 중인 채팅이 없습니다' 뜨게 하고 싶었는데 생각되로 잘 안 돼서 테이블 바디에 넣음 -> 의견 나눠보기
 
         // userId로 chatUser를 받아와서 chatRoom 받아오기 (chatUserType이 COMMON인 방만 받아오기)
         List<ChatRoom> myChatRoomList = chatRoomService.findChatRoomByUserId(user.getId());
