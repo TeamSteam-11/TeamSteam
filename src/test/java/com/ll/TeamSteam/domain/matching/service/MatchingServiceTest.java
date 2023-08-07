@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
