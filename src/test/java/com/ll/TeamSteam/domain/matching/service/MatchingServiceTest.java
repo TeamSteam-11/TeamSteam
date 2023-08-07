@@ -30,7 +30,7 @@ public class MatchingServiceTest {
 
     @Test
     @DisplayName("create")
-    void t001() throws Exception {
+    void t001() {
         User user1 = userService.findById(1L).get();
 
         Matching matching1 = matchingService.create(user1, "matchingTest1", "content1", GenreTagType.격투, 41000, "남성", 3L, 5, 8, LocalDateTime.now());
