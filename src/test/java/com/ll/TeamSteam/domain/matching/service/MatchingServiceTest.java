@@ -105,6 +105,8 @@ public class MatchingServiceTest {
         );
 
         // THEN
+        assertThat(result.getResultCode()).isEqualTo("S-1");
+        assertThat(result.getMsg()).isEqualTo("매칭이 수정되었습니다");
         assertThat(result.getData()).isEqualTo(matching1);
         assertThat(matching1.getTitle()).isEqualTo("newTitle");
         assertThat(matching1.getContent()).isEqualTo("newContent");
@@ -143,6 +145,8 @@ public class MatchingServiceTest {
         );
 
         // THEN
+        assertThat(result.getResultCode()).isEqualTo("S-1");
+        assertThat(result.getMsg()).isEqualTo("매칭이 수정되었습니다");
         assertThat(result.getData()).isEqualTo(matching1);
         assertThat(matching1.getTitle()).isEqualTo("newTitle");
         assertThat(matching1.getContent()).isEqualTo("newContent");
