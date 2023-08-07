@@ -29,7 +29,7 @@ public class MatchingServiceTest {
     private MatchingRepository matchingRepository;
 
     @Test
-    @DisplayName("매칭 등록")
+    @DisplayName("create")
     void t001() throws Exception {
         User user1 = userService.findById(1L).get();
 
@@ -37,6 +37,16 @@ public class MatchingServiceTest {
 
         assertThat(matching1.getTitle()).isEqualTo("matchingTest1");
         assertThat(matching1.getGameTagId()).isEqualTo(41000);
+    }
+
+    @Test
+    @DisplayName("setDeadline")
+    void t002() {
+        LocalDateTime testTime = LocalDateTime.now();
+
+        LocalDateTime deadlineTest = matchingService.setDeadline(testTime, 3);
+
+        assertThat(deadlineTest).isEqualTo(testTime.plusHours(3));
     }
 
 }
