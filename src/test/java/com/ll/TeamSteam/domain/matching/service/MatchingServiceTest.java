@@ -49,4 +49,28 @@ public class MatchingServiceTest {
         assertThat(deadlineTest).isEqualTo(testTime.plusHours(3));
     }
 
+    @Test
+    @DisplayName("calculateDeadline - selectedHours가 1 이상인 경우")
+    void t003() {
+        // selectedHours가 1 이상인 경우 testTime(실제로는 modifyDate)에 Hours 단위로 더해져야 함
+        LocalDateTime testTime = LocalDateTime.now();
+        int selectedHours = 3;
+
+        LocalDateTime deadlineTest = matchingService.calculateDeadline(testTime, selectedHours);
+
+        assertThat(deadlineTest).isEqualTo(testTime.plusHours(3));
+    }
+
+    @Test
+    @DisplayName("calculateDeadline - selectedHours가 0인 경우")
+    void t004() {
+        // selectedHours가 0 이하인 경우 testTime(실제로는 modifyDate)에 Days 단위로 30일이 더해져야 함(default)
+        LocalDateTime testTime = LocalDateTime.now();
+        int selectedHours = 0;
+
+        LocalDateTime deadlineTest = matchingService.calculateDeadline(testTime, selectedHours);
+
+        assertThat(deadlineTest).isEqualTo(testTime.plusDays(30));
+    }
+
 }
