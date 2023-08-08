@@ -1,6 +1,7 @@
 package com.ll.TeamSteam.domain.matching.service;
 
 import com.ll.TeamSteam.domain.matching.entity.Matching;
+import com.ll.TeamSteam.domain.matching.entity.SearchQuery;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.entity.User;
@@ -13,11 +14,17 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -186,6 +193,46 @@ public class MatchingServiceTest {
         // THEN
         assertThat(result.getResultCode()).isEqualTo("F-1");
         assertThat(result.getMsg()).isEqualTo("매칭 수정 중 오류가 발생했습니다.");
+    }
+
+    @Test
+    @DisplayName("searchMatching_title를 기준으로 검색")
+    void t008() {
+        String keyword = "test";
+        Pageable pageable = PageRequest.of(0, 10);
+        SearchQuery searchQuery = new SearchQuery(keyword);
+
+        Page<Matching> expectedPage = new PageImpl<>(Collections.singletonList(new Matching()));
+
+        when(matchingRepository.findByTitleContainingIgnoreCase(eq(keyword), eq(pageable)))
+                .thenReturn(expectedPage);
+
+        // WHEN
+        Page<Matching> resultPage = matchingService.searchMatching("title", keyword, pageable);
+
+        // THEN
+        verify(matchingRepository, times(1)).findByTitleContainingIgnoreCase(eq(keyword), eq(pageable));
+        assertEquals(expectedPage, resultPage);
+    }
+
+    @Test
+    @DisplayName("searchMatching_content를 기준으로 검색")
+    void t009() {
+        String keyword = "test";
+        Pageable pageable = PageRequest.of(0, 10);
+        SearchQuery searchQuery = new SearchQuery(keyword);
+
+        Page<Matching> expectedPage = new PageImpl<>(Collections.singletonList(new Matching()));
+
+        when(matchingRepository.findByContentContainingIgnoreCase(eq(keyword), eq(pageable)))
+                .thenReturn(expectedPage);
+
+        // WHEN
+        Page<Matching> resultPage = matchingService.searchMatching("content", keyword, pageable);
+
+        // THEN
+        verify(matchingRepository, times(1)).findByContentContainingIgnoreCase(eq(keyword), eq(pageable));
+        assertEquals(expectedPage, resultPage);
     }
 
 }
