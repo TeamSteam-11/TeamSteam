@@ -23,7 +23,12 @@ public class SecurityConfig {
                 authorizeHttpRequests
                     .requestMatchers("/**").permitAll()
             )
-            .formLogin(withDefaults())
+            .formLogin(formLogin ->
+                    formLogin
+                            .loginPage("/user/login") // 커스텀 로그인 페이지 URL
+                            .defaultSuccessUrl("/")
+                            .permitAll()
+            )
             .logout((logout) ->
                 logout.deleteCookies("JSESSIONID")
                     .invalidateHttpSession(false)
