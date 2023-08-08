@@ -126,7 +126,7 @@
                 </a>
             </li>
             <li class="menu-1__li-icon">
-                <a href="/notification/list" id="nav-noti" class="h-full flex items-center px-2 btn btn-ghost btn-circle">
+                <a href="/notification/list" th:if="${@rq.isLogin()}" id="nav-noti" class="h-full flex items-center px-2 btn btn-ghost btn-circle">
                     <div class="indicator">
                         <span><i id="noti-icon" class="far fa-envelope"></i></span>
                         <span data-test="hasUnreadNotifications" th:if="${@rq.hasUnreadNotifications}"

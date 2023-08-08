@@ -94,7 +94,6 @@ public class DmController {
 
         // TODO : 로직 정리
 
-
         // userId로 chatUser를 받아와서 chatRoom 받아오기 (chatUserType이 COMMON인 방만 받아오기)
         List<ChatRoom> myChatRoomList = chatRoomService.findChatRoomByUserId(user.getId());
 
