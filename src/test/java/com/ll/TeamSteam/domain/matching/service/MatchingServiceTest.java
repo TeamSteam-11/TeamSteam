@@ -24,7 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -233,6 +235,31 @@ public class MatchingServiceTest {
         // THEN
         verify(matchingRepository, times(1)).findByContentContainingIgnoreCase(eq(keyword), eq(pageable));
         assertEquals(expectedPage, resultPage);
+    }
+
+    @Test
+    @DisplayName("getSortedMatchingByDeadline")
+    void t010() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime futureDeadline = now.plusHours(3);
+        LocalDateTime pastDeadline = now.plusHours(2);
+
+        Matching matchingWithFutureDeadline = new Matching();
+        matchingWithFutureDeadline.setDeadlineDate(futureDeadline);
+        Matching matchingWithPastDeadline = new Matching();
+        matchingWithPastDeadline.setDeadlineDate(pastDeadline);
+
+        List<Matching> matchingList = Arrays.asList(matchingWithFutureDeadline, matchingWithPastDeadline);
+
+        when(matchingRepository.findAll()).thenReturn(matchingList);
+
+        // WHEN
+        List<Matching> sortedMatchingList = matchingService.getSortedMatchingByDeadline();
+
+        // THEN
+        assertEquals(2, sortedMatchingList.size());
+        assertEquals(matchingWithPastDeadline, sortedMatchingList.get(0));
+        assertEquals(matchingWithFutureDeadline, sortedMatchingList.get(1));
     }
 
 }
