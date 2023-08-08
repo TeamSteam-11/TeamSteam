@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-import static com.ll.TeamSteam.domain.dmMessage.dto.response.DmSignalType.*;
+import static com.ll.TeamSteam.domain.dmMessage.dto.response.DmSignalType.NEW_MESSAGE;
 
 @Slf4j
 @Controller

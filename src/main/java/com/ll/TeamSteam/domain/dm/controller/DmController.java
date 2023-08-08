@@ -1,10 +1,7 @@
 package com.ll.TeamSteam.domain.dm.controller;
 
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
-import com.ll.TeamSteam.domain.chatRoom.exception.NotInChatRoomException;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
-import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
-import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
 import com.ll.TeamSteam.domain.dm.entity.Dm;
 import com.ll.TeamSteam.domain.dm.service.DmService;
 import com.ll.TeamSteam.domain.user.entity.User;
@@ -20,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,12 +88,8 @@ public class DmController {
     @GetMapping("/chatlist")
     public String chatList(Model model, @AuthenticationPrincipal SecurityUser user) {
 
-        // TODO : 로직 정리
-
-        // userId로 chatUser를 받아와서 chatRoom 받아오기 (chatUserType이 COMMON인 방만 받아오기)
         List<ChatRoom> myChatRoomList = chatRoomService.findChatRoomByUserId(user.getId());
 
-        // userId로 dmUser를 받아와서 Dm 받아오기
         List<Dm> myDmList = dmService.findByDmSenderIdOrDmReceiverId(user.getId(), user.getId());
 
         model.addAttribute("myChatRoomList", myChatRoomList);

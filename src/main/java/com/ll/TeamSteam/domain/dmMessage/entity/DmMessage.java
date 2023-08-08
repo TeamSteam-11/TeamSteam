@@ -1,9 +1,5 @@
 package com.ll.TeamSteam.domain.dmMessage.entity;
 
-import com.ll.TeamSteam.domain.chatMessage.entity.ChatMessage;
-import com.ll.TeamSteam.domain.chatMessage.entity.ChatMessageType;
-import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
-import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.dm.entity.Dm;
 import com.ll.TeamSteam.domain.dmUser.entity.DmUser;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;

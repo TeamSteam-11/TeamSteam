@@ -1,10 +1,6 @@
 package com.ll.TeamSteam.domain.dm.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ll.TeamSteam.domain.chatRoom.dto.ChatRoomDto;
-import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
-import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
-import com.ll.TeamSteam.domain.chatUser.entity.ChatUserType;
 import com.ll.TeamSteam.domain.dm.entity.Dm;
 import com.ll.TeamSteam.domain.dmUser.entity.DmUser;
 import com.ll.TeamSteam.domain.user.dto.UserDto;

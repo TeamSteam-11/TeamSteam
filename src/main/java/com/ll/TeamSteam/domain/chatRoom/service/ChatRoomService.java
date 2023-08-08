@@ -27,12 +27,12 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.*;
+import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.EXIT;
+import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.KICKED;
 
 @Service
 @Transactional(readOnly = true)
