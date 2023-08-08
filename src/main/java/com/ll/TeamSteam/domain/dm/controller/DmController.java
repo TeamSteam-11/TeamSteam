@@ -92,9 +92,8 @@ public class DmController {
     @GetMapping("/chatlist")
     public String chatList(Model model, @AuthenticationPrincipal SecurityUser user) {
 
-        // TODO : 상의하기(알림 채팅 목록처럼 로그인해야 아이콘 뜨게 하기 & @PreAuthorize("isAuthenticated()")에 걸리면 현재 Security 로그인 창이 뜨는데 해당 부분 수정하는 게 어떤지)
         // TODO : 로직 정리
-        // TODO : 원래는 테이블이 비어있으면 테이블 헤드 안 뜨고 '참여 중인 채팅이 없습니다' 뜨게 하고 싶었는데 생각되로 잘 안 돼서 테이블 바디에 넣음 -> 의견 나눠보기
+
 
         // userId로 chatUser를 받아와서 chatRoom 받아오기 (chatUserType이 COMMON인 방만 받아오기)
         List<ChatRoom> myChatRoomList = chatRoomService.findChatRoomByUserId(user.getId());
