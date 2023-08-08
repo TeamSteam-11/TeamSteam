@@ -55,7 +55,7 @@ public class MatchingServiceTest {
     }
 
     @Test
-    @DisplayName("calculateDeadline - selectedHours가 1 이상인 경우")
+    @DisplayName("calculateDeadline_selectedHours가 1 이상인 경우")
     void t003() {
         // selectedHours가 1 이상인 경우 testTime(실제로는 modifyDate)에 Hours 단위로 더해져야 함
         LocalDateTime testTime = LocalDateTime.now();
@@ -67,7 +67,7 @@ public class MatchingServiceTest {
     }
 
     @Test
-    @DisplayName("calculateDeadline - selectedHours가 0 이하인 경우")
+    @DisplayName("calculateDeadline_selectedHours가 0 이하인 경우")
     void t004() {
         // selectedHours가 0 이하인 경우 testTime(실제로는 modifyDate)에 Days 단위로 30일이 더해져야 함(default)
         LocalDateTime testTime = LocalDateTime.now();
@@ -79,7 +79,7 @@ public class MatchingServiceTest {
     }
 
     @Test
-    @DisplayName("modify - selectedHours가 1 이상인 경우")
+    @DisplayName("modify_selectedHours가 1 이상인 경우")
     void t005() {
         User user1 = userService.findById(1L).get();
         LocalDateTime testTime = LocalDateTime.now();
@@ -119,7 +119,7 @@ public class MatchingServiceTest {
     }
 
     @Test
-    @DisplayName("modify - selectedHours가 0 이하인 경우")
+    @DisplayName("modify_selectedHours가 0 이하인 경우")
     void t006() {
         User user1 = userService.findById(1L).get();
         LocalDateTime testTime = LocalDateTime.now();
@@ -159,7 +159,7 @@ public class MatchingServiceTest {
     }
 
     @Test
-    @DisplayName("modify - 실패")
+    @DisplayName("modify_실패")
     void t007() {
         User user1 = userService.findById(1L).get();
         LocalDateTime testTime = LocalDateTime.now();
