@@ -8,6 +8,7 @@ import com.ll.TeamSteam.domain.dmUser.entity.DmUser;
 import com.ll.TeamSteam.domain.dmUser.service.DmUserService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
+import com.ll.TeamSteam.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -78,5 +79,19 @@ public class DmService {
 
     public List<Dm> findByDmSenderIdOrDmReceiverId(Long dmSenderId, Long dmReceiverId) {
         return dmRepository.findByDmSenderIdOrDmReceiverId(dmSenderId, dmReceiverId);
+    }
+
+
+    public void notSelfDm(Long senderId, Long receiverId) {
+        if(senderId == receiverId) {
+            throw new IllegalArgumentException("본인한테는 안 돼");
+        }
+    }
+
+
+    public void notEnterThirdPerson(Dm dm, SecurityUser user) {
+        if(!dm.getDmSender().getId().equals(user.getId()) && !dm.getDmReceiver().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("돌아가라");
+        }
     }
 }

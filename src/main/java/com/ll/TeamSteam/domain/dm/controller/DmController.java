@@ -40,9 +40,7 @@ public class DmController {
         User sender = userService.findByIdElseThrow(user.getId());
         User receiver = userService.findByIdElseThrow(receiverId);
 
-        if(user.getId() == receiverId) {
-            throw new IllegalArgumentException("본인한테는 안 돼");
-        }
+        dmService.notSelfDm(user.getId(), receiver.getId());
 
         Optional<Dm> dm = dmService.findByDmSenderAndDmReceiver(sender, receiver);
         Optional<Dm> dmCrossCheck = dmService.findByDmSenderAndDmReceiver(receiver, sender);
@@ -68,10 +66,11 @@ public class DmController {
     public String enterDm(@PathVariable Long dmId, Model model, @AuthenticationPrincipal SecurityUser user) {
 
         Dm dm = dmService.findByDmId(dmId);
+        dmService.notEnterThirdPerson(dm, user);
 
-        if(!dm.getDmSender().getId().equals(user.getId()) && !dm.getDmReceiver().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("돌아가라");
-        }
+//        if(!dm.getDmSender().getId().equals(user.getId()) && !dm.getDmReceiver().getId().equals(user.getId())) {
+//            throw new IllegalArgumentException("돌아가라");
+//        }
 
         dmService.validEnterDm(dm.getId(), user.getId());
 
@@ -82,8 +81,8 @@ public class DmController {
     }
 
     /**
-    * 참여 중인 매칭 목록
-    */
+     * 참여 중인 매칭 목록
+     */
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/chatlist")
     public String chatList(Model model, @AuthenticationPrincipal SecurityUser user) {
