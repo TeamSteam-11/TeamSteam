@@ -19,3 +19,8 @@ spring:
 custom:
   site:
     baseUrl: https://www.teamsteam.site
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
