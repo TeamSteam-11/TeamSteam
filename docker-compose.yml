@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   your-application:
-    image: your-application-image
+    image: teamsteam
     ports:
       - "8080:8080"
 
