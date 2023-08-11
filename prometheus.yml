@@ -16,10 +16,10 @@ rule_files:
 scrape_configs:
   - job_name: "prometheus"
     static_configs:
-      - targets: ["teamsteam.site:9090"]
+      - targets: ["172.17.0.1:9090"]
 
   - job_name: "spring-actuator"  # 아무거나 가능
     metrics_path: '/actuator/prometheus'
     scrape_interval: 1s
     static_configs:
-      - targets: [ 'teamsteam.site:8080' ]
+      - targets: [ '172.17.0.1:8080' ]
