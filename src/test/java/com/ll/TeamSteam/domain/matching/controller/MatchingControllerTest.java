@@ -1,9 +1,11 @@
 package com.ll.TeamSteam.domain.matching.controller;
 
+import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
+import com.ll.TeamSteam.domain.user.entity.User;
+import com.ll.TeamSteam.domain.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -32,10 +36,10 @@ public class MatchingControllerTest {
     @Autowired
     private MatchingRepository matchingRepository;
     @Autowired
+    private UserService userService;
+    @Autowired
     private MockMvc mvc;
 
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Test
     @DisplayName("매칭 등록")
@@ -395,8 +399,6 @@ public class MatchingControllerTest {
                 .andExpect(handler().handlerType(MatchingController.class))
                 .andExpect(handler().methodName("modifyMatching"))
                 .andExpect(status().is2xxSuccessful());
-
-        entityManager.flush();
 
         assertThat(matchingRepository.findById(1L).get().getTitle()).isEqualTo("modifyTitle");
     }
