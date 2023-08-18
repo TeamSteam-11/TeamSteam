@@ -4,6 +4,7 @@ import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.chatRoom.exception.NotInChatRoomException;
 import com.ll.TeamSteam.domain.chatRoom.repository.ChatRoomRepository;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
+import com.ll.TeamSteam.domain.chatUser.entity.ChatUserType;
 import com.ll.TeamSteam.domain.chatUser.repository.ChatUserRepository;
 import com.ll.TeamSteam.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -49,5 +50,9 @@ public class ChatUserService {
 
     public ChatUser findByChatRoomAndUser(ChatRoom chatRoom, User user) {
         return chatUserRepository.findByChatRoomAndUser(chatRoom, user);
+    }
+
+    public List<ChatUser> findByUserIdAndTypeIn (Long userId, ChatUserType type) {
+        return chatUserRepository.findByUserIdAndType(userId, type);
     }
 }

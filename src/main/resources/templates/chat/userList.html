@@ -64,7 +64,7 @@
           <form th:action="@{/chat/{roomId}/kick/{userId}(roomId=${chatRoom.id}, userId=${chatUser.id})}" th:if="${chatUser.chatRoom.owner.id != chatUser.user.id}"
                 method="post" onsubmit="if ( !confirm('해당 멤버를 강퇴하시겠습니까?\n(강퇴된 멤버는 모임에 다시 참여할 수 없습니다)') ) return false; disconnect()">
             <input type="hidden" name="_method" value="delete">
-            <button class="btn" >강퇴</button>
+            <button type="submit" class="btn btn-sm btn-outline border-white text-white hover:bg-[#1F2227] hover:border-white">강퇴</button>
           </form>
         </td>
       </tr>

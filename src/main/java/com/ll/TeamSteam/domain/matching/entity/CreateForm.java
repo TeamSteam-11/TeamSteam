@@ -36,8 +36,6 @@ public class CreateForm {
     private int selectedHours;
 
     public CreateForm() {
-        this.title = "제목";
-        this.content = "내용";
         this.genre = GenreTagType.valueOf("삼인칭슈팅");
         this.gameTagId = 1;
         this.capacity = 2L;

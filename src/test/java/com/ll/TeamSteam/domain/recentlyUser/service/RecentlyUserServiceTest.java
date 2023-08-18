@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ll.TeamSteam.domain.user.service.UserService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

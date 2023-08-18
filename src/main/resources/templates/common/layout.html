@@ -87,6 +87,15 @@
         .menu-1 > li:hover #noti-icon {
             text-decoration:underline;
         }
+
+        #nav-message:hover {
+            background-color: transparent !important;
+        }
+
+        .menu-1 > li:hover #message-icon {
+            text-decoration:underline;
+        }
+
     </style>
 </head>
 
@@ -117,11 +126,18 @@
                 </a>
             </li>
             <li class="menu-1__li-icon">
-                <a href="/notification/list" id="nav-noti" class="h-full flex items-center px-2 btn btn-ghost btn-circle">
+                <a href="/notification/list" th:if="${@rq.isLogin()}" id="nav-noti" class="h-full flex items-center px-2 btn btn-ghost btn-circle">
                     <div class="indicator">
                         <span><i id="noti-icon" class="far fa-envelope"></i></span>
                         <span data-test="hasUnreadNotifications" th:if="${@rq.hasUnreadNotifications}"
                               class="badge badge-xs badge-error indicator-item"></span>
+                    </div>
+                </a>
+            </li>
+            <li class="menu-1__li-icon">
+                <a id="nav-message" th:if="${@rq.isLogin()}" href="/dm/chatlist" class="h-full flex items-center px-2 btn btn-ghost btn-circle">
+                    <div class="indicator">
+                        <span><i id="message-icon" class="far fa-comments"></i></span>
                     </div>
                 </a>
             </li>
