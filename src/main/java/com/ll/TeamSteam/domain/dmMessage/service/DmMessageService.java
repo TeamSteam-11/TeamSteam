@@ -12,10 +12,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.bson.types.ObjectId;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -49,8 +51,7 @@ public class DmMessageService {
         return dmMessageRepository.findByDmId(dmId);
     }
 
-
-    public List<DmMessageDto> getByDmIdAndUserIdAndFromId(Long dmId, Long userId) {
+    public List<DmMessageDto> getByDmIdAndUserIdAndFromId(Long dmId, Long userId, String fromMessageId) {
 
         Dm dm = dmService.findByDmId(dmId);
 
@@ -62,11 +63,19 @@ public class DmMessageService {
         log.info("dmUser = {}", dmuser);
 
         List<DmMessage> dmMessages = dmMessageRepository.findByDmId(dmId);
-//        List<DmMessage> list = dmMessages.stream()
-//                .filter(chatMessage -> chatMessage.getId().compareTo(fromMessageId) > 0)
-//                .sorted(Comparator.comparing(DmMessage::getId))
-//                .collect(Collectors.toList());
 
-        return DmMessageDto.fromDmMessages(dmMessages);
+        // Stream 생성
+        Stream<DmMessage> stream = dmMessages.stream();
+
+        // fromMessageId가 유효한 값이면 필터링 적용
+        if (fromMessageId != null && !fromMessageId.isEmpty()) {
+            stream = stream.filter(chatMessage -> new ObjectId(chatMessage.getId()).compareTo(new ObjectId(fromMessageId)) > 0);
+        }
+
+        // 필터링된 스트림으로부터 결과 리스트 생성
+        List<DmMessage> list = stream.sorted(Comparator.comparing(DmMessage::getId))
+                .collect(Collectors.toList());
+
+        return DmMessageDto.fromDmMessages(list);
     }
 }

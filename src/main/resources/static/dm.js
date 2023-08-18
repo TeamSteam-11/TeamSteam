@@ -1,5 +1,5 @@
 let stompClient = null;
-let fromMessageId = 0;
+let fromMessageId = null;
 let ChatMessageUl = null;
 let currentDate = null; // 날짜 변수 추가
 
