@@ -36,7 +36,7 @@ function drawMessages(messages) {
         console.log("userName : " + userName);
         console.log("message.sender" + message.sender);
 
-        if (message.sender.user_id === userId) {
+        if (message.senderId === userId) {
             newItem.classList.add("sender");
         } else {
             newItem.classList.add("receiver");
@@ -52,18 +52,18 @@ function drawMessages(messages) {
         const minutes = String(createdAt.getMinutes()).padStart(2, '0');
         const formattedTime = `${period} ${displayHours}:${minutes}`;
 
-        if ( lastChatMessages[message.sender.user_id] === undefined ) {
-            lastChatMessages[message.sender.user_id] = {
+        if ( lastChatMessages[message.senderId] === undefined ) {
+            lastChatMessages[message.senderId] = {
                 date: formattedTime,
                 el: newItem
             };
         }
 
-        if ( lastChatMessages[message.sender.user_id].date == formattedTime ) {
-            $(lastChatMessages[message.sender.user_id].el).find('.message-time').remove();
+        if ( lastChatMessages[message.senderId].date == formattedTime ) {
+            $(lastChatMessages[message.senderId].el).find('.message-time').remove();
         }
 
-        if (message.sender.user_id === userId) {
+        if (message.senderId === userId) {
             newItem.innerHTML = `
                             <div><div class="chat chat-end">
                                  <div class="chat-bubble">${message.content}</div></div>
@@ -75,11 +75,11 @@ function drawMessages(messages) {
                     
                 </div>
                 <div class="chat-header mb-1">
-                    <a href="/user/profile/${message.sender.user_id}" class="flex items-center">
+                    <a href="/user/profile/${message.senderId}" class="flex items-center">
                         <div class="w-9 mr-1">
-                            <img src="${message.sender.avatar}" alt="${message.sender.username}'s avatar" class="rounded-lg"/>
+                            <img src="${message.senderAvatar}" alt="${message.senderUsername}'s avatar" class="rounded-lg"/>
                         </div>
-                        ${message.sender.username}
+                        ${message.senderUsername}
                     </a>
                 </div>
                 <div class="chat-bubble">${message.content}</div>
@@ -88,16 +88,16 @@ function drawMessages(messages) {
                 </div>
             </div>`;
 
-            if ( lastChatMessageUser == message.sender.user_id ) {
+            if ( lastChatMessageUser == message.senderId ) {
                 $(newItem).find('.chat-header').remove();
                 $(newItem).find('.chat-image').remove();
             }
         }
 
-        lastChatMessageUser = message.sender.user_id;
+        lastChatMessageUser = message.senderId;
 
-        lastChatMessages[message.sender.user_id].el = newItem;
-        lastChatMessages[message.sender.user_id].date = formattedTime;
+        lastChatMessages[message.senderId].el = newItem;
+        lastChatMessages[message.senderId].date = formattedTime;
 
         const messageDate = new Date(message.created_at).toLocaleDateString();
 

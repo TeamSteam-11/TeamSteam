@@ -6,6 +6,7 @@ import com.ll.TeamSteam.domain.dmMessage.dto.DmMessageDto;
 import com.ll.TeamSteam.domain.dmMessage.entity.DmMessage;
 import com.ll.TeamSteam.domain.dmMessage.repository.DmMessageRepository;
 import com.ll.TeamSteam.domain.dmUser.entity.DmUser;
+import com.ll.TeamSteam.domain.dmUser.service.DmUserService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ public class DmMessageService {
 
     private final DmService dmService;
     private final DmMessageRepository dmMessageRepository;
+    private final DmUserService dmUserService;
 
     @Transactional
     public DmMessage createAndSave(String content, User sender, Long dmId) {
@@ -34,10 +36,7 @@ public class DmMessageService {
             throw new IllegalArgumentException("너 로그인 안했어~!");
         }
 
-//        DmUser sender = dm.getDmUsers().stream()
-//                .filter(dmUser -> dmUser.getUser().getId().equals(dmSenderId))
-//                .findFirst()
-//                .orElseThrow(() -> new IllegalArgumentException("으아아아아아"));
+        dmUserService.findDmUserByUserId(dm, sender.getId());
 
         DmMessage dmMessage = DmMessage.create(content, sender.getId(), sender.getUsername(), sender.getAvatar(), dm.getId());
 
@@ -67,8 +66,6 @@ public class DmMessageService {
 //                .filter(chatMessage -> chatMessage.getId().compareTo(fromMessageId) > 0)
 //                .sorted(Comparator.comparing(DmMessage::getId))
 //                .collect(Collectors.toList());
-
-
 
         return DmMessageDto.fromDmMessages(dmMessages);
     }
