@@ -31,7 +31,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import reactor.core.publisher.Mono;
@@ -75,53 +78,49 @@ public class UserController {
 
     @GetMapping("/login/check")
     public String startSession(@RequestParam(value = "openid.ns") String openidNs,
-        @RequestParam(value = "openid.mode") String openidMode,
-        @RequestParam(value = "openid.op_endpoint") String openidOpEndpoint,
-        @RequestParam(value = "openid.claimed_id") String openidClaimedId,
-        @RequestParam(value = "openid.identity") String openidIdentity,
-        @RequestParam(value = "openid.return_to") String openidReturnTo,
-        @RequestParam(value = "openid.response_nonce") String openidResponseNonce,
-        @RequestParam(value = "openid.assoc_handle") String openidAssocHandle,
-        @RequestParam(value = "openid.signed") String openidSigned,
-        @RequestParam(value = "openid.sig") String openidSig,
-        HttpServletRequest request,
-        HttpServletResponse httpResponse) throws InterruptedException {
+                               @RequestParam(value = "openid.mode") String openidMode,
+                               @RequestParam(value = "openid.op_endpoint") String openidOpEndpoint,
+                               @RequestParam(value = "openid.claimed_id") String openidClaimedId,
+                               @RequestParam(value = "openid.identity") String openidIdentity,
+                               @RequestParam(value = "openid.return_to") String openidReturnTo,
+                               @RequestParam(value = "openid.response_nonce") String openidResponseNonce,
+                               @RequestParam(value = "openid.assoc_handle") String openidAssocHandle,
+                               @RequestParam(value = "openid.signed") String openidSigned,
+                               @RequestParam(value = "openid.sig") String openidSig,
+                               HttpServletRequest request,
+                               HttpServletResponse response) throws InterruptedException {
 
 
         log.info("openidResponseNonce = {} ", openidResponseNonce);
 
         //로그인인증 체크과정 2xx가 나오면 정상작동
-        String block = WebClient.create("https://steamcommunity.com")
-                .get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/openid/login")
-                        .queryParam("openid.ns", openidNs)
-                        .queryParam("openid.mode", "check_authentication")
-                        .queryParam("openid.op_endpoint", openidOpEndpoint)
-                        .queryParam("openid.claimed_id", openidClaimedId)
-                        .queryParam("openid.identity", openidIdentity)
-                        .queryParam("openid.return_to", openidReturnTo)
-                        .queryParam("openid.response_nonce", openidResponseNonce)
-                        .queryParam("openid.assoc_handle", openidAssocHandle)
-                        .queryParam("openid.signed", openidSigned)
-                        .queryParam("openid.sig", openidSig)
-                        .build()
-                )
-                .exchangeToMono(response -> {
-                    if (response.statusCode().is2xxSuccessful()) { // 성공검증
-                        return response.bodyToMono(String.class);
-                    } else {
-                        // 요청이 실패한 경우 빈 Mono를 반환하거나 에러 처리를 수행할 수 있습니다.
-                        return Mono.error(new RuntimeException("요청 실패 - 상태 코드: " + response.statusCode()));
-                    }
-                })
-                .doOnSuccess(responseBody -> {
-                    System.out.println("응답 본문: " + responseBody);
-                })
-                .doOnError(error -> {
-                    System.err.println("에러 발생: " + error.getMessage());
-                })
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("openid.ns", openidNs);
+        formData.add("openid.mode", "check_authentication");
+        formData.add("openid.op_endpoint", openidOpEndpoint);
+        formData.add("openid.claimed_id", openidClaimedId);
+        formData.add("openid.identity", openidIdentity);
+        formData.add("openid.return_to", openidReturnTo);
+        formData.add("openid.response_nonce", openidResponseNonce);
+        formData.add("openid.assoc_handle", openidAssocHandle);
+        formData.add("openid.signed", openidSigned);
+        formData.add("openid.sig", openidSig);
+
+        String body = WebClient.create("https://steamcommunity.com")
+                .post()
+                .uri("/openid/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData(formData))
+                .retrieve()
+                .bodyToMono(String.class)
                 .block();
+
+        boolean isTrue = Objects.requireNonNull(body).contains("true");
+
+        log.info("isTrue = {} ", isTrue);
+        if (!isTrue) {
+            return "redirect:https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.return_to=" + baseUrl + "/login/check&openid.realm=" + baseUrl + "&openid.mode=checkid_setup";
+        }
 
         Pattern pattern = Pattern.compile("\\d+");
         Matcher matcher = pattern.matcher(openidIdentity);
@@ -138,15 +137,10 @@ public class UserController {
         }
 
         SecurityUser user = SecurityUser.builder()
-            .id(userService.findBySteamId(steamId).get().getId())
-            .username(userService.findBySteamId(steamId).get().getUsername())
-            .steamId(steamId)
-            .build();
-
-        log.info("user.getId() = {} ", user.getId());
-        log.info("user.getUsername() = {}", user.getUsername());
-        log.info("user.getSteamId() = {} ", user.getSteamId());
-        log.info("user.getAuthorities() = {}", user.getAuthorities());
+                .id(userService.findBySteamId(steamId).get().getId())
+                .username(userService.findBySteamId(steamId).get().getUsername())
+                .steamId(steamId)
+                .build();
 
         Authentication authentication = new OAuth2AuthenticationToken(user, user.getAuthorities(), "steam");
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -163,7 +157,7 @@ public class UserController {
         Cookie cookie = new Cookie("JSESSIONID", session.getId());
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        httpResponse.addCookie(cookie);
+        response.addCookie(cookie);
 
         return "redirect:/user/checkFirstVisit";
 
