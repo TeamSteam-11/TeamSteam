@@ -29,8 +29,6 @@ public class QDmUser extends EntityPathBase<DmUser> {
 
     public final com.ll.TeamSteam.domain.dm.entity.QDm dm;
 
-    public final ListPath<com.ll.TeamSteam.domain.dmMessage.entity.DmMessage, com.ll.TeamSteam.domain.dmMessage.entity.QDmMessage> dmMessages = this.<com.ll.TeamSteam.domain.dmMessage.entity.DmMessage, com.ll.TeamSteam.domain.dmMessage.entity.QDmMessage>createList("dmMessages", com.ll.TeamSteam.domain.dmMessage.entity.DmMessage.class, com.ll.TeamSteam.domain.dmMessage.entity.QDmMessage.class, PathInits.DIRECT2);
-
     //inherited
     public final NumberPath<Long> id = _super.id;
 

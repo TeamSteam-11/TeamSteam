@@ -4,6 +4,8 @@ import com.ll.TeamSteam.domain.dmMessage.dto.DmMessageDto;
 import com.ll.TeamSteam.domain.dmMessage.dto.request.DmMessageRequest;
 import com.ll.TeamSteam.domain.dmMessage.dto.response.DmResponse;
 import com.ll.TeamSteam.domain.dmMessage.service.DmMessageService;
+import com.ll.TeamSteam.domain.user.entity.User;
+import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,13 +30,17 @@ import static com.ll.TeamSteam.domain.dmMessage.dto.response.DmSignalType.NEW_ME
 public class DmMessageController {
 
     private final DmMessageService dmMessageService;
+    private final UserService userService;
 
     @MessageMapping("/dm/{dmId}/sendMessage") // app/dm/{dmId}/sendMessage
     @SendTo("/topic/dm/{dmId}") // 다시보내는 경로? enableSimpleBroker
     public DmResponse sendChatMessage(@DestinationVariable Long dmId, DmMessageRequest request,
                                       @AuthenticationPrincipal SecurityUser user)  {
 
-        dmMessageService.createAndSave(request.getContent(), user.getId(), dmId);
+        User sender = userService.findByIdElseThrow(user.getId());
+        log.info("User user.getAvatar = {}", sender.getAvatar());
+
+        dmMessageService.createAndSave(request.getContent(), sender, dmId);
 
         return DmResponse.builder()
                 .type(NEW_MESSAGE)
@@ -49,11 +55,10 @@ public class DmMessageController {
     @GetMapping("/dm/rooms/{dmId}/messages")
     @ResponseBody
     public List<DmMessageDto> findAll(
-            @PathVariable Long dmId, @AuthenticationPrincipal SecurityUser user,
-            @RequestParam(defaultValue = "0") Long fromMessageId) {
+            @PathVariable Long dmId, @AuthenticationPrincipal SecurityUser user) {
 
         List<DmMessageDto> dmMessageDtos =
-                dmMessageService.getByDmIdAndUserIdAndFromId(dmId, user.getId(), fromMessageId);
+                dmMessageService.getByDmIdAndUserIdAndFromId(dmId, user.getId());
 
         return dmMessageDtos;
     }

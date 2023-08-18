@@ -6,6 +6,7 @@ import com.ll.TeamSteam.domain.dmMessage.dto.DmMessageDto;
 import com.ll.TeamSteam.domain.dmMessage.entity.DmMessage;
 import com.ll.TeamSteam.domain.dmMessage.repository.DmMessageRepository;
 import com.ll.TeamSteam.domain.dmUser.entity.DmUser;
+import com.ll.TeamSteam.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -24,37 +26,50 @@ public class DmMessageService {
     private final DmMessageRepository dmMessageRepository;
 
     @Transactional
-    public DmMessage createAndSave(String content, Long dmSenderId, Long dmId) {
+    public DmMessage createAndSave(String content, User sender, Long dmId) {
 
         Dm dm = dmService.findByDmId(dmId);
 
-        DmUser sender = dm.getDmUsers().stream()
-                .filter(dmUser -> dmUser.getUser().getId().equals(dmSenderId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("으아아아아아"));
-        // TODO : Exception 만들어서 던져주기
+        if (sender == null){
+            throw new IllegalArgumentException("너 로그인 안했어~!");
+        }
 
-        DmMessage dmMessage = DmMessage.create(content, sender, dm);
+//        DmUser sender = dm.getDmUsers().stream()
+//                .filter(dmUser -> dmUser.getUser().getId().equals(dmSenderId))
+//                .findFirst()
+//                .orElseThrow(() -> new IllegalArgumentException("으아아아아아"));
+
+        DmMessage dmMessage = DmMessage.create(content, sender.getId(), sender.getUsername(), sender.getAvatar(), dm.getId());
+
 
         return dmMessageRepository.save(dmMessage);
     }
 
-    public List<DmMessageDto> getByDmIdAndUserIdAndFromId(Long dmId, Long userId, Long fromMessageId) {
+    public List<DmMessage> getChatMessagesByRoomId(Long dmId) {
+
+        return dmMessageRepository.findByDmId(dmId);
+    }
+
+
+    public List<DmMessageDto> getByDmIdAndUserIdAndFromId(Long dmId, Long userId) {
 
         Dm dm = dmService.findByDmId(dmId);
 
-        dm.getDmUsers().stream()
+        DmUser dmuser = dm.getDmUsers().stream()
                 .filter(dmUser -> dmUser.getUser().getId().equals(userId))
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException("하하"));
+
+        log.info("dmUser = {}", dmuser);
 
         List<DmMessage> dmMessages = dmMessageRepository.findByDmId(dmId);
+//        List<DmMessage> list = dmMessages.stream()
+//                .filter(chatMessage -> chatMessage.getId().compareTo(fromMessageId) > 0)
+//                .sorted(Comparator.comparing(DmMessage::getId))
+//                .collect(Collectors.toList());
 
-        List<DmMessage> list = dmMessages.stream()
-                .filter(chatMessage -> chatMessage.getId() > fromMessageId)
-                .sorted(Comparator.comparing(DmMessage::getId))
-                .toList();
 
-        return DmMessageDto.fromDmMessages(list);
+
+        return DmMessageDto.fromDmMessages(dmMessages);
     }
 }

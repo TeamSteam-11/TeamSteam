@@ -18,30 +18,37 @@ import java.util.List;
 public class DmMessageDto {
 
     @JsonProperty("message_id")
-    private Long id;
+    private String id;
 
     @JsonProperty("content")
     private String content;
 
-    @JsonProperty("sender")
-    private UserDto sender;
+    @JsonProperty("senderId")
+    private Long senderId;
+    @JsonProperty("senderUsername")
+    private String senderUsername;
+    @JsonProperty("senderAvatar")
+    private String senderAvatar;
 
     @JsonProperty("created_at")
     private LocalDateTime createdAt;
 
-    @JsonProperty("updated_at")
-    private LocalDateTime updatedAt;
-
     public static DmMessageDto fromDmMessage(DmMessage dmMessage) {
 
-        UserDto userDto = UserDto.fromUser(dmMessage.getSender().getUser());
+        Long senderId = dmMessage.getSenderId();
+        String senderUsername = dmMessage.getSenderUsername();
+        String senderAvatar = dmMessage.getSenderAvatar();
+
+
+//        UserDto userDto = UserDto.fromUser(dmMessage.getSender().getUser());
 
         DmMessageDto dmMessageDto = DmMessageDto.builder()
                 .id(dmMessage.getId())
-                .sender(userDto)
+                .senderId(senderId)
+                .senderUsername(senderUsername)
+                .senderAvatar(senderAvatar)
                 .content(dmMessage.getContent())
-                .createdAt(dmMessage.getCreateDate())
-                .updatedAt(dmMessage.getModifyDate())
+                .createdAt(dmMessage.getCreatedDate())
                 .build();
 
         return dmMessageDto;

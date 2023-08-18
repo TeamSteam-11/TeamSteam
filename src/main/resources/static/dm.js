@@ -5,7 +5,7 @@ let currentDate = null; // 날짜 변수 추가
 
 function getChatMessages() {
     console.log("dmId : " + dmId)
-    fetch(`/dm/rooms/${dmId}/messages?fromMessageId=${fromMessageId}`, {
+    fetch(`/dm/rooms/${dmId}/messages`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

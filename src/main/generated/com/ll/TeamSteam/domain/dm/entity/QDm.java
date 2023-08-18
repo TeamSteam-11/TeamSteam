@@ -27,8 +27,6 @@ public class QDm extends EntityPathBase<Dm> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
-    public final ListPath<com.ll.TeamSteam.domain.dmMessage.entity.DmMessage, com.ll.TeamSteam.domain.dmMessage.entity.QDmMessage> dmMessages = this.<com.ll.TeamSteam.domain.dmMessage.entity.DmMessage, com.ll.TeamSteam.domain.dmMessage.entity.QDmMessage>createList("dmMessages", com.ll.TeamSteam.domain.dmMessage.entity.DmMessage.class, com.ll.TeamSteam.domain.dmMessage.entity.QDmMessage.class, PathInits.DIRECT2);
-
     public final com.ll.TeamSteam.domain.user.entity.QUser dmReceiver;
 
     public final com.ll.TeamSteam.domain.user.entity.QUser dmSender;
