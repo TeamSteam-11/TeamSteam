@@ -55,10 +55,10 @@ public class DmMessageController {
     @GetMapping("/dm/rooms/{dmId}/messages")
     @ResponseBody
     public List<DmMessageDto> findAll(
-            @PathVariable Long dmId, @AuthenticationPrincipal SecurityUser user, @RequestParam(defaultValue = "") String fromId) {
+            @PathVariable Long dmId, @AuthenticationPrincipal SecurityUser user, @RequestParam(defaultValue = "000000000000000000000000") String fromMessageId) {
 
         List<DmMessageDto> dmMessageDtos =
-                dmMessageService.getByDmIdAndUserIdAndFromId(dmId, user.getId(), fromId);
+                dmMessageService.getByDmIdAndUserIdAndFromId(dmId, user.getId(), fromMessageId);
 
         return dmMessageDtos;
     }

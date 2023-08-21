@@ -68,7 +68,7 @@ public class DmMessageService {
         Stream<DmMessage> stream = dmMessages.stream();
 
         // fromMessageId가 유효한 값이면 필터링 적용
-        if (fromMessageId != null && !fromMessageId.isEmpty()) {
+        if (fromMessageId != null && !fromMessageId.isBlank()) {
             stream = stream.filter(chatMessage -> new ObjectId(chatMessage.getId()).compareTo(new ObjectId(fromMessageId)) > 0);
         }
 

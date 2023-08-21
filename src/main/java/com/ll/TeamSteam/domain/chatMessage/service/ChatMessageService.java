@@ -9,9 +9,12 @@ import com.ll.TeamSteam.domain.chatRoom.dto.ChatRoomDto;
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
+import com.ll.TeamSteam.domain.dmMessage.dto.DmMessageDto;
+import com.ll.TeamSteam.domain.dmMessage.entity.DmMessage;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.ll.TeamSteam.domain.chatMessage.dto.response.SignalType.NEW_MESSAGE;
 import static com.ll.TeamSteam.domain.chatMessage.entity.ChatMessageType.ENTER;
@@ -45,12 +50,12 @@ public class ChatMessageService {
                 .findFirst()
                 .orElseThrow();
 
-        ChatMessage chatMessage = ChatMessage.create(content, sender, type, chatRoom);
+        ChatMessage chatMessage = ChatMessage.create(content, sender.getId(), sender.getUser().getUsername(), sender.getUser().getAvatar(), type, chatRoom.getId());
 
         return chatMessageRepository.save(chatMessage);
     }
 
-    public List<ChatMessageDto> getByChatRoomIdAndUserIdAndFromId(Long roomId, Long userId, Long fromId) {
+    public List<ChatMessageDto> getByChatRoomIdAndUserIdAndFromId(Long roomId, Long userId, String fromId) {
 
         ChatRoom chatRoom = chatRoomService.findByRoomId(roomId);
 
@@ -61,10 +66,17 @@ public class ChatMessageService {
 
         List<ChatMessage> chatMessages = chatMessageRepository.findByChatRoomId(roomId);
 
-        List<ChatMessage> list = chatMessages.stream()
-                .filter(chatMessage -> chatMessage.getId() > fromId)
-                .sorted(Comparator.comparing(ChatMessage::getId))
-                .toList();
+        // Stream 생성
+        Stream<ChatMessage> stream = chatMessages.stream();
+
+        // fromId가 유효한 값이면 필터링 적용
+        if (fromId != null && !fromId.isEmpty()) {
+            stream = stream.filter(chatMessage -> new ObjectId(chatMessage.getId()).compareTo(new ObjectId(fromId)) > 0);
+        }
+
+        // 필터링된 스트림으로부터 결과 리스트 생성
+        List<ChatMessage> list = stream.sorted(Comparator.comparing(ChatMessage::getId))
+                .collect(Collectors.toList());
 
         return ChatMessageDto.fromChatMessages(list);
     }

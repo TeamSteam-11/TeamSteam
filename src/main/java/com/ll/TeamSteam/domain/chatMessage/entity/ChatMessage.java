@@ -5,12 +5,16 @@ import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.Assert;
+
+import java.time.LocalDateTime;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
@@ -18,49 +22,58 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-@Entity
+@Document(collection = "chat")
 @SuperBuilder
-public class ChatMessage extends BaseEntity {
+public class ChatMessage {
+
+    @Id
+    private String id;
     private String content; // 내용
 
-    @ManyToOne(fetch = LAZY)
-    private ChatUser sender; // 작성자
+    private Long senderId;
+    private String senderUsername;
+    private String senderAvatar;
 
-    @ManyToOne(fetch = LAZY)
-    private ChatRoom chatRoom; // 해당 채팅방 룸
+    private Long chatRoomId;
+
+    private LocalDateTime createdDate;
 
     @Enumerated(STRING)
     private ChatMessageType type;
 
     @Builder
-    public ChatMessage(String content, ChatUser sender, ChatRoom chatRoom, ChatMessageType type) {
+    public ChatMessage(String content, Long senderId, String senderUsername, String senderAvatar, Long chatRoomId, ChatMessageType type) {
 
         Assert.notNull(content, "content는 널일 수 없습니다.");
-        Assert.notNull(sender, "sender는 널일 수 없습니다.");
-        Assert.notNull(chatRoom, "chatRoom는 널일 수 없습니다.");
+        Assert.notNull(senderId, "senderId는 널일 수 없습니다.");
+        Assert.notNull(chatRoomId, "chatRoomId는 널일 수 없습니다.");
 
         this.content = content;
-        this.sender = sender;
-        this.chatRoom = chatRoom;
+        this.senderId = senderId;
+        this.senderUsername = senderUsername;
+        this.senderAvatar = senderAvatar;
+        this.chatRoomId = chatRoomId;
     }
 
-    public static ChatMessage create(String content, ChatUser chatUser, ChatMessageType chatMessageType, ChatRoom chatRoom) {
+    public static ChatMessage create(String content, Long senderId, String senderUsername, String senderAvatar, ChatMessageType chatMessageType, Long chatRoomId) {
 
         ChatMessage chatMessage = ChatMessage.builder()
                 .content(content)
-                .sender(chatUser)
+                .senderId(senderId)
+                .senderUsername(senderUsername)
+                .senderAvatar(senderAvatar)
                 .type(chatMessageType)
-                .chatRoom(chatRoom)
+                .chatRoomId(chatRoomId)
                 .build();
 
         return chatMessage;
     }
 
-    public static ChatMessage create(String content,ChatRoom chatRoom) {
+    public static ChatMessage create(String content, Long chatRoomId) {
 
         ChatMessage chatMessage = ChatMessage.builder()
                 .content(content)
-                .chatRoom(chatRoom)
+                .chatRoomId(chatRoomId)
                 .build();
 
         return chatMessage;

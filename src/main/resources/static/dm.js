@@ -1,17 +1,26 @@
 let stompClient = null;
-let fromMessageId = null;
+let fromMessageId = "000000000000000000000000";
 let ChatMessageUl = null;
 let currentDate = null; // 날짜 변수 추가
 
 function getChatMessages() {
     console.log("dmId : " + dmId)
-    fetch(`/dm/rooms/${dmId}/messages`, {
+    fetch(`/dm/rooms/${dmId}/messages?fromMessageId=${fromMessageId}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
         }})
-        .then(response => response.json())
+        .then(response => {
+            return response.text().then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error("Failed to parse JSON:", text);
+                    throw e;
+                }
+            });
+        })
         .then(body => {
             drawMessages(body);
             console.log(body);

@@ -50,7 +50,7 @@ public class ChatMessageController {
     @ResponseBody
     public List<ChatMessageDto> findAll(
             @PathVariable Long roomId, @AuthenticationPrincipal SecurityUser user,
-            @RequestParam(defaultValue = "0") Long fromId) {
+            @RequestParam(defaultValue = "000000000000000000000000") String fromId) {
 
         List<ChatMessageDto> chatMessageDtos =
                 chatMessageService.getByChatRoomIdAndUserIdAndFromId(roomId, user.getId(), fromId);
