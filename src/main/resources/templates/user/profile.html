@@ -102,7 +102,7 @@
                     </progress>
                 </div>
             </div>
-            <div>
+            <div th:if="${@rq.getUser().getId() != targetUser.getId()}">
                 <a th:href="@{/dm/room/receiver/{receiverId}(receiverId=${targetUser.getId()})}"
                    class="btn btn-sm btn-outline border-white text-white hover:bg-[#1F2227] hover:border-white">채팅하기</a>
             </div>
