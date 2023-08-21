@@ -66,16 +66,9 @@ public class ChatMessageService {
 
         List<ChatMessage> chatMessages = chatMessageRepository.findByChatRoomId(roomId);
 
-        // Stream 생성
-        Stream<ChatMessage> stream = chatMessages.stream();
-
-        // fromId가 유효한 값이면 필터링 적용
-        if (fromId != null && !fromId.isEmpty()) {
-            stream = stream.filter(chatMessage -> new ObjectId(chatMessage.getId()).compareTo(new ObjectId(fromId)) > 0);
-        }
-
-        // 필터링된 스트림으로부터 결과 리스트 생성
-        List<ChatMessage> list = stream.sorted(Comparator.comparing(ChatMessage::getId))
+        List<ChatMessage> list = chatMessages.stream()
+                .filter(chatMessage -> new ObjectId(chatMessage.getId()).compareTo(new ObjectId(fromId)) > 0)
+                .sorted(Comparator.comparing(ChatMessage::getId))
                 .collect(Collectors.toList());
 
         return ChatMessageDto.fromChatMessages(list);

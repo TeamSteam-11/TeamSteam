@@ -64,16 +64,9 @@ public class DmMessageService {
 
         List<DmMessage> dmMessages = dmMessageRepository.findByDmId(dmId);
 
-        // Stream 생성
-        Stream<DmMessage> stream = dmMessages.stream();
-
-        // fromMessageId가 유효한 값이면 필터링 적용
-        if (fromMessageId != null && !fromMessageId.isBlank()) {
-            stream = stream.filter(chatMessage -> new ObjectId(chatMessage.getId()).compareTo(new ObjectId(fromMessageId)) > 0);
-        }
-
-        // 필터링된 스트림으로부터 결과 리스트 생성
-        List<DmMessage> list = stream.sorted(Comparator.comparing(DmMessage::getId))
+        List<DmMessage> list = dmMessages.stream()
+                .filter(chatMessage -> new ObjectId(chatMessage.getId()).compareTo(new ObjectId(fromMessageId)) > 0)
+                .sorted(Comparator.comparing(DmMessage::getId))
                 .collect(Collectors.toList());
 
         return DmMessageDto.fromDmMessages(list);
