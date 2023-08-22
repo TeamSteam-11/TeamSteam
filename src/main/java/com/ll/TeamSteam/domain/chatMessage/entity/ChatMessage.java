@@ -35,25 +35,27 @@ public class ChatMessage {
     private String senderAvatar;
 
     private Long chatRoomId;
+    private Long chatId;
 
-    private LocalDateTime createdDate;
+    private LocalDateTime createDate;
 
     @Enumerated(STRING)
     private ChatMessageType type;
 
-    @Builder
-    public ChatMessage(String content, Long senderId, String senderUsername, String senderAvatar, Long chatRoomId, ChatMessageType type) {
-
-        Assert.notNull(content, "content는 널일 수 없습니다.");
-        Assert.notNull(senderId, "senderId는 널일 수 없습니다.");
-        Assert.notNull(chatRoomId, "chatRoomId는 널일 수 없습니다.");
-
-        this.content = content;
-        this.senderId = senderId;
-        this.senderUsername = senderUsername;
-        this.senderAvatar = senderAvatar;
-        this.chatRoomId = chatRoomId;
-    }
+//    @Builder
+//    public ChatMessage(String content, Long senderId, String senderUsername, String senderAvatar, Long chatRoomId, LocalDateTime createDate) {
+//
+//        Assert.notNull(content, "content는 널일 수 없습니다.");
+//        Assert.notNull(senderId, "senderId는 널일 수 없습니다.");
+//        Assert.notNull(chatRoomId, "chatRoomId는 널일 수 없습니다.");
+//
+//        this.content = content;
+//        this.senderId = senderId;
+//        this.senderUsername = senderUsername;
+//        this.senderAvatar = senderAvatar;
+//        this.chatRoomId = chatRoomId;
+//        this.createDate = createDate;
+//    }
 
     public static ChatMessage create(String content, Long senderId, String senderUsername, String senderAvatar, ChatMessageType chatMessageType, Long chatRoomId) {
 
@@ -64,6 +66,7 @@ public class ChatMessage {
                 .senderAvatar(senderAvatar)
                 .type(chatMessageType)
                 .chatRoomId(chatRoomId)
+                .createDate(LocalDateTime.now())
                 .build();
 
         return chatMessage;
