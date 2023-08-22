@@ -24,8 +24,6 @@ public class QChatRoom extends EntityPathBase<ChatRoom> {
 
     public final com.ll.TeamSteam.global.baseEntity.QBaseEntity _super = new com.ll.TeamSteam.global.baseEntity.QBaseEntity(this);
 
-    public final ListPath<com.ll.TeamSteam.domain.chatMessage.entity.ChatMessage, com.ll.TeamSteam.domain.chatMessage.entity.QChatMessage> chatMessages = this.<com.ll.TeamSteam.domain.chatMessage.entity.ChatMessage, com.ll.TeamSteam.domain.chatMessage.entity.QChatMessage>createList("chatMessages", com.ll.TeamSteam.domain.chatMessage.entity.ChatMessage.class, com.ll.TeamSteam.domain.chatMessage.entity.QChatMessage.class, PathInits.DIRECT2);
-
     public final SetPath<com.ll.TeamSteam.domain.chatUser.entity.ChatUser, com.ll.TeamSteam.domain.chatUser.entity.QChatUser> chatUsers = this.<com.ll.TeamSteam.domain.chatUser.entity.ChatUser, com.ll.TeamSteam.domain.chatUser.entity.QChatUser>createSet("chatUsers", com.ll.TeamSteam.domain.chatUser.entity.ChatUser.class, com.ll.TeamSteam.domain.chatUser.entity.QChatUser.class, PathInits.DIRECT2);
 
     //inherited

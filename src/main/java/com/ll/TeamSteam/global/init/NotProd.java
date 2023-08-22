@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-@Profile({"local", "test"})
+@Profile({"test"})
 @Slf4j
 public class NotProd {
     @Bean

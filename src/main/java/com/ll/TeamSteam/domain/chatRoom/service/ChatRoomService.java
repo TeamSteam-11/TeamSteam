@@ -1,6 +1,7 @@
 package com.ll.TeamSteam.domain.chatRoom.service;
 
 import com.ll.TeamSteam.domain.chatMessage.entity.ChatMessage;
+import com.ll.TeamSteam.domain.chatMessage.repository.ChatMessageRepository;
 import com.ll.TeamSteam.domain.chatRoom.dto.ChatRoomDto;
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.chatRoom.exception.CanNotEnterException;
@@ -48,6 +49,7 @@ public class ChatRoomService {
     private final NotificationService notificationService;
     private final MatchingPartnerService matchingPartnerService;
     private final MatchingPartnerRepository matchingPartnerRepository;
+    private final ChatMessageRepository chatMessageRepository;
 
 
     @Transactional
@@ -182,10 +184,10 @@ public class ChatRoomService {
         chatUser.changeType();
         matchingPartnerService.updateFalse(roomId, originUserId);
 
-        List<ChatMessage> chatMessages = chatRoom.getChatMessages();
+        List<ChatMessage> chatMessages = chatMessageRepository.findByChatRoomId(roomId);
 
         chatMessages.stream()
-                .filter(chatMessage -> chatMessage.getSender().getId().equals(chatUserId))
+                .filter(chatMessage -> chatMessage.getSenderId().equals(chatUserId))
                 .forEach(chatMessage -> chatMessage.removeChatMessages("강퇴된 사용자의 메시지입니다."));
 
         MatchingPartner matchingPartner = matchingPartnerService.findByMatchingIdAndUserId(roomId, originUserId);

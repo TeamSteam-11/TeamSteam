@@ -31,9 +31,6 @@ public class DmUser extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private Dm dm;
 
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<DmMessage> dmMessages = new ArrayList<>();
-
     @Builder
     public DmUser(User user, Dm dm) {
         this.user = user;

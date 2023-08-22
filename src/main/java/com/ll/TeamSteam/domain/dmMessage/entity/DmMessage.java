@@ -1,37 +1,49 @@
 package com.ll.TeamSteam.domain.dmMessage.entity;
 
-import com.ll.TeamSteam.domain.dm.entity.Dm;
-import com.ll.TeamSteam.domain.dmUser.entity.DmUser;
-import com.ll.TeamSteam.global.baseEntity.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.annotation.PostConstruct;
+import jakarta.persistence.Id;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cglib.core.Local;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import static jakarta.persistence.FetchType.LAZY;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Getter
 @RequiredArgsConstructor
-@Entity
+@Document(collection = "dm")
 @SuperBuilder
 @Slf4j
-public class DmMessage extends BaseEntity {
+public class DmMessage {
+
+    @Id
+    private String id;
     private String content; // 내용
 
-    @ManyToOne(fetch = LAZY)
-    private DmUser sender; // 작성자
+    // senderUsername, senderAvatar, senderId
+    private Long senderId;
+    private String senderUsername;
+    private String senderAvatar;
 
-    @ManyToOne(fetch = LAZY)
-    private Dm dm; // 해당 채팅방 룸
+    // dmId
+    private Long dmId;
 
-    public static DmMessage create(String content, DmUser dmSender, Dm dm) {
+    private LocalDateTime createdDate;
+
+    public static DmMessage create(String content, Long senderId, String senderUsername, String senderAvatar, Long dmId) {
 
         DmMessage dmMessage = DmMessage.builder()
                 .content(content)
-                .sender(dmSender)
-                .dm(dm)
+                .senderId(senderId)
+                .senderUsername(senderUsername)
+                .senderAvatar(senderAvatar)
+                .dmId(dmId)
+                .createdDate(LocalDateTime.now())
                 .build();
 
         return dmMessage;

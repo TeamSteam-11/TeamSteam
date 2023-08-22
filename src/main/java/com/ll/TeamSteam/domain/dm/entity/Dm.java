@@ -38,9 +38,6 @@ public class Dm extends BaseEntity {
     @Builder.Default
     private Set<DmUser> dmUsers = new HashSet<>();
 
-    @OneToMany(mappedBy = "dm",  cascade = PERSIST, orphanRemoval = true)
-    private List<DmMessage> dmMessages = new ArrayList<>();
-
     public static Dm create(User dmSender, User dmReceiver) {
 
         Dm dm = Dm.builder()

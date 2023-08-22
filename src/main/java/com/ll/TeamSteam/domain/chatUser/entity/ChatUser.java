@@ -34,9 +34,6 @@ public class ChatUser extends BaseEntity {
     @Enumerated(STRING)
     private ChatUserType type = ROOMIN;
 
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<ChatMessage> chatMessages = new ArrayList<>();
-
 
     @Builder
     public ChatUser(User user, ChatRoom chatRoom, ChatUserType type) {

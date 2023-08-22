@@ -44,9 +44,6 @@ public class ChatRoom extends BaseEntity {
     @Builder.Default
     private Set<ChatUser> chatUsers = new HashSet<>();
 
-    @OneToMany(mappedBy = "chatRoom",  cascade = PERSIST, orphanRemoval = true)
-    private List<ChatMessage> chatMessages = new ArrayList<>();
-
     public static ChatRoom create(String name, Matching matching, User owner) {
 
         Assert.notNull(name, "name는 널일 수 없습니다.");

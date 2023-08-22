@@ -20,13 +20,17 @@ import java.util.List;
 public class ChatMessageDto implements Serializable {
 
     @JsonProperty("message_id")
-    private Long id;
+    private String id;
 
     @JsonProperty("content")
     private String content;
 
-    @JsonProperty("sender")
-    private UserDto sender;
+    @JsonProperty("senderId")
+    private Long senderId;
+    @JsonProperty("senderUsername")
+    private String senderUsername;
+    @JsonProperty("senderAvatar")
+    private String senderAvatar;
 
     @JsonProperty("type")
     private ChatMessageType type;
@@ -39,16 +43,21 @@ public class ChatMessageDto implements Serializable {
 
     public static ChatMessageDto fromChatMessage(ChatMessage chatMessage) {
 
-        UserDto userDto = UserDto.fromUser(chatMessage.getSender().getUser());
+        Long senderId = chatMessage.getSenderId();
+        String senderUsername = chatMessage.getSenderUsername();
+        String senderAvatar = chatMessage.getSenderAvatar();
+
+        // UserDto userDto = UserDto.fromUser(chatMessage.getSender().getUser());
 
         ChatMessageDto chatMessageDto = ChatMessageDto.builder()
                 .id(chatMessage.getId())
                 .type(chatMessage.getType())
-                .sender(userDto)
+                .senderId(senderId)
+                .senderUsername(senderUsername)
+                .senderAvatar(senderAvatar)
                 .content(chatMessage.getContent())
                 .type(chatMessage.getType())
-                .createdAt(chatMessage.getCreateDate())
-                .updatedAt(chatMessage.getModifyDate())
+                .createdAt(chatMessage.getCreatedDate())
                 .build();
 
         return chatMessageDto;
