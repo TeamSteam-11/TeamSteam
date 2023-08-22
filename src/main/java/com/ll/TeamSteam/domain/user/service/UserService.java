@@ -91,7 +91,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User findByIdElseThrow(Long ownerId) {
-        return userRepository.findById(ownerId).orElseThrow();
+        return userRepository.findById(ownerId).orElseThrow(() -> new IllegalArgumentException("유저 아님"));
     }
 
     @Transactional

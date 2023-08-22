@@ -38,9 +38,6 @@ public class ChatMessageDto implements Serializable {
     @JsonProperty("created_at")
     private LocalDateTime createdAt;
 
-    @JsonProperty("updated_at")
-    private LocalDateTime updatedAt;
-
     public static ChatMessageDto fromChatMessage(ChatMessage chatMessage) {
 
         Long senderId = chatMessage.getSenderId();
@@ -57,7 +54,7 @@ public class ChatMessageDto implements Serializable {
                 .senderAvatar(senderAvatar)
                 .content(chatMessage.getContent())
                 .type(chatMessage.getType())
-                .createdAt(chatMessage.getCreatedDate())
+                .createdAt(LocalDateTime.now())
                 .build();
 
         return chatMessageDto;

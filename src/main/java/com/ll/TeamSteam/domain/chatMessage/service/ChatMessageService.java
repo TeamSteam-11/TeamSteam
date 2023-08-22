@@ -11,6 +11,8 @@ import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.dmMessage.dto.DmMessageDto;
 import com.ll.TeamSteam.domain.dmMessage.entity.DmMessage;
+import com.ll.TeamSteam.domain.user.entity.User;
+import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,17 +42,16 @@ public class ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomService chatRoomService;
     private final SimpMessageSendingOperations template;
+    private final UserService userService;
 
-    public ChatMessage createAndSave(String content, Long senderId, Long chatRoomId, ChatMessageType type) {
+    public ChatMessage createAndSave(String content, Long userId, Long chatRoomId, ChatMessageType type) {
 
         ChatRoom chatRoom = chatRoomService.findByRoomId(chatRoomId);
 
-        ChatUser sender = chatRoom.getChatUsers().stream()
-                .filter(chatUser -> chatUser.getUser().getId().equals(senderId))
-                .findFirst()
-                .orElseThrow();
+        User sender = userService.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저아님"));
 
-        ChatMessage chatMessage = ChatMessage.create(content, sender.getId(), sender.getUser().getUsername(), sender.getUser().getAvatar(), type, chatRoom.getId());
+        ChatMessage chatMessage = ChatMessage.create(content, sender.getId(), sender.getUsername(), sender.getAvatar(), type, chatRoom.getId());
 
         return chatMessageRepository.save(chatMessage);
     }
