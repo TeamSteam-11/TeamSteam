@@ -151,7 +151,6 @@
                     <a th:if="${@rq.isLogin()}" class="h-full flex items-center px-2"
                        th:href="@{'/user/profile/' + ${@rq.getUser().getId()}}">
                         <img th:src="${@rq.getUser().getAvatar()}" class="w-8 h-8 rounded-full mr-2"/>
-                        <span th:text="${@rq.getUser().getUsername()}"></span>
                     </a>
                 </li>
                 <li class="menu-1__li-join">
