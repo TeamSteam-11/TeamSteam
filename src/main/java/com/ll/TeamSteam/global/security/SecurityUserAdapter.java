@@ -1,8 +1,8 @@
 package com.ll.TeamSteam.global.security;
 
-import java.util.Map;
-
 import org.springframework.security.oauth2.core.user.OAuth2User;
+
+import java.util.Map;
 
 public interface SecurityUserAdapter extends OAuth2User {
     @Override

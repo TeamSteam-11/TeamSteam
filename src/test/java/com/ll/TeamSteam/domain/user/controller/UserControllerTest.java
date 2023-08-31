@@ -1,8 +1,7 @@
 package com.ll.TeamSteam.domain.user.controller;
 
 
-import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.*;
-
+import com.ll.TeamSteam.domain.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +12,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.ll.TeamSteam.domain.user.service.UserService;
 
 @SpringBootTest
 @AutoConfigureMockMvc

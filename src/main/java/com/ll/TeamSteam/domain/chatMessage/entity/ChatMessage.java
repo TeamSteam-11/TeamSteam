@@ -1,23 +1,15 @@
 package com.ll.TeamSteam.domain.chatMessage.entity;
 
-import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
-import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
-import com.ll.TeamSteam.global.baseEntity.BaseEntity;
-import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 
 import static jakarta.persistence.EnumType.STRING;
-import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter

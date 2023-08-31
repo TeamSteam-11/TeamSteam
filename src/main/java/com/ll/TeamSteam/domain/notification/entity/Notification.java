@@ -1,13 +1,12 @@
 package com.ll.TeamSteam.domain.notification.entity;
 
-import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
+import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import com.ll.TeamSteam.domain.user.entity.User;
 
 import java.time.LocalDateTime;
 

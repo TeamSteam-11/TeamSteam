@@ -3,7 +3,6 @@ package com.ll.TeamSteam.domain.chatMessage.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ll.TeamSteam.domain.chatMessage.entity.ChatMessage;
 import com.ll.TeamSteam.domain.chatMessage.entity.ChatMessageType;
-import com.ll.TeamSteam.domain.user.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

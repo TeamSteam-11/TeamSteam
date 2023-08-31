@@ -1,16 +1,13 @@
 package com.ll.TeamSteam.domain.genreTag.service;
 
-import java.util.List;
-
+import com.ll.TeamSteam.domain.genreTag.entity.GenreTag;
+import com.ll.TeamSteam.domain.genreTag.repository.GenreTagRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ll.TeamSteam.domain.genreTag.entity.GenreTag;
-import com.ll.TeamSteam.domain.genreTag.repository.GenreTagRepository;
-import com.ll.TeamSteam.domain.userTag.entity.UserTag;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor

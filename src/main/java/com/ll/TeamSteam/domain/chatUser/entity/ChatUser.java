@@ -1,17 +1,15 @@
 package com.ll.TeamSteam.domain.chatUser.entity;
 
-import com.ll.TeamSteam.domain.chatMessage.entity.ChatMessage;
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.*;
 import static jakarta.persistence.EnumType.STRING;

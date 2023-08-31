@@ -1,6 +1,10 @@
 package com.ll.TeamSteam.global.init;
 
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
+import com.ll.TeamSteam.domain.gameTag.entity.GameTag;
+import com.ll.TeamSteam.domain.gameTag.repository.GameTagRepository;
+import com.ll.TeamSteam.domain.genreTag.entity.GenreTag;
+import com.ll.TeamSteam.domain.genreTag.repository.GenreTagRepository;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
@@ -9,10 +13,6 @@ import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
 import com.ll.TeamSteam.domain.userTag.entity.UserTag;
 import com.ll.TeamSteam.domain.userTag.repository.UserTagRepository;
-import com.ll.TeamSteam.domain.gameTag.entity.GameTag;
-import com.ll.TeamSteam.domain.gameTag.repository.GameTagRepository;
-import com.ll.TeamSteam.domain.genreTag.entity.GenreTag;
-import com.ll.TeamSteam.domain.genreTag.repository.GenreTagRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;

@@ -1,13 +1,13 @@
 package com.ll.TeamSteam.domain.matching.service;
 
+import com.ll.TeamSteam.domain.gameTag.entity.GameTag;
+import com.ll.TeamSteam.domain.gameTag.repository.GameTagRepository;
 import com.ll.TeamSteam.domain.matching.entity.CreateForm;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.matching.entity.SearchQuery;
 import com.ll.TeamSteam.domain.matching.repository.MatchingRepository;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.user.entity.User;
-import com.ll.TeamSteam.domain.gameTag.entity.GameTag;
-import com.ll.TeamSteam.domain.gameTag.repository.GameTagRepository;
 import com.ll.TeamSteam.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

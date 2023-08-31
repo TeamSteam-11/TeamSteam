@@ -3,7 +3,6 @@ package com.ll.TeamSteam.domain.notification.controller;
 import com.ll.TeamSteam.domain.matchingPartner.service.MatchingPartnerService;
 import com.ll.TeamSteam.domain.notification.entity.Notification;
 import com.ll.TeamSteam.domain.notification.service.NotificationService;
-import com.ll.TeamSteam.domain.user.controller.UserController;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.security.SecurityUser;

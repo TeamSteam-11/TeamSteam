@@ -1,37 +1,26 @@
 package com.ll.TeamSteam.domain.user.service;
 
 import com.ll.TeamSteam.domain.friend.entity.Friend;
-import com.ll.TeamSteam.domain.friend.repository.FriendRepository;
 import com.ll.TeamSteam.domain.friend.service.FriendService;
+import com.ll.TeamSteam.domain.gameTag.entity.GameTag;
 import com.ll.TeamSteam.domain.gameTag.service.GameTagService;
+import com.ll.TeamSteam.domain.genreTag.entity.GenreTag;
 import com.ll.TeamSteam.domain.genreTag.service.GenreTagService;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
-import com.ll.TeamSteam.domain.steam.repository.SteamGameLibraryRepository;
 import com.ll.TeamSteam.domain.steam.service.SteamGameLibraryService;
 import com.ll.TeamSteam.domain.user.entity.Gender;
 import com.ll.TeamSteam.domain.user.entity.User;
-import com.ll.TeamSteam.domain.gameTag.repository.GameTagRepository;
-import com.ll.TeamSteam.domain.genreTag.repository.GenreTagRepository;
 import com.ll.TeamSteam.domain.user.repository.UserRepository;
-import com.ll.TeamSteam.domain.userTag.repository.UserTagRepository;
 import com.ll.TeamSteam.domain.userTag.entity.UserTag;
-import com.ll.TeamSteam.domain.gameTag.entity.GameTag;
-import com.ll.TeamSteam.domain.genreTag.entity.GenreTag;
 import com.ll.TeamSteam.domain.userTag.service.UserTagService;
 import com.ll.TeamSteam.global.security.UserInfoResponse;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor

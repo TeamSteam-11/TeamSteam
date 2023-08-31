@@ -2,7 +2,6 @@ package com.ll.TeamSteam.domain.notification.eventListener;
 
 import com.ll.TeamSteam.domain.notification.service.NotificationService;
 import com.ll.TeamSteam.global.event.EventAfterFriendAdd;
-import com.ll.TeamSteam.global.event.EventAfterInvite;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;

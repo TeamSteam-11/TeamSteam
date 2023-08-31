@@ -2,7 +2,6 @@ package com.ll.TeamSteam.domain.dmMessage.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ll.TeamSteam.domain.dmMessage.entity.DmMessage;
-import com.ll.TeamSteam.domain.user.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

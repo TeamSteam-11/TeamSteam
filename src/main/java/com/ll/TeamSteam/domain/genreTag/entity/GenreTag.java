@@ -1,7 +1,5 @@
 package com.ll.TeamSteam.domain.genreTag.entity;
 
-import static jakarta.persistence.FetchType.*;
-
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.userTag.entity.UserTag;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
@@ -12,6 +10,8 @@ import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
