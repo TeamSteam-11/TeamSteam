@@ -8,9 +8,6 @@ import com.ll.TeamSteam.domain.chatMessage.repository.ChatMessageRepository;
 import com.ll.TeamSteam.domain.chatRoom.dto.ChatRoomDto;
 import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
-import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
-import com.ll.TeamSteam.domain.dmMessage.dto.DmMessageDto;
-import com.ll.TeamSteam.domain.dmMessage.entity.DmMessage;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.security.SecurityUser;
@@ -25,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.ll.TeamSteam.domain.chatMessage.dto.response.SignalType.NEW_MESSAGE;
 import static com.ll.TeamSteam.domain.chatMessage.entity.ChatMessageType.ENTER;

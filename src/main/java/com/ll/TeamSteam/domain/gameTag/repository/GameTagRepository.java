@@ -2,7 +2,6 @@ package com.ll.TeamSteam.domain.gameTag.repository;
 
 import com.ll.TeamSteam.domain.gameTag.entity.GameTag;
 import com.ll.TeamSteam.domain.userTag.entity.UserTag;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

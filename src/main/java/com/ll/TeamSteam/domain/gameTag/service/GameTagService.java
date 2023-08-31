@@ -1,16 +1,14 @@
 package com.ll.TeamSteam.domain.gameTag.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ll.TeamSteam.domain.gameTag.entity.GameTag;
 import com.ll.TeamSteam.domain.gameTag.repository.GameTagRepository;
 import com.ll.TeamSteam.domain.userTag.entity.UserTag;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor

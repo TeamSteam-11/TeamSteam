@@ -1,6 +1,5 @@
 package com.ll.TeamSteam.domain.dm.entity;
 
-import com.ll.TeamSteam.domain.dmMessage.entity.DmMessage;
 import com.ll.TeamSteam.domain.dmUser.entity.DmUser;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.global.baseEntity.BaseEntity;
@@ -13,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static jakarta.persistence.CascadeType.PERSIST;

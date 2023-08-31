@@ -1,15 +1,13 @@
 package com.ll.TeamSteam.domain.friend.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.ll.TeamSteam.domain.friend.entity.Friend;
 import com.ll.TeamSteam.domain.friend.repository.FriendRepository;
 import com.ll.TeamSteam.domain.user.entity.User;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor

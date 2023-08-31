@@ -3,7 +3,6 @@ package com.ll.TeamSteam.domain.chatMessage.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ll.TeamSteam.domain.chatMessage.entity.ChatMessage;
 import com.ll.TeamSteam.domain.chatMessage.entity.ChatMessageType;
-import com.ll.TeamSteam.domain.user.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,8 +34,8 @@ public class ChatMessageDto implements Serializable {
     @JsonProperty("type")
     private ChatMessageType type;
 
-    @JsonProperty("created_at")
-    private LocalDateTime createdAt;
+    @JsonProperty("createDate")
+    private LocalDateTime createDate;
 
     public static ChatMessageDto fromChatMessage(ChatMessage chatMessage) {
 
@@ -54,7 +53,7 @@ public class ChatMessageDto implements Serializable {
                 .senderAvatar(senderAvatar)
                 .content(chatMessage.getContent())
                 .type(chatMessage.getType())
-                .createdAt(LocalDateTime.now())
+                .createDate(chatMessage.getCreateDate())
                 .build();
 
         return chatMessageDto;
