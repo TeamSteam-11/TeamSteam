@@ -25,55 +25,55 @@
 
     <style>
         .con {
-            max-width:var(--site-width);
+            max-width: var(--site-width);
         }
 
         /* 로고 */
         .logo {
-            font-size:1.3rem;
-            font-weight:bold;
-            letter-spacing:0.025rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 0.025rem;
         }
 
-        @media ( max-width:767px ) {
+        @media ( max-width: 767px ) {
             .logo {
-                font-size:1rem;
+                font-size: 1rem;
             }
         }
 
         /* 탑바 */
         .top-bar {
-            --color:white;
-            --inverse-color:black;
-            height:var(--top-bar__height);
-            background-color : #1F2227;
-            color:var(--color);
-            position:fixed;
-            top:0px;
-            left:0px;
-            width:100%;
+            --color: white;
+            --inverse-color: black;
+            height: var(--top-bar__height);
+            background-color: #171917;
+            color: var(--color);
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100%;
             z-index: 1000;
         }
 
         /* 메뉴 1 */
         .menu-1__li-icon > a > span {
-            font-size:20px;
+            font-size: 20px;
         }
 
         .menu-1 > li:not(.menu-1__li-icon) > a > span {
-            font-size:14px;
+            font-size: 14px;
         }
 
         .menu-1__li-join > a > span {
-            background-color:var(--color, white);
-            color:var(--inverse-color, black);
-            padding:12px 12px 7px 12px;
-            margin-bottom:5px;
-            border-radius:20px;
+            background-color: var(--color, white);
+            color: var(--inverse-color, black);
+            padding: 12px 12px 7px 12px;
+            margin-bottom: 5px;
+            border-radius: 20px;
         }
 
         .menu-1 > li:hover > a > span {
-            text-decoration:underline;
+            text-decoration: underline;
         }
 
         footer {
@@ -85,7 +85,7 @@
         }
 
         .menu-1 > li:hover #noti-icon {
-            text-decoration:underline;
+            text-decoration: underline;
         }
 
         #nav-message:hover {
@@ -93,70 +93,78 @@
         }
 
         .menu-1 > li:hover #message-icon {
-            text-decoration:underline;
+            text-decoration: underline;
         }
-
     </style>
 </head>
 
 <body>
 <!-- 공통 상단 -->
 <header class="top-bar">
-    <div class="con mx-auto pr-3 h-full flex">
-        <a href="/" class="logo flex items-center px-3">
-            TEAM
-            <br class="block md:hidden">
-            STEAM
-        </a>
-        <div class="flex-grow"></div>
-        <ul class="flex menu-1">
-            <li>
-                <a href="/rank" class="h-full flex items-center px-2">
-                    <span>명예의 전당</span>
-                </a>
-            </li>
-            <li>
-                <a href="/match/list" class="h-full flex items-center px-2">
-                    <span>매칭</span>
-                </a>
-            </li>
-            <li>
-                <a href="/minigame" class="h-full flex items-center px-2">
-                    <span>미니게임</span>
-                </a>
-            </li>
-            <li class="menu-1__li-icon">
-                <a href="/notification/list" th:if="${@rq.isLogin()}" id="nav-noti" class="h-full flex items-center px-2 btn btn-ghost btn-circle">
-                    <div class="indicator">
-                        <span><i id="noti-icon" class="far fa-envelope"></i></span>
-                        <span data-test="hasUnreadNotifications" th:if="${@rq.hasUnreadNotifications}"
-                              class="badge badge-xs badge-error indicator-item"></span>
-                    </div>
-                </a>
-            </li>
-            <li class="menu-1__li-icon">
-                <a id="nav-message" th:if="${@rq.isLogin()}" href="/dm/chatlist" class="h-full flex items-center px-2 btn btn-ghost btn-circle">
-                    <div class="indicator">
-                        <span><i id="message-icon" class="far fa-comments"></i></span>
-                    </div>
-                </a>
-            </li>
-            <li>
-                <a th:if="${@rq.isLogin()}" class="h-full flex items-center px-2" th:href="@{'/user/profile/' + ${@rq.getUser().getId()}}">
-                    <img th:src="${@rq.getUser().getAvatar()}" class="w-8 h-8 rounded-full mr-2" />
-                    <span th:text="${@rq.getUser().getUsername()}"></span>
-                </a>
-            </li>
-            <li class="menu-1__li-join">
-                <a href="/user/login" class="h-full flex items-center px-2" th:if="${@rq.logout}">
-                    <span>로그인</span>
-                </a>
-                <a href="/user/logout"
-                   class="h-full flex items-center px-2" th:if="${@rq.login}" >
-                    <span>로그아웃</span>
-                </a>
-            </li>
-        </ul>
+    <div class="con mx-auto justify-between pr-3 h-full flex">
+        <div class="flex direction-column items-center">
+            <a href="/" class="logo flex items-center px-3">
+                TEAM
+                <br class="block md:hidden">
+                STEAM
+            </a>
+            <ul class="flex items-center menu-1">
+                <li>
+                    <a href="/match/list" class="h-full flex items-center px-2">
+                        <span>매칭</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/rank" class="h-full flex items-center px-2">
+                        <span>명예의 전당</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/minigame" class="h-full flex items-center px-2">
+                        <span>미니게임</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="flex direction-column items-center">
+            <ul class="flex direction-column items-center">
+                <li class="menu-1__li-icon">
+                    <a href="/notification/list" th:if="${@rq.isLogin()}" id="nav-noti"
+                       class="h-full flex items-center px-2 btn btn-ghost btn-circle">
+                        <div class="indicator">
+                            <span><i id="noti-icon" class="far fa-envelope"></i></span>
+                            <span data-test="hasUnreadNotifications" th:if="${@rq.hasUnreadNotifications}"
+                                  class="badge badge-xs badge-error indicator-item"></span>
+                        </div>
+                    </a>
+                </li>
+                <li class="menu-1__li-icon">
+                    <a id="nav-message" th:if="${@rq.isLogin()}" href="/dm/chatlist"
+                       class="h-full flex items-center px-2 btn btn-ghost btn-circle">
+                        <div class="indicator">
+                            <span><i id="message-icon" class="far fa-comments"></i></span>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a th:if="${@rq.isLogin()}" class="h-full flex items-center px-2"
+                       th:href="@{'/user/profile/' + ${@rq.getUser().getId()}}">
+                        <img th:src="${@rq.getUser().getAvatar()}" class="w-8 h-8 rounded-full mr-2"/>
+                        <span th:text="${@rq.getUser().getUsername()}"></span>
+                    </a>
+                </li>
+                <li class="menu-1__li-join">
+                    <a href="/user/login" class="h-full flex items-center px-2" th:if="${@rq.logout}">
+                        <span>로그인</span>
+                    </a>
+                    <a href="/user/logout"
+                       class="h-full flex items-center px-2" th:if="${@rq.login}">
+                        <span>로그아웃</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </header>
 
@@ -178,7 +186,7 @@
         if (localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg)) {
             toastWarning(localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg));
             localStorage.removeItem(localStorageKeyAboutHistoryBackErrorMsg);
-        } else if ( !document.referrer ) {
+        } else if (!document.referrer) {
             const localStorageKeyAboutHistoryBackErrorMsg = "historyBackErrorMsg___null";
             if (localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg)) {
                 toastWarning(localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg));

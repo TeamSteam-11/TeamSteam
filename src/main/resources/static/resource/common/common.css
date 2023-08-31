@@ -9,7 +9,7 @@ html > body {
     font-family: "NanumSquareNeo-Variable";
     text-underline-position: under;
     word-break: keep-all;
-    background-color: #1D2939;
+    background-color: #1b1d21;
     padding-top:var(--top-bar__height);
     min-height:100vh;
     max-width: 100vw;
