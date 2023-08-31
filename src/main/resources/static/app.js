@@ -1,7 +1,6 @@
 let stompClient = null;
 let fromId = "000000000000000000000000";
 let ChatMessageUl = null;
-let ChatMessageTime = null;
 let currentDate = null; // 날짜 변수 추가
 
 function getChatMessages() {
@@ -59,7 +58,8 @@ function drawMessages(messages) {
             newItem.classList.add("center");
             newItem.textContent = `${message.content}`;
         } else {
-            const createdAt = new Date(message.created_at);
+            const createdAt = new Date(message.createDate);
+            console.log("시간 : " + message.createDate);
 
             // 가공된 시간 표시 형식 (MM:SS)
             const hours = createdAt.getHours();
@@ -114,10 +114,9 @@ function drawMessages(messages) {
 
             lastChatMessages[message.senderId].el = newItem;
             lastChatMessages[message.senderId].date = formattedTime;
-
         }
 
-        const messageDate = new Date(message.created_at).toLocaleDateString();
+        const messageDate = new Date(message.createDate).toLocaleDateString();
 
         console.log("currentDate : " + currentDate);
 
