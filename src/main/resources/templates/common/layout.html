@@ -25,21 +25,15 @@
 
     <style>
         .con {
-            max-width: var(--site-width);
+            /*max-width: var(--site-width);*/
+            width: 1200px;
         }
 
         /* 로고 */
         .logo {
-            font-size: 1.3rem;
-            font-weight: bold;
-            letter-spacing: 0.025rem;
+            border-radius: 45px;
         }
 
-        @media ( max-width: 767px ) {
-            .logo {
-                font-size: 1rem;
-            }
-        }
 
         /* 탑바 */
         .top-bar {
@@ -95,76 +89,123 @@
         .menu-1 > li:hover #message-icon {
             text-decoration: underline;
         }
+
+        .navbar {
+            --color: white;
+            --inverse-color: black;
+            height: var(--top-bar__height);
+            background-color: #171917;
+            color: var(--color);
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            /*width: 100%;*/
+            z-index: 1000;
+        }
+
+        header {
+            display: flex;
+        }
+
+        .navbar_child:nth-child(1) {
+            flex-grow: 18.75;
+        }
+        .navbar_child:nth-child(2) {
+            /*flex-grow: 62.5;*/
+            /*flex-basis: 1200px;*/
+            width: 1200px;
+            flex-shrink: 0;
+        }
+        @media  {
+            
+        }
+        .navbar_child:nth-child(3) {
+            flex-grow: 18.75;
+        }
     </style>
 </head>
 
 <body>
 <!-- 공통 상단 -->
-<header class="top-bar">
-    <div class="con mx-auto justify-between pr-3 h-full flex">
-        <div class="flex direction-column items-center">
-            <a href="/" class="logo flex items-center px-3">
-                TEAM
-                <br class="block md:hidden">
-                STEAM
-            </a>
-            <ul class="flex items-center menu-1">
-                <li>
-                    <a href="/match/list" class="h-full flex items-center px-2">
-                        <span>매칭</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/rank" class="h-full flex items-center px-2">
-                        <span>명예의 전당</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/minigame" class="h-full flex items-center px-2">
-                        <span>미니게임</span>
-                    </a>
-                </li>
-            </ul>
+<header>
+
+    <div class="navbar">
+        <div class="navbar_child"></div>
+        <div class="navbar_child">
+            <div class="navbar-start">
+                <a href="/main/home">
+                    <img class="logo" src="/resource/common/TSDog.png">
+                </a>
+            </div>
+
+            <!-- 카테고리 -->
+            <div class="navbar-center lg:flex">
+                <!--            <a href="/" class="logo flex items-center px-3">-->
+                <!--                TEAM-->
+                <!--                <br class="block md:hidden">-->
+                <!--                STEAM-->
+                <!--            </a>-->
+                <ul class="menu menu-horizontal px-1">
+                    <li>
+                        <a href="/match/list">
+                            <span>매칭</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/rank">
+                            <span>랭킹</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/minigame">
+                            <span>미니게임</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 개인 카테고리 -->
+            <div class="navbar-end flex justify-end">
+                <ul class="flex direction-column items-center">
+                    <li class="menu-1__li-icon">
+                        <a href="/notification/list" th:if="${@rq.isLogin()}" id="nav-noti"
+                           class="h-full flex items-center px-2 btn btn-ghost btn-circle">
+                            <div class="indicator">
+                                <span><i id="noti-icon" class="far fa-envelope"></i></span>
+                                <span data-test="hasUnreadNotifications" th:if="${@rq.hasUnreadNotifications}"
+                                      class="badge badge-xs badge-error indicator-item"></span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="menu-1__li-icon">
+                        <a id="nav-message" th:if="${@rq.isLogin()}" href="/dm/chatlist"
+                           class="h-full flex items-center px-2 btn btn-ghost btn-circle">
+                            <div class="indicator">
+                                <span><i id="message-icon" class="far fa-comments"></i></span>
+                            </div>
+                        </a>
+                    </li>
+                    <!--                <li>-->
+                    <!--                    <a th:if="${@rq.isLogin()}" class="h-full flex items-center px-2"-->
+                    <!--                       th:href="@{'/user/profile/' + ${@rq.getUser().getId()}}">-->
+                    <!--                        <img th:src="${@rq.getUser().getAvatar()}" class="w-8 h-8 rounded-full mr-2"/>-->
+                    <!--                    </a>-->
+                    <!--                </li>-->
+                    <li class="menu-1__li-join">
+                        <a href="/user/login" class="h-full flex items-center px-2" th:if="${@rq.logout}">
+                            <span>로그인</span>
+                        </a>
+                        <a href="/user/logout"
+                           class="h-full flex items-center px-2" th:if="${@rq.login}">
+                            <span>로그아웃</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="navbar_child"></div>
         </div>
 
-        <div class="flex direction-column items-center">
-            <ul class="flex direction-column items-center">
-                <li class="menu-1__li-icon">
-                    <a href="/notification/list" th:if="${@rq.isLogin()}" id="nav-noti"
-                       class="h-full flex items-center px-2 btn btn-ghost btn-circle">
-                        <div class="indicator">
-                            <span><i id="noti-icon" class="far fa-envelope"></i></span>
-                            <span data-test="hasUnreadNotifications" th:if="${@rq.hasUnreadNotifications}"
-                                  class="badge badge-xs badge-error indicator-item"></span>
-                        </div>
-                    </a>
-                </li>
-                <li class="menu-1__li-icon">
-                    <a id="nav-message" th:if="${@rq.isLogin()}" href="/dm/chatlist"
-                       class="h-full flex items-center px-2 btn btn-ghost btn-circle">
-                        <div class="indicator">
-                            <span><i id="message-icon" class="far fa-comments"></i></span>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a th:if="${@rq.isLogin()}" class="h-full flex items-center px-2"
-                       th:href="@{'/user/profile/' + ${@rq.getUser().getId()}}">
-                        <img th:src="${@rq.getUser().getAvatar()}" class="w-8 h-8 rounded-full mr-2"/>
-                    </a>
-                </li>
-                <li class="menu-1__li-join">
-                    <a href="/user/login" class="h-full flex items-center px-2" th:if="${@rq.logout}">
-                        <span>로그인</span>
-                    </a>
-                    <a href="/user/logout"
-                       class="h-full flex items-center px-2" th:if="${@rq.login}">
-                        <span>로그아웃</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
 </header>
 
 <main layout:fragment="main"></main>
