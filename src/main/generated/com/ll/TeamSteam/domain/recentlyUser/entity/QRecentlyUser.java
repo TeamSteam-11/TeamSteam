@@ -32,10 +32,10 @@ public class QRecentlyUser extends EntityPathBase<RecentlyUser> {
 
     public final com.ll.TeamSteam.domain.matchingPartner.entity.QMatchingPartner matchingPartner;
 
-    public final StringPath matchingPartnerName = createString("matchingPartnerName");
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifyDate = _super.modifyDate;
+
+    public final NumberPath<Long> partnerUserId = createNumber("partnerUserId", Long.class);
 
     public final com.ll.TeamSteam.domain.user.entity.QUser user;
 

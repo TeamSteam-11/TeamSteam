@@ -14,8 +14,7 @@ public interface RecentlyUserRepository extends JpaRepository<RecentlyUser, Long
 	Optional<RecentlyUser> findById(Long id);
 
 	List<RecentlyUser> findAllByUserId(Long userId);
-
-	boolean existsByUserAndMatchingPartner(User user, MatchingPartner matchingPartner);
+	boolean existsByUserAndPartnerUserId(User user, Long partnerUserId);
 
 	List<RecentlyUser> findByUserId(Long userId);
 }

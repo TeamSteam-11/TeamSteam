@@ -30,16 +30,17 @@ public class RecentlyUserService {
 		return matchingPartnerList.stream()
 			.map(m -> m.getMatching().getId())
 			.collect(Collectors.toList());
-
 	}
+
 	@Transactional
 	public void updateRecentlyUser(Long userId) {
 
 		User user = userService.findByIdElseThrow(userId);
-		List<Long> matchingIdList = getMatchingIdList(userId);
+		List<Long> matchingIdList = getMatchingIdList(user.getId());
 		List<RecentlyUser> recentlyUserList = getRecentlyUsersToUpdate(user, matchingIdList);
 		saveRecentlyUsers(recentlyUserList);
 	}
+
 	@Transactional
 	public void saveRecentlyUsers(List<RecentlyUser> recentlyUserList) {
 
@@ -51,11 +52,9 @@ public class RecentlyUserService {
 		Long userId = user.getId();
 
 		List<MatchingPartner> matchingPartnerList = matchingPartners.stream()
-			.filter(u -> u.isInChatRoomTrueFalse() == true)
-			.filter(t -> t.getUser().getId() != userId)
+			.filter(MatchingPartner::isInChatRoomTrueFalse)
+			.filter(t -> !t.getUser().getId().equals(userId))
 			.collect(Collectors.toList());
-
-		log.info("matchingPartnerList = {}", matchingPartnerList);
 
 		return matchingPartnerList;
 	}
@@ -72,14 +71,12 @@ public class RecentlyUserService {
 			.map(matchingPartner -> createRecentlyUser(user, matchingPartner))
 			.collect(Collectors.toList());
 
-		log.info("recentlyUserList = {}", recentlyUserList);
-
 		return recentlyUserList;
 	}
 
 	public boolean canAddRecentlyUser(User user, MatchingPartner matchingPartner) {
 
-		return !existsByUserAndMatchingPartner(user, matchingPartner) && !anotherMatchingExists(user, matchingPartner);
+		return !existsByUserAndMatchingPartner(user, matchingPartner);
 	}
 
 	public RecentlyUser createRecentlyUser(User user, MatchingPartner matchingPartner) {
@@ -87,21 +84,13 @@ public class RecentlyUserService {
 		return RecentlyUser.builder()
 			.user(user)
 			.matchingPartner(matchingPartner)
-			.matchingPartnerName(matchingPartner.getUser().getUsername())
+			.partnerUserId(matchingPartner.getUser().getId())
 			.build();
-	}
-
-	private boolean anotherMatchingExists(User user, MatchingPartner matchingPartner) {
-
-		return recentlyUserRepository.findByUserId(user.getId()).stream()
-			.map(m->m.getMatchingPartnerName().equals(matchingPartner.getUser().getUsername()))
-			.findFirst()
-			.isPresent();
 	}
 
 	public boolean existsByUserAndMatchingPartner(User user, MatchingPartner matchingPartner) {
 
-		return recentlyUserRepository.existsByUserAndMatchingPartner(user, matchingPartner);
+		return recentlyUserRepository.existsByUserAndPartnerUserId(user, matchingPartner.getUser().getId());
 	}
 
 	@Transactional(readOnly = true)
