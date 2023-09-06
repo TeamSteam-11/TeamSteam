@@ -11,7 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,14 +39,28 @@ public class RecentlyUserService {
 	public void updateRecentlyUser(Long userId) {
 
 		User user = userService.findByIdElseThrow(userId);
-		List<Long> matchingIdList = getMatchingIdList(user.getId());
+		List<Long> matchingIdList = getMatchingIdList(userId);
 		List<RecentlyUser> recentlyUserList = getRecentlyUsersToUpdate(user, matchingIdList);
-		saveRecentlyUsers(recentlyUserList);
+
+		Set<Long> uniquePartnerUserIds = new HashSet<>();
+
+		List<RecentlyUser> nonDuplicateRecentlyUsers = new ArrayList<>();
+
+		for (RecentlyUser recentlyUser : recentlyUserList) {
+			Long partnerUserId = recentlyUser.getPartnerUserId();
+			if (!uniquePartnerUserIds.contains(partnerUserId)) {
+				nonDuplicateRecentlyUsers.add(recentlyUser);
+				uniquePartnerUserIds.add(partnerUserId);
+			}
+		}
+
+		saveRecentlyUsers(nonDuplicateRecentlyUsers);
 	}
 
 	@Transactional
 	public void saveRecentlyUsers(List<RecentlyUser> recentlyUserList) {
 
+		log.info("recentlyUserList = {} ", recentlyUserList);
 		recentlyUserRepository.saveAll(recentlyUserList);
 	}
 
@@ -76,7 +93,7 @@ public class RecentlyUserService {
 
 	public boolean canAddRecentlyUser(User user, MatchingPartner matchingPartner) {
 
-		return !existsByUserAndMatchingPartner(user, matchingPartner);
+		return !existsByUserAndPartnerUserId(user, matchingPartner);
 	}
 
 	public RecentlyUser createRecentlyUser(User user, MatchingPartner matchingPartner) {
@@ -88,9 +105,9 @@ public class RecentlyUserService {
 			.build();
 	}
 
-	public boolean existsByUserAndMatchingPartner(User user, MatchingPartner matchingPartner) {
+	public boolean existsByUserAndPartnerUserId(User user, MatchingPartner matchingPartner) {
 
-		return recentlyUserRepository.existsByUserAndPartnerUserId(user, matchingPartner.getUser().getId());
+		return recentlyUserRepository.existsByUserIdAndPartnerUserId(user.getId(), matchingPartner.getUser().getId());
 	}
 
 	@Transactional(readOnly = true)
