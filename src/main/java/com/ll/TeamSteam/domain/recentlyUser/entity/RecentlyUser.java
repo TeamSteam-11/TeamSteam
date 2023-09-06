@@ -19,7 +19,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @SuperBuilder
 public class RecentlyUser extends BaseEntity {
 
-    String matchingPartnerName;
+    Long partnerUserId;
 
     @ManyToOne(fetch = LAZY)
     private User user;

@@ -45,7 +45,6 @@ public class MatchingController {
     private final UserRepository userRepository;
     private final ChatRoomService chatRoomService;
     private final MatchingPartnerService matchingPartnerService;
-    private final RecentlyUserService recentlyUserService;
 
     @GetMapping("/list")
     public String matchingList(@RequestParam(defaultValue = "0") int page,
@@ -270,8 +269,6 @@ public class MatchingController {
         }
 
         matchingPartnerService.updateTrue(matching.getId(), user.getId());
-
-        recentlyUserService.updateRecentlyUser(user.getId());
 
         return String.format("redirect:/chat/rooms/%d", matchingId);
     }

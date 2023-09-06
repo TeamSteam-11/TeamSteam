@@ -8,6 +8,7 @@ import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
 import com.ll.TeamSteam.domain.friend.entity.Friend;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
+import com.ll.TeamSteam.domain.recentlyUser.service.RecentlyUserService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.security.SecurityUser;
@@ -34,6 +35,7 @@ public class ChatRoomController {
     private final ChatMessageService chatMessageService;
     private final ChatUserService chatUserService;
     private final UserService userService;
+    private final RecentlyUserService recentlyUserService;
 
     /**
      * 방 입장
@@ -52,6 +54,8 @@ public class ChatRoomController {
 
         chatRoomService.updateChatUserType(roomId, user.getId());
         chatRoomService.changeParticipantsCount(chatRoom);
+
+        recentlyUserService.updateRecentlyUser(user.getId());
 
         model.addAttribute("chatRoom", chatRoomDto);
         model.addAttribute("user", user);
