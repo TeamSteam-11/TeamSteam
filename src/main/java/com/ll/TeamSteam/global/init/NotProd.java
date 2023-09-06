@@ -205,8 +205,9 @@ public class NotProd {
                     long capacity = 2L;
                     Integer startTime = 20;
                     Integer endTime = 22;
+                    boolean mic = false;
 
-                    Matching matching = matchingService.create(user1, title, content, genre, gameTagId, gender, capacity, startTime, endTime, LocalDateTime.now().plusHours(3));
+                    Matching matching = matchingService.create(user1, title, content, genre, gameTagId, gender, capacity, startTime, endTime, LocalDateTime.now().plusHours(3), mic);
                     chatRoomService.createChatRoomAndConnectMatching(matching.getTitle(), matching, user1.getId());
 
                 }

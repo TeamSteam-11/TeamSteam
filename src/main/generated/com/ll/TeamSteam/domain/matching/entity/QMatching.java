@@ -48,6 +48,8 @@ public class QMatching extends EntityPathBase<Matching> {
     //inherited
     public final NumberPath<Long> id = _super.id;
 
+    public final BooleanPath isMic = createBoolean("isMic");
+
     public final ListPath<com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner, com.ll.TeamSteam.domain.matchingPartner.entity.QMatchingPartner> matchingPartners = this.<com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner, com.ll.TeamSteam.domain.matchingPartner.entity.QMatchingPartner>createList("matchingPartners", com.ll.TeamSteam.domain.matchingPartner.entity.MatchingPartner.class, com.ll.TeamSteam.domain.matchingPartner.entity.QMatchingPartner.class, PathInits.DIRECT2);
 
     //inherited

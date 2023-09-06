@@ -35,6 +35,8 @@ public class CreateForm {
     private Integer endTime;
     private int selectedHours;
 
+    private boolean mic;
+
     public CreateForm() {
         this.genre = GenreTagType.valueOf("삼인칭슈팅");
         this.gameTagId = 1;
@@ -43,5 +45,6 @@ public class CreateForm {
         this.startTime = 0;
         this.endTime = 0;
         this.selectedHours = 0;
+//        this.mic = false;
     }
 }

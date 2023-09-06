@@ -30,7 +30,7 @@ public class MatchingService {
     public final GameTagRepository gameTagRepository;
 
     // 매칭 등록 기능
-    public Matching create(User user, String title, String content, GenreTagType genreTag, Integer gameTagId, String gender, Long capacity, Integer startTime, Integer endTime, LocalDateTime deadlineDate) {
+    public Matching create(User user, String title, String content, GenreTagType genreTag, Integer gameTagId, String gender, Long capacity, Integer startTime, Integer endTime, LocalDateTime deadlineDate, boolean isMic) {
 
         Optional<GameTag> gameTag = gameTagRepository.findByAppidAndUserTagId(gameTagId, user.getUserTag().getId());
         String gameTagName = "게임이름을 불러올 수 없습니다";
@@ -53,6 +53,7 @@ public class MatchingService {
                 .startTime(startTime)
                 .endTime(endTime)
                 .deadlineDate(deadlineDate)
+                .isMic(isMic)
                 .build();
 
         matchingRepository.save(matching);
@@ -92,9 +93,9 @@ public class MatchingService {
     }
 
     @Transactional
-    public RsData<Matching> modify(Matching matching, String title, String content, GenreTagType genreTag, String gender, Long capacity, Integer startTime, Integer endTime, int selectedHours) {
+    public RsData<Matching> modify(Matching matching, String title, String content, GenreTagType genreTag, String gender, Long capacity, Integer startTime, Integer endTime, int selectedHours, boolean mic) {
         try {
-            matching.update(title, content, genreTag, gender, capacity, startTime, endTime);
+            matching.update(title, content, genreTag, gender, capacity, startTime, endTime, mic);
 
             // 수정된 selectedHours를 기반으로 deadlineDate 계산
             LocalDateTime modifyDate = LocalDateTime.now();
@@ -206,6 +207,7 @@ public class MatchingService {
         createForm.setStartTime(matching.getStartTime());
         createForm.setEndTime(matching.getEndTime());
         createForm.setSelectedHours(calculateSelectedHours(matching.getId(), matching.getDeadlineDate()));
+        createForm.setMic(matching.isMic());
 
         return createForm;
     }

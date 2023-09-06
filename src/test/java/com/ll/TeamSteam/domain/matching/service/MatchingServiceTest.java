@@ -48,7 +48,7 @@ public class MatchingServiceTest {
     void t001() {
         User user1 = userService.findById(1L).get();
 
-        Matching matching1 = matchingService.create(user1, "matchingTest1", "content1", GenreTagType.격투, 41000, "남성", 3L, 5, 8, LocalDateTime.now());
+        Matching matching1 = matchingService.create(user1, "matchingTest1", "content1", GenreTagType.격투, 41000, "남성", 3L, 5, 8, LocalDateTime.now(), true);
 
         assertThat(matching1.getTitle()).isEqualTo("matchingTest1");
         assertThat(matching1.getGameTagId()).isEqualTo(41000);
@@ -94,7 +94,7 @@ public class MatchingServiceTest {
         User user1 = userService.findById(1L).get();
         LocalDateTime testTime = LocalDateTime.now();
 
-        Matching matching1 = matchingService.create(user1, "matchingTest1", "content1", GenreTagType.격투, 41000, "남성", 3L, 5, 8, testTime);
+        Matching matching1 = matchingService.create(user1, "matchingTest1", "content1", GenreTagType.격투, 41000, "남성", 3L, 5, 8, testTime, true);
 
         int selectedHours = 5;
 
@@ -110,7 +110,8 @@ public class MatchingServiceTest {
                 4L,
                 10,
                 15,
-                selectedHours
+                selectedHours,
+                true
         );
 
         // THEN
@@ -134,7 +135,7 @@ public class MatchingServiceTest {
         User user1 = userService.findById(1L).get();
         LocalDateTime testTime = LocalDateTime.now();
 
-        Matching matching1 = matchingService.create(user1, "matchingTest1", "content1", GenreTagType.격투, 41000, "남성", 3L, 5, 8, testTime);
+        Matching matching1 = matchingService.create(user1, "matchingTest1", "content1", GenreTagType.격투, 41000, "남성", 3L, 5, 8, testTime, true);
 
         int selectedHours = 0;
 
@@ -150,7 +151,8 @@ public class MatchingServiceTest {
                 4L,
                 10,
                 15,
-                selectedHours
+                selectedHours,
+                true
         );
 
         // THEN
@@ -174,7 +176,7 @@ public class MatchingServiceTest {
         User user1 = userService.findById(1L).get();
         LocalDateTime testTime = LocalDateTime.now();
 
-        Matching matching1 = matchingService.create(user1, "matchingTest1", "content1", GenreTagType.격투, 41000, "남성", 3L, 5, 8, testTime);
+        Matching matching1 = matchingService.create(user1, "matchingTest1", "content1", GenreTagType.격투, 41000, "남성", 3L, 5, 8, testTime, true);
 
         int selectedHours = 2;
 
@@ -190,7 +192,8 @@ public class MatchingServiceTest {
                 4L,
                 10,
                 15,
-                selectedHours
+                selectedHours,
+                true
         );
 
         // THEN

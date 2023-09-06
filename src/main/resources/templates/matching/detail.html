@@ -90,6 +90,12 @@
                               </span>
                             </div>
 
+                            <div class="bg-black bg-opacity-20 h-7 ml-2 p-2 text-xs flex items-center justify-center rounded-xl" style="min-width: 64px">
+                                마이크 :
+                                <span th:if="${matching.isMic()}" class="ml-1">ON</span>
+                                <span th:if="${!matching.isMic()}" class="ml-1">OFF</span>
+                            </div>
+
                             <!--활동 시간-->
                             <div class="bg-black bg-opacity-20 h-7 ml-2 p-2 text-xs flex items-center justify-center rounded-xl"
                                  style="min-width: 64px"> 활동 시간 :

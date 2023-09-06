@@ -52,7 +52,7 @@ class ChatRoomServiceTest {
     void testCreateChatRoomWithAuthorization() throws Exception  {
         User currentUser = userService.findByIdElseThrow(1L);
 
-        Matching matching = matchingService.create(currentUser, "제목", "내용", GenreTagType.valueOf("삼인칭슈팅"), 41000, "성별무관", 4L, 20, 21, LocalDateTime.now().plusHours(3));
+        Matching matching = matchingService.create(currentUser, "제목", "내용", GenreTagType.valueOf("삼인칭슈팅"), 41000, "성별무관", 4L, 20, 21, LocalDateTime.now().plusHours(3), true);
 
         ChatRoom chatRoom = chatRoomService.createChatRoomAndConnectMatching("제목", matching, currentUser.getId());
 
