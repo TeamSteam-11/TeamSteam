@@ -20,126 +20,12 @@
     <script src="/resource/common/common.js"></script>
     <!-- 공통 CSS 불러오기 -->
     <link rel="stylesheet" href="/resource/common/common.css">
+
     <!-- 테일윈드 불러오기 -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <style>
-        .con {
-            /*max-width: var(--site-width);*/
-            width: 1200px;
-        }
-
-        /* 로고 */
-        .logo {
-            border-radius: 45px;
-        }
-
-
-        /* 탑바 */
-        .top-bar {
-            --color: white;
-            --inverse-color: black;
-            height: var(--top-bar__height);
-            background-color: #171917;
-            color: var(--color);
-            position: fixed;
-            top: 0px;
-            left: 0px;
-            width: 100%;
-            z-index: 1000;
-        }
-
-        /* 메뉴 1 */
-        .menu-1__li-icon > a > span {
-            font-size: 20px;
-        }
-
-        .menu-1 > li:not(.menu-1__li-icon) > a > span {
-            font-size: 14px;
-        }
-
-        .menu-1__li-join > a > span {
-            background-color: var(--color, white);
-            color: var(--inverse-color, black);
-            padding: 12px 12px 7px 12px;
-            margin-bottom: 5px;
-            border-radius: 20px;
-        }
-
-        .menu-1 > li:hover > a > span {
-            text-decoration: underline;
-        }
-
-        footer {
-            margin-top: 150px; /* 원하는 간격 크기로 조정 */
-        }
-
-        #nav-noti:hover {
-            background-color: transparent !important;
-        }
-
-        .menu-1 > li:hover #noti-icon {
-            text-decoration: underline;
-        }
-
-        #nav-message:hover {
-            background-color: transparent !important;
-        }
-
-        .menu-1 > li:hover #message-icon {
-            text-decoration: underline;
-        }
-
-        .navbar {
-            --color: white;
-            --inverse-color: black;
-            height: var(--top-bar__height);
-            background-color: #171917;
-            color: var(--color);
-            position: fixed;
-            top: 0px;
-            left: 0px;
-            /*width: 100%;*/
-            z-index: 1000;
-        }
-
-        header {
-            display: flex;
-        }
-
-        .navbar_child:nth-child(1) {
-            flex-grow: 18.75;
-        }
-
-        .navbar_child:nth-child(2) {
-            /*flex-grow: 62.5;*/
-            /*flex-basis: 1200px;*/
-            width: 1200px;
-            flex-shrink: 0;
-        }
-
-        .navbar_child:nth-child(3) {
-            flex-grow: 18.75;
-        }
-
-        @media (max-width: 1200px) {
-            .navbar_child:nth-child(1) {
-                flex-grow: 5;
-            }
-
-            .navbar_child:nth-child(2) {
-                width: auto; /* 중앙 요소의 너비를 100%로 설정 */
-                flex-grow: 90;
-                flex-shrink: 0;
-            }
-
-            .navbar_child:nth-child(3) {
-                flex-grow: 5;
-            }
-        }
-
-
-    </style>
+    <!-- layout css 적용 -->
+    <link rel="stylesheet" href="/layout.css">
 </head>
 
 <body>
@@ -157,11 +43,6 @@
 
             <!-- 카테고리 -->
             <div class="navbar-center lg:flex">
-                <!--            <a href="/" class="logo flex items-center px-3">-->
-                <!--                TEAM-->
-                <!--                <br class="block md:hidden">-->
-                <!--                STEAM-->
-                <!--            </a>-->
                 <ul class="menu menu-horizontal px-1">
                     <li>
                         <a href="/match/list">
@@ -202,12 +83,6 @@
                             </div>
                         </a>
                     </li>
-                    <!--                <li>-->
-                    <!--                    <a th:if="${@rq.isLogin()}" class="h-full flex items-center px-2"-->
-                    <!--                       th:href="@{'/user/profile/' + ${@rq.getUser().getId()}}">-->
-                    <!--                        <img th:src="${@rq.getUser().getAvatar()}" class="w-8 h-8 rounded-full mr-2"/>-->
-                    <!--                    </a>-->
-                    <!--                </li>-->
                     <li class="menu-1__li-join">
                         <a href="/user/login" class="h-full flex items-center px-2" th:if="${@rq.logout}">
                             <span>로그인</span>
