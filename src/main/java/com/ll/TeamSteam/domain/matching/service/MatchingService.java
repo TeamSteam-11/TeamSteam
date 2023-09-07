@@ -137,6 +137,7 @@ public class MatchingService {
         Map<String, Function<String, Page<Matching>>> methodMap = new HashMap<>();
         methodMap.put("title", value -> matchingRepository.findByTitleContainingIgnoreCase(value, pageable));
         methodMap.put("content", value -> matchingRepository.findByContentContainingIgnoreCase(value, pageable));
+        methodMap.put("writer", value -> matchingRepository.findByUserUsernameContainingIgnoreCase(value, pageable));
 
         Function<String, Page<Matching>> method = methodMap.get(name);
         if (method != null) {

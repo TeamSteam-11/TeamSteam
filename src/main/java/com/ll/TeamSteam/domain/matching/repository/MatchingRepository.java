@@ -20,4 +20,5 @@ public interface MatchingRepository extends JpaRepository<Matching, Long>, Match
     Page<Matching> findByTitleContainingIgnoreCase(String keyword, Pageable pageable);
 
     Page<Matching> findByContentContainingIgnoreCase(String keyword, Pageable pageable);
+    Page<Matching> findByUserUsernameContainingIgnoreCase(String keyword, Pageable pageable);
 }
