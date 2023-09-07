@@ -47,6 +47,12 @@ public class MatchingController {
     private final MatchingPartnerService matchingPartnerService;
     private final RecentlyUserService recentlyUserService;
 
+    @GetMapping("")
+    public String showMatchingList() {
+
+        return "redirect:/match/list";
+    }
+
     @GetMapping("/list")
     public String matchingList(@RequestParam(defaultValue = "0") int page,
                                @RequestParam(defaultValue = "8") int size,

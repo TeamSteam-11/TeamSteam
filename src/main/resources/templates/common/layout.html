@@ -36,16 +36,20 @@
         <div class="navbar_child"></div>
         <div class="navbar_child">
             <div class="navbar-start">
-                <a href="/main/home">
-                    <img class="logo" src="/resource/common/TSDog.png">
-                </a>
+                <ul class="main-logo">
+                    <li>
+                        <a href="/main/home">
+                            <img class="logo" src="/resource/common/TSDog.png">
+                        </a>
+                    </li>
+                </ul>
             </div>
 
             <!-- 카테고리 -->
             <div class="navbar-center lg:flex">
                 <ul class="menu menu-horizontal px-1">
                     <li>
-                        <a href="/match/list">
+                        <a href="/match">
                             <span>매칭</span>
                         </a>
                     </li>
@@ -125,6 +129,17 @@
                 localStorage.removeItem(localStorageKeyAboutHistoryBackErrorMsg);
             }
         }
+    });
+
+    /* JavaScript */
+    $(document).ready(function() {
+        var url = window.location.pathname; // 현재 페이지의 경로 가져오기
+
+        $('.menu-horizontal li a').each(function() {
+            if (url.startsWith($(this).attr('href'))) { // 현재 페이지가 해당 링크로 시작하면
+                $(this).addClass('selected'); // 'selected' 클래스 추가
+            }
+        });
     });
 </script>
 </body>
