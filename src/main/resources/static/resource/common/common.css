@@ -1,22 +1,34 @@
 @font-face {
-    font-family: 'GmarketSansMedium';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-family: 'NanumSquareNeo-Variable';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/NanumSquareNeo-Variable.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
 }
 
 html > body {
-    font-family: "GmarketSansMedium";
+    font-family: "NanumSquareNeo-Variable";
     text-underline-position: under;
     word-break: keep-all;
-    background-color: #1D2939;
+    background-color: #2b2b2b;
     padding-top:var(--top-bar__height);
     min-height:100vh;
     max-width: 100vw;
     color: white;
 }
 
+html > body > main {
+    width: 1200px;
+    margin: auto;
+}
+
+@media (max-width: 1200px){
+    html > body > main {
+        width: auto;
+        margin: auto;
+    }
+}
+
 :root {
-    --site-width:1280px;
+    --site-width:1920px;
     --top-bar__height:64px;
 }

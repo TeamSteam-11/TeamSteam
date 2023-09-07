@@ -46,6 +46,12 @@ public class MatchingController {
     private final ChatRoomService chatRoomService;
     private final MatchingPartnerService matchingPartnerService;
 
+    @GetMapping("")
+    public String showMatchingList() {
+
+        return "redirect:/match/list";
+    }
+
     @GetMapping("/list")
     public String matchingList(@RequestParam(defaultValue = "0") int page,
                                @RequestParam(defaultValue = "8") int size,
