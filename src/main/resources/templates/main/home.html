@@ -68,6 +68,22 @@
             </table>
         </div>
 
+        <div class="search-box flex justify-center mt-20 mb-10">
+            <form th:action="@{/match/list/search}" method="GET" class="relative">
+                <div class="flex items-center rounded-xl" style="background-color: #525964;">
+                    <select name="name" class="h-14 p-4 rounded-xl" style="background-color: #525964; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                        <option value="title" th:selected="${searchOption == 'title'}">제목</option>
+                        <option value="content" th:selected="${searchOption == 'content'}">내용</option>
+                        <option value="writer" th:selected="${searchOption == 'writer'}">글쓴이</option>
+                    </select>
+                    <input type="text" name="keyword" placeholder="검색어 입력" th:value="${keyword}" class="h-12 p-4 pr-12 rounded-xl ml-4" style="background-color: #525964; width:500px;"/>
+                    <button type="submit" aria-label="Search" title="Search" class="absolute right-0 top-0 bottom-0 flex items-center justify-center text-black text-2xl pr-3">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
         <div class="matching-deadline">
             <h1 style="font-size: 25px; margin-bottom: 10px; border-bottom-color: white">마감 인원 임박 매칭</h1>
             <hr>

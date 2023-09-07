@@ -20,7 +20,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String showMain() {
-        if (rq.isLogout()) return "redirect:/main/home";
 
         return "redirect:/main/home";
     }
@@ -35,12 +34,4 @@ public class HomeController {
 
         return "main/home";
     }
-
-    @GetMapping("/main/error")
-    public String error(){
-        // 에러 처리 페이지
-
-        return "common/error";
-    }
-
 }
