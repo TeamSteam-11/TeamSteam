@@ -91,6 +91,16 @@
                     </select>
                 </div>
 
+                <!--마이크-->
+                <div>
+                    <label for="mic" class="block">마이크</label>
+                    <select id="mic" th:field="*{mic}" class="h-12 w-36 p-4 mr-6 rounded-lg"
+                            style="background-color: #30405F;">
+                        <option value="false">OFF</option>
+                        <option value="true">ON</option>
+                    </select>
+                </div>
+
                 <!--모집 마감 시간-->
                 <div>
                     <label for="deadline" class="block">모집 마감 시간</label>
