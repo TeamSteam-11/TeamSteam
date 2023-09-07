@@ -12,13 +12,13 @@
 
         /* 헤더 배경색 */
         .table thead th {
-            background-color: #17202c;
+            background-color: #171917;
             color: #fff;
         }
 
         /* 행 배경색 */
         .table tbody tr td {
-            background-color: #1b2634;
+            background-color: #404040;
             color: #fff;
             height: 5vh;
         }
@@ -39,8 +39,8 @@
 
         /* 배지 스타일 */
         .badge {
-            background-color: #ccc;
-            color: #333;
+            /*background-color: #ccc;*/
+            /*color: #333;*/
             padding: 2px 5px;
         }
 
@@ -68,18 +68,40 @@
         }
 
         .progress-custom {
-            background-image: linear-gradient(90deg, #1c92d2 0%,#f2fcfe 100%);
-            height: 20px;
+            background-color: #222222; /* 배경 색상 */
+            height : 20px;
+        }
+
+        .progress-custom::-webkit-progress-bar {
+            background-color: #222222; /* 배경 색상 (WebKit 브라우저용) */
+
+        }
+
+        .progress-custom::-webkit-progress-value {
+            background-color: #58C8C1; /* 진행 막대 색상 (WebKit 브라우저용) */
+        }
+
+        .progress-custom::-moz-progress-bar {
+            background-color: #58C8C1; /* 진행 막대 색상 (Firefox 브라우저용) */
+        }
+        .bg-878787 {
+            background-color: #878787;
+            border-color: #878787;
+        }
+        .bg-00A3FF{
+            background-color: #00A3FF;
+            border-color: #00A3FF;
         }
     </style>
 </head>
 <body>
 <main layout:fragment="main">
 
-    <!-- 메뉴 이미지 -->
+    <!--
+     메뉴 이미지
     <div class="top-image-bar w-full relative">
         <img src="https://cdn.jsdelivr.net/gh/LeeYulhee/projectlion_img/teamsteam/medalBanner.png" class="w-full">
-        <div class="absolute bottom-0" style="bottom: 35%; left:10%;">
+        <div class="absolute bottom-0" style="bottom: 30%; left:10%;">
             <div class="relative max-w-2xl w-full px-4 h-12">
                 <div class="text-2xl">매너 온도 명예의 전당</div>
                 <div class="text-sm mt-1">매너 온도가 높은 유저들을 확인해보세요</div>
@@ -87,7 +109,6 @@
         </div>
     </div>
 
-    <!--TOP3까지 직접 출력-->
     <container
             style="display: flex; flex-direction: row; height: 48vh; justify-content: space-evenly; margin-top: 25px;">
         <div class="card w-96 shadow-xl ml-20" style="height: 38vh; align-self: center; background-color: #17202c;">
@@ -199,10 +220,16 @@
             </div>
         </div>
     </container>
-    <!--TOP3까지 직접 출력 끝-->
-
-    <container style="margin-top:15px; display: flex; justify-content: center;">
-        <table class="table" style=" width: 76%;">
+    -->
+    <!--    flex-direction: row-->
+    <header class="ml-5 flex align-center">
+        <div class="mt-20 mb-10 h-12 flex justify-center flex-col align-center">
+            <div class="text-2xl">매너 온도 명예의 전당</div>
+            <div class="text-sm mt-1">매너 온도가 높은 유저들을 확인해보세요</div>
+        </div>
+    </header>
+    <container class="mt-5 flex justify-center">
+        <table class="table" style=" width: 100%;">
             <!-- head -->
             <thead>
             <tr style="background-color: #1D2939;">
@@ -210,7 +237,60 @@
                 <th>User</th>
                 <th>Tags</th>
                 <th>Temperature</th>
-                <th>Profile</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="h-50" th:each="topSevenUser, index : ${topSevenUserList}">
+                <td th:text="${index.index+1}" style="height: 50px"></td>
+                <td>
+                    <div class="flex items-center space-x-3">
+                        <div class="avatar">
+                            <div class="mask mask-squirrel w-12 h-12">
+                                <img th:src="${topSevenUser.getAvatar()}"/>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="font-bold" th:text="${topSevenUser.getUsername()}"></div>
+                            <div class="text-sm opacity-50">Steam</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div style="display: flex;">
+                        <div th:each="topSevenUserGameTag, indexTwo : ${topSevenUser.getUserTag().getGameTag()}"
+                             th:if="${indexTwo.size} != 0 and ${indexTwo.index} < 3" style="margin-left: 2px">
+                            <div class="badge bg-00A3FF badge-accent"
+                                 th:text="${topSevenUserGameTag.getName()}"></div>
+                        </div>
+                    </div>
+                    <div style="display: flex;">
+                        <div th:each="topSevenUserGenreTag, indexTwo : ${topSevenUser.getUserTag().getGenreTag()}"
+                             th:if="${indexTwo.size} != 0 and ${indexTwo.index} < 3" style="margin-left: 2px">
+                            <div class="badge bg-878787 badge-accent"
+                                 th:text="${topSevenUserGenreTag.getGenre()}"></div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <progress class="progress w-56 progress-custom"
+                              th:value="${topSevenUser.getTemperature()}" max="100">
+                    </progress>
+
+                    <!--                    <progress class="progress w-56 progress-custom bg-222222"-->
+<!--                              th:value="${topSevenUser.getTemperature()}" max="100"></progress>-->
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </container>
+    <!--<container style="margin-top:15px; display: flex; justify-content: center;">
+        <table class="table" style=" width: 100%;">
+            <thead>
+            <tr style="background-color: #1D2939;">
+                <th>Rank</th>
+                <th>User</th>
+                <th>Tags</th>
+                <th>Temperature</th>
             </tr>
             </thead>
             <tbody>
@@ -234,46 +314,51 @@
                     <div style="display: flex;">
                         <div th:each="fourToSevenUserGameTag, indexTwo : ${fourToSevenUser.getUserTag().getGameTag()}"
                              th:if="${indexTwo.size} != 0 and ${indexTwo.index} < 3" style="margin-left: 2px">
-                            <div class="badge bg-sky-400 badge-accent" th:text="${fourToSevenUserGameTag.getName()}"></div>
+                            <div class="badge bg-sky-400 badge-accent"
+                                 th:text="${fourToSevenUserGameTag.getName()}"></div>
                         </div>
                     </div>
                     <div style="display: flex;">
                         <div th:each="fourToSevenUserGenreTag, indexTwo : ${fourToSevenUser.getUserTag().getGenreTag()}"
                              th:if="${indexTwo.size} != 0 and ${indexTwo.index} < 3" style="margin-left: 2px">
-                            <div class="badge bg-green-500 badge-accent" th:text="${fourToSevenUserGenreTag.getGenre()}"></div>
+                            <div class="badge bg-green-500 badge-accent"
+                                 th:text="${fourToSevenUserGenreTag.getGenre()}"></div>
                         </div>
                     </div>
                 </td>
                 <td>
-                    <progress class="progress progress-accent w-56 progress-custom" th:value="${fourToSevenUser.getTemperature()}" max="100"></progress>
-                </td>
-                <td>
-                    <div th:if="${!@rq.isLogin()}" class="tooltip tooltip-error" data-tip="Login Plz!">
-                        <a href="/user/login">
-                            <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
-                        </a>
-                    </div>
-                    <div th:if="${@rq.isLogin()}">
-                        <a th:href="'/user/profile/'+${fourToSevenUser.getId()}">
-                            <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
-                        </a>
-                    </div>
+                    <progress class="progress progress-accent w-56 progress-custom"
+                              th:value="${fourToSevenUser.getTemperature()}" max="100"></progress>
                 </td>
             </tr>
             </tbody>
         </table>
-    </container>
+    </container>-->
 </main>
 <footer layout:fragment="footer" class="footer items-center p-4 text-neutral-content">
     <div class="items-center grid-flow-col">
-        <svg width="36" height="36" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" class="fill-current"><path d="M22.672 15.226l-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.15.325-2.148-.321-2.463-1.226l-.84-2.518-5.013 1.677.84 2.517c.391 1.203-.434 2.542-1.831 2.542-.88 0-1.601-.564-1.86-1.314l-.842-2.516-2.431.809c-1.135.328-2.145-.317-2.463-1.229-.329-1.018.211-2.127 1.231-2.456l2.432-.809-1.621-4.823-2.432.808c-1.355.384-2.558-.59-2.558-1.839 0-.817.509-1.582 1.327-1.846l2.433-.809-.842-2.515c-.33-1.02.211-2.129 1.232-2.458 1.02-.329 2.13.209 2.461 1.229l.842 2.515 5.011-1.677-.839-2.517c-.403-1.238.484-2.553 1.843-2.553.819 0 1.585.509 1.85 1.326l.841 2.517 2.431-.81c1.02-.33 2.131.211 2.461 1.229.332 1.018-.21 2.126-1.23 2.456l-2.433.809 1.622 4.823 2.433-.809c1.242-.401 2.557.484 2.557 1.838 0 .819-.51 1.583-1.328 1.847m-8.992-6.428l-5.01 1.675 1.619 4.828 5.011-1.674-1.62-4.829z"></path></svg>
+        <svg width="36" height="36" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd"
+             clip-rule="evenodd" class="fill-current">
+            <path d="M22.672 15.226l-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.15.325-2.148-.321-2.463-1.226l-.84-2.518-5.013 1.677.84 2.517c.391 1.203-.434 2.542-1.831 2.542-.88 0-1.601-.564-1.86-1.314l-.842-2.516-2.431.809c-1.135.328-2.145-.317-2.463-1.229-.329-1.018.211-2.127 1.231-2.456l2.432-.809-1.621-4.823-2.432.808c-1.355.384-2.558-.59-2.558-1.839 0-.817.509-1.582 1.327-1.846l2.433-.809-.842-2.515c-.33-1.02.211-2.129 1.232-2.458 1.02-.329 2.13.209 2.461 1.229l.842 2.515 5.011-1.677-.839-2.517c-.403-1.238.484-2.553 1.843-2.553.819 0 1.585.509 1.85 1.326l.841 2.517 2.431-.81c1.02-.33 2.131.211 2.461 1.229.332 1.018-.21 2.126-1.23 2.456l-2.433.809 1.622 4.823 2.433-.809c1.242-.401 2.557.484 2.557 1.838 0 .819-.51 1.583-1.328 1.847m-8.992-6.428l-5.01 1.675 1.619 4.828 5.011-1.674-1.62-4.829z"></path>
+        </svg>
         <p>Copyright © TEAMSTEAM</p>
     </div>
     <div class="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
-        <a><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path></svg>
+        <a>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current">
+                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
+            </svg>
         </a>
-        <a><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path></svg></a>
-        <a><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path></svg></a>
+        <a>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current">
+                <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
+            </svg>
+        </a>
+        <a>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current">
+                <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path>
+            </svg>
+        </a>
     </div>
 </footer>
 </body>

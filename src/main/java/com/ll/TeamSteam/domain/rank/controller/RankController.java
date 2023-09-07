@@ -24,11 +24,12 @@ public class RankController {
     @GetMapping("/rank")
     public String showRank(Model model){
         List<User> topSevenUserList = getTopSevenUsersWithHighTemperature();
-        List<User> oneToThreeUserList = new ArrayList<>(topSevenUserList.subList(0, 3));
-        List<User> fourToSevenUserList = new ArrayList<>(topSevenUserList.subList(3, topSevenUserList.size()));
+//        List<User> oneToThreeUserList = new ArrayList<>(topSevenUserList.subList(0, 3));
+//        List<User> fourToSevenUserList = new ArrayList<>(topSevenUserList.subList(3, topSevenUserList.size()));
 
-        model.addAttribute("fourToSevenUserList", fourToSevenUserList);
-        model.addAttribute("oneToThreeUserList", oneToThreeUserList);
+//        model.addAttribute("fourToSevenUserList", fourToSevenUserList);
+//        model.addAttribute("oneToThreeUserList", oneToThreeUserList);
+        model.addAttribute("topSevenUserList", topSevenUserList);
         return "rank/rank";
     }
 
