@@ -6,6 +6,8 @@ import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,13 +21,13 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
 
-    public List<Notification> findByInvitedUser(User user) {
-        return notificationRepository.findByInvitedUserOrderByIdDesc(user);
+    public Page<Notification> findByInvitedUser(User user, Pageable pageable) {
+        return notificationRepository.findByInvitedUserOrderByIdDesc(user, pageable);
     }
 
     @Transactional
-    public void markAsRead(User invitedUser) {
-        List<Notification> notifications = notificationRepository.findByInvitedUserOrderByIdDesc(invitedUser);
+    public void markAsRead(User invitedUser, Pageable pageable) {
+        Page<Notification> notifications = notificationRepository.findByInvitedUserOrderByIdDesc(invitedUser, pageable);
         notifications.stream()
                 .filter(notification -> !notification.isRead())
                 .forEach(Notification::markAsRead);
