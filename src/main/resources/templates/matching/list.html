@@ -36,25 +36,22 @@
 
 <main layout:fragment="main">
 
-    <!-- 메뉴 이미지 -->
-    <div class="top-image-bar w-full relative">
-        <img src="https://cdn.jsdelivr.net/gh/LeeYulhee/projectlion_img/teamsteam/testBanner2.png" class="w-full">
-        <div class="absolute bottom-0" style="bottom: 35%; left:10%;">
-            <div class="relative max-w-2xl w-full px-4 h-12">
-                <div class="text-2xl">매칭 조회</div>
-                <div class="text-sm mt-1">함께 게임할 동료를 찾아보세요</div>
-            </div>
+    <!-- 상단 소개글 -->
+    <header class="ml-5 flex align-center">
+        <div class="mt-20 mb-10 h-12 flex justify-center flex-col align-center">
+            <div class="text-2xl">매칭 조회</div>
+            <div class="text-sm mt-1">함께 게임할 동료를 찾아보세요</div>
         </div>
-    </div>
+    </header>
 
-    <div class="search-box flex justify-center mt-20 mb-10">
+    <div class="search-box flex justify-center mt-20 mb-10" style="height: 30px;">
         <form th:action="@{/match/list/search}" method="GET" class="relative">
-            <div class="flex items-center rounded-xl" style="background-color: #525964;">
-                <select name="name" class="h-14 p-4 rounded-xl" style="background-color: #525964; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+            <div class="flex items-center" style="background-color: #555555;">
+                <select name="name" class="h-12 p-4" style="background-color: #444444; border-top-right-radius: 0; border-bottom-right-radius: 0;">
                     <option value="title" th:selected="${searchOption == 'title'}">제목</option>
                     <option value="content" th:selected="${searchOption == 'content'}">내용</option>
                 </select>
-                <input type="text" name="keyword" placeholder="검색어 입력" th:value="${keyword}" class="h-12 p-4 pr-12 rounded-xl ml-4" style="background-color: #525964; width:500px;"/>
+                <input type="text" name="keyword" placeholder="검색어 입력" th:value="${keyword}" class="h-12 p-4 pr-12 ml-4" style="background-color: #555555; width:500px;"/>
                 <button type="submit" aria-label="Search" title="Search" class="absolute right-0 top-0 bottom-0 flex items-center justify-center text-black text-2xl pr-3">
                     <i class="fas fa-search"></i>
                 </button>
