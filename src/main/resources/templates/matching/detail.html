@@ -66,11 +66,16 @@
 
                 <!--작성자 왼쪽 부분-->
                 <div class="flex justify-start items-center">
-                    <img th:src="${matching.user.getAvatar()}"
-                         class="user-profile w-10 h-10 object-cover m-3 rounded-xl">
+                    <a th:href="@{'/user/profile/' + ${matching.user.id}}" class="hover:underline">
+                        <img th:src="${matching.user.getAvatar()}"
+                            class="user-profile w-10 h-10 object-cover m-3 rounded-xl">
+                    </a>
+
                     <div>
                         <div class="flex items-center mb-1">
-                            <div class="user-name" th:text="${matching.user.username}"></div>
+                            <a th:href="@{'/user/profile/' + ${matching.user.id}}" class="hover:underline">
+                                <div class="user-name" th:text="${matching.user.username}"></div>
+                            </a>
 
                             <!--장르 태그-->
                             <div class="bg-black bg-opacity-20 h-7 ml-2 p-2 text-xs flex items-center justify-center rounded-xl"
