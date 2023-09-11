@@ -48,6 +48,16 @@
         input[type="text"]::placeholder {
             color: #d1d1d1; /* 원하는 폰트 색상 (예: 빨간색) 설정 */
         }
+
+        .card {
+            background-color: #2d2d2d;
+            color: white;
+            margin: 10px;
+            width: 290px;
+            height: 280px;
+            border: 1px solid #67686c;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -185,24 +195,24 @@
         </div>
     </div>
 
-
+    <!-- 매칭글 -->
     <div style="display: flex; justify-content: center; flex-wrap: wrap; width: 100%">
-        <a th:each="matching : ${matchingList}" th:href="@{|/match/detail/${matching.id}|}"
-           class="card w-96 bg-base-100 shadow-xl"
-           style="background-color: #1F2227; color: white; box-shadow: 3px 3px 5px black; margin: 30px;">
-            <div class="card-body" style="margin: px">
-                <div class="flex justify-between">
+        <a class="card" th:each="matching : ${matchingList}" th:href="@{|/match/detail/${matching.id}|}">
+            <div class="card-body" style="padding: 10px;">
+                <div class="flex justify-between" style="margin-bottom: 10px">
                     <div class="flex justify-start items-center">
                         <img th:src="${matching.user.getAvatar()}"
-                             class="user-profile w-10 h-10 object-cover m-3 rounded-xl">
+                             class="user-profile w-10 h-10 object-cover m-3"
+                             style="width: 40px; height: 40px; border-radius: 5px;">
                         <div style="display: flex; flex-direction: column">
                             <div>
                                 <div class="flex items-center mb-1">
-                                    <span th:text="${matching.getUser().username}"></span>
+                                    <span class="card-title" style="font-size: 17px"
+                                          th:text="${#strings.length(matching.title) > 15 ? #strings.substring(matching.title, 0, 15) + '...' : matching.title}"></span>
                                 </div>
 
                                 <div class="flex">
-                                    <div class="text-xs mr-2"
+                                    <div class="text-xs mr-2" style="color: #aaaaaa; font-size: 13px"
                                          th:text="${#temporals.format(matching.getModifyDate(), 'yyyy/MM/dd hh:mm')}"></div>
                                 </div>
                             </div>
@@ -210,38 +220,56 @@
                     </div>
                 </div>
 
-                <span class="card-title mb-1 ml-3"
-                      th:text="${#strings.length(matching.title) > 15 ? #strings.substring(matching.title, 0, 15) + '...' : matching.title}"></span>
-                <span class="badge badge-outline" th:text="|${matching.participant} / ${matching.capacity}|"></span>
-                <div style="background-color: #87F86A; color: #1F2227; height: 25px; border-radius: 20px;
-                 display: flex; justify-content: center; align-items: center; font-size: 15px">
-                    <span th:text="${matching.genre}"></span>
-                </div>
-                <br>
-                <div style="background-color: #59C3F0; color: #1F2227; height: 50px; border-radius: 10px; padding: 10px;
+                <!--                <span class="card-title mb-1 ml-3"-->
+                <!--                      th:text="${#strings.length(matching.title) > 15 ? #strings.substring(matching.title, 0, 15) + '...' : matching.title}"></span>-->
+
+                <!-- 게임 태그 -->
+                <div style="background-color: #404040; color: white; height: 50px; border-radius: 5px; padding: 10px;
                  display: flex; justify-content: flex-start; align-items: center">
                     <td>
-                        <img style="width: 40px; height: 40px; border-radius: 5px; margin-right: 20px"
+                        <img style="width: 40px; height: 40px; margin-right: 20px"
                              th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${matching.getGameTagId()} + '/header.jpg'}"
                              alt="게임 이미지" width="200" height="auto"/>
                     </td>
                     <span style="display: flex; justify-content: center" th:text="${matching.gameTagName}">게임 이름</span>
+                </div>
 
+                <!-- 참여인원 및 마감시간 -->
+                <div style="font-size: 15px; margin-top: 10px;">
+                    <div class="flex items-center" style="margin-bottom: 7px">
+                        <span style="color: #aaaaaa; margin-right: 30px; margin-left: 10px;">참여 인원</span>
+                        <span th:text="|${matching.participant}  /  ${matching.capacity}|"></span>
+                    </div>
+
+                    <div class="flex items-center">
+                        <span style="color: #aaaaaa; margin-right: 30px; margin-left: 10px">마감 시간</span>
+                        <span th:text="${matching.getDeadlineDuration() != null ? matching.getDeadlineDuration() : '마감완료'}"></span>
+                    </div>
                 </div>
-                <br>
-                <div>
-                    <div class="badge badge-secondary">시간</div>
-                    <span th:if="${matching.startTime} != 0" th:text="${matching.startTime} + ' : 00'"></span>
-                    <span th:if="${matching.startTime} == 0" text="시간무관">시간무관 </span>
-                    <span th:if="${matching.endTime} != 0" th:text="' ~ ' + ${matching.endTime} + ' : 00'"></span>
-                </div>
-                <div>
-                    <div class="badge badge-secondary">성별</div>
-                    <span th:switch="${matching.gender}">
-                  <span th:case="'F'">여성</span>
-                  <span th:case="'M'">남성</span>
-                  <span th:case="'DC'">성별무관</span>
-                </span>
+
+
+                <!-- 장르, 시간, 성별 -->
+                <div class="flex justify-center items-center" style="margin-top: 15px">
+                    <div style="background-color: #444444; width: auto; height: 25px; border-radius: 5px; padding:10px; margin: 0px 5px 0px 5px;
+                         display: flex; justify-content: center; align-items: center; font-size: 13px">
+                        <span th:text="${matching.genre}"></span>
+                    </div>
+
+                    <div style="background-color: #444444; width: auto; height: 25px; border-radius: 5px; padding:10px; margin: 0px 5px 0px 5px;
+                         display: flex; justify-content: center; align-items: center; font-size: 13px">
+                        <span th:if="${matching.startTime} != 0" th:text="${matching.startTime}"></span>
+                        <span th:if="${matching.startTime} == 0" text="시간무관">시간무관 </span>
+                        <span th:if="${matching.endTime} != 0" th:text="' - ' + ${matching.endTime}"></span>
+                    </div>
+
+                    <div style="background-color: #444444; width: auto; height: 25px; border-radius: 5px; padding:10px; margin: 0px 5px 0px 5px;
+                         display: flex; justify-content: center; align-items: center; font-size: 13px">
+                        <span th:switch="${matching.gender}">
+                          <span th:case="'F'">여성</span>
+                          <span th:case="'M'">남성</span>
+                          <span th:case="'DC'">성별X</span>
+                        </span>
+                    </div>
                 </div>
             </div>
         </a>
