@@ -37,7 +37,7 @@ public class NotificationController {
     @PreAuthorize("isAuthenticated()")
     public String showList(Model model, @AuthenticationPrincipal SecurityUser user,
                            @RequestParam(defaultValue = "0") int page,
-                           @RequestParam(defaultValue = "2") int size,
+                           @RequestParam(defaultValue = "10") int size,
                            @RequestParam(defaultValue = "createDate") String sortCode,
                            @RequestParam(defaultValue = "DESC") String direction) {
 
@@ -49,7 +49,9 @@ public class NotificationController {
         Page<Notification> notifications = notificationService.findByInvitedUser(currentUser, pageable);
 
         if(page != 0 && page > notifications.getTotalPages() - 1) {
-            return String.format("redirect:/notification/list?page=%d", notifications.getTotalPages() - 1);
+            page = notifications.getTotalPages() - 1;
+            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
+            notifications = notificationService.findByInvitedUser(currentUser, pageable);
         }
 
         notificationService.markAsRead(currentUser, pageable);
