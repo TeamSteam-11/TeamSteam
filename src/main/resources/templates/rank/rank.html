@@ -4,7 +4,7 @@
     <style>
         /* 테이블 테마 */
         .table {
-            background-color: #17202c;
+            background-color: #171917;
             color: #fff;
             border-radius: 30%;
             width: 100%;
@@ -20,7 +20,10 @@
         .table tbody tr td {
             background-color: #404040;
             color: #fff;
-            height: 5vh;
+        }
+
+        td {
+            height: 80px;
         }
 
         /* 버튼 스타일 */
@@ -69,7 +72,7 @@
 
         .progress-custom {
             background-color: #222222; /* 배경 색상 */
-            height : 20px;
+            height: 20px;
         }
 
         .progress-custom::-webkit-progress-bar {
@@ -84,11 +87,13 @@
         .progress-custom::-moz-progress-bar {
             background-color: #58C8C1; /* 진행 막대 색상 (Firefox 브라우저용) */
         }
+
         .bg-878787 {
             background-color: #878787;
             border-color: #878787;
         }
-        .bg-00A3FF{
+
+        .bg-00A3FF {
             background-color: #00A3FF;
             border-color: #00A3FF;
         }
@@ -222,28 +227,33 @@
     </container>
     -->
     <!--    flex-direction: row-->
-    <header class="ml-5 flex align-center">
+    <header class="ml-5 flex items-center">
         <div class="mt-20 mb-10 h-12 flex justify-center flex-col align-center">
             <div class="text-2xl">매너 온도 명예의 전당</div>
             <div class="text-sm mt-1">매너 온도가 높은 유저들을 확인해보세요</div>
         </div>
+        <a class="flex items-center" href="/user/dummyAdd">
+            <div>
+                <button class="bg-skyblue">유저데이터 추가</button>
+            </div>
+        </a>
     </header>
-    <container class="mt-5 flex justify-center">
-        <table class="table" style=" width: 100%;">
+    <container class="mt-5 flex justify-center items-center">
+        <table class="table flex items-center justify-center" style=" width: 100%;">
             <!-- head -->
             <thead>
-            <tr style="background-color: #1D2939;">
+            <tr style="background-color: #1D2939; ">
                 <th>Rank</th>
                 <th>User</th>
                 <th>Tags</th>
-                <th>Temperature</th>
+                <th class="flex align-center">Temperature</th>
             </tr>
             </thead>
             <tbody>
-            <tr class="h-50" th:each="topSevenUser, index : ${topSevenUserList}">
-                <td th:text="${index.index+1}" style="height: 50px"></td>
+            <tr th:each="topSevenUser, index : ${topSevenUserList}">
+                <td th:text="${index.index+1}" style="height: 80px"></td>
                 <td>
-                    <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-3 ">
                         <div class="avatar">
                             <div class="mask mask-squirrel w-12 h-12">
                                 <img th:src="${topSevenUser.getAvatar()}"/>
@@ -256,28 +266,31 @@
                     </div>
                 </td>
                 <td>
-                    <div style="display: flex;">
+                    <div class="flex">
                         <div th:each="topSevenUserGameTag, indexTwo : ${topSevenUser.getUserTag().getGameTag()}"
                              th:if="${indexTwo.size} != 0 and ${indexTwo.index} < 3" style="margin-left: 2px">
                             <div class="badge bg-00A3FF badge-accent"
-                                 th:text="${topSevenUserGameTag.getName()}"></div>
+                                 th:text="${topSevenUserGameTag.getName()}"
+                                 style="color: #FFFFFF; font-size: 12px"></div>
                         </div>
                     </div>
-                    <div style="display: flex;">
+                    <div class="flex">
                         <div th:each="topSevenUserGenreTag, indexTwo : ${topSevenUser.getUserTag().getGenreTag()}"
                              th:if="${indexTwo.size} != 0 and ${indexTwo.index} < 3" style="margin-left: 2px">
                             <div class="badge bg-878787 badge-accent"
-                                 th:text="${topSevenUserGenreTag.getGenre()}"></div>
+                                 th:text="${topSevenUserGenreTag.getGenre()}"
+                                 style="color: #FFFFFF; font-size: 12px"></div>
                         </div>
                     </div>
                 </td>
                 <td>
-                    <progress class="progress w-56 progress-custom"
-                              th:value="${topSevenUser.getTemperature()}" max="100">
-                    </progress>
-
-                    <!--                    <progress class="progress w-56 progress-custom bg-222222"-->
-<!--                              th:value="${topSevenUser.getTemperature()}" max="100"></progress>-->
+                    <div class="flex items-center">
+                        <progress class="progress w-56 progress-custom"
+                                  th:value="${topSevenUser.getTemperature()}" max="100">
+                        </progress>
+                        <inline th:text="'&nbsp;&nbsp;' + ${topSevenUser.getTemperature()} + ' &#8451;'"
+                                style="height:20px; font-size: 13px; text-align: center"></inline>
+                    </div>
                 </td>
             </tr>
             </tbody>
