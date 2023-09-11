@@ -51,9 +51,15 @@
       <tbody>
       <tr th:each="chatUser, loop : ${chatUserList}" th:if="${chatUser.type == COMMON}">
         <td class="flex justify-center">
-          <img th:src="${chatUser.getUser().getAvatar()}" alt="${user.username}'s avatar" class="rounded-lg w-10 h-10 m-auto"/>
+          <a th:href="@{'/user/profile/' + ${chatUser.getUser().getId()}}" class="hover:underline">
+            <img th:src="${chatUser.getUser().getAvatar()}" alt="${user.username}'s avatar" class="rounded-lg w-10 h-10 m-auto"/>
+          </a>
         </td>
-        <td th:text="${chatUser.getUser().getUsername()}"></td>
+        <td>
+          <a th:href="@{'/user/profile/' + ${chatUser.getUser().getId()}}" class="hover:underline">
+            <div th:text="${chatUser.getUser().getUsername()}"></div>
+          </a>
+        </td>
         <td th:text="${#temporals.format(chatUser.createDate, 'yyyy/MM/dd hh:mm')}"></td>
         <td>
           <span th:if="${chatUser.user.id == chatRoom.owner.id}">

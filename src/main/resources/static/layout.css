@@ -5,16 +5,17 @@
 
 .main-logo {
     width: 50px;
+    padding-left: 5px;
 }
 
 /* 메뉴 */
-.menu > li {
+.menu-navbar > li {
     color: #888888;
     position: relative;
     height: 64px;
 }
 
-.menu > li:hover::after {
+.menu-navbar > li:hover::after {
     content: '';
     position: absolute;
     left: 10%;
@@ -24,13 +25,13 @@
     background-color: white;
 }
 
-.menu > li:hover span {
+.menu-navbar > li:hover span {
     color: white;
     /*border-bottom: 2px solid white;*/
     /*text-decoration: underline;*/
 }
 
-.menu > li > a {
+.menu-navbar > li > a {
     background-color: transparent;
 }
 
@@ -40,12 +41,26 @@
 
 .selected {
     color: white;
-    content: '';
-    left: 10%;
-    bottom: 0;
-    width: 80%;:
-    height: 2px;
-    background-color: white;
+}
+
+.menu-dropdown {
+    background-color: #2d2d2d;
+    color: #888888;
+    border-radius: 5px;
+}
+
+.menu-dropdown > li {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    height: 50px;
+    width: 170px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-dropdown > li:hover {
+    color: white;
 }
 
 /* 메뉴 1 */
@@ -60,7 +75,7 @@
 .menu-1__li-join > a > span {
     background-color: var(--color, white);
     color: var(--inverse-color, #000000);
-    padding: 12px 12px 7px 12px;
+    padding: 12px 12px 12px 12px;
     margin-bottom: 5px;
     border-radius: 20px;
 }
