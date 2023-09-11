@@ -70,6 +70,16 @@
             <div class="navbar-end">
                 <div class="flex justify-end flex-1 px-2">
                     <div class="flex items-stretch">
+                        <div class="menu-1__li-icon">
+                            <a href="/notification/list" th:if="${@rq.isLogin()}" id="nav-noti"
+                               class="h-full flex items-center px-2 btn btn-ghost btn-circle">
+                                <div class="indicator">
+                                    <span><i class="fa-solid fa-bell fa-lg"></i></span>
+                                    <span data-test="hasUnreadNotifications" th:if="${@rq.hasUnreadNotifications}"
+                                          class="badge badge-xs badge-error indicator-item"></span>
+                                </div>
+                            </a>
+                        </div>
                         <div class="dropdown dropdown-hover dropdown-end">
                             <label tabindex="0" class="btn btn-ghost rounded-btn">
                                 <i class="fa-solid fa-user fa-lg"></i>
@@ -78,64 +88,13 @@
                                 class="menu-dropdown dropdown-content">
                                 <li th:if="${@rq.login}"><a
                                         th:href="@{'/user/profile/' + ${@rq.getUser().getId()}}">프로필</a></li>
-                                <li th:if="${@rq.login}">
-                                    <a href="/notification/list">알림
-                                        <!--                                        <div class="indicator">-->
-                                        <!--&lt;!&ndash;                                            <span><i id="noti-icon" class="far fa-envelope"></i></span>&ndash;&gt;-->
-                                        <!--&lt;!&ndash;                                            <span data-test="hasUnreadNotifications" th:if="${@rq.hasUnreadNotifications}"&ndash;&gt;-->
-                                        <!--&lt;!&ndash;                                                  class="badge badge-xs badge-error indicator-item"></span>&ndash;&gt;-->
-                                        <!--                                            <span>알림</span>-->
-                                        <!--                                        </div>-->
-                                    </a>
-                                </li>
-                                <li th:if="${@rq.login}"><a href="/dm/chatlist">DM</a></li>
+                                <li th:if="${@rq.login}"><a href="/dm/chatlist">채팅</a></li>
                                 <li th:if="${@rq.logout}"><a href="/user/login">로그인</a></li>
                                 <li th:if="${@rq.login}"><a href="/user/logout">로그아웃</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <!--                <div class="dropdown dropdown-end">-->
-                <!--                    <label tabindex="0" class="btn btn-ghost rounded-btn">Dropdown</label>-->
-                <!--                    <ul tabindex="0" class="flex direction-column items-center">-->
-                <!--                        <li class="menu-1__li-icon">-->
-                <!--                            <a href="/notification/list" th:if="${@rq.isLogin()}" id="nav-noti"-->
-                <!--                                               class="h-full flex items-center px-2 btn btn-ghost btn-circle">-->
-                <!--                                                <div class="indicator">-->
-                <!--                                                    <span><i id="noti-icon" class="far fa-envelope"></i></span>-->
-                <!--                                                    <span data-test="hasUnreadNotifications" th:if="${@rq.hasUnreadNotifications}"-->
-                <!--                                                          class="badge badge-xs badge-error indicator-item"></span>-->
-                <!--                                                </div>-->
-                <!--                            </a>-->
-                <!--                        </li>-->
-                <!--                        <li class="menu-1__li-icon">-->
-                <!--                            <a id="nav-message" th:if="${@rq.isLogin()}" href="/dm/chatlist"-->
-                <!--                               class="h-full flex items-center px-2 btn btn-ghost btn-circle">-->
-                <!--                                <div class="indicator">-->
-                <!--                                    <span><i id="message-icon" class="far fa-comments"></i></span>-->
-                <!--                                </div>-->
-                <!--                            </a>-->
-                <!--                        </li>-->
-                <!--                    <li>-->
-                <!--                        <a th:if="${@rq.isLogin()}" class="dropdown dropdown-end">-->
-                <!--                            <img th:src="${@rq.getUser().getAvatar()}" class="w-8 h-8 rounded-full mr-2"/>-->
-                <!--                            <label tabindex="0" class="btn btn-ghost rounded-btn">Dropdown</label>-->
-                <!--                            <ul tabindex="0" class="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box">-->
-                <!--                                <li><a>profile</a></li>-->
-                <!--                                <li><a>dm</a></li>-->
-                <!--                            </ul>-->
-                <!--                        </a>-->
-                <!--                    </li>-->
-                <!--                    <li class="menu-1__li-join">-->
-                <!--                        <a href="/user/login" class="h-full flex items-center px-2" th:if="${@rq.logout}">-->
-                <!--                            <span>로그인</span>-->
-                <!--                        </a>-->
-                <!--                        <a href="/user/logout"-->
-                <!--                           class="h-full flex items-center px-2" th:if="${@rq.login}">-->
-                <!--                            <span>로그아웃</span>-->
-                <!--                        </a>-->
-                <!--                    </li>-->
-                <!--                </ul>-->
             </div>
         </div>
 
