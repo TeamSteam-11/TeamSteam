@@ -12,7 +12,7 @@
             padding: 5px 10px;
             white-space: nowrap;
             color: white;
-            border-radius: 10px;
+            border-radius: 5px;
             text-decoration: none;
         }
 
@@ -20,6 +20,8 @@
             float: right;
             margin-top: 30px;
             margin-right: 80px;
+            padding: 10px 50px 10px 50px;
+            background-color: #ff6b00;
         }
 
         .pagination a {
@@ -183,7 +185,6 @@
         </div>
     </div>
 
-    <a href="/match/create" class="btn btn-custom">매칭 등록</a><br><br>
 
     <div style="display: flex; justify-content: center; flex-wrap: wrap; width: 100%">
         <a th:each="matching : ${matchingList}" th:href="@{|/match/detail/${matching.id}|}"
@@ -245,6 +246,9 @@
             </div>
         </a>
     </div>
+
+    <!-- 글 작성 버튼 -->
+    <a href="/match/create" class="btn btn-custom">글 작성</a><br><br>
 
     <!-- 페이지네이션 시작 -->
     <div class="pagination" style="display: flex; justify-content: center; flex-wrap: wrap;">
