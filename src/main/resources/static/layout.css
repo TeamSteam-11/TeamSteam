@@ -9,13 +9,13 @@
 }
 
 /* 메뉴 */
-.menu > li {
+.menu-navbar > li {
     color: #888888;
     position: relative;
     height: 64px;
 }
 
-.menu > li:hover::after {
+.menu-navbar > li:hover::after {
     content: '';
     position: absolute;
     left: 10%;
@@ -25,13 +25,13 @@
     background-color: white;
 }
 
-.menu > li:hover span {
+.menu-navbar > li:hover span {
     color: white;
     /*border-bottom: 2px solid white;*/
     /*text-decoration: underline;*/
 }
 
-.menu > li > a {
+.menu-navbar > li > a {
     background-color: transparent;
 }
 
