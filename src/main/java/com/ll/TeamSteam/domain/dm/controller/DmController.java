@@ -1,6 +1,5 @@
 package com.ll.TeamSteam.domain.dm.controller;
 
-import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.dm.entity.Dm;
 import com.ll.TeamSteam.domain.dm.service.DmService;
@@ -9,6 +8,10 @@ import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -16,8 +19,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -84,17 +87,26 @@ public class DmController {
      * 참여 중인 매칭 목록
      */
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/chatlist")
-    public String chatList(Model model, @AuthenticationPrincipal SecurityUser user) {
+    @GetMapping("/dmList")
+    public String chatList(Model model, @AuthenticationPrincipal SecurityUser user,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam(defaultValue = "1") int size,
+                           @RequestParam(defaultValue = "createDate") String sortCode,
+                           @RequestParam(defaultValue = "DESC") String direction) {
 
-        List<ChatRoom> myChatRoomList = chatRoomService.findChatRoomByUserId(user.getId());
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
+        Page<Dm> myDmList = dmService.findByDmSenderIdOrDmReceiverId(user.getId(), user.getId(), pageable);
 
-        List<Dm> myDmList = dmService.findByDmSenderIdOrDmReceiverId(user.getId(), user.getId());
+        if(page != 0 && page > myDmList.getTotalPages() - 1) {
+            page = myDmList.getTotalPages() - 1;
+            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
+            myDmList = dmService.findByDmSenderIdOrDmReceiverId(user.getId(), user.getId(), pageable);
+        }
 
-        model.addAttribute("myChatRoomList", myChatRoomList);
         model.addAttribute("myDmList", myDmList);
+        model.addAttribute("currentPage", page);
         model.addAttribute("user", user);
 
-        return "dm/chatList";
+        return "dm/dmList";
     }
 }

@@ -31,13 +31,6 @@
       bottom: 0;
       width: 100%;
     }
-    #chatRoomRadio:checked + label {
-      color: white;
-    }
-
-    #dmRadio:checked + label {
-      color: white;
-    }
   </style>
 </head>
 
@@ -46,43 +39,16 @@
 <main layout:fragment="main">
 
   <div class="mt-10 flex justify-center">
-    <input type="radio" id="chatRoomRadio" name="tableType" value="chatRoom" onclick="showTable('chatRoom')" class="peer hidden" checked>
-    <label for="chatRoomRadio" class="cursor-pointer mr-16 mt-2 text-base text-gray-500 hover:text-white">
+    <a href="/chat/chatList" class="cursor-pointer mt-2 text-base text-gray-500 hover:text-white hover:underline mr-16">
       매칭 채팅
-    </label>
-    <input type="radio" id="dmRadio" name="tableType" value="dm" onclick="showTable('dm')" class="peer hidden">
-    <label for="dmRadio" class="cursor-pointer mt-2 text-base text-gray-500 hover:text-white">
+    </a>
+    <div  class="mt-2 text-base text-white underline">
       DM
-    </label>
+    </div>
   </div>
 
   <div style="display: flex; justify-content: center;">
-    <table id="chatRoomTable" class="table shadow-2xl w-1/5 flex justify-center">
-      <thead>
-      <tr>
-        <th>번호</th>
-        <th>프로필</th>
-        <th>채팅방 이름</th>
-        <th>채팅방 입장</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="myChatRoom, loop : ${myChatRoomList}">
-        <td th:text="${loop.count}"></td>
-        <td class="flex justify-center">
-          <img th:src="${myChatRoom.getOwner().getAvatar()}" alt="${user.username}'s avatar" class="rounded-lg w-10 h-10 m-auto"/>
-        </td>
-        <td th:text="${myChatRoom.getName()}"></td>
-        <td>
-          <a th:href="@{/chat/rooms/{roomId}(roomId=${myChatRoom.getId()})}" class="btn btn-sm btn-outline border-white text-white hover:bg-[#1F2227] hover:border-white invite">입장</a>
-        </td>
-      </tr>
-      <tr th:if="${#lists.isEmpty(myChatRoomList)}">
-        <td colspan="4" style="text-align: center;">참여 중인 채팅방이 없습니다😥</td>
-      </tr>
-      </tbody>
-    </table>
-    <table id="dmTable" class="table shadow-2xl w-1/5 flex justify-center" style="display: none;">
+    <table id="dmTable" class="table shadow-2xl w-1/5 flex justify-center">
       <thead>
       <tr>
         <th>번호</th>
@@ -104,25 +70,32 @@
           <a th:href="@{/dm/room/{roomId}(roomId=${myDm.getId()})}" class="btn btn-sm btn-outline border-white text-white hover:bg-[#1F2227] hover:border-white invite">입장</a>
         </td>
       </tr>
-      <tr th:if="${#lists.isEmpty(myDmList)}">
+      <tr th:if="${myDmList.isEmpty()}">
         <td colspan="4" style="text-align: center;">참여 중인 채팅방이 없습니다😥</td>
       </tr>
       </tbody>
     </table>
   </div>
 
-  <script type="text/javascript">
-    function showTable(tableType) {
-      if (tableType === 'chatRoom') {
-        document.getElementById('chatRoomTable').style.display = 'table';
-        document.getElementById('dmTable').style.display = 'none';
-      } else if (tableType === 'dm') {
-        document.getElementById('dmTable').style.display = 'table';
-        document.getElementById('chatRoomTable').style.display = 'none';
-      }
-    }
-  </script>
+  <!-- 페이지 번호 표시 부분 -->
+  <div class="pagination" style="display: flex; justify-content: center; flex-wrap: wrap;">
+    <ul style="display: flex;">
+      <li th:if="${currentPage != 0}">
+        <a th:href="@{/dm/dmList(page=${currentPage - 1})}" style="margin-right: 1em;">&lt;이전</a>
+      </li>
+      <li th:each="pageNumber : ${#numbers.sequence((currentPage > 4 ? currentPage - 3 : 0),
+                (myDmList.totalPages > currentPage + 5 ? currentPage + 5 : myDmList.totalPages))}"
+          style="display: inline;" th:unless="${pageNumber == 0}">
+        <a th:href="@{/dm/dmList(page=${pageNumber - 1})}" th:text="${pageNumber}" style="margin-right: 1em;"
+           th:classappend="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
+      </li>
+      <li th:if="${currentPage + 1 < myDmList.totalPages}">
+        <a th:href="@{/dm/dmList(page=${currentPage + 1})}" style="margin-right: 1em;">다음&gt;</a>
+      </li>
+    </ul>
+  </div>
 </main>
+
 <footer layout:fragment="footer" class="footer items-center p-4 text-neutral-content">
   <div class="items-center grid-flow-col">
     <svg width="36" height="36" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" class="fill-current"><path d="M22.672 15.226l-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.15.325-2.148-.321-2.463-1.226l-.84-2.518-5.013 1.677.84 2.517c.391 1.203-.434 2.542-1.831 2.542-.88 0-1.601-.564-1.86-1.314l-.842-2.516-2.431.809c-1.135.328-2.145-.317-2.463-1.229-.329-1.018.211-2.127 1.231-2.456l2.432-.809-1.621-4.823-2.432.808c-1.355.384-2.558-.59-2.558-1.839 0-.817.509-1.582 1.327-1.846l2.433-.809-.842-2.515c-.33-1.02.211-2.129 1.232-2.458 1.02-.329 2.13.209 2.461 1.229l.842 2.515 5.011-1.677-.839-2.517c-.403-1.238.484-2.553 1.843-2.553.819 0 1.585.509 1.85 1.326l.841 2.517 2.431-.81c1.02-.33 2.131.211 2.461 1.229.332 1.018-.21 2.126-1.23 2.456l-2.433.809 1.622 4.823 2.433-.809c1.242-.401 2.557.484 2.557 1.838 0 .819-.51 1.583-1.328 1.847m-8.992-6.428l-5.01 1.675 1.619 4.828 5.011-1.674-1.62-4.829z"></path></svg>
