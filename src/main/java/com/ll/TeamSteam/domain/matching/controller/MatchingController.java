@@ -54,7 +54,7 @@ public class MatchingController {
 
     @GetMapping("/list")
     public String matchingList(@RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "8") int size,
+                               @RequestParam(defaultValue = "9") int size,
                                @RequestParam(defaultValue = "createDate") String sortCode,
                                @RequestParam(defaultValue = "DESC") String direction,
                                /*@PageableDefault(sort = "createDate", direction = Sort.Direction.DESC, size = 12) Pageable pageable,*/
@@ -62,6 +62,13 @@ public class MatchingController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
         Page<Matching> matchingList = matchingService.getMatchingList(pageable);
+
+        if(page != 0 && page > matchingList.getTotalPages() - 1) {
+            page = matchingList.getTotalPages() - 1;
+            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
+            matchingList = matchingService.getMatchingList(pageable);
+        }
+
         model.addAttribute("matchingList", matchingList);
         model.addAttribute("currentPage", page);
         model.addAttribute("keyword", null);
@@ -283,13 +290,21 @@ public class MatchingController {
     @GetMapping("/list/search")
     public String searchMatching(@RequestParam String name, @RequestParam String keyword,
                                  @RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "8") int size,
+                                 @RequestParam(defaultValue = "9") int size,
                                  @RequestParam(defaultValue = "createDate") String sortCode,
                                  @RequestParam(defaultValue = "DESC") String direction,
                                  Model model){
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
         Page<Matching> matchingList = matchingService.searchMatching(name, keyword, pageable);
+        // http://localhost:8080/match/list/search?name=title&keyword=ㅎㅇㅎㅇ&page=3
+
+        if(page != 0 && page > matchingList.getTotalPages() - 1) {
+            page = matchingList.getTotalPages() - 1;
+            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
+            matchingList = matchingService.searchMatching(name, keyword, pageable);
+        }
+
         model.addAttribute("matchingList", matchingList);
         model.addAttribute("currentPage", page);
         model.addAttribute("keyword", keyword);
@@ -303,7 +318,7 @@ public class MatchingController {
                                  @RequestParam(name = "starttime", required = false) Integer startTime,
                                  @RequestParam(name = "gender", required = false) String gender,
                                  @RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "8") int size,
+                                 @RequestParam(defaultValue = "9") int size,
                                  @RequestParam(defaultValue = "createDate") String sortCode,
                                  @RequestParam(defaultValue = "DESC") String direction,
                                  Model model) {
@@ -315,6 +330,12 @@ public class MatchingController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
         Page<Matching> matchingList = matchingService.filterMatching(genreType, startTime,gender, pageable);
+
+        if(page != 0 && page > matchingList.getTotalPages() - 1) {
+            page = matchingList.getTotalPages() - 1;
+            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
+            matchingList = matchingService.filterMatching(genreType, startTime,gender, pageable);
+        }
 
         model.addAttribute("matchingList", matchingList);
         model.addAttribute("currentPage", page);

@@ -57,6 +57,23 @@
                     </div>
                 </div>
             </div>
+            <!-- 페이지 번호 표시 부분 -->
+            <div class="pagination" style="display: flex; justify-content: center; flex-wrap: wrap;">
+                <ul style="display: flex;">
+                    <li th:if="${currentPage != 0}">
+                        <a th:href="@{/notification/list(page=${currentPage - 1})}" style="margin-right: 1em;">&lt;이전</a>
+                    </li>
+                    <li th:each="pageNumber : ${#numbers.sequence((currentPage > 4 ? currentPage - 3 : 0),
+                (notifications.totalPages > currentPage + 5 ? currentPage + 5 : notifications.totalPages))}"
+                        style="display: inline;" th:unless="${pageNumber == 0}">
+                        <a th:href="@{/notification/list(page=${pageNumber - 1})}" th:text="${pageNumber}" style="margin-right: 1em;"
+                           th:classappend="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
+                    </li>
+                    <li th:if="${currentPage + 1 < notifications.totalPages}">
+                        <a th:href="@{/notification/list(page=${currentPage + 1})}" style="margin-right: 1em;">다음&gt;</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 

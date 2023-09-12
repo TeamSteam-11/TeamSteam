@@ -6,6 +6,7 @@ import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.chatUser.entity.ChatUser;
 import com.ll.TeamSteam.domain.chatUser.service.ChatUserService;
+import com.ll.TeamSteam.domain.dm.entity.Dm;
 import com.ll.TeamSteam.domain.friend.entity.Friend;
 import com.ll.TeamSteam.domain.matching.entity.Matching;
 import com.ll.TeamSteam.domain.recentlyUser.service.RecentlyUserService;
@@ -14,6 +15,10 @@ import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -166,5 +171,28 @@ public class ChatRoomController {
         chatRoomService.validInviteChatRoom(roomId, user, userId);
 
         return ResponseEntity.ok(alreadyInvited);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/chatList")
+    public String chatList(Model model, @AuthenticationPrincipal SecurityUser user,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam(defaultValue = "3") int size) {
+
+        int totalItems = chatRoomService.findChatRoomByUserId(user.getId()).size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        if (page > totalPages - 1) {
+            page = totalPages - 1;
+        }
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ChatRoom> myChatRoomList = chatRoomService.findChatRoomByUserId(user.getId(), pageable);
+
+        model.addAttribute("myChatRoomList", myChatRoomList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("user", user);
+
+        return "chat/chatList";
     }
 }

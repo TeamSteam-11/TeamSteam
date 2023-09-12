@@ -24,10 +24,12 @@ import com.ll.TeamSteam.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.*;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -286,8 +288,25 @@ public class ChatRoomService {
                 .orElseThrow(() -> new NoChatRoomException("방이 존재하지 않습니다."));
     }
 
+    public Page<ChatRoom> findChatRoomByUserId(Long userId, Pageable pageable) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "createDate"); // 또는 다른 필드
+        List<ChatUser> chatUsers = chatUserService.findByUserIdAndTypeIn(userId, ChatUserType.COMMON, sort);
+
+
+        List<ChatRoom> chatRooms = chatUsers.stream()
+                .map(ChatUser::getChatRoom)
+                .collect(Collectors.toList());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), chatRooms.size());
+
+        return new PageImpl<>(chatRooms.subList(start, end), pageable, chatRooms.size());
+    }
+
     public List<ChatRoom> findChatRoomByUserId(Long userId) {
-        List<ChatUser> chatUsers = chatUserService.findByUserIdAndTypeIn(userId, ChatUserType.COMMON);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createDate"); // 또는 다른 필드
+        List<ChatUser> chatUsers = chatUserService.findByUserIdAndTypeIn(userId, ChatUserType.COMMON, sort);
+
         return chatUsers.stream()
                 .map(ChatUser::getChatRoom)
                 .collect(Collectors.toList());
