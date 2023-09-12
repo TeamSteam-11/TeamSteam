@@ -17,9 +17,9 @@
         }
 
         .btn-custom {
-            float: right;
-            margin-top: 30px;
-            margin-right: 80px;
+            /*float: right;*/
+            width: 150px;
+            margin: 30px 70px 20px 0px;
             padding: 10px 50px 10px 50px;
             background-color: #ff6b00;
         }
@@ -52,7 +52,7 @@
         .card {
             background-color: #2d2d2d;
             color: white;
-            margin: 10px;
+            margin: 20px;
             width: 290px;
             height: 280px;
             border: 1px solid #67686c;
@@ -220,8 +220,6 @@
                     </div>
                 </div>
 
-                <!--                <span class="card-title mb-1 ml-3"-->
-                <!--                      th:text="${#strings.length(matching.title) > 15 ? #strings.substring(matching.title, 0, 15) + '...' : matching.title}"></span>-->
 
                 <!-- 게임 태그 -->
                 <div style="background-color: #404040; color: white; height: 50px; border-radius: 5px; padding: 10px;
@@ -276,7 +274,9 @@
     </div>
 
     <!-- 글 작성 버튼 -->
-    <a href="/match/create" class="btn btn-custom">글 작성</a><br><br>
+    <div class="flex justify-end items-center">
+        <a href="/match/create" class="btn btn-custom">글 작성</a>
+    </div>
 
     <!-- 페이지네이션 시작 -->
     <div class="pagination" style="display: flex; justify-content: center; flex-wrap: wrap;">
