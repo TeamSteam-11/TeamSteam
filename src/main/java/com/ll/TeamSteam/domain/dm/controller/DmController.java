@@ -87,7 +87,7 @@ public class DmController {
      * 참여 중인 매칭 목록
      */
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/dmList")
+    @GetMapping("/dmlist")
     public String chatList(Model model, @AuthenticationPrincipal SecurityUser user,
                            @RequestParam(defaultValue = "0") int page,
                            @RequestParam(defaultValue = "1") int size,

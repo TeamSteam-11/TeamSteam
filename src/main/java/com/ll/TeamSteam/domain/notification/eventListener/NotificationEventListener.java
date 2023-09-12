@@ -1,6 +1,7 @@
 package com.ll.TeamSteam.domain.notification.eventListener;
 
 import com.ll.TeamSteam.domain.notification.service.NotificationService;
+import com.ll.TeamSteam.global.event.EventAfterCreateDm;
 import com.ll.TeamSteam.global.event.EventAfterInvite;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,5 +21,10 @@ public class NotificationEventListener {
     public void listen(EventAfterInvite event) {
 
         notificationService.makeLike(event.getInvitingUser(), event.getInvitedUser(), event.getChatRoom().getId(), event.getChatRoom().getName());
+    }
+
+    @EventListener
+    public void listen(EventAfterCreateDm event){
+        notificationService.makeDmCreateAlarm(event.getDm(), event.getDmSender(), event.getReceiver());
     }
 }

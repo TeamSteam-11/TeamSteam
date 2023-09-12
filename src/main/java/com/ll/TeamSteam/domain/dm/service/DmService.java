@@ -8,9 +8,11 @@ import com.ll.TeamSteam.domain.dmUser.entity.DmUser;
 import com.ll.TeamSteam.domain.dmUser.service.DmUserService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
+import com.ll.TeamSteam.global.event.EventAfterCreateDm;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,7 @@ public class DmService {
     private final DmRepository dmRepository;
     private final UserService userService;
     private final DmUserService dmUserService;
+    private final ApplicationEventPublisher publisher;
 
     public Dm findByDmId(Long dmId) {
         return dmRepository.findById(dmId)
@@ -46,6 +49,8 @@ public class DmService {
         Dm dmSave = dmRepository.save(dm);
         addDmUser(dm, dmSender);
         addDmUser(dm, receiver);
+
+        publisher.publishEvent(new EventAfterCreateDm(this, dm, dmSender, receiver));
 
         return dmSave;
     }

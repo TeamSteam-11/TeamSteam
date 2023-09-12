@@ -27,6 +27,7 @@ public class Notification extends BaseEntity {
     private Long roomId;
     private String matchingName;
     private LocalDateTime readDate;
+    private Long dmId;
 
     public boolean isRead() {
         return readDate != null;
