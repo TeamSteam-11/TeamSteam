@@ -2,12 +2,14 @@
 <head>
     <title>명예의 전당</title>
     <style>
+        table{
+            border-radius: 5px 5px 5px 5px;
+        }
         /* 테이블 테마 */
         .table {
-            background-color: #171917;
             color: #fff;
-            border-radius: 30%;
-            width: 100%;
+            width: 1200px;
+            border-radius: 5px 5px 5px 5px;
         }
 
         /* 헤더 배경색 */
@@ -22,17 +24,13 @@
             color: #fff;
         }
 
-        td {
-            height: 80px;
+        .table tbody th{
+            background-color: #171917;
+            color: #fff;
         }
 
-        /* 버튼 스타일 */
-        .btn-rank {
-            background-color: #333;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 10px 10px 10px 10px;
+        td {
+            height: 80px;
         }
 
         /* 버튼 호버 효과 */
@@ -45,29 +43,7 @@
             /*background-color: #ccc;*/
             /*color: #333;*/
             padding: 2px 5px;
-        }
-
-        .card-actions {
-            width: 50%;
-            height: 50%;
-        }
-
-        .mini-profile {
-            display: flex;
-            flex-direction: row;
-            width: 100%;
-        }
-
-        .mini-profile-avatar {
-            margin-left: 10px;
-            margin-right: 10px;
-            border-right-color: #525964;
-        }
-
-        .mini-profile-tag {
-            border-left-color: #525964;
-            border-left-width: 1px;
-            padding-left: 5px;
+            border-radius: 5px 5px 5px 5px;
         }
 
         .progress-custom {
@@ -101,184 +77,63 @@
 </head>
 <body>
 <main layout:fragment="main">
-
-    <!--
-     메뉴 이미지
-    <div class="top-image-bar w-full relative">
-        <img src="https://cdn.jsdelivr.net/gh/LeeYulhee/projectlion_img/teamsteam/medalBanner.png" class="w-full">
-        <div class="absolute bottom-0" style="bottom: 30%; left:10%;">
-            <div class="relative max-w-2xl w-full px-4 h-12">
-                <div class="text-2xl">매너 온도 명예의 전당</div>
-                <div class="text-sm mt-1">매너 온도가 높은 유저들을 확인해보세요</div>
-            </div>
-        </div>
-    </div>
-
-    <container
-            style="display: flex; flex-direction: row; height: 48vh; justify-content: space-evenly; margin-top: 25px;">
-        <div class="card w-96 shadow-xl ml-20" style="height: 38vh; align-self: center; background-color: #17202c;">
-            <figure class="px-10 pt-3">
-                <img src="https://raw.githubusercontent.com/tkdtn4657/images/main/8.png" style="width: 60%"/>
-            </figure>
-            <div class="card-body items-center text-center pt-3">
-                <h2 class="card-title" style="color: silver; "
-                    th:text="${oneToThreeUserList.get(1).getUsername()}"></h2>
-                <progress class="progress progress-accent w-61 progress-custom" th:value="${oneToThreeUserList.get(1).getTemperature()}" max="100"></progress>
-                <div class="mini-profile">
-                    <div class="mini-profile-avatar"><img th:src="${oneToThreeUserList.get(1).getAvatar()}"/></div>
-                    <div class="mini-profile-tag">
-                        <tr th:each="twoUserGameTag, index : ${oneToThreeUserList.get(1).getUserTag().getGameTag()}"
-                            th:if="${index.size} != 0 and ${index.index} < 2">
-                            <div class="badge bg-sky-400 badge-accent mt-2" th:text="${twoUserGameTag.getName()}"></div>
-                        </tr>
-                        <br>
-                        <tr th:each="twoUserGenreTag, index : ${oneToThreeUserList.get(1).getUserTag().getGenreTag()}"
-                            th:if="${index.size} != 0 and ${index.index} < 3">
-                            <div class="badge bg-green-500 badge-accent" th:text="${twoUserGenreTag.getGenre()}"></div>
-                        </tr>
-                    </div>
-                </div>
-                <div class="card-actions" style="display:flex; align-content: center; justify-content: center;">
-                    <div th:if="${@rq.isLogin()}">
-                        <a th:href="'/user/profile/'+${oneToThreeUserList.get(1).getId()}">
-                            <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
-                        </a>
-                    </div>
-                    <div th:if="${!@rq.isLogin()}" class="tooltip tooltip-error" data-tip="Login Plz!">
-                        <a href="/user/login">
-                            <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card w-96 shadow-xl" style="height: 38vh; align-self: start; background-color: #17202c;">
-            <figure class="px-10 pt-3">
-                <img src="https://raw.githubusercontent.com/tkdtn4657/images/main/7.png" style="width: 60%"/>
-            </figure>
-            <div class="card-body items-center text-center pt-3">
-                <h2 class="card-title" style="color: #F5ED27;"
-                    th:text="${oneToThreeUserList.get(0).getUsername()}"></h2>
-                <progress class="progress progress-accent w-61 progress-custom" th:value="${oneToThreeUserList.get(0).getTemperature()}" max="100"></progress>
-                <div class="mini-profile">
-                    <div class="mini-profile-avatar"><img th:src="${oneToThreeUserList.get(0).getAvatar()}"/></div>
-                    <div class="mini-profile-tag">
-                        <tr th:each="twoUserGameTag, index : ${oneToThreeUserList.get(0).getUserTag().getGameTag()}"
-                            th:if="${index.size} != 0 and ${index.index} < 2">
-                            <div class="badge bg-sky-400 badge-accent mt-2" th:text="${twoUserGameTag.getName()}"></div>
-                        </tr>
-                        <br>
-                        <tr th:each="twoUserGenreTag, index : ${oneToThreeUserList.get(0).getUserTag().getGenreTag()}"
-                            th:if="${index.size} != 0 and ${index.index} < 3">
-                            <div class="badge bg-green-500 badge-accent" th:text="${twoUserGenreTag.getGenre()}"></div>
-                        </tr>
-                    </div>
-                </div>
-                <div class="card-actions" style="display:flex; align-content: center; justify-content: center;">
-                    <div th:if="${@rq.isLogin()}">
-                        <a th:href="'/user/profile/'+${oneToThreeUserList.get(0).getId()}">
-                            <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
-                        </a>
-                    </div>
-                    <div th:if="${!@rq.isLogin()}" class="tooltip tooltip-error" data-tip="Login Plz!">
-                        <a href="/user/login">
-                            <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card w-96 shadow-xl mr-20 mb-8" style="height: 38vh; align-self: end; background-color: #17202c;">
-            <figure class="px-10 pt-3">
-                <img src="https://raw.githubusercontent.com/tkdtn4657/images/main/9.png" style="width: 60%"/>
-            </figure>
-            <div class="card-body items-center text-center pt-3">
-                <h2 class="card-title" style="color: #FF2B2B;"
-                    th:text="${oneToThreeUserList.get(2).getUsername()}"></h2>
-                <progress class="progress progress-accent w-61 progress-custom" th:value="${oneToThreeUserList.get(2).getTemperature()}" max="100"></progress>
-                <div class="mini-profile">
-                    <div class="mini-profile-avatar"><img th:src="${oneToThreeUserList.get(2).getAvatar()}"/></div>
-                    <div class="mini-profile-tag">
-                        <tr th:each="twoUserGameTag, index : ${oneToThreeUserList.get(2).getUserTag().getGameTag()}"
-                            th:if="${index.size} != 0 and ${index.index} < 2" style="margin-left: 2px">
-                            <div class="badge bg-sky-400 badge-accent mt-2" th:text="${twoUserGameTag.getName()}"></div>
-                        </tr>
-                        <br>
-                        <tr th:each="twoUserGenreTag, index : ${oneToThreeUserList.get(2).getUserTag().getGenreTag()}"
-                            th:if="${index.size} != 0 and ${index.index} < 3" style="margin-left: 2px">
-                            <div class="badge bg-green-500 badge-accent" th:text="${twoUserGenreTag.getGenre()}"></div>
-                        </tr>
-                    </div>
-                </div>
-                <div class="card-actions" style="display:flex; align-content: center; justify-content: center;">
-                    <div th:if="${@rq.isLogin()}">
-                        <a th:href="'/user/profile/'+${oneToThreeUserList.get(2).getId()}">
-                            <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
-                        </a>
-                    </div>
-                    <div th:if="${!@rq.isLogin()}" class="tooltip tooltip-error" data-tip="Login Plz!">
-                        <a href="/user/login">
-                            <button class="btn-rank btn-ghost btn-xs">Go Profile</button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </container>
-    -->
     <!--    flex-direction: row-->
     <header class="ml-5 flex items-center">
         <div class="mt-20 mb-10 h-12 flex justify-center flex-col align-center">
             <div class="text-2xl">매너 온도 명예의 전당</div>
             <div class="text-sm mt-1">매너 온도가 높은 유저들을 확인해보세요</div>
         </div>
+        <!--임시 데이터추가 버튼-->
         <a class="flex items-center" href="/user/dummyAdd">
             <div>
                 <button class="bg-skyblue">유저데이터 추가</button>
             </div>
         </a>
     </header>
-    <container class="mt-5 flex justify-center items-center">
-        <table class="table flex items-center justify-center" style=" width: 100%;">
+    <container class="mt-5 flex flex-col justify-center items-center">
+        <table class="table flex items-center justify-center w-full">
             <!-- head -->
             <thead>
-            <tr style="background-color: #1D2939; ">
-                <th>Rank</th>
-                <th>User</th>
-                <th>Tags</th>
-                <th class="flex align-center">Temperature</th>
+            <tr>
+                <th>순위</th>
+                <th>사용자</th>
+                <th>태그</th>
+                <th>매너온도</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="topSevenUser, index : ${topSevenUserList}">
-                <td th:text="${index.index+1}" style="height: 80px"></td>
+            <tr th:each="topUser, index : ${topUserList}">
+                <td th:if="${index.index+1} == 1"><i class="fa-solid fa-crown" style="color: #ffff00;"></i></td>
+                <td th:if="${index.index+1} == 2"><i class="fa-solid fa-crown" style="color: #c2c2c2;"></i></td>
+                <td th:if="${index.index+1} == 3"><i class="fa-solid fa-crown" style="color: #ca8f58;"></i></td>
+                <td th:if="${index.index+1} > 3" th:text="${index.index+1}"></td>
                 <td>
                     <div class="flex items-center space-x-3 ">
                         <div class="avatar">
                             <div class="mask mask-squirrel w-12 h-12">
-                                <img th:src="${topSevenUser.getAvatar()}"/>
+                                <img th:src="${topUser.getAvatar()}"/>
                             </div>
                         </div>
                         <div>
-                            <div class="font-bold" th:text="${topSevenUser.getUsername()}"></div>
+                            <div class="font-bold" th:text="${topUser.getUsername()}"></div>
                             <div class="text-sm opacity-50">Steam</div>
                         </div>
                     </div>
                 </td>
                 <td>
                     <div class="flex">
-                        <div th:each="topSevenUserGameTag, indexTwo : ${topSevenUser.getUserTag().getGameTag()}"
+                        <div th:each="topUserGameTag, indexTwo : ${topUser.getUserTag().getGameTag()}"
                              th:if="${indexTwo.size} != 0 and ${indexTwo.index} < 3" style="margin-left: 2px">
                             <div class="badge bg-00A3FF badge-accent"
-                                 th:text="${topSevenUserGameTag.getName()}"
+                                 th:text="${topUserGameTag.getName()}"
                                  style="color: #FFFFFF; font-size: 12px"></div>
                         </div>
                     </div>
                     <div class="flex">
-                        <div th:each="topSevenUserGenreTag, indexTwo : ${topSevenUser.getUserTag().getGenreTag()}"
+                        <div th:each="topUserGenreTag, indexTwo : ${topUser.getUserTag().getGenreTag()}"
                              th:if="${indexTwo.size} != 0 and ${indexTwo.index} < 3" style="margin-left: 2px">
                             <div class="badge bg-878787 badge-accent"
-                                 th:text="${topSevenUserGenreTag.getGenre()}"
+                                 th:text="${topUserGenreTag.getGenre()}"
                                  style="color: #FFFFFF; font-size: 12px"></div>
                         </div>
                     </div>
@@ -286,9 +141,59 @@
                 <td>
                     <div class="flex items-center">
                         <progress class="progress w-56 progress-custom"
-                                  th:value="${topSevenUser.getTemperature()}" max="100">
+                                  th:value="${topUser.getTemperature()}" max="100">
                         </progress>
-                        <inline th:text="'&nbsp;&nbsp;' + ${topSevenUser.getTemperature()} + ' &#8451;'"
+                        <inline th:text="'&nbsp;&nbsp;' + ${topUser.getTemperature()} + ' &#8451;'"
+                                style="height:20px; font-size: 13px; text-align: center"></inline>
+                    </div>
+                </td>
+            </tr>
+
+            <!--로그인 했을 때 내 순위 출력-->
+            <tr th:if="${myRank} != null">
+                <th colspan="4" style="text-align:center; font-size: 14px; padding-top: 15px; padding-bottom: 15px; font-weight : bold; border-bottom-color: #171917;">
+                    내 순위
+                </th>
+            </tr>
+            <tr th:if="${myRank} != null">
+                <td th:text="${myRank}+1"></td>
+                <td>
+                    <div class="flex items-center space-x-3">
+                        <div class="avatar">
+                            <div class="mask mask-squirrel w-12 h-12">
+                                <img th:src="${myRankProfile.getAvatar()}"/>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="font-bold" th:text="${myRankProfile.getUsername()}" style="font-size : 16px;"></div>
+                            <div class="text-sm opacity-50">Steam</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="flex">
+                        <div th:each="myProfileGameTag, indexTwo : ${myRankProfile.getUserTag().getGameTag()}"
+                             th:if="${indexTwo.size} != 0 and ${indexTwo.index} < 3" style="margin-left: 2px">
+                            <div class="badge bg-00A3FF badge-accent"
+                                 th:text="${myProfileGameTag.getName()}"
+                                 style="color: #FFFFFF; font-size: 12px"></div>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div th:each="myProfileGenreTag, indexTwo : ${myRankProfile.getUserTag().getGenreTag()}"
+                             th:if="${indexTwo.size} != 0 and ${indexTwo.index} < 3" style="margin-left: 2px">
+                            <div class="badge bg-878787 badge-accent"
+                                 th:text="${myProfileGenreTag.getGenre()}"
+                                 style="color: #FFFFFF; font-size: 12px"></div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="flex items-center">
+                        <progress class="progress w-56 progress-custom"
+                                  th:value="${myRankProfile.getTemperature()}" max="100">
+                        </progress>
+                        <inline th:text="'&nbsp;&nbsp;' + ${myRankProfile.getTemperature()} + ' &#8451;'"
                                 style="height:20px; font-size: 13px; text-align: center"></inline>
                     </div>
                 </td>
@@ -296,58 +201,8 @@
             </tbody>
         </table>
     </container>
-    <!--<container style="margin-top:15px; display: flex; justify-content: center;">
-        <table class="table" style=" width: 100%;">
-            <thead>
-            <tr style="background-color: #1D2939;">
-                <th>Rank</th>
-                <th>User</th>
-                <th>Tags</th>
-                <th>Temperature</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="fourToSevenUser, index : ${fourToSevenUserList}"
-                th:if="${index.size} != 0 and ${index.index} < 4">
-                <td th:text="${index.index+4}" style="height: 10vh"></td>
-                <td>
-                    <div class="flex items-center space-x-3">
-                        <div class="avatar">
-                            <div class="mask mask-squircle w-12 h-12">
-                                <img th:src="${fourToSevenUser.getAvatar()}"/>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="font-bold" th:text="${fourToSevenUser.getUsername()}"></div>
-                            <div class="text-sm opacity-50">Steam</div>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div style="display: flex;">
-                        <div th:each="fourToSevenUserGameTag, indexTwo : ${fourToSevenUser.getUserTag().getGameTag()}"
-                             th:if="${indexTwo.size} != 0 and ${indexTwo.index} < 3" style="margin-left: 2px">
-                            <div class="badge bg-sky-400 badge-accent"
-                                 th:text="${fourToSevenUserGameTag.getName()}"></div>
-                        </div>
-                    </div>
-                    <div style="display: flex;">
-                        <div th:each="fourToSevenUserGenreTag, indexTwo : ${fourToSevenUser.getUserTag().getGenreTag()}"
-                             th:if="${indexTwo.size} != 0 and ${indexTwo.index} < 3" style="margin-left: 2px">
-                            <div class="badge bg-green-500 badge-accent"
-                                 th:text="${fourToSevenUserGenreTag.getGenre()}"></div>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <progress class="progress progress-accent w-56 progress-custom"
-                              th:value="${fourToSevenUser.getTemperature()}" max="100"></progress>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </container>-->
 </main>
+
 <footer layout:fragment="footer" class="footer items-center p-4 text-neutral-content">
     <div class="items-center grid-flow-col">
         <svg width="36" height="36" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd"

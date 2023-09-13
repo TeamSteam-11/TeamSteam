@@ -19,8 +19,8 @@ public class RankService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<User> getTopSeven() {
-        return userRepository.findTop7ByOrderByTemperatureDesc();
+    public List<User> getTopUserList() {
+        return userRepository.findTop10ByOrderByTemperatureDesc();
     }
 
     /**
