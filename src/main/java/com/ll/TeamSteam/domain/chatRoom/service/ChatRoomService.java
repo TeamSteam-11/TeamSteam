@@ -79,18 +79,22 @@ public class ChatRoomService {
 
         matchingPartnerService.validNotMatchingPartner(matching, user);
 
-        addChatRoomUser(chatRoom, user, userId);
-
-        chatUserService.findChatUserByUserId(chatRoom, user.getId());
-
         List<ChatUser> chatUsers = chatRoom.getChatUsers().stream()
-                .filter(chatUser -> !chatUser.getUser().getId().equals(userId))
                 .toList();
 
-        for (ChatUser chatUser : chatUsers){
-            User inChatUser = chatUser.getUser();
-            publisher.publishEvent(new EventEnterNewChatUser(this, chatRoom, inChatUser, user));
+        List<Long> chatUserConvertUserId = chatUsers.stream()
+                .map(chatUser -> chatUser.getUser().getId())
+                .toList();
+
+        if(!chatUserConvertUserId.contains(userId)) {
+            for (ChatUser chatUser : chatUsers){
+                User inChatUser = chatUser.getUser();
+                publisher.publishEvent(new EventEnterNewChatUser(this, chatRoom, inChatUser, user));
+            }
         }
+        
+        addChatRoomUser(chatRoom, user, userId);
+        chatUserService.findChatUserByUserId(chatRoom, user.getId());
 
         return ChatRoomDto.fromChatRoom(chatRoom, user);
     }
