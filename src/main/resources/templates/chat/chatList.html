@@ -42,7 +42,7 @@
     <div class="mr-16 mt-2 text-base text-white underline">
       매칭 채팅
     </div>
-    <a href="/dm/dmList" class="cursor-pointer mt-2 text-base text-gray-500 hover:text-white hover:underline">
+    <a href="/dm/dmlist" class="cursor-pointer mt-2 text-base text-gray-500 hover:text-white hover:underline">
       DM
     </a>
   </div>
@@ -80,16 +80,16 @@
   <div class="pagination" style="display: flex; justify-content: center; flex-wrap: wrap;">
     <ul style="display: flex;">
       <li th:if="${currentPage != 0}">
-        <a th:href="@{/chat/chatList(page=${currentPage - 1})}" style="margin-right: 1em;">&lt;이전</a>
+        <a th:href="@{/chat/chatlist(page=${currentPage - 1})}" style="margin-right: 1em;">&lt;이전</a>
       </li>
       <li th:each="pageNumber : ${#numbers.sequence((currentPage > 4 ? currentPage - 3 : 0),
                 (myChatRoomList.totalPages > currentPage + 5 ? currentPage + 5 : myChatRoomList.totalPages))}"
           style="display: inline;" th:unless="${pageNumber == 0}">
-        <a th:href="@{/chat/chatList(page=${pageNumber - 1})}" th:text="${pageNumber}" style="margin-right: 1em;"
+        <a th:href="@{/chat/chatlist(page=${pageNumber - 1})}" th:text="${pageNumber}" style="margin-right: 1em;"
            th:classappend="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
       </li>
       <li th:if="${currentPage + 1 < myChatRoomList.totalPages}">
-        <a th:href="@{/chat/chatList(page=${currentPage + 1})}" style="margin-right: 1em;">다음&gt;</a>
+        <a th:href="@{/chat/chatlist(page=${currentPage + 1})}" style="margin-right: 1em;">다음&gt;</a>
       </li>
     </ul>
   </div>

@@ -1,5 +1,6 @@
 package com.ll.TeamSteam.domain.notification.service;
 
+import com.ll.TeamSteam.domain.dm.entity.Dm;
 import com.ll.TeamSteam.domain.notification.entity.Notification;
 import com.ll.TeamSteam.domain.notification.repository.NotificationRepository;
 import com.ll.TeamSteam.domain.user.entity.User;
@@ -33,17 +34,18 @@ public class NotificationService {
                 .forEach(Notification::markAsRead);
     }
 
-    public void makeLike(User invitingUser, User invitedUser, Long roomId, String roomName) {
-        createAndSaveNotification(invitingUser, invitedUser, roomId, roomName);
+    public void makeLike(User invitingUser, User invitedUser, Long roomId, String roomName, boolean enterAlarm) {
+        createAndSaveNotification(invitingUser, invitedUser, roomId, roomName, enterAlarm);
     }
 
-    public RsData<Notification> createAndSaveNotification(User invitingUser, User invitedUser, Long roomId, String roomName) {
+    public RsData<Notification> createAndSaveNotification(User invitingUser, User invitedUser, Long roomId, String roomName, boolean enterAlarm) {
 
         Notification notification = Notification.builder()
                 .invitingUser(invitingUser)
                 .invitedUser(invitedUser)
                 .roomId(roomId)
                 .matchingName(roomName)
+                .enterAlarm(enterAlarm)
                 .build();
 
         notificationRepository.save(notification);
@@ -94,5 +96,19 @@ public class NotificationService {
         notificationRepository.save(notification);
 
         return RsData.of("S-1", "알림 메세지가 생성되었습니다.", notification);
+    }
+
+    public void makeDmCreateAlarm(Dm dm, User dmSender, User receiver) {
+        createDmAlarm(dm, dmSender, receiver);
+    }
+
+    private void createDmAlarm(Dm dm, User dmSender, User receiver) {
+        Notification notification = Notification.builder()
+                .dmId(dm.getId())
+                .invitingUser(dmSender)
+                .invitedUser(receiver)
+                .build();
+
+        notificationRepository.save(notification);
     }
 }

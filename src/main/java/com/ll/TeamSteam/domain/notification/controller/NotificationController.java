@@ -81,13 +81,22 @@ public class NotificationController {
         Long invitedUserId = user.getId();
         Long invitingUserId = notification.getInvitingUser().getId();
         Long roomId = notification.getRoomId();
+        Long dmId = notification.getDmId();
 
         notificationService.deleteNotification(user.getId(), notificationId);
 
-        if(roomId == null) {
+        if(roomId == null && dmId == null) {
             userService.addFriends(invitedUserId, invitingUserId);
 
             return "redirect:/notification/list";
+        }
+
+        if(dmId != null) {
+            return String.format("redirect:/dm/room/%d", dmId);
+        }
+
+        if (notification.isEnterAlarm()) {
+            return String.format("redirect:/chat/rooms/%d", roomId);
         }
 
         boolean alreadyWithPartner = matchingPartnerService.isDuplicatedMatchingPartner(roomId, invitedUserId);

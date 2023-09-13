@@ -50,9 +50,21 @@
                         <div>
                             <strong>읽음 여부:</strong> <span th:if="${notification.readDate != null}">읽음</span><span th:unless="${notification.readDate != null}">읽지 않음</span>
                         </div>
-                        <div class="flex justify-center">
+                        <div th:if="${notification.roomId == null && notification.dmId == null && notification.enterAlarm == false}" class="flex justify-center">
                             <a th:href="@{'/notification/' + ${notification.id} + '/accept'}" class="border p-3 m-3 hover:bg-[#1F2227]">수락</a>
                             <a th:href="@{'/notification/' + ${notification.id} + '/reject'}" class="border p-3 m-3 hover:bg-[#1F2227]">거절</a>
+                        </div>
+                        <div th:if="${notification.roomId != null && notification.dmId == null && notification.enterAlarm == false}" class="flex justify-center">
+                            <a th:href="@{'/notification/' + ${notification.id} + '/accept'}" class="border p-3 m-3 hover:bg-[#1F2227]">수락</a>
+                            <a th:href="@{'/notification/' + ${notification.id} + '/reject'}" class="border p-3 m-3 hover:bg-[#1F2227]">거절</a>
+                        </div>
+                        <div th:if="${notification.dmId != null && notification.roomId == null && notification.enterAlarm == false}" class="flex justify-center">
+                            <a th:href="@{'/notification/' + ${notification.id} + '/accept'}" class="border p-3 m-3 hover:bg-[#1F2227]">이동</a>
+                            <a th:href="@{'/notification/' + ${notification.id} + '/reject'}" class="border p-3 m-3 hover:bg-[#1F2227]">확인</a>
+                        </div>
+                        <div th:if="${notification.dmId == null && notification.roomId != null && notification.enterAlarm == true}" class="flex justify-center">
+                            <a th:href="@{'/notification/' + ${notification.id} + '/accept'}" class="border p-3 m-3 hover:bg-[#1F2227]">이동</a>
+                            <a th:href="@{'/notification/' + ${notification.id} + '/reject'}" class="border p-3 m-3 hover:bg-[#1F2227]">확인</a>
                         </div>
                     </div>
                 </div>

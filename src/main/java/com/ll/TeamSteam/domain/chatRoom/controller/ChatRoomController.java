@@ -174,7 +174,7 @@ public class ChatRoomController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/chatList")
+    @GetMapping("/chatlist")
     public String chatList(Model model, @AuthenticationPrincipal SecurityUser user,
                            @RequestParam(defaultValue = "0") int page,
                            @RequestParam(defaultValue = "3") int size) {
@@ -182,7 +182,7 @@ public class ChatRoomController {
         int totalItems = chatRoomService.findChatRoomByUserId(user.getId()).size();
         int totalPages = (int) Math.ceil((double) totalItems / size);
 
-        if (page > totalPages - 1) {
+        if (page != 0 && page > totalPages - 1) {
             page = totalPages - 1;
         }
 
