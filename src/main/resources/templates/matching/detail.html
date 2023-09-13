@@ -50,6 +50,30 @@
             height: 450px;
             margin-top: 70px;
         }
+
+        .progress-custom {
+            background-color: #847676;
+            height: 10px;
+            border-radius: 2px;
+        }
+
+        .progress-custom::-webkit-progress-bar {
+            background-color: #847676; /* 배경 색상 (WebKit 브라우저용) */
+            height: 10px;
+            border-radius: 2px;
+
+        }
+
+        .progress-custom::-webkit-progress-value {
+            background-color: #58C8C1; /* 진행 막대 색상 (WebKit 브라우저용) */
+            border-radius: 2px;
+        }
+
+        .progress-custom::-moz-progress-bar {
+            background-color: #58C8C1; /* 진행 막대 색상 (Firefox 브라우저용) */
+            border-radius: 2px;
+        }
+
     </style>
 </head>
 <body>
@@ -279,7 +303,8 @@
 
                 <!-- 매칭 파트너인 경우에 채팅 참여하기 버튼 활성화됨 -> 미니 프로필도 보이게 하기 -->
                 <a class="text-sm flex items-center justify-center"
-                   style="background-color: #ff6b00; width: 140px; height: 45px; border-radius: 5px; font-size: 17px" th:if="${alreadyWithPartner}"
+                   style="background-color: #ff6b00; width: 140px; height: 45px; border-radius: 5px; font-size: 17px"
+                   th:if="${alreadyWithPartner}"
                    th:href="@{|/match/detail/${matching.getId()}/moveChatRoom|}">채팅 참여하기</a>
 
             </div>
@@ -298,21 +323,24 @@
                 <div class="mt-6 mb-6 flex flex-wrap">
 
                     <!--1번 프로필-->
-                    <div class="w-1/5 rounded-xl flex-shrink-0 shadow-2xl" style="background-color: #202d3e;"
+                    <div class="flex-shrink-0"
+                         style="background-color: #2d2d2d; width: 195px; min-height: 210px; border: 1px solid #67686c; border-radius: 10px; margin: 10px"
                          th:each="matchingPartner : ${matching.matchingPartners}"
                          th:if="${matchingPartner.inChatRoomTrueFalse}">
 
                         <!--프로필 내용 시작-->
-                        <div class="flex flex-col justify-center min-h-full p-4" style="min-height: 18rem;">
+                        <div class="flex flex-col justify-center min-h-full p-4" style="width: 195px; min-height: 210px;">
                             <a th:href="@{'/user/profile/' + ${matchingPartner.getUser().getId()}}"
                                class="hover:underline">
-                                <div class="flex justify-start items-center ml-2 mb-2 border-b">
+                                <div class="flex justify-start items-center"
+                                     style="border-bottom: 1px solid #67686c; margin-bottom: 5px">
 
                                     <img th:src="${matchingPartner.getUser().getAvatar()}"
-                                         class="w-10 h-10 object-cover mr-3 mb-3 rounded-xl">
+                                         class="object-cover"
+                                         style="width: 35px; height: 35px; border-radius: 5px; margin: 5px 10px 10px 10px">
                                     <div>
                                         <div class="flex items-center">
-                                            <div class="text-xl mb-3"
+                                            <div class="text-xl" style="margin-bottom: 10px"
                                                  th:text="${matchingPartner.getUser().getUsername()}">
                                                 참여자
                                             </div>
@@ -321,31 +349,33 @@
                                 </div>
                             </a>
 
-                            <!--장르 태그-->
-                            <div class="flex flex-wrap">
-                                <div class="m-1 p-2 text-xs flex items-center justify-center rounded-xl"
-                                     th:each="genreTag: ${matchingPartner.getUser().getUserTag().getGenreTag()}"
-                                     th:text="${genreTag.getGenre()}"
-                                     style="min-width: 64px; background-color: #22C55E;"></div>
-                            </div>
-                            <!--장르 태그 끝-->
-
                             <!--게임 태그-->
                             <div class="flex flex-wrap">
-                                <div class="m-1 p-2 text-xs flex items-center justify-center rounded-xl"
+                                <div class="m-1 p-1 text-xs flex items-center justify-center"
                                      th:each="gameTag: ${matchingPartner.getUser().getUserTag().getGameTag()}"
-                                     th:text="${gameTag.getName()}" style="min-width: 64px; background-color: #0EA5E9;">
+                                     th:text="${gameTag.getName()}"
+                                     style="min-width: 64px; background-color: #00a3ff; border-radius: 5px">
                                     게임 태그
                                 </div>
                             </div>
                             <!--게임 태그-->
 
+                            <!--장르 태그-->
+                            <div class="flex flex-wrap">
+                                <div class="m-1 p-1 text-xs flex items-center justify-center"
+                                     th:each="genreTag: ${matchingPartner.getUser().getUserTag().getGenreTag()}"
+                                     th:text="${genreTag.getGenre()}"
+                                     style="min-width: 64px; background-color: #878787; border-radius: 5px"></div>
+                            </div>
+                            <!--장르 태그 끝-->
+
+
                             <!--매너온도-->
                             <div>
                                 <div class="flex items-center m-2 mt-2">
-                                    <i class="fas fa-thermometer-half text-2xl mr-2"></i>
-                                    <div class="text-base mr-2">매너온도 :</div>
-                                    <div class="text-base"
+                                    <!--                                    <i class="fas fa-thermometer-half text-2xl mr-2"></i>-->
+                                    <div class="text-sm mr-2">매너온도 :</div>
+                                    <div class="text-sm"
                                          th:text="${matchingPartner.getUser().getTemperature()}"></div>
                                 </div>
                                 <div class="ml-2">
