@@ -95,6 +95,10 @@ public class NotificationController {
             return String.format("redirect:/dm/room/%d", dmId);
         }
 
+        if (notification.isEnterAlarm()) {
+            return String.format("redirect:/chat/rooms/%d", roomId);
+        }
+
         boolean alreadyWithPartner = matchingPartnerService.isDuplicatedMatchingPartner(roomId, invitedUserId);
 
         if (alreadyWithPartner) {

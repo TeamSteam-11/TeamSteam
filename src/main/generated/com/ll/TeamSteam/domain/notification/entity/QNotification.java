@@ -29,6 +29,8 @@ public class QNotification extends EntityPathBase<Notification> {
 
     public final NumberPath<Long> dmId = createNumber("dmId", Long.class);
 
+    public final BooleanPath enterAlarm = createBoolean("enterAlarm");
+
     //inherited
     public final NumberPath<Long> id = _super.id;
 

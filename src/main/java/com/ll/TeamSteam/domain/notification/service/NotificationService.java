@@ -34,17 +34,18 @@ public class NotificationService {
                 .forEach(Notification::markAsRead);
     }
 
-    public void makeLike(User invitingUser, User invitedUser, Long roomId, String roomName) {
-        createAndSaveNotification(invitingUser, invitedUser, roomId, roomName);
+    public void makeLike(User invitingUser, User invitedUser, Long roomId, String roomName, boolean enterAlarm) {
+        createAndSaveNotification(invitingUser, invitedUser, roomId, roomName, enterAlarm);
     }
 
-    public RsData<Notification> createAndSaveNotification(User invitingUser, User invitedUser, Long roomId, String roomName) {
+    public RsData<Notification> createAndSaveNotification(User invitingUser, User invitedUser, Long roomId, String roomName, boolean enterAlarm) {
 
         Notification notification = Notification.builder()
                 .invitingUser(invitingUser)
                 .invitedUser(invitedUser)
                 .roomId(roomId)
                 .matchingName(roomName)
+                .enterAlarm(enterAlarm)
                 .build();
 
         notificationRepository.save(notification);
