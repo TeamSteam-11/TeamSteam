@@ -329,7 +329,8 @@
                          th:if="${matchingPartner.inChatRoomTrueFalse}">
 
                         <!--프로필 내용 시작-->
-                        <div class="flex flex-col justify-center min-h-full p-4" style="width: 195px; min-height: 210px;">
+                        <div class="flex flex-col justify-between min-h-full p-4"
+                             style="width: 195px; height: 100%; min-height: 210px;">
                             <a th:href="@{'/user/profile/' + ${matchingPartner.getUser().getId()}}"
                                class="hover:underline">
                                 <div class="flex justify-start items-center"
@@ -349,36 +350,38 @@
                                 </div>
                             </a>
 
-                            <!--게임 태그-->
-                            <div class="flex flex-wrap">
-                                <div class="m-1 p-1 text-xs flex items-center justify-center"
-                                     th:each="gameTag: ${matchingPartner.getUser().getUserTag().getGameTag()}"
-                                     th:text="${gameTag.getName()}"
-                                     style="min-width: 64px; background-color: #00a3ff; border-radius: 5px">
-                                    게임 태그
+                            <div>
+                                <!--게임 태그-->
+                                <div class="flex flex-wrap">
+                                    <div class="m-1 p-1 text-xs flex items-center justify-center"
+                                         th:each="gameTag: ${matchingPartner.getUser().getUserTag().getGameTag()}"
+                                         th:text="${gameTag.getName()}"
+                                         style="min-width: 64px; background-color: #00a3ff; border-radius: 5px">
+                                        게임 태그
+                                    </div>
                                 </div>
-                            </div>
-                            <!--게임 태그-->
+                                <!--게임 태그-->
 
-                            <!--장르 태그-->
-                            <div class="flex flex-wrap">
-                                <div class="m-1 p-1 text-xs flex items-center justify-center"
-                                     th:each="genreTag: ${matchingPartner.getUser().getUserTag().getGenreTag()}"
-                                     th:text="${genreTag.getGenre()}"
-                                     style="min-width: 64px; background-color: #878787; border-radius: 5px"></div>
+                                <!--장르 태그-->
+                                <div class="flex flex-wrap">
+                                    <div class="m-1 p-1 text-xs flex items-center justify-center"
+                                         th:each="genreTag: ${matchingPartner.getUser().getUserTag().getGenreTag()}"
+                                         th:text="${genreTag.getGenre()}"
+                                         style="min-width: 64px; background-color: #878787; border-radius: 5px"></div>
+                                </div>
+                                <!--장르 태그 끝-->
                             </div>
-                            <!--장르 태그 끝-->
 
 
                             <!--매너온도-->
                             <div>
-                                <div class="flex items-center m-2 mt-2">
+                                <div class="flex items-center ml-1 mt-2">
                                     <!--                                    <i class="fas fa-thermometer-half text-2xl mr-2"></i>-->
-                                    <div class="text-sm mr-2">매너온도 :</div>
-                                    <div class="text-sm"
+                                    <div class="text-xs mr-2">매너온도 :</div>
+                                    <div class="text-xs"
                                          th:text="${matchingPartner.getUser().getTemperature()}"></div>
                                 </div>
-                                <div class="ml-2">
+                                <div>
                                     <progress class="progress progress-accent progress-custom"
                                               th:value="${matchingPartner.getUser().getTemperature()}" max="100">
                                     </progress>
