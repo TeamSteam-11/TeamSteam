@@ -4,7 +4,6 @@ import com.ll.TeamSteam.domain.rank.service.RankService;
 import com.ll.TeamSteam.domain.user.controller.UserController;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
-import com.ll.TeamSteam.global.rq.Rq;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,7 +29,7 @@ public class RankController {
         List<User> topUserList = getTopUsersWithHighTemperature();
         model.addAttribute("topUserList", topUserList);
 
-        if(user == null){ // 미로그인 상태
+        if (user == null) { // 미로그인 상태
             return "rank/rank";
         }
 
@@ -45,10 +41,7 @@ public class RankController {
             }
         }
 
-        /**
-         * 나의 랭크 인덱스 표시하기 구현중
-         */
-        long userRank = rankService.getMyRank(user.getId());
+        long userRank = rankService.getUserOfTemperatureRank(user.getId());
         if (!listContainUser) {
             model.addAttribute("myRank", userRank);
             model.addAttribute("myRankProfile", userService.findById(user.getId()).orElseThrow());

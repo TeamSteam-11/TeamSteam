@@ -7,9 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -24,17 +22,17 @@ public class RankService {
     }
 
     /**
-     * @param id
-     * @return <UserRank, User>
+     * 해당 유저의 아이디를 입력받아 온도순위 출력
+     *
+     * @param id - 온도순위를 받을 유저의 id
+     * @return myRankNum - 나의 순위를 리턴
      */
-    public Long getMyRank(Long id){
+    public Long getUserOfTemperatureRank(Long id) {
         List<User> userList = userRepository.findAllByOrderByTemperatureDesc();
 
         User user = userRepository.findById(id).orElseThrow();
         long myRankNum = userList.indexOf(user);
 
-//        Map<Long, User> myRank = new HashMap<>();
-//        myRank.put(myRankNum, user);
         return myRankNum;
     }
 
