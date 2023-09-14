@@ -54,7 +54,7 @@
         .menu input[type="radio"]:checked + label {
             color: white;
         }
-        li:active {
+        label:active{
             background-color: black;
         }
     </style>
@@ -79,28 +79,28 @@
                     </div>
                 </div>
         </div>
-        <div class="mt-9 flex flex-row">
-            <div class="basis-1/4">
+        <div class="flex flex-row">
+            <div class="mt-12 basis-1/4">
                 <ul class="menu w-56">
-                    <li>
+                    <li class="li-button">
                         <input type="radio" id="profileRadio" name="menuType" value="profile" onclick="showMenu('profile')" class="peer hidden" checked>
                         <label for="profileRadio">
                             나의 프로필
                         </label>
                     </li>
-                    <li>
+                    <li class="li-button">
                         <input type="radio" id="friendsListRadio" name="menuType" value="friendsList" onclick="showMenu('friendsList')" class="peer hidden">
                         <label for ="friendsListRadio">
                             친구 목록
                         </label>
                     </li>
-                    <li>
+                    <li class="li-button">
                         <input type= "radio" id="recentUserRadio" name= "menuType" value= "recentUser" onclick= "showMenu('recentUser')" class ="peer hidden">
                         <label for ="recentUserRadio">
                             최근 유저
                         </label>
                     </li>
-                    <li >
+                    <li class="li-button">
                         <input type = "radio" id = "libraryRadio" name = "menuType" value = "library" onclick = "showMenu('library')" class = "peer hidden ">
                         <label for = "libraryRadio">
                             라이브러리
@@ -113,7 +113,7 @@
                 <div id="friendsList" class="section" style="display: none;">
                     <div class="overflow-x-auto">
                         <h2 class="text-xl font-semibold mb-4">친구 목록</h2>
-                        <div class="grid grid-cols-3 gap-4">
+                        <div class="mt-12 grid grid-cols-3 gap-4">
                             <th:block th:if="${!friendsList.isEmpty()}">
                                 <div th:each="friend: ${friendsList}" class="card custom-card w-full shadow-xl">
                                     <div class="flex flex-col space-x-3 p-4">
@@ -147,7 +147,7 @@
                                         </div>
                                         <div class="card-actions justify-end items-end p-4">
                                         <label>
-                                            <a th:href="@{/dm/room/receiver/{receiverId}(receiverId=${friend.getFriend().getId()})}"><i class="fas fa-message fa-2x hover:text-blue-500"></i></a>
+                                            <a th:href="@{/dm/room/receiver/{receiverId}(receiverId=${friend.getFriend().getId()})}"  class="btn btn-sm bg-[#FF6B00] btn-outline border-white text-white hover:border-white"><i class="fa-regular fa-paper-plane"></i></a>
                                         </label>
                                         </div>
                                     </div>
