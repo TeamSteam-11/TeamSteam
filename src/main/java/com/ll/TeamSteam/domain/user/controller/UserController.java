@@ -381,27 +381,4 @@ public class UserController {
 
         return "user/createGenre";
     }
-
-
-    /**
-     * 명예의전당 버튼을 통해 유저 더미데이터 생성
-     */
-    @GetMapping("/user/dummyAdd")
-    public String dummyAdd(){
-        UserInfoResponse.User user = new UserInfoResponse.User();
-        user.setAvatarmedium("https://example.com/avatar.jpg");
-        user.setProfilestate(1);
-        user.setPersonaname("JohnDoe");
-        user.setSteamid("11331");
-
-        UserInfoResponse.Response response = new UserInfoResponse.Response();
-        response.setPlayers(Collections.singletonList(user));
-
-        UserInfoResponse userInfoResponse = new UserInfoResponse();
-        userInfoResponse.setResponse(response);
-
-        userService.create(userInfoResponse);
-
-        return "redirect:/rank";
-    }
 }
