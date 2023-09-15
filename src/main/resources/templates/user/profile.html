@@ -32,9 +32,26 @@
         .btn-custom{
             background-color: #FF6B00;
         }
+        /*.progress-custom {*/
+        /*    background-image: linear-gradient(90deg, #1c92d2 0%,#f2fcfe 100%);*/
+        /*    height: 9px;*/
+        /*}*/
         .progress-custom {
-            background-image: linear-gradient(90deg, #1c92d2 0%,#f2fcfe 100%);
+            background-color: #222222; /* 배경 색상 */
             height: 9px;
+        }
+
+        .progress-custom::-webkit-progress-bar {
+            background-color: #222222; /* 배경 색상 (WebKit 브라우저용) */
+
+        }
+
+        .progress-custom::-webkit-progress-value {
+            background-color: #58C8C1; /* 진행 막대 색상 (WebKit 브라우저용) */
+        }
+
+        .progress-custom::-moz-progress-bar {
+            background-color: #58C8C1; /* 진행 막대 색상 (Firefox 브라우저용) */
         }
         .badge {
             padding: 2px 5px;
@@ -68,16 +85,16 @@
                     <img th:src="${targetUser.getAvatar()}" class="w-full h-full object-cover">
                 </div>
             </figure>
-                <div class="flex flex-row p-4">
-                    <h1 class="my-2 text-xl" th:text="${targetUser.getUsername()}" style="color: #dddddd;">이름
-                    </h1>
-                    <div class="mt-3 ml-4" th:if="${targetUser.getType().toString().equals('남성')}">
-                        <i class="fa-solid fa-mars fa-2xl" style="color: #80aeff;"></i>
-                    </div>
-                    <div class="mt-3 ml-4" th:if="${targetUser.getType().toString().equals('여성')}">
-                        <i class="fa-solid fa-venus fa-2xl" style="color: #ff94eb;"></i>
-                    </div>
+            <div class="flex flex-row p-4">
+                <h1 class="my-2 text-xl" th:text="${targetUser.getUsername()}" style="color: #dddddd;">이름
+                </h1>
+                <div class="mt-3 ml-4" th:if="${targetUser.getType().toString().equals('남성')}">
+                    <i class="fa-solid fa-mars fa-2xl" style="color: #80aeff;"></i>
                 </div>
+                <div class="mt-3 ml-4" th:if="${targetUser.getType().toString().equals('여성')}">
+                    <i class="fa-solid fa-venus fa-2xl" style="color: #ff94eb;"></i>
+                </div>
+            </div>
         </div>
         <div class="flex flex-row">
             <div class="mt-12 basis-1/4">
@@ -109,6 +126,12 @@
                 </ul>
             </div>
             <div class="basis-3/4">
+                <!--프로필-->
+                <div id="profile" class="section" style="display: none;">
+                    <div class="overflow-x-auto">
+                        <h2 class="text-xl font-semibold mb-4">프로필</h2>
+                    </div>
+                </div>
                 <!--친구 목록-->
                 <div id="friendsList" class="section" style="display: none;">
                     <div class="overflow-x-auto">
@@ -118,16 +141,16 @@
                                 <div th:each="friend: ${friendsList}" class="card custom-card w-full shadow-xl">
                                     <div class="flex flex-col space-x-3 p-4">
                                         <div class="flex flex-row">
-                                        <div class="avatar p-4">
-                                            <div class="mask mask-squircle w-12 h-12">
-                                                <img th:src="${friend.getFriend().getAvatar()}" class="w-8 h-8 " />
+                                            <div class="avatar p-4">
+                                                <div class="mask rounded-xl w-12 h-12">
+                                                    <img th:src="${friend.getFriend().getAvatar()}" class="w-12 h-12 " />
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="flex flex-col justify-around">
-                                            <div class="font-bold" th:text="${friend.getFriend().getUsername()}"></div>
+                                            <div class="flex flex-col justify-center">
+                                                <div class="font-bold pb-1" th:text="${friend.getFriend().getUsername()}"></div>
                                                 <progress class="progress progress-accent w-24 progress-custom" th:value="${friend.getFriend().getTemperature()}" max="100">
                                                 </progress>
-                                        </div>
+                                            </div>
                                         </div>
                                         <div class="flex pt-4" style="display: flex; flex-direction: column">
                                             <div class="table-cell m-2">
@@ -146,9 +169,9 @@
                                             </div>
                                         </div>
                                         <div class="card-actions justify-end items-end p-4">
-                                        <label>
-                                            <a th:href="@{/dm/room/receiver/{receiverId}(receiverId=${friend.getFriend().getId()})}"  class="btn btn-sm bg-[#FF6B00] btn-outline border-white text-white hover:border-white"><i class="fa-regular fa-paper-plane"></i></a>
-                                        </label>
+                                            <label>
+                                                <a th:href="@{/dm/room/receiver/{receiverId}(receiverId=${friend.getFriend().getId()})}"  class="btn btn-sm bg-[#FF6B00] btn-outline border-white text-white hover:border-white"><i class="fa-regular fa-paper-plane"></i></a>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -159,45 +182,119 @@
                         </div>
                     </div>
                 </div>
+                <!--최근 매칭된 유저-->
+                <div id="recentUser" class="section" style="display: none;">
+                    <div class="overflow-x-auto">
+                        <h2 class="text-xl font-semibold mb-4">최근 매칭된 유저</h2>
+                        <div class="mt-12 grid grid-cols-3 gap-4">
+                            <th:block th:if="${!recentlyUserList.isEmpty()}">
+                                <div th:each="recentlyUser: ${recentlyUserList}" class="card custom-card w-full shadow-xl">
+                                    <div class="flex flex-col space-x-3 p-4">
+                                        <div class="flex flex-row">
+                                            <div class="avatar p-4">
+                                                <div class="mask rounded-xl w-12 h-12">
+                                                    <img th:src="${recentlyUser.getMatchingPartner().getUser().getAvatar()}" class="w-12 h-12 "/>
+                                                </div>
+                                            </div>
+                                            <div class="flex flex-col justify-center">
+                                                <div class="font-bold pb-1" th:text="${recentlyUser.getMatchingPartner().getUser().getUsername()}"></div>
+                                                <progress class="progress progress-accent w-24 progress-custom" th:value="${recentlyUser.getMatchingPartner().getUser().getTemperature()}" max="100">
+                                                </progress>
+                                            </div>
+                                        </div>
+                                        <div class="flex pt-4" style="display: flex; flex-direction: column">
+                                            <div class="table-cell m-2">
+                                                <div class="flex flex-wrap">
+                                                    <div th:if="${!recentlyUser.getMatchingPartner().getUser().getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${recentlyUser.getMatchingPartner().getUser().getUserTag().getGameTag()}" class="badge" style="background-color: #00A3FF; color: #FFFFFF; font-size: 12px">
+                                                        <span th:text="${targetUserGameTag.getName()}"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="table-cell m-2">
+                                                <div class="flex flex-wrap">
+                                                    <div th:if="${!recentlyUser.getMatchingPartner().getUser().getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${recentlyUser.getMatchingPartner().getUser().getUserTag().getGenreTag()}"  class="badge" style="background-color: #878787; color: #FFFFFF; font-size: 12px">
+                                                        <span th:text="${targetUserGenreTag.getGenre()}"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-actions justify-between p-4">
+                                            <div>
+                                            <label class="px-2">
+                                                <a th:id="'thumbsUpButton_' + ${recentlyUser.getMatchingPartner().getUser().getId()}"
+                                                   th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()} +'/'+ ${1}}"
+                                                   class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded thumbs-up-button">
+                                                    <i class="fa fa-thumbs-up fa-lg"></i>
+                                                </a>
+                                            </label>
+                                            <label class="px-2">
+                                                <a th:id="'thumbsDownButton_' + ${recentlyUser.getMatchingPartner().getUser().getId()}"
+                                                   th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()} +'/'+ ${0}}"
+                                                   class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded thumbs-down-button">
+                                                    <i class="fa fa-thumbs-down fa-lg"></i>
+                                                </a>
+                                            </label>
+                                            </div>
+                                            <label>
+                                                <a th:href="'/user/profile/'+${recentlyUser.getMatchingPartner().getUser().getId()}">
+                                                    <button class="btn btn-custom btn-sm"> Profile</button>
+                                                </a>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th:block>
+                            </th:block>
+                            <th:block th:if="${recentlyUserList.isEmpty()}">
+                                <p class="text-gray-500">매칭을 시작해주세요.</p>
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
+                <!--라이브러리-->
+                <div id="library" class="section" style="display: none;">
+                    <div class="overflow-x-auto">
+                        <h2 class="text-xl font-semibold mb-4">라이브러리</h2>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <script th:inline="javascript">
-        function showMenu(menuType) {
-            // 모든 섹션을 가져옵니다.
-            var sections = document.querySelectorAll('.section');
+        <script th:inline="javascript">
+            function showMenu(menuType) {
+                // 모든 섹션을 가져옵니다.
+                var sections = document.querySelectorAll('.section');
 
-            // 모든 섹션을 숨깁니다.
-            for (var i = 0; i < sections.length; i++) {
-                sections[i].style.display = 'none';
+                // 모든 섹션을 숨깁니다.
+                for (var i = 0; i < sections.length; i++) {
+                    sections[i].style.display = 'none';
+                }
+
+                // 선택된 메뉴에 해당하는 섹션만 보여줍니다.
+                var sectionToShow = document.querySelector('#' + menuType);
+
+                if (sectionToShow) {
+                    sectionToShow.style.display = 'block';
+                }
             }
-
-            // 선택된 메뉴에 해당하는 섹션만 보여줍니다.
-            var sectionToShow = document.querySelector('#' + menuType);
-
-            if (sectionToShow) {
-                sectionToShow.style.display = 'block';
-            }
-        }
-        $(document).ready(function() {
-            $('.thumbs-up-button, .thumbs-down-button').click(function() {
-                var buttonId = $(this).attr('id');
-                $('#' + buttonId).closest('th').hide();
-                $('#' + buttonId).closest('tr').find('.thumbs-up-button, .thumbs-down-button').hide();
-                localStorage.setItem(buttonId, 'hidden');
-            });
-
-            $('.thumbs-up-button, .thumbs-down-button').each(function() {
-                var buttonId = $(this).attr('id');
-                var isHidden = localStorage.getItem(buttonId);
-                if (isHidden === 'hidden') {
+            $(document).ready(function() {
+                $('.thumbs-up-button, .thumbs-down-button').click(function() {
+                    var buttonId = $(this).attr('id');
                     $('#' + buttonId).closest('th').hide();
                     $('#' + buttonId).closest('tr').find('.thumbs-up-button, .thumbs-down-button').hide();
-                }
+                    localStorage.setItem(buttonId, 'hidden');
+                });
+
+                $('.thumbs-up-button, .thumbs-down-button').each(function() {
+                    var buttonId = $(this).attr('id');
+                    var isHidden = localStorage.getItem(buttonId);
+                    if (isHidden === 'hidden') {
+                        $('#' + buttonId).closest('th').hide();
+                        $('#' + buttonId).closest('tr').find('.thumbs-up-button, .thumbs-down-button').hide();
+                    }
+                });
             });
-        });
-    </script>
+        </script>
 </main>
 <footer layout:fragment="footer" class="footer items-center p-4 text-neutral-content">
     <div class="items-center grid-flow-col">
