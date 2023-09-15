@@ -26,7 +26,7 @@
             text-align: center;
         }
         .custom-card{
-            background-color: #444444;
+            background-color: #2D2D2D;
             border: 1px solid #67686C;
         }
         .btn-custom{
@@ -220,20 +220,20 @@
                                         </div>
                                         <div class="card-actions justify-between p-4">
                                             <div>
-                                            <label class="px-2">
-                                                <a th:id="'thumbsUpButton_' + ${recentlyUser.getMatchingPartner().getUser().getId()}"
-                                                   th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()} +'/'+ ${1}}"
-                                                   class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded thumbs-up-button">
-                                                    <i class="fa fa-thumbs-up fa-lg"></i>
-                                                </a>
-                                            </label>
-                                            <label class="px-2">
-                                                <a th:id="'thumbsDownButton_' + ${recentlyUser.getMatchingPartner().getUser().getId()}"
-                                                   th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()} +'/'+ ${0}}"
-                                                   class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded thumbs-down-button">
-                                                    <i class="fa fa-thumbs-down fa-lg"></i>
-                                                </a>
-                                            </label>
+                                                <label class="px-2">
+                                                    <a th:id="'thumbsUpButton_' + ${recentlyUser.getMatchingPartner().getUser().getId()}"
+                                                       th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()} +'/'+ ${1}}"
+                                                       class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded thumbs-up-button">
+                                                        <i class="fa fa-thumbs-up fa-lg"></i>
+                                                    </a>
+                                                </label>
+                                                <label class="px-2">
+                                                    <a th:id="'thumbsDownButton_' + ${recentlyUser.getMatchingPartner().getUser().getId()}"
+                                                       th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()} +'/'+ ${0}}"
+                                                       class="daisy-btn daisy-btn_secondary daisy-btn_icon daisy-btn_rounded thumbs-down-button">
+                                                        <i class="fa fa-thumbs-down fa-lg"></i>
+                                                    </a>
+                                                </label>
                                             </div>
                                             <label>
                                                 <a th:href="'/user/profile/'+${recentlyUser.getMatchingPartner().getUser().getId()}">
@@ -255,6 +255,32 @@
                 <div id="library" class="section" style="display: none;">
                     <div class="overflow-x-auto">
                         <h2 class="text-xl font-semibold mb-4">라이브러리</h2>
+                        <div class="mt-12 grid grid-cols-3 gap-4">
+                            <div th:each="game : ${gameList}" class="card custom-card w-full shadow-xl">
+                                <figure class="px-5 pt-5">
+                                    <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${game.appid} + '/header.jpg'}"
+                                         alt="게임 이미지" class="card-img-top">
+                                </figure>
+                                <div class="card-body  items-center text-center">
+                                    <h5 class="card-title" th:text="${game.name}"></h5>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="m-8 flex justify-center">
+                            <div class="pagination">
+                                <ul class="flex space-x-4 flex-row">
+                                    <li th:if="${currentPage != 0}" th:class="${currentPage == 0 ? 'disabled' : ''}">
+                                        <a th:href="@{/user/profile/{userId}(userId=${userId},page=${currentPage - 1}, size=${size})}">&laquo; 이전 </a>
+                                    </li>
+                                    <li th:if="${currentPage != totalPages - 1}" th:class="${currentPage == totalPages - 2 ? 'disabled' : ''}">
+                                        <a th:href="@{/user/profile/{userId}(userId=${userId},page=${currentPage + 1}, size=${size})}">다음 &raquo;</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
             </div>
