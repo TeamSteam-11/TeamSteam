@@ -52,8 +52,8 @@
         .card {
             background-color: #2d2d2d;
             color: white;
-            margin: 20px;
-            width: 290px;
+            margin: 10px;
+            width: 275px;
             height: 280px;
             border: 1px solid #67686c;
             border-radius: 5px;
@@ -79,7 +79,7 @@
             <form id="filter-form" th:action="@{/match/list/filter}" method="GET" class="relative">
 
                 <select id="genre-select" name="genretype" class="h-12 p-3 mr-3" onchange="submitForm()"
-                        style="background-color: transparent; border: 1px solid #67686c; width: 150px; border-radius: 5px">
+                        style="background-color: transparent; border: 1px solid #67686c; width: 175px; border-radius: 5px">
                     <option value="" selected>장르 선택</option>
                     <optgroup label="액션">
                         <option value="일인칭슈팅" th:selected="${genretype == '일인칭슈팅'}">일인칭슈팅</option>
@@ -134,7 +134,7 @@
 
 
                 <select id="time-select" name="starttime" class="h-12 p-3 mr-3" onchange="submitForm()"
-                        style="background-color: transparent; border: 1px solid #67686c; width: 150px; border-radius: 5px">
+                        style="background-color: transparent; border: 1px solid #67686c; width: 175px; border-radius: 5px">
                     <option value="" selected>시작 시간</option>
                     <option value="0" th:selected="${starttime == 0}">시간무관</option>
                     <option value="1" th:selected="${starttime == 1}">1시</option>
@@ -165,7 +165,7 @@
 
 
                 <select id="gender-select" name="gender" class="h-12 p-3 mr-8" onchange="submitForm()"
-                        style="background-color: transparent; border: 1px solid #67686c; width: 150px; border-radius: 5px">
+                        style="background-color: transparent; border: 1px solid #67686c; width: 175px; border-radius: 5px">
                     <option value="" selected>성별</option>
                     <option value="DC" th:selected="${gender == 'DC'}">성별무관</option>
                     <option value="F" th:selected="${gender == 'F'}">여성</option>
@@ -178,14 +178,14 @@
         <!-- 검색창 -->
         <div class="search-box flex justify-center items-center mt-5 mb-5" style="height: 30px;">
             <form th:action="@{/match/list/search}" method="GET" class="relative">
-                <div class="flex items-center" style="background-color: #555555; border-radius: 5px; width: 550px">
+                <div class="flex items-center" style="background-color: #555555; border-radius: 5px; width: 570px">
                     <select name="name" class="h-12 p-3"
                             style="color: white; background-color: #444444; border-radius: 5px; padding-left: 25px; padding-right: 20px;">
                         <option value="title" th:selected="${searchOption == 'title'}">제목</option>
                         <option value="content" th:selected="${searchOption == 'content'}">내용</option>
                     </select>
                     <input type="text" name="keyword" placeholder="검색어 입력" th:value="${keyword}"
-                           class="h-12 p-4 pr-12 ml-4" style="background-color: transparent; width: 500px;"/>
+                           class="h-12 p-4 pr-12 ml-3" style="background-color: transparent; width: 500px;"/>
                     <button type="submit" aria-label="Search" title="Search"
                             class="absolute right-0 top-0 bottom-0 flex items-center justify-center text-black text-2xl pr-3">
                         <i class="fas fa-search"></i>
