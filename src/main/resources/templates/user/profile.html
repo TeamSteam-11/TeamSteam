@@ -29,6 +29,11 @@
         .btn-custom:hover{
             background-color: #dc5804;
         }
+        .badge {
+            padding: 2px 5px;
+            border-radius: 5px 5px 5px 5px;
+        }
+
         .progress-custom {
             background-color: #222222; /* 배경 색상 */
             height: 9px;
@@ -36,7 +41,6 @@
 
         .progress-custom::-webkit-progress-bar {
             background-color: #222222; /* 배경 색상 (WebKit 브라우저용) */
-
         }
 
         .progress-custom::-webkit-progress-value {
@@ -46,20 +50,16 @@
         .progress-custom::-moz-progress-bar {
             background-color: #58C8C1; /* 진행 막대 색상 (Firefox 브라우저용) */
         }
-        .badge {
-            padding: 2px 5px;
-            border-radius: 5px 5px 5px 5px;
-        }
+
         .progress-bar {
+            height: 24px;
             width: 100%;
             background-color: #222222; /* 배경 색상 */
-            height: 24px;
             position: relative;
         }
 
         .progress {
             background-color: #58C8C1; /* 진행 막대 색상 */
-            height: 100%;
         }
 
         .percentage {
@@ -150,7 +150,7 @@
                             </div>
                             <div class="divider"></div>
                             <div id="progressBar" class="progress-bar">
-                                <div id="progress" class="progress"></div>
+                                <div id="progress" class="progress h-full"></div>
                                 <span id="percentage" class="percentage"></span>
                             </div>
                         </div>
