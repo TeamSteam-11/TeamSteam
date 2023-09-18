@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -154,6 +155,10 @@ public class MatchingService {
         return matchingRepository.filterByGenreAndStartTimeAndGender(genreType, startTime, gender, pageable);
     }
 
+    /**
+     * 현재 사용 X
+     * @return
+     */
     public List<Matching> getSortedMatchingByDeadline() {
         List<Matching> matchingList = matchingRepository.findAll();
         List<Matching> approachingDeadlineList = new ArrayList<>();
@@ -181,6 +186,9 @@ public class MatchingService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 현재 사용 X
+     */
     public List<Matching> getSortedMatchingByParticipant() {
         List<Matching> matchingList = matchingRepository.findAll();
 
@@ -217,4 +225,14 @@ public class MatchingService {
         return matchingRepository.findByTitle(title);
     }
 
+    public List<Matching> getSortedMatchingByCreateDate() {
+        List<Matching> matchingList = matchingRepository.findAll(Sort.by(Sort.Order.desc("createDate")));
+
+        int maxResults = 3;
+        if (matchingList.size() > maxResults) {
+            matchingList = matchingList.subList(0, maxResults);
+        }
+
+        return matchingList;
+    }
 }
