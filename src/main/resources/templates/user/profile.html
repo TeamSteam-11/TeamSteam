@@ -7,12 +7,6 @@
             color:white;
         }
 
-        .table {
-            display: flex;
-            justify-content: center;
-            margin-top: 50px;
-        }
-
         .table thead tr:first-child th,
         .table thead tr:first-child td {
             background-color: #1F2227;
@@ -32,10 +26,9 @@
         .btn-custom{
             background-color: #FF6B00;
         }
-        /*.progress-custom {*/
-        /*    background-image: linear-gradient(90deg, #1c92d2 0%,#f2fcfe 100%);*/
-        /*    height: 9px;*/
-        /*}*/
+        .btn-custom:hover{
+            background-color: #dc5804;
+        }
         .progress-custom {
             background-color: #222222; /* 배경 색상 */
             height: 9px;
@@ -60,7 +53,7 @@
         .progress-bar {
             width: 100%;
             background-color: #222222; /* 배경 색상 */
-            height: 9px;
+            height: 24px;
             position: relative;
         }
 
@@ -71,14 +64,11 @@
 
         .percentage {
             position: absolute;
-            right: 10px;
+            left: 10px;
             top: 50%;
             transform: translateY(-50%);
         }
-        .progress-custom2 {
-            background-image: linear-gradient(90deg, #1c92d2 0%,#f2fcfe 100%);
-            height: 24px;
-        }
+
         /* 기본 상태 */
         .menu label {
             color: gray;
@@ -153,7 +143,11 @@
                     <div class="overflow-x-auto">
                         <h2 class="text-xl font-semibold mb-4 ">프로필</h2>
                         <div class="pt-4">
+                            <div class="flex justify-between items-center">
                             <p class="mb-2">매너온도</p>
+                            <div th:if="${myRank} != null" th:text="'#' + (${myRank}+1) + '등'">
+                            </div>
+                            </div>
                             <div class="divider"></div>
                             <div id="progressBar" class="progress-bar">
                                 <div id="progress" class="progress"></div>
@@ -162,7 +156,7 @@
                         </div>
                         <div class="pt-4">
                             <div class=" flex justify-between items-center">
-                                <p class="pt-2">게임 태그</pclass>
+                                <p class="pt-2">게임 태그</p>
                                 <form th:action="@{/user/profile/editprofile}" method="post">
                                     <button th:if="${loginedId == targetUser.getId()}" class="btn btn-sm btn-custom">Edit Tag</button>
                                     <input type="submit" value="">
@@ -379,7 +373,7 @@
                 var percentage = document.getElementById('percentage');
 
                 progressBar.style.width = percent + '%';
-                percentage.innerHTML = percent + '%';
+                percentage.innerHTML = percent + '°C';
             }
 
             // 페이지 로드 시 진행률 업데이트
