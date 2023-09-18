@@ -3,13 +3,30 @@
 <head>
     <title>Matching Detail</title>
     <style>
+        .button-group > a {
+            background-color: #ff6b00;
+            width: 140px;
+            height: 45px;
+            border-radius: 5px;
+            font-size: 17px;
+        }
+
         .button-group > a:hover {
-            background-color: #2e3239 !important;
+            background-color: #dc5804 !important;
             cursor: pointer;
         }
 
+        .button-group > form > button {
+            background-color: #444444;
+            width: 90px;
+            height: 45px;
+            border-radius: 5px;
+            font-size: 17px;
+            margin-right: 10px;
+        }
+
         .button-group > form > button:hover {
-            background-color: #2e3239 !important;
+            background-color: #363535 !important;
             cursor: pointer;
         }
 
@@ -276,7 +293,6 @@
                       method="post">
                     <button type="submit"
                             class="flex items-center justify-center"
-                            style="background-color: #444444; width: 90px; height: 45px; border-radius: 5px; font-size: 17px; margin-right: 10px"
                             th:if="${matching.user.id == @rq.user.id}"
                             onclick="return confirm('해당 게시물을 삭제하시겠습니까?')">삭제
                     </button>
@@ -286,7 +302,6 @@
                 <form th:if="${@rq.isLogin()}" th:action="@{/match/modify/{id}(id=${matching.id})}">
                     <button type="submit"
                             class="flex items-center justify-center"
-                            style="background-color: #444444; width: 90px; height: 45px; border-radius: 5px; font-size: 17px; margin-right: 10px"
                             th:if="${matching.user.id == @rq.user.id}"
                             onclick="return confirm('해당 게시물을 수정하시겠습니까?')">수정
                     </button>
@@ -294,7 +309,6 @@
 
                 <!--참여 버튼-->
                 <a class="flex items-center justify-center"
-                   style="background-color: #ff6b00; width: 140px; height: 45px; border-radius: 5px; font-size: 17px"
                    th:if="${!alreadyWithPartner && matching.getDeadlineDuration() != null}"
                    th:href="@{|/match/detail/${matching.getId()}/addPartner|}"
                    th:classappend="${matching.participant >= matching.capacity} ? 'disabled' : ''">
@@ -303,9 +317,9 @@
 
                 <!-- 매칭 파트너인 경우에 채팅 참여하기 버튼 활성화됨 -> 미니 프로필도 보이게 하기 -->
                 <a class="text-sm flex items-center justify-center"
-                   style="background-color: #ff6b00; width: 140px; height: 45px; border-radius: 5px; font-size: 17px"
                    th:if="${alreadyWithPartner}"
-                   th:href="@{|/match/detail/${matching.getId()}/moveChatRoom|}">채팅 참여하기</a>
+                   th:href="@{|/match/detail/${matching.getId()}/moveChatRoom|}">채팅 참여하기
+                </a>
 
             </div>
             <!-- 수정/삭제 버튼 끝-->
