@@ -4,7 +4,7 @@
     <title>매칭 등록</title>
     <style>
         .submit-button:hover {
-            background-color: #2f77b6 !important;
+            background-color: #dc5804 !important;
         }
 
         input[type="text"]::placeholder {
@@ -20,7 +20,7 @@
             height: 45px;
             background-color: #404040;
             border-radius: 5px;
-            margin-bottom: 22px;
+            margin-bottom: 20px;
             padding: 10px;
         }
 
@@ -43,7 +43,7 @@
 
     <form th:object="${createForm}" th:action="@{/match/create}" method="POST">
 
-        <div class="flex justify-center">
+        <div class="ml-5 mr-5 flex justify-between">
 
             <!-- 게시글 작성 -->
             <div style="margin-right: 45px">
@@ -73,110 +73,114 @@
 
 
             <!--태그 설정 및 등록 버튼-->
-            <div class="flex flex-col justify-center">
-                <div class="flex align-center"
-                     style="border-bottom: 1px solid white; padding: 0px 0px 7px 5px; margin-bottom: 15px">
-                    <div style="font-size: 17px">태그 설정</div>
-                </div>
-
-                <!-- 태그 설정 -->
-                <div>
-                    <!--게임 태그-->
-                    <div>
-                        <select id="gameTag" th:field="*{gameTagId}" class="tag-custom" required autofocus>
-                            <option value="" disabled selected>게임 태그</option>
-                            <option th:each="gameTag : ${userGameTags}" th:value="${gameTag.appid}"
-                                    th:text="${gameTag.name}"></option>
-                        </select>
+            <div class="flex flex-col justify-between">
+                <div flex flex-col>
+                    <div class="flex align-center"
+                         style="border-bottom: 1px solid white; padding: 0px 0px 7px 5px; margin-bottom: 15px">
+                        <div style="font-size: 17px">태그 설정</div>
                     </div>
 
-                    <!--장르 태그-->
-                    <div>
-                        <select id="genreTag" th:field="*{genre}" class="tag-custom" required autofocus>
-                            <option value="" disabled selected>장르 태그</option>
-                            <option th:each="genreTag : ${userGenreTags}" th:value="${genreTag.genre}"
-                                    th:text="${genreTag.genre}"></option>
-                        </select>
-                    </div>
 
-                    <!--매칭 인원-->
+                    <!-- 태그 설정 -->
                     <div>
-                        <!--                        <label for="capacity" class="block">매칭 인원</label>-->
-                        <!--                        <input type="number" id="capacity" th:field="*{capacity}" class="tag-custom"-->
-                        <!--                               oninput="checkCapacity()" min="2" max="5" required autofocus>-->
-                        <select id="capacity" name="capacity" th:field="*{capacity}" class="tag-custom" required
-                                autofocus>
-                            <option value="" disabled selected>매칭 인원</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                        </select>
-                    </div>
+                        <!--게임 태그-->
+                        <div>
+                            <select id="gameTag" th:field="*{gameTagId}" class="tag-custom" required autofocus>
+                                <option value="" disabled selected>게임 태그</option>
+                                <option th:each="gameTag : ${userGameTags}" th:value="${gameTag.appid}"
+                                        th:text="${gameTag.name}"></option>
+                            </select>
+                        </div>
 
-                    <!--성별 설정-->
-                    <div>
-                        <!--                        <label for="gender" class="block">모집 성별</label>-->
-                        <select id="gender" name="gender" th:field="*{gender}" class="tag-custom" required autofocus>
-                            <option value="" disabled selected>모집 성별</option>
-                            <option value="DC">성별무관</option>
-                            <option value="F">여성</option>
-                            <option value="M">남성</option>
-                        </select>
-                    </div>
+                        <!--장르 태그-->
+                        <div>
+                            <select id="genreTag" th:field="*{genre}" class="tag-custom" required autofocus>
+                                <option value="" disabled selected>장르 태그</option>
+                                <option th:each="genreTag : ${userGenreTags}" th:value="${genreTag.genre}"
+                                        th:text="${genreTag.genre}"></option>
+                            </select>
+                        </div>
 
-                    <!--시작 시간-->
-                    <div>
-                        <!--                        <label for="startTime" class="block">시작 시간</label>-->
-                        <select id="startTime" th:field="*{startTime}" class="tag-custom" required>
-                            <option value="" disabled selected>시작 시간</option>
-                            <option value="0" text="시간무관">시간무관</option>
-                            <option th:each="hour : ${#numbers.sequence(1, 24)}" th:value="${hour}"
-                                    th:text="${hour}"></option>
-                        </select>
-                    </div>
+                        <!--매칭 인원-->
+                        <div>
+                            <!--                        <label for="capacity" class="block">매칭 인원</label>-->
+                            <!--                        <input type="number" id="capacity" th:field="*{capacity}" class="tag-custom"-->
+                            <!--                               oninput="checkCapacity()" min="2" max="5" required autofocus>-->
+                            <select id="capacity" name="capacity" th:field="*{capacity}" class="tag-custom" required
+                                    autofocus>
+                                <option value="" disabled selected>매칭 인원</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
 
-                    <!--                    &lt;!&ndash;종료 시간&ndash;&gt;-->
-                    <!--                    <div>-->
-                    <!--&lt;!&ndash;                        <label for="endTime" class="block">종료 시간</label>&ndash;&gt;-->
-                    <!--                        <select id="endTime" th:field="*{endTime}" class="tag-custom" required autofocus>-->
-                    <!--                            <option value="0" text="시간무관">시간무관</option>-->
-                    <!--                            <option th:each="hour : ${#numbers.sequence(1, 24)}" th:value="${hour}"-->
-                    <!--                                    th:text="${hour}"></option>-->
-                    <!--                        </select>-->
-                    <!--                    </div>-->
+                        <!--성별 설정-->
+                        <div>
+                            <!--                        <label for="gender" class="block">모집 성별</label>-->
+                            <select id="gender" name="gender" th:field="*{gender}" class="tag-custom" required
+                                    autofocus>
+                                <option value="" disabled selected>모집 성별</option>
+                                <option value="DC">성별무관</option>
+                                <option value="F">여성</option>
+                                <option value="M">남성</option>
+                            </select>
+                        </div>
 
-                    <!--마이크-->
-                    <div>
-                        <label for="mic" class="block">마이크</label>
-                        <select id="mic" th:field="*{mic}" class="tag-custom" required>
-<!--                            <option value="" selected>마이크</option>-->
-                            <option value="false">OFF</option>
-                            <option value="true">ON</option>
-                        </select>
-                    </div>
+                        <!--시작 시간-->
+                        <div>
+                            <!--                        <label for="startTime" class="block">시작 시간</label>-->
+                            <select id="startTime" th:field="*{startTime}" class="tag-custom" required>
+                                <option value="" disabled selected>시작 시간</option>
+                                <option value="0" text="시간무관">시간무관</option>
+                                <option th:each="hour : ${#numbers.sequence(1, 24)}" th:value="${hour}"
+                                        th:text="${hour}"></option>
+                            </select>
+                        </div>
 
-                    <!--모집 마감 시간-->
-                    <div>
-<!--                        <label for="deadline" class="block">모집 마감 시간</label>-->
-                        <select id="deadline" name="deadline" onchange="setSelectedHours()"
-                                class="tag-custom" required>
-                            <option value="" disabled selected>모집 마감 시간</option>
-                            <option value="0">제한 없음</option>
-                            <option value="1">1시간 후</option>
-                            <option value="2">2시간 후</option>
-                            <option value="3">3시간 후</option>
-                            <option value="6">6시간 후</option>
-                            <option value="12">12시간 후</option>
-                            <option value="24">1일 후</option>
-                        </select>
+                        <!--                    &lt;!&ndash;종료 시간&ndash;&gt;-->
+                        <!--                    <div>-->
+                        <!--&lt;!&ndash;                        <label for="endTime" class="block">종료 시간</label>&ndash;&gt;-->
+                        <!--                        <select id="endTime" th:field="*{endTime}" class="tag-custom" required autofocus>-->
+                        <!--                            <option value="0" text="시간무관">시간무관</option>-->
+                        <!--                            <option th:each="hour : ${#numbers.sequence(1, 24)}" th:value="${hour}"-->
+                        <!--                                    th:text="${hour}"></option>-->
+                        <!--                        </select>-->
+                        <!--                    </div>-->
+
+                        <!--마이크-->
+                        <div>
+                            <!--                        <label for="mic" class="block">마이크</label>-->
+                            <select id="mic" th:field="*{mic}" class="tag-custom" required>
+                                <!--                            <option value="" selected>마이크</option>-->
+                                <option value="false">OFF</option>
+                                <option value="true">ON</option>
+                            </select>
+                        </div>
+
+                        <!--모집 마감 시간-->
+                        <div>
+                            <!--                        <label for="deadline" class="block">모집 마감 시간</label>-->
+                            <select id="deadline" name="deadline" onchange="setSelectedHours()"
+                                    class="tag-custom" required>
+                                <option value="" disabled selected>모집 마감 시간</option>
+                                <option value="0">제한 없음</option>
+                                <option value="1">1시간 후</option>
+                                <option value="2">2시간 후</option>
+                                <option value="3">3시간 후</option>
+                                <option value="6">6시간 후</option>
+                                <option value="12">12시간 후</option>
+                                <option value="24">1일 후</option>
+                            </select>
+                        </div>
+                        <input type="hidden" id="selectedHours" name="selectedHours" value="0">
                     </div>
-                    <input type="hidden" id="selectedHours" name="selectedHours" value="0">
                 </div>
 
 
@@ -184,10 +188,11 @@
                 <div class="flex justify-end">
                     <div class="flex justify-end">
                         <button type="submit" onclick="showSuccessMessage()" class="submit-button p-2"
-                                style="background-color: #ff6b00; width: 190px; height: 45px; border-radius: 5px">등록
+                                style="background-color: #ff6b00; width: 190px; height: 45px; border-radius: 5px; margin-bottom: 7px">등록
                         </button>
                     </div>
                 </div>
+
 
             </div>
             <!--태그 끝-->
