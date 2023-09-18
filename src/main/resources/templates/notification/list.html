@@ -51,6 +51,13 @@
             background-color: #363535;
         }
 
+        .image{
+            border-radius: 5px 5px 5px 5px;
+            margin-right: 5px;
+            weight : 96px;
+            height : 96px;
+        }
+
     </style>
 </head>
 
@@ -71,8 +78,22 @@
             <div class="noti-box flex flex-row justify-between mb-8 pt-2 pb-2">
                 <div class="flex flex-col w-full">
                     <!--알림창 내용 들어감-->
-                    <div class="flex pl-3 grow items-center"
+
+                    <!--친구추가 알림 정상출력-->
+                    <div class="flex pl-3 grow items-center" th:if="${notification.roomId == null && notification.dmId == null && notification.enterAlarm == false}"
+                         th:text="${notification.invitingUser.username} + '님이 친구추가를 요청했습니다.'"></div>
+
+                    <!--채팅방 초대 정상출력-->
+                    <div class="flex pl-3 grow items-center" th:if="${notification.roomId != null && notification.dmId == null && notification.enterAlarm == false}"
                          th:text="${notification.invitingUser.username} + '님이 매칭 \' '+${notification.matchingName}+ ' \' 에 초대하셨습니다'"></div>
+
+                    <!--첫 dm시 알림-->
+                    <div class="flex pl-3 grow items-center" th:if="${notification.dmId != null && notification.roomId == null && notification.enterAlarm == false}"
+                         th:text="${notification.invitingUser.username} + '님이 메세지를 보냈습니다.'"></div>
+
+                    <!--채팅방 입장시 방장에게 알림 정상출력-->
+                    <div class="flex pl-3 grow items-center" th:if="${notification.dmId == null && notification.roomId != null && notification.enterAlarm == true}"
+                         th:text="${notification.invitingUser.username} + '님이 매칭 \' '+${notification.matchingName}+ ' \' 에 입장하셨습니다'"></div>
                     <!--수락 거절 버튼-->
                     <div th:if="${notification.roomId == null && notification.dmId == null && notification.enterAlarm == false}"
                          class="flex pl-2 pb-1">
@@ -106,9 +127,9 @@
                     <!--                    <div class="flex grow items-center">왼쪽2</div>-->
                 </div>
                 <!--알림창이 매칭글일 때 사진 친구추가일때 프로필아바타-->
-                <div class="flex justify-end items-center">
-                    <img style="width: 40px; height: 40px; border-radius: 5px; margin-right: 20px" th:src="${notification.getImage()}"
-                        alt="게임 이미지" width="200" height="auto"/>
+                <div class="flex justify-end items-center pr-2">
+                    <img class="image" th:src="${notification.getImage()}"
+                        alt="이미지"/>
                 </div>
 
             </div>
