@@ -252,19 +252,18 @@
 
                 <!-- 장르, 시간, 성별 -->
                 <div class="flex justify-center items-center" style="margin-top: 15px">
-                    <div style="background-color: #444444; width: auto; height: 25px; border-radius: 5px; padding:10px; margin: 0px 5px 0px 5px;
+                    <div style="background-color: #444444; width: auto; height: 25px; border-radius: 5px; padding:10px; margin: 0px 4px 0px 4px;
                          display: flex; justify-content: center; align-items: center; font-size: 13px">
                         <span th:text="${matching.genre}"></span>
                     </div>
 
-                    <div style="background-color: #444444; width: auto; height: 25px; border-radius: 5px; padding:10px; margin: 0px 5px 0px 5px;
+                    <div style="background-color: #444444; width: auto; height: 25px; border-radius: 5px; padding:10px; margin: 0px 4px 0px 4px;
                          display: flex; justify-content: center; align-items: center; font-size: 13px">
-                        <span th:if="${matching.startTime} != 0" th:text="${matching.startTime}"></span>
+                        <span th:if="${matching.startTime} != 0" th:text="${matching.startTime} + ':00'"></span>
                         <span th:if="${matching.startTime} == 0" text="시간무관">시간무관 </span>
-                        <span th:if="${matching.endTime} != 0" th:text="' - ' + ${matching.endTime}"></span>
                     </div>
 
-                    <div style="background-color: #444444; width: auto; height: 25px; border-radius: 5px; padding:10px; margin: 0px 5px 0px 5px;
+                    <div style="background-color: #444444; width: auto; height: 25px; border-radius: 5px; padding:10px; margin: 0px 4px 0px 4px;
                          display: flex; justify-content: center; align-items: center; font-size: 13px">
                         <span th:switch="${matching.gender}">
                           <span th:case="'F'">여성</span>
