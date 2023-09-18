@@ -57,10 +57,27 @@
             padding: 2px 5px;
             border-radius: 5px 5px 5px 5px;
         }
+        .progress-bar {
+            width: 100%;
+            background-color: #222222; /* 배경 색상 */
+            height: 9px;
+            position: relative;
+        }
 
+        .progress {
+            background-color: #58C8C1; /* 진행 막대 색상 */
+            height: 100%;
+        }
+
+        .percentage {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
         .progress-custom2 {
             background-image: linear-gradient(90deg, #1c92d2 0%,#f2fcfe 100%);
-            height: 4px;
+            height: 24px;
         }
         /* 기본 상태 */
         .menu label {
@@ -138,16 +155,18 @@
                         <div class="pt-4">
                             <p class="mb-2">매너온도</p>
                             <div class="divider"></div>
-                            <progress class="progress progress-accent w-full progress-custom" th:value="${targetUser.getTemperature()}" max="100">
-                            </progress>
+                            <div id="progressBar" class="progress-bar">
+                                <div id="progress" class="progress"></div>
+                                <span id="percentage" class="percentage"></span>
+                            </div>
                         </div>
                         <div class="pt-4">
-                            <div class="mb-2 flex justify-between">
-                            <p>게임 태그</p>
-                            <form th:action="@{/user/profile/editprofile}" method="post">
-                                <button th:if="${loginedId == targetUser.getId()}" class="btn btn-custom">Edit Tag</button>
-                                <input type="submit" value="">
-                            </form>
+                            <div class=" flex justify-between items-center">
+                                <p class="pt-2">게임 태그</pclass>
+                                <form th:action="@{/user/profile/editprofile}" method="post">
+                                    <button th:if="${loginedId == targetUser.getId()}" class="btn btn-sm btn-custom">Edit Tag</button>
+                                    <input type="submit" value="">
+                                </form>
                             </div>
                             <div class="divider"></div>
                             <div class="table-cell m-2">
@@ -335,6 +354,7 @@
         </div>
 
         <script th:inline="javascript">
+            //메뉴를 보이고 안보이게
             function showMenu(menuType) {
                 // 모든 섹션을 가져옵니다.
                 var sections = document.querySelectorAll('.section');
@@ -351,6 +371,23 @@
                     sectionToShow.style.display = 'block';
                 }
             }
+            //매너온도에 숫자 표시
+            /*<![CDATA[*/
+            var temperature = /*[[${targetUser.getTemperature()}]]*/ '50';
+            function updateProgress(percent) {
+                var progressBar = document.getElementById('progress');
+                var percentage = document.getElementById('percentage');
+
+                progressBar.style.width = percent + '%';
+                percentage.innerHTML = percent + '%';
+            }
+
+            // 페이지 로드 시 진행률 업데이트
+            window.onload = function() {
+                updateProgress(temperature);
+            }
+
+
             $(document).ready(function() {
                 $('.thumbs-up-button, .thumbs-down-button').click(function() {
                     var buttonId = $(this).attr('id');
