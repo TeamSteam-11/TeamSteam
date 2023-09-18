@@ -196,7 +196,7 @@
     </div>
 
     <!-- 매칭글 -->
-    <div style="display: flex; justify-content: center; flex-wrap: wrap; width: 100%">
+    <div style="display: flex; justify-content: center; flex-wrap: wrap; width: 100%; margin-top: 10px;">
         <a class="card" th:each="matching : ${matchingList}" th:href="@{|/match/detail/${matching.id}|}">
             <div class="card-body" style="padding: 10px;">
                 <div class="flex justify-between" style="margin-bottom: 10px">
