@@ -8,6 +8,10 @@ import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -15,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -30,15 +35,29 @@ public class NotificationController {
 
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
-    public String showList(Model model, @AuthenticationPrincipal SecurityUser user) {
+    public String showList(Model model, @AuthenticationPrincipal SecurityUser user,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam(defaultValue = "10") int size,
+                           @RequestParam(defaultValue = "createDate") String sortCode,
+                           @RequestParam(defaultValue = "DESC") String direction) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
+
         Long currentUserId = user.getId();
         User currentUser = userService.findByIdElseThrow(currentUserId);
 
-        List<Notification> notifications = notificationService.findByInvitedUser(currentUser);
+        Page<Notification> notifications = notificationService.findByInvitedUser(currentUser, pageable);
 
-        notificationService.markAsRead(currentUser);
+        if(page != 0 && page > notifications.getTotalPages() - 1) {
+            page = notifications.getTotalPages() - 1;
+            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
+            notifications = notificationService.findByInvitedUser(currentUser, pageable);
+        }
+
+        notificationService.markAsRead(currentUser, pageable);
 
         model.addAttribute("notifications", notifications);
+        model.addAttribute("currentPage", page);
 
         return "notification/list";
     }
@@ -62,13 +81,22 @@ public class NotificationController {
         Long invitedUserId = user.getId();
         Long invitingUserId = notification.getInvitingUser().getId();
         Long roomId = notification.getRoomId();
+        Long dmId = notification.getDmId();
 
         notificationService.deleteNotification(user.getId(), notificationId);
 
-        if(roomId == null) {
+        if(roomId == null && dmId == null) {
             userService.addFriends(invitedUserId, invitingUserId);
 
             return "redirect:/notification/list";
+        }
+
+        if(dmId != null) {
+            return String.format("redirect:/dm/room/%d", dmId);
+        }
+
+        if (notification.isEnterAlarm()) {
+            return String.format("redirect:/chat/rooms/%d", roomId);
         }
 
         boolean alreadyWithPartner = matchingPartnerService.isDuplicatedMatchingPartner(roomId, invitedUserId);

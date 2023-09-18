@@ -44,7 +44,6 @@
                     </li>
                 </ul>
             </div>
-
             <!-- 카테고리 -->
             <div class="navbar-center lg:flex">
                 <ul class="menu menu-navbar menu-horizontal px-1">
@@ -88,7 +87,7 @@
                                 class="menu-dropdown dropdown-content">
                                 <li th:if="${@rq.login}"><a
                                         th:href="@{'/user/profile/' + ${@rq.getUser().getId()}}">프로필</a></li>
-                                <li th:if="${@rq.login}"><a href="/dm/chatlist">채팅</a></li>
+                                <li th:if="${@rq.login}"><a href="/chat/chatlist">채팅</a></li>
                                 <li th:if="${@rq.logout}"><a href="/user/login">로그인</a></li>
                                 <li th:if="${@rq.login}"><a href="/user/logout">로그아웃</a></li>
                             </ul>

@@ -31,13 +31,6 @@
       bottom: 0;
       width: 100%;
     }
-    #chatRoomRadio:checked + label {
-      color: white;
-    }
-
-    #dmRadio:checked + label {
-      color: white;
-    }
   </style>
 </head>
 
@@ -46,14 +39,12 @@
 <main layout:fragment="main">
 
   <div class="mt-10 flex justify-center">
-    <input type="radio" id="chatRoomRadio" name="tableType" value="chatRoom" onclick="showTable('chatRoom')" class="peer hidden" checked>
-    <label for="chatRoomRadio" class="cursor-pointer mr-16 mt-2 text-base text-gray-500 hover:text-white">
+    <div class="mr-16 mt-2 text-base text-white underline">
       매칭 채팅
-    </label>
-    <input type="radio" id="dmRadio" name="tableType" value="dm" onclick="showTable('dm')" class="peer hidden">
-    <label for="dmRadio" class="cursor-pointer mt-2 text-base text-gray-500 hover:text-white">
+    </div>
+    <a href="/dm/dmlist" class="cursor-pointer mt-2 text-base text-gray-500 hover:text-white hover:underline">
       DM
-    </label>
+    </a>
   </div>
 
   <div style="display: flex; justify-content: center;">
@@ -66,6 +57,7 @@
         <th>채팅방 입장</th>
       </tr>
       </thead>
+
       <tbody>
       <tr th:each="myChatRoom, loop : ${myChatRoomList}">
         <td th:text="${loop.count}"></td>
@@ -77,51 +69,31 @@
           <a th:href="@{/chat/rooms/{roomId}(roomId=${myChatRoom.getId()})}" class="btn btn-sm btn-outline border-white text-white hover:bg-[#1F2227] hover:border-white invite">입장</a>
         </td>
       </tr>
-      <tr th:if="${#lists.isEmpty(myChatRoomList)}">
-        <td colspan="4" style="text-align: center;">참여 중인 채팅방이 없습니다😥</td>
-      </tr>
-      </tbody>
-    </table>
-    <table id="dmTable" class="table shadow-2xl w-1/5 flex justify-center" style="display: none;">
-      <thead>
-      <tr>
-        <th>번호</th>
-        <th>프로필</th>
-        <th>채팅방 이름</th>
-        <th>채팅방 입장</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="myDm, loop : ${myDmList}">
-        <td th:text="${loop.count}"></td>
-        <td class="flex justify-center">
-          <img th:src="${myDm.getDmSender().getId() == user.getId() ? myDm.getDmReceiver().getAvatar() : myDm.getDmSender().getAvatar()}" alt="${user.username}'s avatar" class="rounded-lg w-10 h-10 m-auto"/>
-        </td>
-        <td>
-          <span th:text="${myDm.getDmSender().getId() == user.getId() ? myDm.getDmReceiver().getUsername() : myDm.getDmSender().getUsername()} + ' 님의 채팅'"></span>
-        </td>
-        <td>
-          <a th:href="@{/dm/room/{roomId}(roomId=${myDm.getId()})}" class="btn btn-sm btn-outline border-white text-white hover:bg-[#1F2227] hover:border-white invite">입장</a>
-        </td>
-      </tr>
-      <tr th:if="${#lists.isEmpty(myDmList)}">
+      <tr th:if="${myChatRoomList.isEmpty()}">
         <td colspan="4" style="text-align: center;">참여 중인 채팅방이 없습니다😥</td>
       </tr>
       </tbody>
     </table>
   </div>
 
-  <script type="text/javascript">
-    function showTable(tableType) {
-      if (tableType === 'chatRoom') {
-        document.getElementById('chatRoomTable').style.display = 'table';
-        document.getElementById('dmTable').style.display = 'none';
-      } else if (tableType === 'dm') {
-        document.getElementById('dmTable').style.display = 'table';
-        document.getElementById('chatRoomTable').style.display = 'none';
-      }
-    }
-  </script>
+  <!-- 페이지 번호 표시 부분 -->
+  <div class="pagination" style="display: flex; justify-content: center; flex-wrap: wrap;">
+    <ul style="display: flex;">
+      <li th:if="${currentPage != 0}">
+        <a th:href="@{/chat/chatlist(page=${currentPage - 1})}" style="margin-right: 1em;">&lt;이전</a>
+      </li>
+      <li th:each="pageNumber : ${#numbers.sequence((currentPage > 4 ? currentPage - 3 : 0),
+                (myChatRoomList.totalPages > currentPage + 5 ? currentPage + 5 : myChatRoomList.totalPages))}"
+          style="display: inline;" th:unless="${pageNumber == 0}">
+        <a th:href="@{/chat/chatlist(page=${pageNumber - 1})}" th:text="${pageNumber}" style="margin-right: 1em;"
+           th:classappend="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
+      </li>
+      <li th:if="${currentPage + 1 < myChatRoomList.totalPages}">
+        <a th:href="@{/chat/chatlist(page=${currentPage + 1})}" style="margin-right: 1em;">다음&gt;</a>
+      </li>
+    </ul>
+  </div>
+
 </main>
 <footer layout:fragment="footer" class="footer items-center p-4 text-neutral-content">
   <div class="items-center grid-flow-col">

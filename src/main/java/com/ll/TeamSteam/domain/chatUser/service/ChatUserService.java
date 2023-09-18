@@ -9,6 +9,7 @@ import com.ll.TeamSteam.domain.chatUser.repository.ChatUserRepository;
 import com.ll.TeamSteam.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,7 +53,7 @@ public class ChatUserService {
         return chatUserRepository.findByChatRoomAndUser(chatRoom, user);
     }
 
-    public List<ChatUser> findByUserIdAndTypeIn (Long userId, ChatUserType type) {
-        return chatUserRepository.findByUserIdAndType(userId, type);
+    public List<ChatUser> findByUserIdAndTypeIn (Long userId, ChatUserType type, Sort sort) {
+        return chatUserRepository.findByUserIdAndType(userId, type, sort);
     }
 }
