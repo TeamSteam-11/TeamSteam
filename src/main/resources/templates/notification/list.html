@@ -81,7 +81,7 @@
 
                     <!--친구추가 알림 정상출력-->
                     <div class="flex pl-3 grow items-center" th:if="${notification.roomId == null && notification.dmId == null && notification.enterAlarm == false}"
-                         th:text="${notification.invitingUser.username} + '님이 친구추가를 요청했습니다.'"></div>
+                         th:text="${notification.invitingUser.username} + '님이 당신에게 친구요청을 보냈습니다.'"></div>
 
                     <!--채팅방 초대 정상출력-->
                     <div class="flex pl-3 grow items-center" th:if="${notification.roomId != null && notification.dmId == null && notification.enterAlarm == false}"
