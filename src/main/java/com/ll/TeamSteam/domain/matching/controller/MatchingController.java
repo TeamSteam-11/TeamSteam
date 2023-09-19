@@ -114,7 +114,7 @@ public class MatchingController {
                 createForm.getStartTime(),
                 createForm.getEndTime(),
                 deadlineDate,
-                createForm.isMic()
+                createForm.getIsMic()
         );
 
         // 매칭 등록 실패 시
@@ -197,7 +197,7 @@ public class MatchingController {
         }
 
         RsData<Matching> modifyRsData = matchingService.modify(matching, createForm.getTitle(), createForm.getContent(),
-                createForm.getGenre(), createForm.getGender(), createForm.getCapacity(), createForm.getStartTime(), createForm.getEndTime(), createForm.getSelectedHours(), createForm.isMic());
+                createForm.getGenre(), createForm.getGender(), createForm.getCapacity(), createForm.getStartTime(), createForm.getEndTime(), createForm.getIsMic());
 
         chatRoomService.updateChatRoomName(matching.getChatRoom(), matching.getTitle());
 
