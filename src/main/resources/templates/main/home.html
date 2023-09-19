@@ -134,8 +134,8 @@
                                 <div>
                                     <div class="m-1 p-2 text-xs flex items-center justify-center rounded-xl" style="background-color: #222222;">
                                         마이크 :
-                                        <span th:if="${matching.isMic()}" class="ml-1">ON</span>
-                                        <span th:if="${!matching.isMic()}" class="ml-1">OFF</span>
+                                        <span th:if="${matching.getIsMic()}" class="ml-1">ON</span>
+                                        <span th:if="${!matching.getIsMic()}" class="ml-1">OFF</span>
                                     </div>
                                 </div>
                             </div>
