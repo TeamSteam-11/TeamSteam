@@ -29,6 +29,7 @@ public class Notification extends BaseEntity {
     private LocalDateTime readDate;
     private Long dmId;
     private boolean enterAlarm;
+    private String image;
 
     public boolean isRead() {
         return readDate != null;
