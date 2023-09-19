@@ -286,13 +286,16 @@ public class UserController {
         User targetUser = userService.findById(userId).orElseThrow();
 
         List<SteamGameLibrary> haveGameListData = steamGameLibraryService.getUserGameList(targetUser.getSteamId());
-
         int totalItems = haveGameListData.size();
         int totalPages = (int) Math.ceil((double) totalItems / size);
-
         int start = page * size;
         int end = Math.min(start + size, totalItems);
         List<SteamGameLibrary> pagedGameList = haveGameListData.subList(start, end);
+
+        //최근 플레이한 게임
+        List<SteamGameLibrary> haveRecentlyPlayedGameList = steamGameLibraryService.getUserRecentlyPlayedGames(targetUser.getSteamId(),userId);
+
+
         recentlyUserService.updateRecentlyUser(targetUser.getId());
         List<RecentlyUser> recentlyUserList =recentlyUserService.findAllByUserId(userId);
 
@@ -310,6 +313,7 @@ public class UserController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("gameList", pagedGameList);
+        model.addAttribute("recentlyGameList", haveRecentlyPlayedGameList);
         model.addAttribute("targetUser", targetUser);
         model.addAttribute("loginedId", loginedId);
         model.addAttribute("friendsList", friendsList);
