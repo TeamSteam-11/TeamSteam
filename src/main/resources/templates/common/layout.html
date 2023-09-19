@@ -85,7 +85,7 @@
                             </label>
                             <ul tabindex="0"
                                 class="menu-dropdown dropdown-content">
-                                <li th:if="${@rq.login}"><button class="w-full h-full flex justify-center items-center" th:onclick="|location.href=@{'/user/profile/' + ${@rq.getUser().getId()}}|"><a style="width: 170px; text-align: center; display: block;">프로필</a></button></li>
+                                <li th:if="${@rq.login}"><button class="w-full h-full flex justify-center items-center" th:onclick="|location.href='@{'/user/profile/' + ${@rq.getUser().getId()}}'|"><a style="width: 170px; text-align: center; display: block;">프로필</a></button></li>
                                 <li th:if="${@rq.login}"><button class="w-full h-full flex justify-center items-center" onclick="location.href='/chat/chatlist';"><a style="width: 170px; text-align: center; display: block;">채팅</a></button></li>
                                 <li th:if="${@rq.logout}"><button class="w-full h-full flex justify-center items-center" onclick="location.href='/user/login';"><a style="width: 170px; text-align: center; display: block;">로그인</a></button></li>
                                 <li th:if="${@rq.login}"><button class="w-full h-full flex justify-center items-center" onclick="location.href='/user/logout';"><a style="width: 170px; text-align: center; display: block;">로그아웃</a></button></li>
