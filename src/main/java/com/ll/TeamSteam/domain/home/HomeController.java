@@ -26,11 +26,10 @@ public class HomeController {
 
     @GetMapping("/main/home")
     public String showHome(Model model) {
-        List<Matching> approachingDeadlineList = matchingService.getSortedMatchingByDeadline();
-        model.addAttribute("matchingListSortedByDeadline", approachingDeadlineList);
+        List<Matching> newPost = matchingService.getSortedMatchingByCreateDate();
+        model.addAttribute("newPost", newPost);
 
-        List<Matching> sortedByParticipantList = matchingService.getSortedMatchingByParticipant();
-        model.addAttribute("matchingListSortedByParticipant", sortedByParticipantList);
+        log.info("newPost = {} ", newPost);
 
         return "main/home";
     }
