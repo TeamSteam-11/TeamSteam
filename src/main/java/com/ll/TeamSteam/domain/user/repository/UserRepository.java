@@ -11,5 +11,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findBySteamId(String steamId);
-    List<User> findTop7ByOrderByTemperatureDesc();
+    List<User> findTop10ByOrderByTemperatureDesc();
+    List<User> findAllByOrderByTemperatureDesc();
 }

@@ -2,6 +2,7 @@ let stompClient = null;
 let fromId = "000000000000000000000000";
 let ChatMessageUl = null;
 let currentDate = null; // 날짜 변수 추가
+let lastMessageSenderId = null;
 
 function getChatMessages() {
     console.log("fromId : " + fromId);
@@ -75,7 +76,7 @@ function drawMessages(messages) {
                 };
             }
 
-            if ( lastChatMessages[message.senderId].date == formattedTime ) {
+            if ( lastChatMessages[message.senderId].date == formattedTime && message.senderId === lastMessageSenderId ) {
                 $(lastChatMessages[message.senderId].el).find('.message-time').remove();
             }
 
@@ -114,6 +115,8 @@ function drawMessages(messages) {
 
             lastChatMessages[message.senderId].el = newItem;
             lastChatMessages[message.senderId].date = formattedTime;
+
+            lastMessageSenderId = message.senderId;
         }
 
         const messageDate = new Date(message.createDate).toLocaleDateString();

@@ -20,27 +20,17 @@ public class HomeController {
 
     @GetMapping("/")
     public String showMain() {
-        if (rq.isLogout()) return "redirect:/main/home";
 
         return "redirect:/main/home";
     }
 
     @GetMapping("/main/home")
     public String showHome(Model model) {
-        List<Matching> approachingDeadlineList = matchingService.getSortedMatchingByDeadline();
-        model.addAttribute("matchingListSortedByDeadline", approachingDeadlineList);
+        List<Matching> newPost = matchingService.getSortedMatchingByCreateDate();
+        model.addAttribute("newPost", newPost);
 
-        List<Matching> sortedByParticipantList = matchingService.getSortedMatchingByParticipant();
-        model.addAttribute("matchingListSortedByParticipant", sortedByParticipantList);
+        log.info("newPost = {} ", newPost);
 
         return "main/home";
     }
-
-    @GetMapping("/main/error")
-    public String error(){
-        // 에러 처리 페이지
-
-        return "common/error";
-    }
-
 }

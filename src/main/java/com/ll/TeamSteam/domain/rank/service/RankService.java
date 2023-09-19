@@ -17,7 +17,23 @@ public class RankService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<User> getTopSeven() {
-        return userRepository.findTop7ByOrderByTemperatureDesc();
+    public List<User> getTopUserList() {
+        return userRepository.findTop10ByOrderByTemperatureDesc();
     }
+
+    /**
+     * 해당 유저의 아이디를 입력받아 온도순위 출력
+     *
+     * @param id - 온도순위를 받을 유저의 id
+     * @return myRankNum - 나의 순위를 리턴
+     */
+    public Long getUserOfTemperatureRank(Long id) {
+        List<User> userList = userRepository.findAllByOrderByTemperatureDesc();
+
+        User user = userRepository.findById(id).orElseThrow();
+        long myRankNum = userList.indexOf(user);
+
+        return myRankNum;
+    }
+
 }

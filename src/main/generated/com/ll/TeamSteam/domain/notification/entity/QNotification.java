@@ -27,8 +27,14 @@ public class QNotification extends EntityPathBase<Notification> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
+    public final NumberPath<Long> dmId = createNumber("dmId", Long.class);
+
+    public final BooleanPath enterAlarm = createBoolean("enterAlarm");
+
     //inherited
     public final NumberPath<Long> id = _super.id;
+
+    public final StringPath image = createString("image");
 
     public final com.ll.TeamSteam.domain.user.entity.QUser invitedUser;
 
