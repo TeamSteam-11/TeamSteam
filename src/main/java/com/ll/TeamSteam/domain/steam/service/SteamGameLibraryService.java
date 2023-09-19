@@ -20,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -87,31 +88,53 @@ public class SteamGameLibraryService {
 
 
     }
+    public List<SteamGameLibrary> getUserRecentlyPlayedGames(String steamId, Long userId) throws ParseException {
+        // GetRecentlyPlayedGames API 호출
+        String url = "http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key={apiKey}&steamid={steam_id}" +
+            "&format=json";
 
-    // public String getBaseUrl(String steamId, String role){
-    //     String url = "";
-    //     if(role.equals("gameList")) { // 이렇게까지 해야할까... ㅋㅋㅋㅋㅋㅋ 한번봐주세요
-    //         url = getGameListUrl();
-    //     }
-    //     if(role.equals("userInfo")){
-    //         url = getUserInfoUrl();
-    //     }
-    //     UriComponents builder = UriComponentsBuilder
-    //         .fromHttpUrl(url)
-    //         .buildAndExpand(apiKey, steamId);
-    //
-    //     return builder.toUriString();
-    // }
-    //
-    // public String getGameListUrl(){
-    //     return baseUrl + "/IPlayerService/GetOwnedGames/v0001/?key={apiKey}&steamid={steam_id}" +
-    //         "&include_appinfo=true&format=json";
-    // }
-    //
-    // public String getUserInfoUrl(){
-    //     return baseUrl
-    //         + "/ISteamUser/GetPlayerSummaries/v2?key={apiKey}&steamids={steam_id}";
-    // }
+        UriComponents builder = UriComponentsBuilder
+            .fromHttpUrl(url)
+            .buildAndExpand(apiKey, steamId);
+
+        ResponseEntity<String> response = restTemplate.getForEntity(builder.toUriString(), String.class);
+        String responseBody = response.getBody();
+
+        // JSON 파싱 및 appid 리스트 추출
+        List<Integer> recentlyPlayedAppIds = new ArrayList<>();
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            JsonNode rootNode = mapper.readTree(responseBody);
+            JsonNode gamesNode = rootNode.path("response").path("games");
+
+            for (JsonNode gameNode : gamesNode) {
+                JsonNode appIdNode = gameNode.get("appid");
+
+                Integer appId = (appIdNode != null && !appIdNode.isNull()) ? appIdNode.asInt() : null;
+
+                if (appId != null) {
+                    recentlyPlayedAppIds.add(appId);
+                }
+            }
+
+        } catch (IOException e) {
+            // 예외 처리 로직을 추가하세요.
+        }
+
+        // SteamGameLibraryRepository에서 appid에 해당하는 게임 정보 조회
+        List<SteamGameLibrary> recentlyPlayedList= new ArrayList<>();
+
+        for(Integer appId: recentlyPlayedAppIds){
+            Optional<SteamGameLibrary> gameOpt= Optional.ofNullable(
+                steamGameLibraryRepository.findByAppidAndUserId(appId, userId));
+            gameOpt.ifPresent(recentlyPlayedList::add);
+        }
+
+        return recentlyPlayedList;
+    }
+
+
     @Transactional
     public void save(SteamGameLibrary steamGameLibrary) {
          steamGameLibraryRepository.save(steamGameLibrary);
