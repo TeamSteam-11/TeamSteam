@@ -143,9 +143,9 @@
                         <h2 class="text-xl font-semibold mb-4 ">프로필</h2>
                         <div class="pt-4">
                             <div class="flex justify-between items-center">
-                            <p class="mb-2">매너온도</p>
-                            <div th:if="${myRank} != null" th:text="'#' + (${myRank}+1) + '등'">
-                            </div>
+                                <p class="mb-2">매너온도</p>
+                                <div th:if="${myRank} != null" th:text="'#' + (${myRank}+1) + '등'">
+                                </div>
                             </div>
                             <div class="divider"></div>
                             <div id="progressBar" class="progress-bar">
@@ -211,7 +211,7 @@
                             <th:block th:if="${!friendsList.isEmpty()}">
                                 <div th:each="friend: ${friendsList}" class="card custom-card w-full shadow-xl">
                                     <div class="flex flex-col space-x-3 p-4">
-                                        <div class="flex flex-row">
+                                        <a class="flex flex-row hover:underline" th:href="@{'/user/profile/' + ${friend.getFriend().getId()}}">
                                             <div class="avatar p-4">
                                                 <div class="mask rounded-xl w-12 h-12">
                                                     <img th:src="${friend.getFriend().getAvatar()}" class="w-12 h-12 " />
@@ -222,7 +222,7 @@
                                                 <progress class="progress progress-accent w-24 progress-custom" th:value="${friend.getFriend().getTemperature()}" max="100">
                                                 </progress>
                                             </div>
-                                        </div>
+                                        </a>
                                         <div class="flex pt-4" style="display: flex; flex-direction: column">
                                             <div class="table-cell m-2">
                                                 <div class="flex flex-wrap">
@@ -261,7 +261,7 @@
                             <th:block th:if="${!recentlyUserList.isEmpty()}">
                                 <div th:each="recentlyUser: ${recentlyUserList}" class="card custom-card w-full shadow-xl">
                                     <div class="flex flex-col space-x-3 p-4">
-                                        <div class="flex flex-row">
+                                        <a class="flex flex-row hover:underline" th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()}}">
                                             <div class="avatar p-4">
                                                 <div class="mask rounded-xl w-12 h-12">
                                                     <img th:src="${recentlyUser.getMatchingPartner().getUser().getAvatar()}" class="w-12 h-12 "/>
@@ -272,7 +272,7 @@
                                                 <progress class="progress progress-accent w-24 progress-custom" th:value="${recentlyUser.getMatchingPartner().getUser().getTemperature()}" max="100">
                                                 </progress>
                                             </div>
-                                        </div>
+                                        </a>
                                         <div class="flex pt-4" style="display: flex; flex-direction: column">
                                             <div class="table-cell m-2">
                                                 <div class="flex flex-wrap">
