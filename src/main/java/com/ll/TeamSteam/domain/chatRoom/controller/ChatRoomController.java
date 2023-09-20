@@ -177,7 +177,7 @@ public class ChatRoomController {
     @GetMapping("/chatlist")
     public String chatList(Model model, @AuthenticationPrincipal SecurityUser user,
                            @RequestParam(defaultValue = "0") int page,
-                           @RequestParam(defaultValue = "3") int size) {
+                           @RequestParam(defaultValue = "10") int size) {
 
         int totalItems = chatRoomService.findChatRoomByUserId(user.getId()).size();
         int totalPages = (int) Math.ceil((double) totalItems / size);
