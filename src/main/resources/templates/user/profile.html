@@ -157,7 +157,7 @@
                             <div class=" flex justify-between items-center">
                                 <p class="pt-2">게임 태그</p>
                                 <form th:action="@{/user/profile/editprofile}" method="post">
-                                    <button th:if="${loginedId == targetUser.getId()}" class="btn btn-sm btn-custom">Edit Tag</button>
+                                    <button th:if="${loginedId == targetUser.getId()}" class="btn btn-sm btn-custom text-white">Edit Tag</button>
                                     <input type="submit" value="">
                                 </form>
                             </div>
