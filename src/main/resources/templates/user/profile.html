@@ -375,6 +375,7 @@
                     sectionToShow.style.display = 'block';
                 }
             }
+
             //매너온도에 숫자 표시
             /*<![CDATA[*/
             var temperature = /*[[${targetUser.getTemperature()}]]*/ '50';
@@ -386,9 +387,10 @@
                 percentage.innerHTML = percent + '°C';
             }
 
-            // 페이지 로드 시 진행률 업데이트
+            // 페이지 로드 시 진행률 업데이트, 프로필 업데이트
             window.onload = function() {
                 updateProgress(temperature);
+                showMenu('profile');
             }
 
 
