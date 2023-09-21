@@ -395,13 +395,14 @@
                 updateProgress(temperature);
 
                 // 라디오 버튼 체크되어있을때,
-                if (document.getElementById('libraryRadio').checked = true) {
+                if (document.getElementById('libraryRadio').checked) {
                     showMenu('library');
                 } else {
-                    //그 외 기본값
+                    // 그 외 기본값
                     showMenu('profile');
-                    document.getElementById('profileRadio').checked = true;
                 }
+
+
             }
 
 
