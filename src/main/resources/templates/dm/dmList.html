@@ -15,13 +15,13 @@
 
     .table thead tr:first-child th,
     .table thead tr:first-child td {
-      background-color: #1F2227;
+      background-color: #171917;
       text-align: center;
     }
 
     .table tbody tr th,
     .table tbody tr td {
-      background-color: #202d3e;
+      background-color: #404040;
       border:0px;
       text-align: center;
     }
@@ -78,7 +78,7 @@
   </div>
 
   <!-- 페이지 번호 표시 부분 -->
-  <div class="pagination" style="display: flex; justify-content: center; flex-wrap: wrap;">
+  <div class="pagination" style="display: flex; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
     <ul style="display: flex;">
       <li th:if="${currentPage != 0}">
         <a th:href="@{/dm/dmlist(page=${currentPage - 1})}" style="margin-right: 1em;">&lt;이전</a>

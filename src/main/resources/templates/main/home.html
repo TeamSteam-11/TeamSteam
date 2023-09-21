@@ -29,6 +29,17 @@
         footer {
             margin-top: 150px; /* 원하는 간격 크기로 조정 */
         }
+        select {
+            padding:10px 28px 10px 10px;
+            font-size: 15px;
+            border:5px;
+        /*-webkit-appearance:none; !* for chrome *!*/
+        /*    -moz-appearance:none; !*for firefox*!*/
+        /*    appearance:none;*/
+            box-sizing: border-box;
+            background: transparent;
+
+        }
     </style>
 </head>
 <body>
@@ -37,17 +48,17 @@
         <img src="/resource/common/logo.png" style="width: 550px; height: auto;">
     </div>
 
-    <div class="search-box flex justify-center mt-6 mb-10"> <!-- mt 값을 20에서 6으로 조정 -->
+    <!-- 검색창 -->
+    <div class="search-box flex justify-center items-center mt-5 mb-5" style="height: 30px; margin-top: 3%">
         <form th:action="@{/match/list/search}" method="GET" class="relative">
-            <div class="flex items-center rounded-xl" style="background-color: #525964;">
-                <select name="name" class="h-14 p-4 rounded-xl"
-                        style="background-color: #525964; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+            <div class="flex items-center" style="background-color: #555555; border-radius: 5px; width: 650px">
+                <select name="name" class="h-12 p-3" style="color: white; background-color: #444444; border-radius: 5px; padding-left: 25px; padding-right: 5px;">
                     <option value="title" th:selected="${searchOption == 'title'}">제목</option>
                     <option value="content" th:selected="${searchOption == 'content'}">내용</option>
                     <option value="writer" th:selected="${searchOption == 'writer'}">글쓴이</option>
                 </select>
                 <input type="text" name="keyword" placeholder="검색어 입력" th:value="${keyword}"
-                       class="h-12 p-4 pr-12 rounded-xl ml-4" style="background-color: #525964; width:500px;"/>
+                       class="h-12 p-4 pr-12 ml-3" style="background-color: transparent; width: 500px;"/>
                 <button type="submit" aria-label="Search" title="Search"
                         class="absolute right-0 top-0 bottom-0 flex items-center justify-center text-black text-2xl pr-3">
                     <i class="fas fa-search"></i>

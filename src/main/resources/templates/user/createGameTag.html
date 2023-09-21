@@ -4,11 +4,15 @@
     <title>나의 게임 목록</title>
     <style>
         .custom-card{
-            background-color: #202d3e;
+            background-color: #2d2d2d;
             border:0px;
         }
         footer {
             margin-top: 250px; /* 원하는 간격 크기로 조정 */
+        }
+        .active-button:hover {
+            background-color: #dc5804;
+            border-color: #dc5804;
         }
     </style>
 </head>
@@ -24,9 +28,10 @@
                     <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${game.appid} + '/header.jpg'}"
                          alt="게임 이미지" class="card-img-top">
                     <div class="card-body">
-                        <h5 class="card-title" th:text="${game.name}"></h5>
+                        <h5 class="card-title" th:text="${game.name}" style="font-size: 14px;"></h5>
                         <div class="card-actions justify-end">
-                            <input type="checkbox" class="checkbox checkbox-success checkbox-lg" name="selectedGames" th:value="${game.appid}" />
+<!--                            <input type="checkbox" class="checkbox checkbox-success checkbox-lg " style="border-color: #878787; accent-color: purple; n" name="selectedGames" th:value="${game.appid}" />-->
+                            <input type="checkbox" class="checkbox checkbox-lg" style="border-color: #878787; accent-color: purple;" name="selectedGames" th:value="${game.appid}" />
                             <input type="hidden" name="selectedGames" id="selectedGamesInput" />
                         </div>
                     </div>
@@ -45,7 +50,7 @@
                     </div>
                 </div>
                 <div class="flex justify-end">
-                    <button id="saveButton" class="btn btn-accent">저장</button>
+                    <button id="saveButton" class="btn btn-accent active-button bg-[#FF6B00]" style="border-color: #FF6B00; border-radius: 5px 5px 5px 5px;">저장</button>
                 </div>
             </div>
         </div>
