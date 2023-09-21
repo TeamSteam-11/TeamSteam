@@ -41,6 +41,7 @@ public class DmMessageService {
 
         DmMessage dmMessage = DmMessage.create(content, sender.getId(), sender.getUsername(), sender.getAvatar(), dm.getId());
 
+        dmMessage.validateLength(dmMessage.getContent());
 
         return dmMessageRepository.save(dmMessage);
     }

@@ -1,7 +1,9 @@
 package com.ll.TeamSteam.domain.chatMessage.entity;
 
+import com.ll.TeamSteam.domain.chatMessage.error.ChatMessageOverContent;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -18,8 +20,11 @@ import static lombok.AccessLevel.PROTECTED;
 @SuperBuilder
 public class ChatMessage {
 
+    private static final int MAX_LENGTH = 250;
+
     @Id
     private String id;
+    @Size(max= 50)
     private String content; // 내용
 
     private Long senderId;
@@ -61,6 +66,12 @@ public class ChatMessage {
 
     public void removeChatMessages(String content){
         this.content = content;
+    }
+
+    public void validateLength(String content) {
+        if (content.length() > MAX_LENGTH) {
+            throw new ChatMessageOverContent("메시지 content 초과했어!");
+        }
     }
 }
 
