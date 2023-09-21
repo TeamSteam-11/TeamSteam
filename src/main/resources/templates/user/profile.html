@@ -31,6 +31,7 @@
         }
         .badge {
             border-radius: 5px 5px 5px 5px;
+            height: auto;
         }
 
         .progress-custom {
@@ -164,7 +165,7 @@
                             <div class="divider"></div>
                             <div class="table-cell m-2">
                                 <div class="flex flex-wrap">
-                                    <div th:if="${!targetUser.getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${targetUser.getUserTag().getGameTag()}" class="badge" style="background-color: #00A3FF; color: #FFFFFF; font-size: 12px; height: 34px; margin-right: 5px;">
+                                    <div th:if="${!targetUser.getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${targetUser.getUserTag().getGameTag()}" class="badge" style="background-color: #00A3FF; color: #FFFFFF; height: 34px; margin-right: 5px;">
                                         <span th:text="${targetUserGameTag.getName()}"></span>
                                     </div>
                                 </div>
@@ -175,7 +176,7 @@
                             <div class="divider"></div>
                             <div class="table-cell m-2">
                                 <div class="flex flex-wrap">
-                                    <div th:if="${!targetUser.getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${targetUser.getUserTag().getGenreTag()}"  class="badge" style="background-color: #878787; color: #FFFFFF; font-size: 12px; height: 34px; margin-right: 5px;">
+                                    <div th:if="${!targetUser.getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${targetUser.getUserTag().getGenreTag()}"  class="badge" style="background-color: #878787; color: #FFFFFF; height: 34px; margin-right: 5px;">
                                         <span th:text="${targetUserGenreTag.getGenre()}"></span>
                                     </div>
                                 </div>
@@ -226,14 +227,14 @@
                                         <div class="flex pt-4" style="display: flex; flex-direction: column">
                                             <div class="table-cell m-2">
                                                 <div class="flex flex-wrap">
-                                                    <div th:if="${!friend.getFriend().getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${friend.getFriend().getUserTag().getGameTag()}" class="badge" style="background-color: #00A3FF; color: #FFFFFF; font-size: 12px">
+                                                    <div th:if="${!friend.getFriend().getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${friend.getFriend().getUserTag().getGameTag()}" class="badge" style="background-color: #00A3FF; color: #FFFFFF;">
                                                         <span th:text="${targetUserGameTag.getName()}"></span>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="table-cell m-2">
                                                 <div class="flex flex-wrap">
-                                                    <div th:if="${!friend.getFriend().getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${friend.getFriend().getUserTag().getGenreTag()}"  class="badge" style="background-color: #878787; color: #FFFFFF; font-size: 12px">
+                                                    <div th:if="${!friend.getFriend().getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${friend.getFriend().getUserTag().getGenreTag()}"  class="badge" style="background-color: #878787; color: #FFFFFF;" >
                                                         <span th:text="${targetUserGenreTag.getGenre()}"></span>
                                                     </div>
                                                 </div>
@@ -276,14 +277,14 @@
                                         <div class="flex pt-4" style="display: flex; flex-direction: column">
                                             <div class="table-cell m-2">
                                                 <div class="flex flex-wrap">
-                                                    <div th:if="${!recentlyUser.getMatchingPartner().getUser().getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${recentlyUser.getMatchingPartner().getUser().getUserTag().getGameTag()}" class="badge" style="background-color: #00A3FF; color: #FFFFFF; font-size: 12px">
+                                                    <div th:if="${!recentlyUser.getMatchingPartner().getUser().getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${recentlyUser.getMatchingPartner().getUser().getUserTag().getGameTag()}" class="badge" style="background-color: #00A3FF; color: #FFFFFF;">
                                                         <span th:text="${targetUserGameTag.getName()}"></span>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="table-cell m-2">
                                                 <div class="flex flex-wrap">
-                                                    <div th:if="${!recentlyUser.getMatchingPartner().getUser().getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${recentlyUser.getMatchingPartner().getUser().getUserTag().getGenreTag()}"  class="badge" style="background-color: #878787; color: #FFFFFF; font-size: 12px">
+                                                    <div th:if="${!recentlyUser.getMatchingPartner().getUser().getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${recentlyUser.getMatchingPartner().getUser().getUserTag().getGenreTag()}"  class="badge" style="background-color: #878787; color: #FFFFFF;">
                                                         <span th:text="${targetUserGenreTag.getGenre()}"></span>
                                                     </div>
                                                 </div>
