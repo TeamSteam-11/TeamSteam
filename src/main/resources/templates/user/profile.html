@@ -357,6 +357,7 @@
                 </div>
             </div>
         </div>
+    </div>
 
         <script th:inline="javascript">
             //메뉴를 보이고 안보이게
@@ -388,11 +389,22 @@
                 percentage.innerHTML = percent + '°C';
             }
 
-            // 페이지 로드 시 진행률 업데이트, 프로필 업데이트
+            // 페이지 로드 시 실행되는 코드
             window.onload = function() {
+                //매너온도 없데이트
                 updateProgress(temperature);
-                showMenu('profile');
+
+                // 라디오 버튼 체크되어있을때,
+                if (document.getElementById('libraryRadio').checked = true) {
+                    showMenu('library');
+                } else {
+                    //그 외 기본값
+                    showMenu('profile');
+                    document.getElementById('profileRadio').checked = true;
+                }
             }
+
+
 
 
             $(document).ready(function() {
