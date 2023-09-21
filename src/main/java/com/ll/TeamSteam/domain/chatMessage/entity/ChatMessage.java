@@ -24,7 +24,7 @@ public class ChatMessage {
 
     @Id
     private String id;
-    @Size(max= 50)
+
     private String content; // 내용
 
     private Long senderId;
