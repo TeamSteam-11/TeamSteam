@@ -126,13 +126,13 @@
                             프로필
                         </label>
                     </li>
-                    <li class="li-button">
+                    <li class="li-button" th:if="${loginedId == targetUser.getId()}">
                         <input type="radio" id="friendsListRadio" name="menuType" value="friendsList" onclick="showMenu('friendsList')" class="peer hidden">
                         <label for ="friendsListRadio">
                             친구 목록
                         </label>
                     </li>
-                    <li class="li-button">
+                    <li class="li-button" th:if="${loginedId == targetUser.getId()}">
                         <input type= "radio" id="recentUserRadio" name= "menuType" value= "recentUser" onclick= "showMenu('recentUser')" class ="peer hidden">
                         <label for ="recentUserRadio">
                             최근 유저
