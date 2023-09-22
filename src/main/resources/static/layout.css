@@ -80,8 +80,17 @@
     text-decoration: underline;
 }
 
+#wrapper {
+    min-height: calc(100vh - 5rem); /* footer 높이를 빼준다. */
+}
+
 footer {
-    margin-top: 150px; /* 원하는 간격 크기로 조정 */
+    /*margin-top: 150px; !* 원하는 간격 크기로 조정 *!*/
+    height: 5rem; /* footer 높이 */
+}
+
+.footer-custom {
+    width: 1200px;
 }
 
 #nav-noti:hover {
