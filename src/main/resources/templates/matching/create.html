@@ -54,7 +54,6 @@
 
                 <!--제목-->
                 <div>
-                    <!--                    <label for="title">제목</label>-->
                     <input type="text" placeholder="제목을 입력하세요" id="title" th:field="*{title}" maxlength="50"
                            class="p-4" style="background-color: #404040; width: 850px; height: 45px; border-radius: 5px"
                            required autofocus>
@@ -62,7 +61,6 @@
 
                 <!--내용-->
                 <div class="mt-5">
-                    <!--                    <label for="content">내용</label>-->
                     <textarea cols="45" rows="15" id="content" placeholder="내용을 입력하세요" th:field="*{content}"
                               class="resize-none p-4 w-full"
                               style="background-color: #404040; width: 850px; min-height: 450px; border-radius: 5px"
@@ -79,7 +77,6 @@
                          style="border-bottom: 1px solid white; padding: 0px 0px 7px 5px; margin-bottom: 15px">
                         <div style="font-size: 17px">태그 설정</div>
                     </div>
-
 
                     <!-- 태그 설정 -->
                     <div>
@@ -103,9 +100,6 @@
 
                         <!--매칭 인원-->
                         <div>
-                            <!--                        <label for="capacity" class="block">매칭 인원</label>-->
-                            <!--                        <input type="number" id="capacity" th:field="*{capacity}" class="tag-custom"-->
-                            <!--                               oninput="checkCapacity()" min="2" max="5" required autofocus>-->
                             <select id="capacity" name="capacity" th:field="*{capacity}" class="tag-custom" required
                                     autofocus>
                                 <option value="" selected>매칭 인원</option>
@@ -123,7 +117,6 @@
 
                         <!--성별 설정-->
                         <div>
-                            <!--                        <label for="gender" class="block">모집 성별</label>-->
                             <select id="gender" name="gender" th:field="*{gender}" class="tag-custom" required
                                     autofocus>
                                 <option value="">모집 성별</option>
@@ -135,7 +128,6 @@
 
                         <!--시작 시간-->
                         <div>
-                            <!-- <label for="startTime" class="block">시작 시간</label> -->
                             <select id="startTime" th:field="*{startTime}" class="tag-custom scroll" required>
                                 <option value="" selected>시작 시간</option>
                                 <option value="0" text="시간무관">시간무관</option>
@@ -146,7 +138,6 @@
 
                         <!-- 마이크-->
                         <div>
-<!--                            <label for="mic" class="block">마이크</label>-->
                             <select id="mic" th:field="*{isMic}" class="tag-custom" required>
                                 <option value="" selected>마이크</option>
                                 <option value="false">OFF</option>
@@ -156,7 +147,6 @@
 
                         <!--모집 마감 시간-->
                         <div>
-                            <!--                        <label for="deadline" class="block">모집 마감 시간</label>-->
                             <select id="deadline" name="deadline" onchange="setSelectedHours()"
                                     class="tag-custom" required>
                                 <option value="">모집 마감 시간</option>
