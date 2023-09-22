@@ -395,11 +395,13 @@
 
         // 페이지 로드 시 실행되는 코드
         window.onload = function() {
-            //매너온도 없데이트
+            // 매너온도 업데이트
             updateProgress(temperature);
 
-            // 라디오 버튼 체크되어있을때,
-            if (document.getElementById('libraryRadio').checked) {
+            // 현재 URL을 확인하여 "library" 쿼리 매개변수의 존재 여부를 검사
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('size')) {
+                document.getElementById('libraryRadio').checked = true;
                 showMenu('library');
             } else {
                 // 그 외 기본값
