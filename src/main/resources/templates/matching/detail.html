@@ -30,25 +30,6 @@
             cursor: pointer;
         }
 
-        .scroll {
-            overflow: auto;
-        }
-
-        .scroll::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        .scroll::-webkit-scrollbar-thumb {
-            background-color: #2f3542;
-            border-radius: 15px;
-        }
-
-        .scroll::-webkit-scrollbar-track {
-            background-color: grey;
-            border-radius: 15px;
-            box-shadow: inset 0px 0px 5px white;
-        }
-
         li:active a {
             background-color: #1F2227;
         }
@@ -109,16 +90,22 @@
                 <div class="flex">
 
                     <div class="flex justify-start items-center" style="width: 100%">
-                        <img th:src="${matching.user.getAvatar()}"
-                             class="user-profile object-cover"
-                             style="width: 50px; height: 50px; border-radius: 5px; margin-right: 10px">
+                        <a th:href="@{'/user/profile/' + ${matching.user.getId()}}"
+                           class="hover:underline">
+                            <img th:src="${matching.user.getAvatar()}"
+                                 class="user-profile object-cover"
+                                 style="width: 50px; height: 50px; border-radius: 5px; margin-right: 10px">
+                        </a>
 
                         <div class="flex flex-col items-start" style="width: 100%">
                             <div class="flex justify-between items-center" style="width: 100%; margin-bottom: 5px">
 
                                 <div class="flex items-center">
                                     <div class="flex items-center">
-                                        <div class="user-name" th:text="${matching.user.username}"></div>
+                                        <a th:href="@{'/user/profile/' + ${matching.user.getId()}}"
+                                           class="hover:underline">
+                                            <div class="user-name" th:text="${matching.user.username}"></div>
+                                        </a>
 
                                         <!--활동 시간-->
                                         <div class="text-xs flex items-center justify-center"
@@ -152,36 +139,6 @@
                                     <span th:case="23">23 : 00</span>
                                     <span th:case="24">24 : 00</span>
                               </span>
-                                            <!--                                            <span th:if="${matching.startTime + matching.endTime != 0}"-->
-                                            <!--                                                  th:switch="${matching.endTime}">-->
-                                            <!--                                    <span th:case="0">시간 무관</span>-->
-                                            <!--                                    <span th:case="1">1 : 00</span>-->
-                                            <!--                                    <span th:case="2">2 : 00</span>-->
-                                            <!--                                    <span th:case="3">3 : 00</span>-->
-                                            <!--                                    <span th:case="4">4 : 00</span>-->
-                                            <!--                                    <span th:case="5">5 : 00</span>-->
-                                            <!--                                    <span th:case="6">6 : 00</span>-->
-                                            <!--                                    <span th:case="7">7 : 00</span>-->
-                                            <!--                                    <span th:case="8">8 : 00</span>-->
-                                            <!--                                    <span th:case="9">9 : 00</span>-->
-                                            <!--                                    <span th:case="10">10 : 00</span>-->
-                                            <!--                                    <span th:case="11">11 : 00</span>-->
-                                            <!--                                    <span th:case="12">12 : 00</span>-->
-                                            <!--                                    <span th:case="13">13 : 00</span>-->
-                                            <!--                                    <span th:case="14">14 : 00</span>-->
-                                            <!--                                    <span th:case="15">15 : 00</span>-->
-                                            <!--                                    <span th:case="16">16 : 00</span>-->
-                                            <!--                                    <span th:case="17">17 : 00</span>-->
-                                            <!--                                    <span th:case="18">18 : 00</span>-->
-                                            <!--                                    <span th:case="19">19 : 00</span>-->
-                                            <!--                                    <span th:case="20">20 : 00</span>-->
-                                            <!--                                    <span th:case="21">21 : 00</span>-->
-                                            <!--                                    <span th:case="22">22 : 00</span>-->
-                                            <!--                                    <span th:case="23">23 : 00</span>-->
-                                            <!--                                    <span th:case="24">24 : 00</span>-->
-                                            <!--                              </span>-->
-                                            <!--                                            <span th:if="${matching.startTime + matching.endTime == 0}">시간 무관</span>-->
-
                                         </div>
 
 
@@ -216,7 +173,6 @@
                                         <!--모집 인원-->
                                         <div class="flex justify-center items-center mr-3"
                                              style="width: 67px; height: 25px; border-radius: 5px; background-color: #444444; margin-left: 10px;">
-                                            <!--                            <i class="fas fa-user-friends text-xl"></i>-->
                                             <div class="text-xs flex justify-center items-center"
                                                  th:text="|${matching.participant} / ${matching.capacity}|"></div>
                                         </div>
@@ -225,7 +181,6 @@
                                         <!-- 모집 마감 시간-->
                                         <div class="flex justify-center items-center"
                                              style="width: 120px; height: 25px; border-radius: 5px; background-color: #444444;">
-                                            <!--                                            <i class="fas fa-hourglass-start"></i>-->
                                             <div class="text-xs flex justify-center items-center"
                                                  th:text="${matching.getDeadlineDuration() != null ? matching.getDeadlineDuration() : '마감완료'}"></div>
                                         </div>
@@ -261,18 +216,20 @@
                                  th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${matching.getGameTagId()} + '/header.jpg'}"
                                  alt="게임 이미지" width="200" height="auto"/>
                         </td>
-                        <div class="text-xs flex items-center justify-center" th:text="${matching.gameTagName}"
-                             style="background-color: #00a3ff; width: 236px; height: 25px; border-radius: 5px; margin-bottom: 10px"></div>
+                        <div class="text-xs p-1 flex items-center justify-center text-center"
+                             th:text="${matching.gameTagName}"
+                             style="background-color: #00a3ff; width: 236px; min-height: 25px; border-radius: 5px; margin-bottom: 10px"></div>
                         <!--장르 태그-->
-                        <div class="text-xs flex items-center justify-center" th:text="${matching.getGenre()}"
-                             style="background-color: #878787; width: 236px; height: 25px; border-radius: 5px"></div>
+                        <div class="text-xs p-1 flex items-center justify-center" th:text="${matching.getGenre()}"
+                             style="background-color: #878787; width: 236px; min-height: 25px; border-radius: 5px"></div>
 
                     </div>
 
                     <!-- 제목 & 내용 -->
                     <div style="margin: 15px 0px 15px 20px">
                         <!-- 제목 -->
-                        <div class="title text-2xl" th:text="${matching.title}" style="margin-bottom: 5px;  word-break: break-all;"></div>
+                        <div class="title text-2xl" th:text="${matching.title}"
+                             style="margin-bottom: 5px;  word-break: break-all;"></div>
 
                         <!-- 게시글 내용 -->
                         <div id="contentBox"
@@ -390,7 +347,6 @@
                             <!--매너온도-->
                             <div>
                                 <div class="flex items-center ml-1 mt-2">
-                                    <!--                                    <i class="fas fa-thermometer-half text-2xl mr-2"></i>-->
                                     <div class="text-xs mr-2">매너온도 :</div>
                                     <div class="text-xs"
                                          th:text="${matchingPartner.getUser().getTemperature()}"></div>
