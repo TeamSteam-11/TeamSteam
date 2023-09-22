@@ -31,6 +31,7 @@
         }
         .badge {
             border-radius: 5px 5px 5px 5px;
+            height: auto;
         }
 
         .progress-custom {
@@ -90,6 +91,7 @@
 <body>
 <main layout:fragment="main">
     <div class="flex flex-col">
+        <div class="flex justify-between">
         <div class="flex flex-row items-center">
             <figure class="ml-8 mt-8">
                 <div class="w-24 h-24">
@@ -107,6 +109,14 @@
                 </div>
             </div>
         </div>
+            <div class="flex items-center">
+            <form th:action="@{/user/profile/{userId}/addFriend(userId=${targetUser.id})}" method="post">
+                <button th:if="${loginedId != targetUser.getId() and !isFriend}" class="btn btn-custom">친구추가</button>
+                <button th:if="${loginedId != targetUser.getId() and isFriend}" disabled></button>
+                <input type="submit" value="">
+            </form>
+            </div>
+        </div>
         <div class="flex flex-row">
             <div class="mt-12 basis-1/4">
                 <ul class="menu w-56">
@@ -116,13 +126,13 @@
                             프로필
                         </label>
                     </li>
-                    <li class="li-button">
+                    <li class="li-button" th:if="${loginedId == targetUser.getId()}">
                         <input type="radio" id="friendsListRadio" name="menuType" value="friendsList" onclick="showMenu('friendsList')" class="peer hidden">
                         <label for ="friendsListRadio">
                             친구 목록
                         </label>
                     </li>
-                    <li class="li-button">
+                    <li class="li-button" th:if="${loginedId == targetUser.getId()}">
                         <input type= "radio" id="recentUserRadio" name= "menuType" value= "recentUser" onclick= "showMenu('recentUser')" class ="peer hidden">
                         <label for ="recentUserRadio">
                             최근 유저
@@ -143,9 +153,9 @@
                         <h2 class="text-xl font-semibold mb-4 ">프로필</h2>
                         <div class="pt-4">
                             <div class="flex justify-between items-center">
-                            <p class="mb-2">매너온도</p>
-                            <div th:if="${myRank} != null" th:text="'#' + (${myRank}+1) + '등'">
-                            </div>
+                                <p class="mb-2">매너온도</p>
+                                <div th:if="${myRank} != null" th:text="'#' + (${myRank}+1) + '등'">
+                                </div>
                             </div>
                             <div class="divider"></div>
                             <div id="progressBar" class="progress-bar">
@@ -157,14 +167,14 @@
                             <div class=" flex justify-between items-center">
                                 <p class="pt-2">게임 태그</p>
                                 <form th:action="@{/user/profile/editprofile}" method="post">
-                                    <button th:if="${loginedId == targetUser.getId()}" class="btn btn-sm btn-custom">Edit Tag</button>
+                                    <button th:if="${loginedId == targetUser.getId()}" class="btn btn-sm btn-custom text-white">Edit Tag</button>
                                     <input type="submit" value="">
                                 </form>
                             </div>
                             <div class="divider"></div>
                             <div class="table-cell m-2">
                                 <div class="flex flex-wrap">
-                                    <div th:if="${!targetUser.getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${targetUser.getUserTag().getGameTag()}" class="badge" style="background-color: #00A3FF; color: #FFFFFF; font-size: 12px; height: 34px; margin-right: 5px;">
+                                    <div th:if="${!targetUser.getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${targetUser.getUserTag().getGameTag()}" class="badge" style="background-color: #00A3FF; color: #FFFFFF; height: 34px; margin-right: 5px;">
                                         <span th:text="${targetUserGameTag.getName()}"></span>
                                     </div>
                                 </div>
@@ -175,7 +185,7 @@
                             <div class="divider"></div>
                             <div class="table-cell m-2">
                                 <div class="flex flex-wrap">
-                                    <div th:if="${!targetUser.getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${targetUser.getUserTag().getGenreTag()}"  class="badge" style="background-color: #878787; color: #FFFFFF; font-size: 12px; height: 34px; margin-right: 5px;">
+                                    <div th:if="${!targetUser.getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${targetUser.getUserTag().getGenreTag()}"  class="badge" style="background-color: #878787; color: #FFFFFF; height: 34px; margin-right: 5px;">
                                         <span th:text="${targetUserGenreTag.getGenre()}"></span>
                                     </div>
                                 </div>
@@ -196,11 +206,6 @@
                                 </div>
                             </div>
                         </div>
-                        <form th:action="@{/user/profile/{userId}/addFriend(userId=${targetUser.id})}" method="post">
-                            <button th:if="${loginedId != targetUser.getId() and !isFriend}" class="btn btn-accent">친구추가</button>
-                            <button th:if="${loginedId != targetUser.getId() and isFriend}" disabled></button>
-                            <input type="submit" value="">
-                        </form>
                     </div>
                 </div>
                 <!--친구 목록-->
@@ -211,7 +216,7 @@
                             <th:block th:if="${!friendsList.isEmpty()}">
                                 <div th:each="friend: ${friendsList}" class="card custom-card w-full shadow-xl">
                                     <div class="flex flex-col space-x-3 p-4">
-                                        <div class="flex flex-row">
+                                        <a class="flex flex-row hover:underline" th:href="@{'/user/profile/' + ${friend.getFriend().getId()}}">
                                             <div class="avatar p-4">
                                                 <div class="mask rounded-xl w-12 h-12">
                                                     <img th:src="${friend.getFriend().getAvatar()}" class="w-12 h-12 " />
@@ -222,18 +227,18 @@
                                                 <progress class="progress progress-accent w-24 progress-custom" th:value="${friend.getFriend().getTemperature()}" max="100">
                                                 </progress>
                                             </div>
-                                        </div>
+                                        </a>
                                         <div class="flex pt-4" style="display: flex; flex-direction: column">
                                             <div class="table-cell m-2">
                                                 <div class="flex flex-wrap">
-                                                    <div th:if="${!friend.getFriend().getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${friend.getFriend().getUserTag().getGameTag()}" class="badge" style="background-color: #00A3FF; color: #FFFFFF; font-size: 12px">
+                                                    <div th:if="${!friend.getFriend().getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${friend.getFriend().getUserTag().getGameTag()}" class="badge" style="background-color: #00A3FF; color: #FFFFFF;">
                                                         <span th:text="${targetUserGameTag.getName()}"></span>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="table-cell m-2">
                                                 <div class="flex flex-wrap">
-                                                    <div th:if="${!friend.getFriend().getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${friend.getFriend().getUserTag().getGenreTag()}"  class="badge" style="background-color: #878787; color: #FFFFFF; font-size: 12px">
+                                                    <div th:if="${!friend.getFriend().getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${friend.getFriend().getUserTag().getGenreTag()}"  class="badge" style="background-color: #878787; color: #FFFFFF;" >
                                                         <span th:text="${targetUserGenreTag.getGenre()}"></span>
                                                     </div>
                                                 </div>
@@ -241,7 +246,7 @@
                                         </div>
                                         <div class="card-actions justify-end items-end p-4">
                                             <label>
-                                                <a th:href="@{/dm/room/receiver/{receiverId}(receiverId=${friend.getFriend().getId()})}"  class="btn btn-sm bg-[#FF6B00] btn-outline border-white text-white hover:border-white"><i class="fa-regular fa-paper-plane"></i></a>
+                                                <a th:href="@{/dm/room/receiver/{receiverId}(receiverId=${friend.getFriend().getId()})}"  class="btn btn-custom btn-sm"><i class="fa-regular fa-paper-plane"></i></a>
                                             </label>
                                         </div>
                                     </div>
@@ -261,7 +266,7 @@
                             <th:block th:if="${!recentlyUserList.isEmpty()}">
                                 <div th:each="recentlyUser: ${recentlyUserList}" class="card custom-card w-full shadow-xl">
                                     <div class="flex flex-col space-x-3 p-4">
-                                        <div class="flex flex-row">
+                                        <a class="flex flex-row hover:underline" th:href="@{'/user/profile/' + ${recentlyUser.getMatchingPartner().getUser().getId()}}">
                                             <div class="avatar p-4">
                                                 <div class="mask rounded-xl w-12 h-12">
                                                     <img th:src="${recentlyUser.getMatchingPartner().getUser().getAvatar()}" class="w-12 h-12 "/>
@@ -272,18 +277,18 @@
                                                 <progress class="progress progress-accent w-24 progress-custom" th:value="${recentlyUser.getMatchingPartner().getUser().getTemperature()}" max="100">
                                                 </progress>
                                             </div>
-                                        </div>
+                                        </a>
                                         <div class="flex pt-4" style="display: flex; flex-direction: column">
                                             <div class="table-cell m-2">
                                                 <div class="flex flex-wrap">
-                                                    <div th:if="${!recentlyUser.getMatchingPartner().getUser().getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${recentlyUser.getMatchingPartner().getUser().getUserTag().getGameTag()}" class="badge" style="background-color: #00A3FF; color: #FFFFFF; font-size: 12px">
+                                                    <div th:if="${!recentlyUser.getMatchingPartner().getUser().getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${recentlyUser.getMatchingPartner().getUser().getUserTag().getGameTag()}" class="badge" style="background-color: #00A3FF; color: #FFFFFF;">
                                                         <span th:text="${targetUserGameTag.getName()}"></span>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="table-cell m-2">
                                                 <div class="flex flex-wrap">
-                                                    <div th:if="${!recentlyUser.getMatchingPartner().getUser().getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${recentlyUser.getMatchingPartner().getUser().getUserTag().getGenreTag()}"  class="badge" style="background-color: #878787; color: #FFFFFF; font-size: 12px">
+                                                    <div th:if="${!recentlyUser.getMatchingPartner().getUser().getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${recentlyUser.getMatchingPartner().getUser().getUserTag().getGenreTag()}"  class="badge" style="background-color: #878787; color: #FFFFFF;">
                                                         <span th:text="${targetUserGenreTag.getGenre()}"></span>
                                                     </div>
                                                 </div>
@@ -306,11 +311,11 @@
                                                     </a>
                                                 </label>
                                             </div>
-                                            <label>
-                                                <a th:href="'/user/profile/'+${recentlyUser.getMatchingPartner().getUser().getId()}">
-                                                    <button class="btn btn-custom btn-sm"> Profile</button>
-                                                </a>
-                                            </label>
+                                            <form th:action="@{/user/profile/{userId}/addFriend(userId=${targetUser.id})}" method="post">
+                                                <button th:if="${loginedId != targetUser.getId() and !isFriend}" class="btn btn-custom">친구추가</button>
+                                                <button th:if="${loginedId != targetUser.getId() and isFriend}" disabled></button>
+                                                <input type="submit" value="">
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -356,60 +361,75 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <script th:inline="javascript">
-            //메뉴를 보이고 안보이게
-            function showMenu(menuType) {
-                // 모든 섹션을 가져옵니다.
-                var sections = document.querySelectorAll('.section');
+    <script th:inline="javascript">
+        //메뉴를 보이고 안보이게
+        function showMenu(menuType) {
+            // 모든 섹션을 가져옵니다.
+            var sections = document.querySelectorAll('.section');
 
-                // 모든 섹션을 숨깁니다.
-                for (var i = 0; i < sections.length; i++) {
-                    sections[i].style.display = 'none';
-                }
-
-                // 선택된 메뉴에 해당하는 섹션만 보여줍니다.
-                var sectionToShow = document.querySelector('#' + menuType);
-
-                if (sectionToShow) {
-                    sectionToShow.style.display = 'block';
-                }
-            }
-            //매너온도에 숫자 표시
-            /*<![CDATA[*/
-            var temperature = /*[[${targetUser.getTemperature()}]]*/ '50';
-            function updateProgress(percent) {
-                var progressBar = document.getElementById('progress');
-                var percentage = document.getElementById('percentage');
-
-                progressBar.style.width = percent + '%';
-                percentage.innerHTML = percent + '°C';
+            // 모든 섹션을 숨깁니다.
+            for (var i = 0; i < sections.length; i++) {
+                sections[i].style.display = 'none';
             }
 
-            // 페이지 로드 시 진행률 업데이트
-            window.onload = function() {
-                updateProgress(temperature);
+            // 선택된 메뉴에 해당하는 섹션만 보여줍니다.
+            var sectionToShow = document.querySelector('#' + menuType);
+
+            if (sectionToShow) {
+                sectionToShow.style.display = 'block';
             }
+        }
+
+        //매너온도에 숫자 표시
+        /*<![CDATA[*/
+        var temperature = /*[[${targetUser.getTemperature()}]]*/ '50';
+        function updateProgress(percent) {
+            var progressBar = document.getElementById('progress');
+            var percentage = document.getElementById('percentage');
+
+            progressBar.style.width = percent + '%';
+            percentage.innerHTML = percent + '°C';
+        }
+
+        // 페이지 로드 시 실행되는 코드
+        window.onload = function() {
+            // 매너온도 업데이트
+            updateProgress(temperature);
+
+            // 현재 URL을 확인하여 "library" 쿼리 매개변수의 존재 여부를 검사
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('size')) {
+                document.getElementById('libraryRadio').checked = true;
+                showMenu('library');
+            } else {
+                // 그 외 기본값
+                showMenu('profile');
+            }
+        }
 
 
-            $(document).ready(function() {
-                $('.thumbs-up-button, .thumbs-down-button').click(function() {
-                    var buttonId = $(this).attr('id');
-                    $('#' + buttonId).closest('th').hide();
-                    $('#' + buttonId).closest('tr').find('.thumbs-up-button, .thumbs-down-button').hide();
-                    localStorage.setItem(buttonId, 'hidden');
-                });
 
-                $('.thumbs-up-button, .thumbs-down-button').each(function() {
-                    var buttonId = $(this).attr('id');
-                    var isHidden = localStorage.getItem(buttonId);
-                    if (isHidden === 'hidden') {
-                        $('#' + buttonId).closest('th').hide();
-                        $('#' + buttonId).closest('tr').find('.thumbs-up-button, .thumbs-down-button').hide();
-                    }
-                });
+
+        $(document).ready(function() {
+            $('.thumbs-up-button, .thumbs-down-button').click(function() {
+                var buttonId = $(this).attr('id');
+                $('#' + buttonId).closest('label').hide();
+                $('#' + buttonId).closest('label').find('.thumbs-up-button, .thumbs-down-button').hide();
+                localStorage.setItem(buttonId, 'hidden');
             });
-        </script>
+
+            $('.thumbs-up-button, .thumbs-down-button').each(function() {
+                var buttonId = $(this).attr('id');
+                var isHidden = localStorage.getItem(buttonId);
+                if (isHidden === 'hidden') {
+                    $('#' + buttonId).closest('label').hide();
+                    $('#' + buttonId).closest('label').find('.thumbs-up-button, .thumbs-down-button').hide();
+                }
+            });
+        });
+    </script>
 </main>
 <footer layout:fragment="footer" class="footer items-center p-4 text-neutral-content">
     <div class="items-center grid-flow-col">
