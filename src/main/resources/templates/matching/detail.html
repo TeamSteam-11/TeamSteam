@@ -90,16 +90,22 @@
                 <div class="flex">
 
                     <div class="flex justify-start items-center" style="width: 100%">
-                        <img th:src="${matching.user.getAvatar()}"
-                             class="user-profile object-cover"
-                             style="width: 50px; height: 50px; border-radius: 5px; margin-right: 10px">
+                        <a th:href="@{'/user/profile/' + ${matching.user.getId()}}"
+                           class="hover:underline">
+                            <img th:src="${matching.user.getAvatar()}"
+                                 class="user-profile object-cover"
+                                 style="width: 50px; height: 50px; border-radius: 5px; margin-right: 10px">
+                        </a>
 
                         <div class="flex flex-col items-start" style="width: 100%">
                             <div class="flex justify-between items-center" style="width: 100%; margin-bottom: 5px">
 
                                 <div class="flex items-center">
                                     <div class="flex items-center">
-                                        <div class="user-name" th:text="${matching.user.username}"></div>
+                                        <a th:href="@{'/user/profile/' + ${matching.user.getId()}}"
+                                           class="hover:underline">
+                                            <div class="user-name" th:text="${matching.user.username}"></div>
+                                        </a>
 
                                         <!--활동 시간-->
                                         <div class="text-xs flex items-center justify-center"
@@ -210,7 +216,8 @@
                                  th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${matching.getGameTagId()} + '/header.jpg'}"
                                  alt="게임 이미지" width="200" height="auto"/>
                         </td>
-                        <div class="text-xs p-1 flex items-center justify-center text-center" th:text="${matching.gameTagName}"
+                        <div class="text-xs p-1 flex items-center justify-center text-center"
+                             th:text="${matching.gameTagName}"
                              style="background-color: #00a3ff; width: 236px; min-height: 25px; border-radius: 5px; margin-bottom: 10px"></div>
                         <!--장르 태그-->
                         <div class="text-xs p-1 flex items-center justify-center" th:text="${matching.getGenre()}"
@@ -221,7 +228,8 @@
                     <!-- 제목 & 내용 -->
                     <div style="margin: 15px 0px 15px 20px">
                         <!-- 제목 -->
-                        <div class="title text-2xl" th:text="${matching.title}" style="margin-bottom: 5px;  word-break: break-all;"></div>
+                        <div class="title text-2xl" th:text="${matching.title}"
+                             style="margin-bottom: 5px;  word-break: break-all;"></div>
 
                         <!-- 게시글 내용 -->
                         <div id="contentBox"
