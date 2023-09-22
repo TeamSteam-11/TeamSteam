@@ -133,7 +133,6 @@
                                     <span th:case="23">23 : 00</span>
                                     <span th:case="24">24 : 00</span>
                               </span>
-
                                         </div>
 
 
@@ -211,11 +210,11 @@
                                  th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${matching.getGameTagId()} + '/header.jpg'}"
                                  alt="게임 이미지" width="200" height="auto"/>
                         </td>
-                        <div class="text-xs flex items-center justify-center" th:text="${matching.gameTagName}"
-                             style="background-color: #00a3ff; width: 236px; height: 25px; border-radius: 5px; margin-bottom: 10px"></div>
+                        <div class="text-xs p-1 flex items-center justify-center text-center" th:text="${matching.gameTagName}"
+                             style="background-color: #00a3ff; width: 236px; min-height: 25px; border-radius: 5px; margin-bottom: 10px"></div>
                         <!--장르 태그-->
-                        <div class="text-xs flex items-center justify-center" th:text="${matching.getGenre()}"
-                             style="background-color: #878787; width: 236px; height: 25px; border-radius: 5px"></div>
+                        <div class="text-xs p-1 flex items-center justify-center" th:text="${matching.getGenre()}"
+                             style="background-color: #878787; width: 236px; min-height: 25px; border-radius: 5px"></div>
 
                     </div>
 
