@@ -62,7 +62,7 @@ html, body {
     justify-content: center;
     align-items: center;
     /*background-image: url("../images/tile_05.png");*/
-    background-color: #202d3e;
+    background-color: #404040;
     background-repeat: repeat;
     height: calc(100vh - 200px);
     max-height: calc(100vh - 200px);

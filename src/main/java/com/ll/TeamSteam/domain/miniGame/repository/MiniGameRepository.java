@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface MiniGameRepository extends JpaRepository<MiniGame, Long> {
     MiniGame findByUser(User user);
-    List<MiniGame> findTop5ByOrderByScoreDesc();
+    List<MiniGame> findTop3ByOrderByScoreDesc();
 }

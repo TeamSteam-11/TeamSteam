@@ -1,5 +1,5 @@
 <html layout:decorate="~{common/layout.html}">
-
+<!--a 태그랑 label 에 padding이 5가 들어가있음 -->
 <head>
     <meta charset="UTF-8">
     <title>MatchingPage</title>
@@ -9,7 +9,7 @@
         }
 
         .btn {
-            padding: 5px 10px;
+            padding: 0px 10px;
             white-space: nowrap;
             color: white;
             border-radius: 5px;
@@ -34,15 +34,18 @@
 
         .pagination a.active {
             text-decoration: underline;
-            color: white;
+            color: #ffffff;
         }
 
         optgroup[label] {
-            color: black;
+            color: #00a3ff;
+            border-bottom-color: white;
+            margin-bottom: 1px;
+            border-width: 1px;
         }
 
         option {
-            color: black;
+            color: white;
         }
 
         select[name="name"] > option {
@@ -83,7 +86,7 @@
             <form id="filter-form" th:action="@{/match/list/filter}" method="GET" class="relative">
 
                 <select id="genre-select" name="genretype" class="h-12 p-3 mr-3" onchange="submitForm()"
-                        style="background-color: transparent; border: 1px solid #67686c; width: 175px; border-radius: 5px">
+                        style="border: 1px solid #67686c; width: 175px; border-radius: 5px;">
                     <option value="" selected>장르 선택</option>
                     <optgroup label="액션">
                         <option value="일인칭슈팅" th:selected="${genretype == '일인칭슈팅'}">일인칭슈팅</option>
@@ -138,7 +141,7 @@
 
 
                 <select id="time-select" name="starttime" class="h-12 p-3 mr-3" onchange="submitForm()"
-                        style="background-color: transparent; border: 1px solid #67686c; width: 175px; border-radius: 5px">
+                        style="border: 1px solid #67686c; width: 175px; border-radius: 5px">
                     <option value="" selected>시작 시간</option>
                     <option value="0" th:selected="${starttime == 0}">시간무관</option>
                     <option value="1" th:selected="${starttime == 1}">1시</option>
@@ -169,7 +172,7 @@
 
 
                 <select id="gender-select" name="gender" class="h-12 p-3 mr-8" onchange="submitForm()"
-                        style="background-color: transparent; border: 1px solid #67686c; width: 175px; border-radius: 5px">
+                        style="border: 1px solid #67686c; width: 175px; border-radius: 5px">
                     <option value="" selected>성별</option>
                     <option value="DC" th:selected="${gender == 'DC'}">성별무관</option>
                     <option value="F" th:selected="${gender == 'F'}">여성</option>
@@ -184,9 +187,10 @@
             <form th:action="@{/match/list/search}" method="GET" class="relative">
                 <div class="flex items-center" style="background-color: #555555; border-radius: 5px; width: 570px">
                     <select name="name" class="h-12 p-3"
-                            style="color: white; background-color: #444444; border-radius: 5px; padding-left: 25px; padding-right: 20px;">
+                            style="color: white; background-color: #444444; border-radius: 5px; padding-left: 25px; padding-right: 5px;">
                         <option value="title" th:selected="${searchOption == 'title'}">제목</option>
                         <option value="content" th:selected="${searchOption == 'content'}">내용</option>
+                        <option value="writer" th:selected="${searchOption == 'writer'}">글쓴이</option>
                     </select>
                     <input type="text" name="keyword" placeholder="검색어 입력" th:value="${keyword}"
                            class="h-12 p-4 pr-12 ml-3" style="background-color: transparent; width: 500px;"/>
@@ -203,22 +207,26 @@
     <div style="display: flex; justify-content: center; flex-wrap: wrap; width: 100%; margin-top: 10px;">
         <a class="card" th:each="matching : ${matchingList}" th:href="@{|/match/detail/${matching.id}|}">
             <div class="card-body" style="padding: 10px;">
-                <div class="flex justify-between" style="margin-bottom: 10px">
+                <div class="flex justify-between" style="margin-bottom: 15px;">
                     <div class="flex justify-start items-center">
-                        <img th:src="${matching.user.getAvatar()}"
-                             class="user-profile w-10 h-10 object-cover m-3"
-                             style="width: 40px; height: 40px; border-radius: 5px;">
-                        <div style="display: flex; flex-direction: column">
-                            <div>
-                                <div class="flex items-center mb-1">
-                                    <span class="card-title" style="font-size: 17px"
-                                          th:text="${#strings.length(matching.title) > 15 ? #strings.substring(matching.title, 0, 15) + '...' : matching.title}"></span>
-                                </div>
+                        <div class="w-10 h-10 m-2 flex flex-col justify-center">
+                            <img th:src="${matching.user.getAvatar()}"
+                                 class="user-profile w-10 h-10 object-cover"
+                                 style="border-radius: 5px; margin-top: 15px">
+                            <div class="user-name" th:text="${matching.user.username}" style="font-size: 11px;"></div>
+                        </div>
 
-                                <div class="flex">
-                                    <div class="text-xs mr-2" style="color: #aaaaaa; font-size: 13px"
-                                         th:text="${#temporals.format(matching.getModifyDate(), 'yyyy/MM/dd hh:mm')}"></div>
-                                </div>
+                        <!-- 첫 번째 div (제목과 날짜) -->
+                        <div class="flex flex-col" style="margin-left: 10px;">
+                            <!-- title -->
+                            <div style="min-width :300px; max-width: 300px">
+                                <span th:text="${#strings.length(matching.title) > 11 ? #strings.substring(matching.title, 0, 11) + '...' : matching.title}"></span>
+                            </div>
+
+                            <!-- date -->
+                            <div class="flex">
+                                <div class="text-xs" style="color: #888888;"
+                                     th:text="${#temporals.format(matching.getModifyDate(), 'yyyy/MM/dd hh:mm')}"></div>
                             </div>
                         </div>
                     </div>
@@ -233,7 +241,8 @@
                              th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${matching.getGameTagId()} + '/header.jpg'}"
                              alt="게임 이미지" width="200" height="auto"/>
                     </td>
-                    <span style="display: flex; justify-content: center" th:text="${matching.gameTagName}">게임 이름</span>
+                    <span style="display: flex; justify-content: center"
+                          th:text="${#strings.length(matching.gameTagName) > 35 ? #strings.substring(matching.gameTagName, 0, 35) + '...' : matching.gameTagName}">게임 이름</span>
                 </div>
 
                 <!-- 참여인원 및 마감시간 -->
@@ -253,23 +262,31 @@
                 <!-- 장르, 시간, 성별 -->
                 <div class="flex justify-center items-center" style="margin-top: 15px">
                     <div style="background-color: #444444; width: auto; height: 25px; border-radius: 5px; padding:10px; margin: 0px 4px 0px 4px;
-                         display: flex; justify-content: center; align-items: center; font-size: 13px">
+                         display: flex; justify-content: center; align-items: center; font-size: 10px">
                         <span th:text="${matching.genre}"></span>
                     </div>
 
                     <div style="background-color: #444444; width: auto; height: 25px; border-radius: 5px; padding:10px; margin: 0px 4px 0px 4px;
-                         display: flex; justify-content: center; align-items: center; font-size: 13px">
+                         display: flex; justify-content: center; align-items: center; font-size: 10px">
                         <span th:if="${matching.startTime} != 0" th:text="${matching.startTime} + ':00'"></span>
                         <span th:if="${matching.startTime} == 0" text="시간무관">시간무관 </span>
                     </div>
 
                     <div style="background-color: #444444; width: auto; height: 25px; border-radius: 5px; padding:10px; margin: 0px 4px 0px 4px;
-                         display: flex; justify-content: center; align-items: center; font-size: 13px">
+                         display: flex; justify-content: center; align-items: center; font-size: 10px">
                         <span th:switch="${matching.gender}">
                           <span th:case="'F'">여성</span>
                           <span th:case="'M'">남성</span>
                           <span th:case="'DC'">성별X</span>
                         </span>
+                    </div>
+
+                    <div style="background-color: #444444; width: auto; height: 25px; border-radius: 5px; padding:10px; margin: 0px 4px 0px 4px;
+                         display: flex; justify-content: center; align-items: center; font-size: 10px">
+                        <span th:if="${matching.getIsMic()}"><i class="fa-solid fa-microphone"
+                                                                             style="color: #ffffff;"></i></span>
+                        <span th:if="${!matching.getIsMic()}"><i class="fa-solid fa-microphone-slash"
+                                                                              style="color: #ffffff;"></i></span>
                     </div>
                 </div>
             </div>

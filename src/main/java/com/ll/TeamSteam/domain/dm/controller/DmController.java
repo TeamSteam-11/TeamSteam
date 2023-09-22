@@ -90,7 +90,7 @@ public class DmController {
     @GetMapping("/dmlist")
     public String chatList(Model model, @AuthenticationPrincipal SecurityUser user,
                            @RequestParam(defaultValue = "0") int page,
-                           @RequestParam(defaultValue = "1") int size,
+                           @RequestParam(defaultValue = "10") int size,
                            @RequestParam(defaultValue = "createDate") String sortCode,
                            @RequestParam(defaultValue = "DESC") String direction) {
 
