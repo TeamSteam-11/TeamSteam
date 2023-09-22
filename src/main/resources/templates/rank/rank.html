@@ -2,13 +2,14 @@
 <head>
     <title>명예의 전당</title>
     <style>
-        table{
+        table {
             border-radius: 5px 5px 5px 5px;
         }
+
         /* 테이블 테마 */
         .table {
             color: #fff;
-            width: 1200px;
+            width: 1180px;
             border-radius: 5px 5px 5px 5px;
         }
 
@@ -24,7 +25,7 @@
             color: #fff;
         }
 
-        .table tbody th{
+        .table tbody th {
             background-color: #171917;
             color: #fff;
         }
@@ -85,7 +86,7 @@
         </div>
     </header>
     <container class="mt-5 flex flex-col justify-center items-center">
-        <table class="table flex items-center justify-center w-full">
+        <table class="table flex items-center justify-center">
             <!-- head -->
             <thead>
             <tr>
@@ -102,22 +103,25 @@
                 <td th:if="${index.index+1} == 3"><i class="fa-solid fa-crown" style="color: #ca8f58;"></i></td>
                 <td th:if="${index.index+1} > 3" th:text="${index.index+1}"></td>
                 <td>
-                    <div class="flex items-center space-x-3 ">
-                        <div class="avatar">
-                            <div class="mask mask-squirrel w-12 h-12">
-                                <img th:src="${topUser.getAvatar()}"/>
+                    <a th:href="@{'/user/profile/' + ${topUser.getId()}}"
+                       class="hover:underline">
+                        <div class="flex items-center space-x-3 ">
+                            <div class="avatar">
+                                <div class="mask mask-squirrel w-12 h-12">
+                                    <img th:src="${topUser.getAvatar()}"/>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="font-bold" th:text="${topUser.getUsername()}"></div>
+                                <div class="text-sm opacity-50">Steam</div>
                             </div>
                         </div>
-                        <div>
-                            <div class="font-bold" th:text="${topUser.getUsername()}"></div>
-                            <div class="text-sm opacity-50">Steam</div>
-                        </div>
-                    </div>
+                    </a>
                 </td>
                 <td>
                     <div class="flex">
                         <div th:each="topUserGameTag, indexTwo : ${topUser.getUserTag().getGameTag()}"
-                             th:if="${indexTwo.size} != 0 and ${indexTwo.index} < 3" style="margin-left: 2px">
+                             th:if="${indexTwo.size} != 0 and ${indexTwo.index} < 2" style="margin-left: 2px">
                             <div class="badge bg-00A3FF badge-accent"
                                  th:text="${topUserGameTag.getName()}"
                                  style="color: #FFFFFF; font-size: 12px"></div>
@@ -145,7 +149,8 @@
 
             <!--로그인 했을 때 내 순위 출력-->
             <tr th:if="${myRank} != null">
-                <th colspan="4" style="text-align:center; font-size: 14px; padding-top: 15px; padding-bottom: 15px; font-weight : bold; border-bottom-color: #171917;">
+                <th colspan="4"
+                    style="text-align:center; font-size: 14px; padding-top: 15px; padding-bottom: 15px; font-weight : bold; border-bottom-color: #171917;">
                     내 순위
                 </th>
             </tr>
@@ -159,7 +164,8 @@
                             </div>
                         </div>
                         <div>
-                            <div class="font-bold" th:text="${myRankProfile.getUsername()}" style="font-size : 16px;"></div>
+                            <div class="font-bold" th:text="${myRankProfile.getUsername()}"
+                                 style="font-size : 16px;"></div>
                             <div class="text-sm opacity-50">Steam</div>
                         </div>
                     </div>
