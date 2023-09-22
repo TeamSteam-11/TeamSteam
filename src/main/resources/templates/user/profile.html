@@ -413,8 +413,8 @@
         $(document).ready(function() {
             $('.thumbs-up-button, .thumbs-down-button').click(function() {
                 var buttonId = $(this).attr('id');
-                $('#' + buttonId).closest('th').hide();
-                $('#' + buttonId).closest('tr').find('.thumbs-up-button, .thumbs-down-button').hide();
+                $('#' + buttonId).closest('label').hide();
+                $('#' + buttonId).closest('label').find('.thumbs-up-button, .thumbs-down-button').hide();
                 localStorage.setItem(buttonId, 'hidden');
             });
 
@@ -422,8 +422,8 @@
                 var buttonId = $(this).attr('id');
                 var isHidden = localStorage.getItem(buttonId);
                 if (isHidden === 'hidden') {
-                    $('#' + buttonId).closest('th').hide();
-                    $('#' + buttonId).closest('tr').find('.thumbs-up-button, .thumbs-down-button').hide();
+                    $('#' + buttonId).closest('label').hide();
+                    $('#' + buttonId).closest('label').find('.thumbs-up-button, .thumbs-down-button').hide();
                 }
             });
         });
