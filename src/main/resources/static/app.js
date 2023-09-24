@@ -101,7 +101,7 @@ function drawMessages(messages) {
                         </a>
                     </div>
                     <div class="chat-bubble">${message.content}</div>
-                    <div class="chat-footer message-time" style="margin-left: 68px;">
+                    <div class="chat-footer message-time">
                         ${formattedTime}
                     </div>
                 </div>`;
@@ -110,6 +110,7 @@ function drawMessages(messages) {
                     $(newItem).find('.chat-header').remove();
                     $(newItem).find('.chat-image').remove();
                     $(newItem).find('.chat-bubble').addClass('no-image');
+                    $(newItem).find('.chat-footer').addClass('no-image');
                 }
             }
 
