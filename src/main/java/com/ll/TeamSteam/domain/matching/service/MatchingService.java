@@ -40,8 +40,7 @@ public class MatchingService {
             gameTagName = gameTag1.getName();
         }
 
-        Matching matching = Matching
-                .builder()
+        Matching matching = Matching.builder()
                 .user(user)
                 .title(title)
                 .content(content)
@@ -94,20 +93,9 @@ public class MatchingService {
     }
 
     @Transactional
-    public RsData<Matching> modify(Matching matching, String title, String content, GenreTagType genreTag, String gender, Long capacity, Integer startTime, Integer endTime, int selectedHours, boolean mic) {
+    public RsData<Matching> modify(Matching matching, String title, String content, GenreTagType genreTag, String gender, Long capacity, Integer startTime, Integer endTime, boolean mic) {
         try {
             matching.update(title, content, genreTag, gender, capacity, startTime, endTime, mic);
-
-            // 수정된 selectedHours를 기반으로 deadlineDate 계산
-            LocalDateTime modifyDate = LocalDateTime.now();
-            LocalDateTime deadlineDate;
-            if (selectedHours > 0) {
-                deadlineDate = setDeadline(modifyDate, selectedHours);
-            } else {
-                // 마감 시간을 '제한 없음'으로 선택 시 매칭 마감일이 30일 이후로 저장됨
-                deadlineDate = modifyDate.plusDays(30);
-            }
-            matching.setDeadlineDate(deadlineDate);
 
             matchingRepository.save(matching);
 
@@ -179,7 +167,7 @@ public class MatchingService {
             return Duration.ZERO;
         });
 
-        Collections.sort(approachingDeadlineList, deadlineComparator);
+        approachingDeadlineList.sort(deadlineComparator);
 
         return approachingDeadlineList.stream()
                 .limit(6)
@@ -205,20 +193,8 @@ public class MatchingService {
     }
 
     public CreateForm setCreateForm(Matching matching) {
-        CreateForm createForm = new CreateForm();
 
-        createForm.setTitle(matching.getTitle());
-        createForm.setContent(matching.getContent());
-        createForm.setGenre(matching.getGenre());
-        createForm.setGameTagId(matching.getGameTagId());
-        createForm.setGender(matching.getGender());
-        createForm.setCapacity(matching.getCapacity());
-        createForm.setStartTime(matching.getStartTime());
-        createForm.setEndTime(matching.getEndTime());
-        createForm.setSelectedHours(calculateSelectedHours(matching.getId(), matching.getDeadlineDate()));
-        createForm.setMic(matching.isMic());
-
-        return createForm;
+        return CreateForm.of(matching);
     }
 
     public Optional<Matching> findByTitle(String title){

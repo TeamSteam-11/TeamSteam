@@ -39,8 +39,8 @@ public class MiniGameService {
     }
 
     public List<MiniGame> scoreDesc() {
-        List<MiniGame> byOrderByScoreDesc = miniGameRepository.findTop5ByOrderByScoreDesc();
+        List<MiniGame> byOrderByScoreDesc = miniGameRepository.findTop3ByOrderByScoreDesc();
         log.info("byOrderByScoreDesc = {} ", byOrderByScoreDesc);
-        return miniGameRepository.findTop5ByOrderByScoreDesc();
+        return miniGameRepository.findTop3ByOrderByScoreDesc();
     }
 }

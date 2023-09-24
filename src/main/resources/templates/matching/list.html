@@ -1,25 +1,31 @@
 <html layout:decorate="~{common/layout.html}">
-
+<!--a 태그랑 label 에 padding이 5가 들어가있음 -->
 <head>
     <meta charset="UTF-8">
     <title>MatchingPage</title>
     <style>
         body {
-            color:white;
+            color: white;
         }
 
         .btn {
-            padding: 5px 10px;
+            padding: 0px 10px;
             white-space: nowrap;
             color: white;
-            border-radius: 10px;
+            border-radius: 5px;
             text-decoration: none;
         }
 
         .btn-custom {
-            float: right;
-            margin-top: 30px;
-            margin-right: 80px;
+            /*float: right;*/
+            width: 150px;
+            margin: 30px 20px;
+            padding: 10px 50px 10px 50px;
+            background-color: #ff6b00;
+        }
+
+        .btn-custom:hover {
+            background-color: #dc5804 !important;
         }
 
         .pagination a {
@@ -28,7 +34,40 @@
 
         .pagination a.active {
             text-decoration: underline;
+            color: #404040;
+        }
+
+        optgroup[label] {
+            color: #00a3ff;
+            border-bottom-color: white;
+            margin-bottom: 1px;
+            border-width: 1px;
+        }
+
+        option {
             color: white;
+        }
+
+        select[name="name"] > option {
+            color: #ffffff;
+        }
+
+        select {
+            background-color: #404040;
+        }
+
+        input[type="text"]::placeholder {
+            color: #d1d1d1; /* 원하는 폰트 색상 (예: 빨간색) 설정 */
+        }
+
+        .card {
+            background-color: #2d2d2d;
+            color: white;
+            margin: 10px;
+            width: 275px;
+            height: 280px;
+            border: 1px solid #67686c;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -36,190 +75,237 @@
 
 <main layout:fragment="main">
 
-    <!-- 메뉴 이미지 -->
-    <div class="top-image-bar w-full relative">
-        <img src="https://cdn.jsdelivr.net/gh/LeeYulhee/projectlion_img/teamsteam/testBanner2.png" class="w-full">
-        <div class="absolute bottom-0" style="bottom: 35%; left:10%;">
-            <div class="relative max-w-2xl w-full px-4 h-12">
-                <div class="text-2xl">매칭 조회</div>
-                <div class="text-sm mt-1">함께 게임할 동료를 찾아보세요</div>
-            </div>
+    <!-- 상단 소개글 -->
+    <header class="ml-5 flex align-center">
+        <div class="mt-20 mb-10 h-12 flex justify-center flex-col align-center">
+            <div class="text-2xl">매칭 조회</div>
+            <div class="text-sm mt-1">함께 게임할 동료를 찾아보세요</div>
+        </div>
+    </header>
+
+
+    <!-- 세부 검색창 -->
+    <div class="flex justify-center items-center">
+        <div class="filter-box flex justify-center items-center">
+            <form id="filter-form" th:action="@{/match/list/filter}" method="GET" class="relative">
+
+                <select id="genre-select" name="genretype" class="h-12 p-3 mr-3 scroll" onchange="submitForm()"
+                        style="border: 1px solid #67686c; width: 175px; border-radius: 5px;">
+                    <option value="" selected>장르 선택</option>
+                    <optgroup label="액션">
+                        <option value="일인칭슈팅" th:selected="${genretype == '일인칭슈팅'}">일인칭슈팅</option>
+                        <option value="삼인칭슈팅" th:selected="${genretype == '삼인칭슈팅'}">삼인칭슈팅</option>
+                        <option value="격투" th:selected="${genretype == '격투'}">격투</option>
+                        <option value="슛뎀업" th:selected="${genretype == '슛뎀업'}">슛뎀업</option>
+                        <option value="아케이드" th:selected="${genretype == '아케이드'}">아케이드</option>
+                        <option value="러너" th:selected="${genretype == '러너'}">러너</option>
+                        <option value="핵앤슬래시" th:selected="${genretype == '핵앤슬래시'}">핵앤슬래시</option>
+                    </optgroup>
+                    <optgroup label="롤플레잉">
+                        <option value="JRPG" th:selected="${genretype == 'JRPG'}">JRPG</option>
+                        <option value="로그라이크" th:selected="${genretype == '로그라이크'}">로그라이크</option>
+                        <option value="액션RPG" th:selected="${genretype == '액션RPG'}">액션RPG</option>
+                        <option value="어드벤처RPG" th:selected="${genretype == '어드벤처RPG'}">어드벤처RPG</option>
+                        <option value="전략RPG" th:selected="${genretype == '전략RPG'}">전략RPG</option>
+                        <option value="현대RPG" th:selected="${genretype == '현대RPG'}">현대RPG</option>
+                        <option value="파티" th:selected="${genretype == '파티'}">파티</option>
+                    </optgroup>
+                    <optgroup label="전략">
+                        <option value="군사" th:selected="${genretype == '군사'}">군사</option>
+                        <option value="대전략" th:selected="${genretype == '대전략'}">대전략</option>
+                        <option value="도시" th:selected="${genretype == '도시'}">도시</option>
+                        <option value="실시간전략" th:selected="${genretype == '실시간전략'}">실시간전략</option>
+                        <option value="카드" th:selected="${genretype == '카드'}">카드</option>
+                        <option value="타워디펜스" th:selected="${genretype == '타워디펜스'}">타워디펜스</option>
+                        <option value="턴제전략" th:selected="${genretype == '턴제전략'}">턴제전략</option>
+                    </optgroup>
+                    <optgroup label="어드벤처">
+                        <option value="매트로베니아" th:selected="${genretype == '매트로베니아'}">매트로베니아</option>
+                        <option value="비주얼노벨" th:selected="${genretype == '비주얼노벨'}">비주얼노벨</option>
+                        <option value="캐주얼" th:selected="${genretype == '캐주얼'}">캐주얼</option>
+                        <option value="풍부한스토리" th:selected="${genretype == '풍부한스토리'}">풍부한스토리</option>
+                        <option value="히든오브젝트" th:selected="${genretype == '히든오브젝트'}">히든오브젝트</option>
+                    </optgroup>
+                    <optgroup label="시뮬레이션">
+                        <option value="건설" th:selected="${genretype == '건설'}">건설</option>
+                        <option value="농업" th:selected="${genretype == '농업'}">농업</option>
+                        <option value="샌드박스" th:selected="${genretype == '샌드박스'}">샌드박스</option>
+                        <option value="생활" th:selected="${genretype == '생활'}">생활</option>
+                        <option value="연애" th:selected="${genretype == '연애'}">연애</option>
+                        <option value="우주" th:selected="${genretype == '우주'}">우주</option>
+                        <option value="취미" th:selected="${genretype == '취미'}">취미</option>
+                    </optgroup>
+                    <optgroup label="스포츠 및 레이싱">
+                        <option value="스포츠" th:selected="${genretype == '스포츠'}">스포츠</option>
+                        <option value="낚시" th:selected="${genretype == '낚시'}">낚시</option>
+                        <option value="레이싱" th:selected="${genretype == '레이싱'}">레이싱</option>
+                        <option value="스포츠시뮬레이션" th:selected="${genretype == '스포츠시뮬레이션'}">스포츠시뮬레이션</option>
+                    </optgroup>
+                </select>
+
+
+                <select id="time-select" name="starttime" class="h-12 p-3 mr-3 scroll" onchange="submitForm()"
+                        style="border: 1px solid #67686c; width: 175px; border-radius: 5px;">
+                    <option value="" selected>시작 시간</option>
+                    <option value="0" th:selected="${starttime == 0}">시간무관</option>
+                    <option value="1" th:selected="${starttime == 1}">1시</option>
+                    <option value="2" th:selected="${starttime == 2}">2시</option>
+                    <option value="3" th:selected="${starttime == 3}">3시</option>
+                    <option value="4" th:selected="${starttime == 4}">4시</option>
+                    <option value="5" th:selected="${starttime == 5}">5시</option>
+                    <option value="6" th:selected="${starttime == 6}">6시</option>
+                    <option value="7" th:selected="${starttime == 7}">7시</option>
+                    <option value="8" th:selected="${starttime == 8}">8시</option>
+                    <option value="9" th:selected="${starttime == 9}">9시</option>
+                    <option value="10" th:selected="${starttime == 10}">10시</option>
+                    <option value="11" th:selected="${starttime == 11}">11시</option>
+                    <option value="12" th:selected="${starttime == 12}">12시</option>
+                    <option value="13" th:selected="${starttime == 13}">13시</option>
+                    <option value="14" th:selected="${starttime == 14}">14시</option>
+                    <option value="15" th:selected="${starttime == 15}">15시</option>
+                    <option value="16" th:selected="${starttime == 16}">16시</option>
+                    <option value="17" th:selected="${starttime == 17}">17시</option>
+                    <option value="18" th:selected="${starttime == 18}">18시</option>
+                    <option value="19" th:selected="${starttime == 19}">19시</option>
+                    <option value="20" th:selected="${starttime == 20}">20시</option>
+                    <option value="21" th:selected="${starttime == 21}">21시</option>
+                    <option value="22" th:selected="${starttime == 22}">22시</option>
+                    <option value="23" th:selected="${starttime == 23}">23시</option>
+                    <option value="24" th:selected="${starttime == 24}">24시</option>
+                </select>
+
+
+                <select id="gender-select" name="gender" class="h-12 p-3 mr-8" onchange="submitForm()"
+                        style="border: 1px solid #67686c; width: 175px; border-radius: 5px">
+                    <option value="" selected>성별</option>
+                    <option value="DC" th:selected="${gender == 'DC'}">성별무관</option>
+                    <option value="F" th:selected="${gender == 'F'}">여성</option>
+                    <option value="M" th:selected="${gender == 'M'}">남성</option>
+                </select>
+
+            </form>
+        </div>
+
+        <!-- 검색창 -->
+        <div class="search-box flex justify-center items-center mt-5 mb-5" style="height: 30px;">
+            <form th:action="@{/match/list/search}" method="GET" class="relative">
+                <div class="flex items-center" style="background-color: #555555; border-radius: 5px; width: 570px">
+                    <select name="name" class="h-12 p-3"
+                            style="color: white; background-color: #444444; border-radius: 5px; padding-left: 25px; padding-right: 5px;">
+                        <option value="title" th:selected="${searchOption == 'title'}">제목</option>
+                        <option value="content" th:selected="${searchOption == 'content'}">내용</option>
+                        <option value="writer" th:selected="${searchOption == 'writer'}">글쓴이</option>
+                    </select>
+                    <input type="text" name="keyword" placeholder="검색어 입력" th:value="${keyword}"
+                           class="h-12 p-4 pr-12 ml-3" style="background-color: transparent; width: 500px;"/>
+                    <button type="submit" aria-label="Search" title="Search"
+                            class="absolute right-0 top-0 bottom-0 flex items-center justify-center text-black text-2xl pr-3">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <div class="search-box flex justify-center mt-20 mb-10">
-        <form th:action="@{/match/list/search}" method="GET" class="relative">
-            <div class="flex items-center rounded-xl" style="background-color: #525964;">
-                <select name="name" class="h-14 p-4 rounded-xl" style="background-color: #525964; border-top-right-radius: 0; border-bottom-right-radius: 0;">
-                    <option value="title" th:selected="${searchOption == 'title'}">제목</option>
-                    <option value="content" th:selected="${searchOption == 'content'}">내용</option>
-                    <option value="writer" th:selected="${searchOption == 'writer'}">글쓴이</option>
-                </select>
-                <input type="text" name="keyword" placeholder="검색어 입력" th:value="${keyword}" class="h-12 p-4 pr-12 rounded-xl ml-4" style="background-color: #525964; width:500px;"/>
-                <button type="submit" aria-label="Search" title="Search" class="absolute right-0 top-0 bottom-0 flex items-center justify-center text-black text-2xl pr-3">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-        </form>
-    </div>
-
-    <div class="filter-box flex justify-center">
-        <form id="filter-form" th:action="@{/match/list/filter}" method="GET" class="relative">
-
-            <select id="genre-select" name="genretype" class="h-12 w-40 p-4 rounded-lg mr-2" onchange="submitForm()" style="background-color: #525964;">
-                <option value="" selected>장르 선택</option>
-                <optgroup label="액션">
-                    <option value="일인칭슈팅" th:selected="${genretype == '일인칭슈팅'}">일인칭슈팅</option>
-                    <option value="삼인칭슈팅" th:selected="${genretype == '삼인칭슈팅'}">삼인칭슈팅</option>
-                    <option value="격투" th:selected="${genretype == '격투'}">격투</option>
-                    <option value="슛뎀업" th:selected="${genretype == '슛뎀업'}">슛뎀업</option>
-                    <option value="아케이드" th:selected="${genretype == '아케이드'}">아케이드</option>
-                    <option value="러너" th:selected="${genretype == '러너'}">러너</option>
-                    <option value="핵앤슬래시" th:selected="${genretype == '핵앤슬래시'}">핵앤슬래시</option>
-                </optgroup>
-                <optgroup label="롤플레잉">
-                    <option value="JRPG" th:selected="${genretype == 'JRPG'}">JRPG</option>
-                    <option value="로그라이크" th:selected="${genretype == '로그라이크'}">로그라이크</option>
-                    <option value="액션RPG" th:selected="${genretype == '액션RPG'}">액션RPG</option>
-                    <option value="어드벤처RPG" th:selected="${genretype == '어드벤처RPG'}">어드벤처RPG</option>
-                    <option value="전략RPG" th:selected="${genretype == '전략RPG'}">전략RPG</option>
-                    <option value="현대RPG" th:selected="${genretype == '현대RPG'}">현대RPG</option>
-                    <option value="파티" th:selected="${genretype == '파티'}">파티</option>
-                </optgroup>
-                <optgroup label="전략">
-                    <option value="군사" th:selected="${genretype == '군사'}">군사</option>
-                    <option value="대전략" th:selected="${genretype == '대전략'}">대전략</option>
-                    <option value="도시" th:selected="${genretype == '도시'}">도시</option>
-                    <option value="실시간전략" th:selected="${genretype == '실시간전략'}">실시간전략</option>
-                    <option value="카드" th:selected="${genretype == '카드'}">카드</option>
-                    <option value="타워디펜스" th:selected="${genretype == '타워디펜스'}">타워디펜스</option>
-                    <option value="턴제전략" th:selected="${genretype == '턴제전략'}">턴제전략</option>
-                </optgroup>
-                <optgroup label="어드벤처">
-                    <option value="매트로베니아" th:selected="${genretype == '매트로베니아'}">매트로베니아</option>
-                    <option value="비주얼노벨" th:selected="${genretype == '비주얼노벨'}">비주얼노벨</option>
-                    <option value="캐주얼" th:selected="${genretype == '캐주얼'}">캐주얼</option>
-                    <option value="풍부한스토리" th:selected="${genretype == '풍부한스토리'}">풍부한스토리</option>
-                    <option value="히든오브젝트" th:selected="${genretype == '히든오브젝트'}">히든오브젝트</option>
-                </optgroup>
-                <optgroup label="시뮬레이션">
-                    <option value="건설" th:selected="${genretype == '건설'}">건설</option>
-                    <option value="농업" th:selected="${genretype == '농업'}">농업</option>
-                    <option value="샌드박스" th:selected="${genretype == '샌드박스'}">샌드박스</option>
-                    <option value="생활" th:selected="${genretype == '생활'}">생활</option>
-                    <option value="연애" th:selected="${genretype == '연애'}">연애</option>
-                    <option value="우주" th:selected="${genretype == '우주'}">우주</option>
-                    <option value="취미" th:selected="${genretype == '취미'}">취미</option>
-                </optgroup>
-                <optgroup label="스포츠 및 레이싱">
-                    <option value="스포츠" th:selected="${genretype == '스포츠'}">스포츠</option>
-                    <option value="낚시" th:selected="${genretype == '낚시'}">낚시</option>
-                    <option value="레이싱" th:selected="${genretype == '레이싱'}">레이싱</option>
-                    <option value="스포츠시뮬레이션" th:selected="${genretype == '스포츠시뮬레이션'}">스포츠시뮬레이션</option>
-                </optgroup>
-            </select>
-
-
-            <select id="time-select" name="starttime" class="h-12 p-4 rounded-lg mr-2" onchange="submitForm()" style="background-color: #525964;">
-                <option value="" selected>시작 시간</option>
-                <option value="0" th:selected="${starttime == 0}">시간무관</option>
-                <option value="1" th:selected="${starttime == 1}">1시</option>
-                <option value="2" th:selected="${starttime == 2}">2시</option>
-                <option value="3" th:selected="${starttime == 3}">3시</option>
-                <option value="4" th:selected="${starttime == 4}">4시</option>
-                <option value="5" th:selected="${starttime == 5}">5시</option>
-                <option value="6" th:selected="${starttime == 6}">6시</option>
-                <option value="7" th:selected="${starttime == 7}">7시</option>
-                <option value="8" th:selected="${starttime == 8}">8시</option>
-                <option value="9" th:selected="${starttime == 9}">9시</option>
-                <option value="10" th:selected="${starttime == 10}">10시</option>
-                <option value="11" th:selected="${starttime == 11}">11시</option>
-                <option value="12" th:selected="${starttime == 12}">12시</option>
-                <option value="13" th:selected="${starttime == 13}">13시</option>
-                <option value="14" th:selected="${starttime == 14}">14시</option>
-                <option value="15" th:selected="${starttime == 15}">15시</option>
-                <option value="16" th:selected="${starttime == 16}">16시</option>
-                <option value="17" th:selected="${starttime == 17}">17시</option>
-                <option value="18" th:selected="${starttime == 18}">18시</option>
-                <option value="19" th:selected="${starttime == 19}">19시</option>
-                <option value="20" th:selected="${starttime == 20}">20시</option>
-                <option value="21" th:selected="${starttime == 21}">21시</option>
-                <option value="22" th:selected="${starttime == 22}">22시</option>
-                <option value="23" th:selected="${starttime == 23}">23시</option>
-                <option value="24" th:selected="${starttime == 24}">24시</option>
-            </select>
-
-
-            <select id="gender-select" name="gender" class="h-12 p-4 rounded-lg" onchange="submitForm()" style="background-color: #525964;">
-                <option value="" selected>성별</option>
-                <option value="DC" th:selected="${gender == 'DC'}">성별무관</option>
-                <option value="F" th:selected="${gender == 'F'}">여성</option>
-                <option value="M" th:selected="${gender == 'M'}">남성</option>
-            </select>
-
-        </form>
-    </div>
-
-    <a href="/match/create" class="btn btn-custom">매칭 등록</a><br><br>
-
-    <div style="display: flex; justify-content: center; flex-wrap: wrap; width: 100%">
-        <a th:each="matching : ${matchingList}" th:href="@{|/match/detail/${matching.id}|}"
-           class="card w-96 bg-base-100 shadow-xl"
-           style="background-color: #1F2227; color: white; box-shadow: 3px 3px 5px black; margin: 30px;">
-            <div class="card-body" style="margin: px">
-                <div class="flex justify-between">
+    <!-- 매칭글 -->
+    <div style="display: flex; justify-content: center; flex-wrap: wrap; width: 100%; margin-top: 10px;">
+        <a class="card" th:each="matching : ${matchingList}" th:href="@{|/match/detail/${matching.id}|}">
+            <div class="card-body" style="padding: 10px;">
+                <div class="flex justify-between" style="margin-bottom: 15px;">
                     <div class="flex justify-start items-center">
-                        <img th:src="${matching.user.getAvatar()}" class="user-profile w-10 h-10 object-cover m-3 rounded-xl">
-                        <div style="display: flex; flex-direction: column">
-                            <div>
-                                <div class="flex items-center mb-1">
-                                    <span th:text="${matching.getUser().username}"></span>
-                                </div>
+                        <div class="w-10 h-10 m-2 flex flex-col justify-center">
+                            <img th:src="${matching.user.getAvatar()}"
+                                 class="user-profile w-10 h-10 object-cover"
+                                 style="border-radius: 5px; margin-top: 15px">
+                            <div class="user-name" th:text="${matching.user.username}" style="font-size: 11px;"></div>
+                        </div>
 
-                                <div class="flex">
-                                    <div class="text-xs mr-2" th:text="${#temporals.format(matching.getModifyDate(), 'yyyy/MM/dd hh:mm')}"></div>
-                                </div>
+                        <!-- 첫 번째 div (제목과 날짜) -->
+                        <div class="flex flex-col" style="margin-left: 10px;">
+                            <!-- title -->
+                            <div style="min-width :300px; max-width: 300px">
+                                <span th:text="${#strings.length(matching.title) > 11 ? #strings.substring(matching.title, 0, 11) + '...' : matching.title}"></span>
+                            </div>
+
+                            <!-- date -->
+                            <div class="flex">
+                                <div class="text-xs" style="color: #888888;"
+                                     th:text="${#temporals.format(matching.getModifyDate(), 'yyyy/MM/dd hh:mm')}"></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <span class="card-title mb-1 ml-3" th:text="${#strings.length(matching.title) > 15 ? #strings.substring(matching.title, 0, 15) + '...' : matching.title}"></span>
-                <span class="badge badge-outline" th:text="|${matching.participant} / ${matching.capacity}|"></span>
-                <div style="background-color: #87F86A; color: #1F2227; height: 25px; border-radius: 20px;
-                 display: flex; justify-content: center; align-items: center; font-size: 15px">
-                    <span th:text="${matching.genre}"></span>
-                </div><br>
-                <div style="background-color: #59C3F0; color: #1F2227; height: 50px; border-radius: 10px; padding: 10px;
+
+                <!-- 게임 태그 -->
+                <div style="background-color: #404040; color: white; height: 50px; border-radius: 5px; padding: 10px;
                  display: flex; justify-content: flex-start; align-items: center">
-                    <td >
-                        <img style="width: 40px; height: 40px; border-radius: 5px; margin-right: 20px" th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${matching.getGameTagId()} + '/header.jpg'}"
+                    <td>
+                        <img style="width: 40px; height: 40px; margin-right: 20px"
+                             th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${matching.getGameTagId()} + '/header.jpg'}"
                              alt="게임 이미지" width="200" height="auto"/>
                     </td>
-                    <span style="display: flex; justify-content: center" th:text="${matching.gameTagName}">게임 이름</span>
-
-                </div><br>
-                <div>
-                    <div class="badge badge-secondary">시간</div>
-                    <span th:if="${matching.startTime} != 0" th:text="${matching.startTime} + ' : 00'"></span>
-                    <span th:if="${matching.startTime} == 0" text="시간무관">시간무관 </span>
-                    <span th:if="${matching.endTime} != 0" th:text="' ~ ' + ${matching.endTime} + ' : 00'"></span>
+                    <span style="display: flex; justify-content: center"
+                          th:text="${#strings.length(matching.gameTagName) > 35 ? #strings.substring(matching.gameTagName, 0, 35) + '...' : matching.gameTagName}">게임 이름</span>
                 </div>
-                <div>
-                    <div class="badge badge-secondary">성별</div>
-                    <span th:switch="${matching.gender}">
-                  <span th:case="'F'">여성</span>
-                  <span th:case="'M'">남성</span>
-                  <span th:case="'DC'">성별무관</span>
-                </span>
+
+                <!-- 참여인원 및 마감시간 -->
+                <div style="font-size: 15px; margin-top: 10px;">
+                    <div class="flex items-center" style="margin-bottom: 7px">
+                        <span style="color: #aaaaaa; margin-right: 30px; margin-left: 10px;">참여 인원</span>
+                        <span th:text="|${matching.participant}  /  ${matching.capacity}|"></span>
+                    </div>
+
+                    <div class="flex items-center">
+                        <span style="color: #aaaaaa; margin-right: 30px; margin-left: 10px">마감 시간</span>
+                        <span th:text="${matching.getDeadlineDuration() != null ? matching.getDeadlineDuration() : '마감완료'}"></span>
+                    </div>
+                </div>
+
+
+                <!-- 장르, 시간, 성별 -->
+                <div class="flex justify-center items-center" style="margin-top: 15px">
+                    <div style="background-color: #444444; width: auto; height: 25px; border-radius: 5px; padding:10px; margin: 0px 4px 0px 4px;
+                         display: flex; justify-content: center; align-items: center; font-size: 10px">
+                        <span th:text="${matching.genre}"></span>
+                    </div>
+
+                    <div style="background-color: #444444; width: auto; height: 25px; border-radius: 5px; padding:10px; margin: 0px 4px 0px 4px;
+                         display: flex; justify-content: center; align-items: center; font-size: 10px">
+                        <span th:if="${matching.startTime} != 0" th:text="${matching.startTime} + ':00'"></span>
+                        <span th:if="${matching.startTime} == 0" text="시간무관">시간무관 </span>
+                    </div>
+
+                    <div style="background-color: #444444; width: auto; height: 25px; border-radius: 5px; padding:10px; margin: 0px 4px 0px 4px;
+                         display: flex; justify-content: center; align-items: center; font-size: 10px">
+                        <span th:switch="${matching.gender}">
+                          <span th:case="'F'">여성</span>
+                          <span th:case="'M'">남성</span>
+                          <span th:case="'DC'">성별X</span>
+                        </span>
+                    </div>
+
+                    <div style="background-color: #444444; width: auto; height: 25px; border-radius: 5px; padding:10px; margin: 0px 4px 0px 4px;
+                         display: flex; justify-content: center; align-items: center; font-size: 10px">
+                        <span th:if="${matching.getIsMic()}"><i class="fa-solid fa-microphone"
+                                                                             style="color: #ffffff;"></i></span>
+                        <span th:if="${!matching.getIsMic()}"><i class="fa-solid fa-microphone-slash"
+                                                                              style="color: #ffffff;"></i></span>
+                    </div>
                 </div>
             </div>
         </a>
     </div>
 
+    <!-- 글 작성 버튼 -->
+    <div class="flex justify-end items-center">
+        <a href="/match/create" class="btn btn-custom">글 작성</a>
+    </div>
+
     <!-- 페이지네이션 시작 -->
     <div class="pagination" style="display: flex; justify-content: center; flex-wrap: wrap;">
-        <ul th:if="${keyword == null and searchOption == null and genretype == null and starttime == null}" style="display: flex;">
+        <ul th:if="${keyword == null and searchOption == null and genretype == null and starttime == null}"
+            style="display: flex;">
             <li th:if="${currentPage != 0}">
                 <a th:href="@{/match/list(page=${currentPage - 1})}" style="margin-right: 1em;">&lt;이전</a>
             </li>
@@ -229,7 +315,7 @@
                 <a th:href="@{/match/list(page=${pageNumber - 1})}" th:text="${pageNumber}" style="margin-right: 1em;"
                    th:classappend="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
             </li>
-            <li th:if="${currentPage + 1 < matchingList.totalPages}">
+            <li th:if="${currentPage != matchingList.totalPages - 1}">
                 <a th:href="@{/match/list(page=${currentPage + 1})}" style="margin-right: 1em;">다음&gt;</a>
             </li>
         </ul>
@@ -245,7 +331,7 @@
                    th:text="${pageNumber}" style="margin-right: 1em;"
                    th:classappend="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
             </li>
-            <li th:if="${currentPage + 1 < matchingList.totalPages}">
+            <li th:if="${currentPage != matchingList.totalPages - 1}">
                 <a th:href="@{/match/list/search(name=${searchOption}, keyword=${keyword}, page=${currentPage + 1})}"
                    style="margin-right: 1em;">다음&gt;</a>
             </li>
@@ -262,7 +348,7 @@
                    th:text="${pageNumber}" style="margin-right: 1em;"
                    th:classappend="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
             </li>
-            <li th:if="${currentPage + 1 < matchingList.totalPages}">
+            <li th:if="${currentPage != matchingList.totalPages - 1}">
                 <a th:href="@{/match/list/filter(genretype=${genretype != null ? genretype : ''}, starttime=${starttime != null ? starttime : ''}, gender=${gender != null ? gender : ''}, page=${currentPage + 1})}"
                    style="margin-right: 1em;">다음&gt;</a>
             </li>
@@ -277,17 +363,6 @@
         }
     </script>
 </main>
-<footer layout:fragment="footer" class="footer items-center p-4 text-neutral-content">
-    <div class="items-center grid-flow-col">
-        <svg width="36" height="36" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" class="fill-current"><path d="M22.672 15.226l-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.15.325-2.148-.321-2.463-1.226l-.84-2.518-5.013 1.677.84 2.517c.391 1.203-.434 2.542-1.831 2.542-.88 0-1.601-.564-1.86-1.314l-.842-2.516-2.431.809c-1.135.328-2.145-.317-2.463-1.229-.329-1.018.211-2.127 1.231-2.456l2.432-.809-1.621-4.823-2.432.808c-1.355.384-2.558-.59-2.558-1.839 0-.817.509-1.582 1.327-1.846l2.433-.809-.842-2.515c-.33-1.02.211-2.129 1.232-2.458 1.02-.329 2.13.209 2.461 1.229l.842 2.515 5.011-1.677-.839-2.517c-.403-1.238.484-2.553 1.843-2.553.819 0 1.585.509 1.85 1.326l.841 2.517 2.431-.81c1.02-.33 2.131.211 2.461 1.229.332 1.018-.21 2.126-1.23 2.456l-2.433.809 1.622 4.823 2.433-.809c1.242-.401 2.557.484 2.557 1.838 0 .819-.51 1.583-1.328 1.847m-8.992-6.428l-5.01 1.675 1.619 4.828 5.011-1.674-1.62-4.829z"></path></svg>
-        <p>Copyright © TEAMSTEAM</p>
-    </div>
-    <div class="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
-        <a><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path></svg>
-        </a>
-        <a><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path></svg></a>
-        <a><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path></svg></a>
-    </div>
-</footer>
+
 </body>
 </html>

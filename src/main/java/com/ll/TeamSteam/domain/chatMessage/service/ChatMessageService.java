@@ -48,6 +48,8 @@ public class ChatMessageService {
                 .orElseThrow(() -> new IllegalArgumentException("유저아님"));
 
         ChatMessage chatMessage = ChatMessage.create(content, sender.getId(), sender.getUsername(), sender.getAvatar(), type, chatRoom.getId());
+        // 글자수 제한
+        chatMessage.validateLength(chatMessage.getContent());
 
         return chatMessageRepository.save(chatMessage);
     }

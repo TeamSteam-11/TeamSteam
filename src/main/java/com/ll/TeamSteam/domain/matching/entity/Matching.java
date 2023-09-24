@@ -43,7 +43,7 @@ public class Matching extends BaseEntity {
     private String gameTagName;
 
     @Min(value = 2)
-    @Max(value = 5)
+    @Max(value = 10)
     private Long capacity; // 모집 인원
 
     private Long participant; // 참가자 수
@@ -56,7 +56,7 @@ public class Matching extends BaseEntity {
 
     private String gender; // 성별
 
-    private boolean isMic; // 마이크
+    private Boolean isMic; // 마이크
 
     @OneToOne(mappedBy = "matching", fetch = LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ChatRoom chatRoom;
@@ -67,7 +67,7 @@ public class Matching extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void update(String title, String content, GenreTagType genre, String gender, Long capacity, Integer startTime, Integer endTime, boolean isMic) {
+    public void update(String title, String content, GenreTagType genre, String gender, Long capacity, Integer startTime, Integer endTime, Boolean isMic) {
         this.title = title;
         this.content = content;
         this.genre = genre;

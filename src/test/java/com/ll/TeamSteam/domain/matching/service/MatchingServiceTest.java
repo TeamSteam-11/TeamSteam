@@ -110,7 +110,6 @@ public class MatchingServiceTest {
                 4L,
                 10,
                 15,
-                selectedHours,
                 true
         );
 
@@ -151,7 +150,6 @@ public class MatchingServiceTest {
                 4L,
                 10,
                 15,
-                selectedHours,
                 true
         );
 
@@ -192,7 +190,6 @@ public class MatchingServiceTest {
                 4L,
                 10,
                 15,
-                selectedHours,
                 true
         );
 

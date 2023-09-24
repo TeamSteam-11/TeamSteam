@@ -1,6 +1,7 @@
 package com.ll.TeamSteam.domain.notification.service;
 
 import com.ll.TeamSteam.domain.dm.entity.Dm;
+import com.ll.TeamSteam.domain.matching.service.MatchingService;
 import com.ll.TeamSteam.domain.notification.entity.Notification;
 import com.ll.TeamSteam.domain.notification.repository.NotificationRepository;
 import com.ll.TeamSteam.domain.user.entity.User;
@@ -21,6 +22,7 @@ import java.util.List;
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
+    private final MatchingService matchingService;
 
     public Page<Notification> findByInvitedUser(User user, Pageable pageable) {
         return notificationRepository.findByInvitedUserOrderByIdDesc(user, pageable);
@@ -34,17 +36,18 @@ public class NotificationService {
                 .forEach(Notification::markAsRead);
     }
 
-    public void makeLike(User invitingUser, User invitedUser, Long roomId, String roomName, boolean enterAlarm) {
-        createAndSaveNotification(invitingUser, invitedUser, roomId, roomName, enterAlarm);
+    public void makeLike(User invitingUser, User invitedUser, Long roomId, String roomName, String image, boolean enterAlarm) {
+        createAndSaveNotification(invitingUser, invitedUser, roomId, roomName, image, enterAlarm);
     }
 
-    public RsData<Notification> createAndSaveNotification(User invitingUser, User invitedUser, Long roomId, String roomName, boolean enterAlarm) {
+    public RsData<Notification> createAndSaveNotification(User invitingUser, User invitedUser, Long roomId, String roomName, String image, boolean enterAlarm) {
 
         Notification notification = Notification.builder()
                 .invitingUser(invitingUser)
                 .invitedUser(invitedUser)
                 .roomId(roomId)
                 .matchingName(roomName)
+                .image(image)
                 .enterAlarm(enterAlarm)
                 .build();
 
@@ -76,7 +79,8 @@ public class NotificationService {
     }
 
     public void makeFriend(User invitingUser, User invitedUser) {
-        createAndSaveNotification(invitingUser, invitedUser);
+        String image = invitingUser.getAvatar();
+        createAndSaveNotification(invitingUser, invitedUser, image);
     }
 
     public boolean isDupNotification(User invitingUser, User invitedUser){
@@ -86,11 +90,12 @@ public class NotificationService {
         return false;
     }
 
-    public RsData<Notification> createAndSaveNotification(User invitingUser, User invitedUser) {
+    public RsData<Notification> createAndSaveNotification(User invitingUser, User invitedUser, String image) {
 
         Notification notification = Notification.builder()
                 .invitingUser(invitingUser)
                 .invitedUser(invitedUser)
+                .image(image)
                 .build();
 
         notificationRepository.save(notification);
@@ -98,15 +103,16 @@ public class NotificationService {
         return RsData.of("S-1", "알림 메세지가 생성되었습니다.", notification);
     }
 
-    public void makeDmCreateAlarm(Dm dm, User dmSender, User receiver) {
-        createDmAlarm(dm, dmSender, receiver);
+    public void makeDmCreateAlarm(Dm dm, User dmSender, User receiver, String image) {
+        createDmAlarm(dm, dmSender, receiver, image);
     }
 
-    private void createDmAlarm(Dm dm, User dmSender, User receiver) {
+    private void createDmAlarm(Dm dm, User dmSender, User receiver, String image) {
         Notification notification = Notification.builder()
                 .dmId(dm.getId())
                 .invitingUser(dmSender)
                 .invitedUser(receiver)
+                .image(image)
                 .build();
 
         notificationRepository.save(notification);

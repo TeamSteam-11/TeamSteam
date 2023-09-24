@@ -4,6 +4,7 @@ package com.ll.TeamSteam.domain.user.controller;
 import com.ll.TeamSteam.domain.friend.entity.Friend;
 import com.ll.TeamSteam.domain.matchingTag.entity.GenreTagType;
 import com.ll.TeamSteam.domain.notification.service.NotificationService;
+import com.ll.TeamSteam.domain.rank.service.RankService;
 import com.ll.TeamSteam.domain.recentlyUser.entity.RecentlyUser;
 import com.ll.TeamSteam.domain.recentlyUser.service.RecentlyUserService;
 import com.ll.TeamSteam.domain.steam.entity.SteamGameLibrary;
@@ -61,6 +62,8 @@ public class UserController {
     private final RecentlyUserService recentlyUserService;
 
     private final NotificationService notificationService;
+
+    private final RankService rankService;
 
     private final Rq rq;
 
@@ -283,13 +286,16 @@ public class UserController {
         User targetUser = userService.findById(userId).orElseThrow();
 
         List<SteamGameLibrary> haveGameListData = steamGameLibraryService.getUserGameList(targetUser.getSteamId());
-
         int totalItems = haveGameListData.size();
         int totalPages = (int) Math.ceil((double) totalItems / size);
-
         int start = page * size;
         int end = Math.min(start + size, totalItems);
         List<SteamGameLibrary> pagedGameList = haveGameListData.subList(start, end);
+
+        //최근 플레이한 게임
+        List<SteamGameLibrary> haveRecentlyPlayedGameList = steamGameLibraryService.getUserRecentlyPlayedGames(targetUser.getSteamId(),userId);
+
+
         recentlyUserService.updateRecentlyUser(targetUser.getId());
         List<RecentlyUser> recentlyUserList =recentlyUserService.findAllByUserId(userId);
 
@@ -301,14 +307,19 @@ public class UserController {
         //친구 검증
         boolean isFriend =userService.isFriend(userId,loginedId);
 
+        //매너온도 랭킹
+        long userRank = rankService.getUserOfTemperatureRank(userId);
+
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("gameList", pagedGameList);
+        model.addAttribute("recentlyGameList", haveRecentlyPlayedGameList);
         model.addAttribute("targetUser", targetUser);
         model.addAttribute("loginedId", loginedId);
         model.addAttribute("friendsList", friendsList);
         model.addAttribute("recentlyUserList",recentlyUserList);
         model.addAttribute("isFriend", isFriend);
+        model.addAttribute("myRank", userRank);
 
         return "user/profile";
 

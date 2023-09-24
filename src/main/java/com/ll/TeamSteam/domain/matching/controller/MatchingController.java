@@ -54,7 +54,7 @@ public class MatchingController {
 
     @GetMapping("/list")
     public String matchingList(@RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "9") int size,
+                               @RequestParam(defaultValue = "12") int size,
                                @RequestParam(defaultValue = "createDate") String sortCode,
                                @RequestParam(defaultValue = "DESC") String direction,
                                /*@PageableDefault(sort = "createDate", direction = Sort.Direction.DESC, size = 12) Pageable pageable,*/
@@ -121,7 +121,7 @@ public class MatchingController {
                 createForm.getStartTime(),
                 createForm.getEndTime(),
                 deadlineDate,
-                createForm.isMic()
+                createForm.getIsMic()
         );
 
         // 매칭 등록 실패 시
@@ -204,7 +204,7 @@ public class MatchingController {
         }
 
         RsData<Matching> modifyRsData = matchingService.modify(matching, createForm.getTitle(), createForm.getContent(),
-                createForm.getGenre(), createForm.getGender(), createForm.getCapacity(), createForm.getStartTime(), createForm.getEndTime(), createForm.getSelectedHours(), createForm.isMic());
+                createForm.getGenre(), createForm.getGender(), createForm.getCapacity(), createForm.getStartTime(), createForm.getEndTime(), createForm.getIsMic());
 
         chatRoomService.updateChatRoomName(matching.getChatRoom(), matching.getTitle());
 
@@ -290,7 +290,7 @@ public class MatchingController {
     @GetMapping("/list/search")
     public String searchMatching(@RequestParam String name, @RequestParam String keyword,
                                  @RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "9") int size,
+                                 @RequestParam(defaultValue = "12") int size,
                                  @RequestParam(defaultValue = "createDate") String sortCode,
                                  @RequestParam(defaultValue = "DESC") String direction,
                                  Model model){
@@ -318,7 +318,7 @@ public class MatchingController {
                                  @RequestParam(name = "starttime", required = false) Integer startTime,
                                  @RequestParam(name = "gender", required = false) String gender,
                                  @RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "9") int size,
+                                 @RequestParam(defaultValue = "12") int size,
                                  @RequestParam(defaultValue = "createDate") String sortCode,
                                  @RequestParam(defaultValue = "DESC") String direction,
                                  Model model) {

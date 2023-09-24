@@ -34,6 +34,8 @@ public class QNotification extends EntityPathBase<Notification> {
     //inherited
     public final NumberPath<Long> id = _super.id;
 
+    public final StringPath image = createString("image");
+
     public final com.ll.TeamSteam.domain.user.entity.QUser invitedUser;
 
     public final com.ll.TeamSteam.domain.user.entity.QUser invitingUser;

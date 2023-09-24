@@ -3,6 +3,7 @@ package com.ll.TeamSteam.domain.chatMessage.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ll.TeamSteam.domain.chatMessage.entity.ChatMessage;
 import com.ll.TeamSteam.domain.chatMessage.entity.ChatMessageType;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class ChatMessageDto implements Serializable {
     private String id;
 
     @JsonProperty("content")
+    @Size(max = 50)
     private String content;
 
     @JsonProperty("senderId")

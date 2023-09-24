@@ -1,5 +1,6 @@
 package com.ll.TeamSteam.global.error;
 
+import com.ll.TeamSteam.domain.chatMessage.error.ChatMessageOverContent;
 import com.ll.TeamSteam.domain.chatRoom.exception.CanNotEnterException;
 import com.ll.TeamSteam.domain.chatRoom.exception.KickedUserEnterException;
 import com.ll.TeamSteam.domain.chatRoom.exception.NoChatRoomException;
@@ -92,6 +93,13 @@ public class GlobalExceptionHandler {
         model.addAttribute("errorMessage",e.getMessage());
         log.info("e.getMessage = {} ", e.getMessage());
         return "error/noChatroomError";
+    }
+
+    @ExceptionHandler(value = ChatMessageOverContent.class)
+    public String chatMessageOverContent(Exception e, Model model){
+        model.addAttribute("errorMessage",e.getMessage());
+        log.info("e.getMessage = {} ", e.getMessage());
+        return "error/commonError";
     }
 
 }

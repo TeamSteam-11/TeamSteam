@@ -1,5 +1,6 @@
 package com.ll.TeamSteam.domain.dmMessage.entity;
 
+import com.ll.TeamSteam.domain.chatMessage.error.ChatMessageOverContent;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,8 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @Slf4j
 public class DmMessage {
+
+    private static final int MAX_LENGTH = 250;
 
     @Id
     private String id;
@@ -42,5 +45,11 @@ public class DmMessage {
                 .build();
 
         return dmMessage;
+    }
+
+    public void validateLength(String content) {
+        if (content.length() > MAX_LENGTH) {
+            throw new ChatMessageOverContent("메시지 content 초과했어!");
+        }
     }
 }

@@ -3,33 +3,31 @@
 <head>
     <title>Matching Detail</title>
     <style>
+        .button-group > a {
+            background-color: #ff6b00;
+            width: 140px;
+            height: 45px;
+            border-radius: 5px;
+            font-size: 17px;
+        }
+
         .button-group > a:hover {
-            background-color: #2e3239 !important;
+            background-color: #dc5804 !important;
             cursor: pointer;
+        }
+
+        .button-group > form > button {
+            background-color: #444444;
+            width: 90px;
+            height: 45px;
+            border-radius: 5px;
+            font-size: 17px;
+            margin-right: 10px;
         }
 
         .button-group > form > button:hover {
-            background-color: #2e3239 !important;
+            background-color: #363535 !important;
             cursor: pointer;
-        }
-
-        .scroll {
-            overflow: auto;
-        }
-
-        .scroll::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        .scroll::-webkit-scrollbar-thumb {
-            background-color: #2f3542;
-            border-radius: 15px;
-        }
-
-        .scroll::-webkit-scrollbar-track {
-            background-color: grey;
-            border-radius: 15px;
-            box-shadow: inset 0px 0px 5px white;
         }
 
         li:active a {
@@ -40,185 +38,218 @@
             pointer-events: none;
             opacity: 0.6;
         }
+
+        .matching-box {
+            background-color: #2d2d2d;
+            border: 1px solid #67686c;
+            padding: 20px;
+            border-radius: 5px;
+            width: 1150px;
+            height: 450px;
+            margin-top: 70px;
+        }
+
+        .progress-custom {
+            background-color: #847676;
+            width: 175px;
+            height: 10px;
+            border-radius: 2px;
+        }
+
+        .progress-custom::-webkit-progress-bar {
+            background-color: #847676; /* 배경 색상 (WebKit 브라우저용) */
+            height: 10px;
+            border-radius: 2px;
+
+        }
+
+        .progress-custom::-webkit-progress-value {
+            background-color: #58C8C1; /* 진행 막대 색상 (WebKit 브라우저용) */
+            border-radius: 2px;
+        }
+
+        .progress-custom::-moz-progress-bar {
+            background-color: #58C8C1; /* 진행 막대 색상 (Firefox 브라우저용) */
+            border-radius: 2px;
+        }
+
     </style>
 </head>
 <body>
 
 <main layout:fragment="main">
 
-    <!-- 메뉴 이미지 -->
-    <div class="top-image-bar w-full relative">
-        <img src="https://cdn.jsdelivr.net/gh/LeeYulhee/projectlion_img/teamsteam/testBanner2.png" class="w-full">
-        <div class="absolute bottom-0" style="bottom: 35%; left:10%;">
-            <div class="relative max-w-2xl w-full px-4 h-12">
-                <div class="text-2xl">매칭 조회</div>
-                <div class="text-sm mt-1">함께 게임할 동료를 찾아보세요</div>
-            </div>
-        </div>
-    </div>
 
     <div class="flex justify-center">
 
-        <div class="mt-10 w-4/5">
+        <div>
 
-            <!-- 작성자 부분 -->
-            <div class="flex mt-7 justify-between">
+            <!-- 매칭글 윗 부분 -->
+            <div class="matching-box">
+                <!-- 작성자 부분 -->
+                <div class="flex">
 
-                <!--작성자 왼쪽 부분-->
-                <div class="flex justify-start items-center">
-                    <a th:href="@{'/user/profile/' + ${matching.user.id}}" class="hover:underline">
-                        <img th:src="${matching.user.getAvatar()}"
-                            class="user-profile w-10 h-10 object-cover m-3 rounded-xl">
-                    </a>
+                    <div class="flex justify-start items-center" style="width: 100%">
+                        <a th:href="@{'/user/profile/' + ${matching.user.getId()}}"
+                           class="hover:underline">
+                            <img th:src="${matching.user.getAvatar()}"
+                                 class="user-profile object-cover"
+                                 style="width: 50px; height: 50px; border-radius: 5px; margin-right: 10px">
+                        </a>
 
-                    <div>
-                        <div class="flex items-center mb-1">
-                            <a th:href="@{'/user/profile/' + ${matching.user.id}}" class="hover:underline">
-                                <div class="user-name" th:text="${matching.user.username}"></div>
-                            </a>
+                        <div class="flex flex-col items-start" style="width: 100%">
+                            <div class="flex justify-between items-center" style="width: 100%; margin-bottom: 5px">
 
-                            <!--장르 태그-->
-                            <div class="bg-black bg-opacity-20 h-7 ml-2 p-2 text-xs flex items-center justify-center rounded-xl"
-                                 th:text="${matching.getGenre()}" style="min-width: 64px"></div>
+                                <div class="flex items-center">
+                                    <div class="flex items-center">
+                                        <a th:href="@{'/user/profile/' + ${matching.user.getId()}}"
+                                           class="hover:underline">
+                                            <div class="user-name" th:text="${matching.user.username}"></div>
+                                        </a>
 
-                            <!--게임 태그-->
-                            <div class="bg-black bg-opacity-20 h-7 ml-2 p-2 text-xs flex items-center justify-center rounded-xl"
-                                 th:text="${matching.gameTagName}" style="min-width: 64px"></div>
+                                        <!--활동 시간-->
+                                        <div class="text-xs flex items-center justify-center"
+                                             style="width: 67px; height: 25px; border-radius: 5px; background-color: #444444;
+                                            margin-left: 10px;">
 
-                            <!--모집 성별-->
-                            <div class="bg-black bg-opacity-20 h-7 ml-2 p-2 text-xs flex items-center justify-center rounded-xl"
-                                 style="min-width: 64px"> 모집 성별 :
-                                <span th:switch="${matching.gender}">
-                                <span class="ml-1" th:case="'F'">여성</span>
-                                <span class="ml-1" th:case="'M'">남성</span>
-                                <span class="ml-1" th:case="'DC'">성별무관</span>
+                                    <span th:switch="${matching.startTime}">
+                                    <span th:case="0">시간 무관</span>
+                                    <span th:case="1">1 : 00</span>
+                                    <span th:case="2">2 : 00</span>
+                                    <span th:case="3">3 : 00</span>
+                                    <span th:case="4">4 : 00</span>
+                                    <span th:case="5">5 : 00</span>
+                                    <span th:case="6">6 : 00</span>
+                                    <span th:case="7">7 : 00</span>
+                                    <span th:case="8">8 : 00</span>
+                                    <span th:case="9">9 : 00</span>
+                                    <span th:case="10">10 : 00</span>
+                                    <span th:case="11">11 : 00</span>
+                                    <span th:case="12">12 : 00</span>
+                                    <span th:case="13">13 : 00</span>
+                                    <span th:case="14">14 : 00</span>
+                                    <span th:case="15">15 : 00</span>
+                                    <span th:case="16">16 : 00</span>
+                                    <span th:case="17">17 : 00</span>
+                                    <span th:case="18">18 : 00</span>
+                                    <span th:case="19">19 : 00</span>
+                                    <span th:case="20">20 : 00</span>
+                                    <span th:case="21">21 : 00</span>
+                                    <span th:case="22">22 : 00</span>
+                                    <span th:case="23">23 : 00</span>
+                                    <span th:case="24">24 : 00</span>
                               </span>
+                                        </div>
+
+
+                                        <!--모집 성별-->
+                                        <div class="text-xs flex items-center justify-center"
+                                             style="width: 67px; height: 25px; border-radius: 5px; background-color: #444444;
+                                            margin-left: 10px;">
+                                    <span th:switch="${matching.gender}">
+                                        <span th:case="'F'">여성</span>
+                                        <span th:case="'M'">남성</span>
+                                        <span th:case="'DC'">성별무관</span>
+                                    </span>
+                                        </div>
+
+                                        <div class="text-xs flex items-center justify-center"
+                                             style="width: 85px; height: 25px; border-radius: 5px; background-color: #444444;
+                                            margin-left: 10px;">
+                                            마이크 :
+                                            <span th:if="${matching.getIsMic()}" class="ml-1">ON</span>
+                                            <span th:if="${!matching.getIsMic()}" class="ml-1">OFF</span>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+
+                                <!-- 작성자 오른쪽 -->
+                                <div class="flex items-center">
+                                    <div class="flex items-center ml-auto">
+
+                                        <!--모집 인원-->
+                                        <div class="flex justify-center items-center mr-3"
+                                             style="width: 67px; height: 25px; border-radius: 5px; background-color: #444444; margin-left: 10px;">
+                                            <div class="text-xs flex justify-center items-center"
+                                                 th:text="|${matching.participant} / ${matching.capacity}|"></div>
+                                        </div>
+                                        <!--모집 인원 끝-->
+
+                                        <!-- 모집 마감 시간-->
+                                        <div class="flex justify-center items-center"
+                                             style="width: 120px; height: 25px; border-radius: 5px; background-color: #444444;">
+                                            <div class="text-xs flex justify-center items-center"
+                                                 th:text="${matching.getDeadlineDuration() != null ? matching.getDeadlineDuration() : '마감완료'}"></div>
+                                        </div>
+                                        <!-- 모집 마감 시간 끝-->
+                                    </div>
+                                </div>
+
                             </div>
 
-                            <div class="bg-black bg-opacity-20 h-7 ml-2 p-2 text-xs flex items-center justify-center rounded-xl" style="min-width: 64px">
-                                마이크 :
-                                <span th:if="${matching.isMic()}" class="ml-1">ON</span>
-                                <span th:if="${!matching.isMic()}" class="ml-1">OFF</span>
-                            </div>
 
-                            <!--활동 시간-->
-                            <div class="bg-black bg-opacity-20 h-7 ml-2 p-2 text-xs flex items-center justify-center rounded-xl"
-                                 style="min-width: 64px"> 활동 시간 :
-
-                                <span th:if="${matching.startTime + matching.endTime != 0}" th:switch="${matching.startTime}">
-                                    <span class="ml-1" th:case="0">시간 무관 ~</span>
-                                    <span class="ml-1" th:case="1">1 : 00 ~</span>
-                                    <span class="ml-1" th:case="2">2 : 00 ~</span>
-                                    <span class="ml-1" th:case="3">3 : 00 ~</span>
-                                    <span class="ml-1" th:case="4">4 : 00 ~</span>
-                                    <span class="ml-1" th:case="5">5 : 00 ~</span>
-                                    <span class="ml-1" th:case="6">6 : 00 ~</span>
-                                    <span class="ml-1" th:case="7">7 : 00 ~</span>
-                                    <span class="ml-1" th:case="8">8 : 00 ~</span>
-                                    <span class="ml-1" th:case="9">9 : 00 ~</span>
-                                    <span class="ml-1" th:case="10">10 : 00 ~</span>
-                                    <span class="ml-1" th:case="11">11 : 00 ~</span>
-                                    <span class="ml-1" th:case="12">12 : 00 ~</span>
-                                    <span class="ml-1" th:case="13">13 : 00 ~</span>
-                                    <span class="ml-1" th:case="14">14 : 00 ~</span>
-                                    <span class="ml-1" th:case="15">15 : 00 ~</span>
-                                    <span class="ml-1" th:case="16">16 : 00 ~</span>
-                                    <span class="ml-1" th:case="17">17 : 00 ~</span>
-                                    <span class="ml-1" th:case="18">18 : 00 ~</span>
-                                    <span class="ml-1" th:case="19">19 : 00 ~</span>
-                                    <span class="ml-1" th:case="20">20 : 00 ~</span>
-                                    <span class="ml-1" th:case="21">21 : 00 ~</span>
-                                    <span class="ml-1" th:case="22">22 : 00 ~</span>
-                                    <span class="ml-1" th:case="23">23 : 00 ~</span>
-                                    <span class="ml-1" th:case="24">24 : 00 ~</span>
-                              </span>
-                                <span th:if="${matching.startTime + matching.endTime != 0}" th:switch="${matching.endTime}">
-                                    <span class="ml-1" th:case="0">시간 무관</span>
-                                    <span class="ml-1" th:case="1">1 : 00</span>
-                                    <span class="ml-1" th:case="2">2 : 00</span>
-                                    <span class="ml-1" th:case="3">3 : 00</span>
-                                    <span class="ml-1" th:case="4">4 : 00</span>
-                                    <span class="ml-1" th:case="5">5 : 00</span>
-                                    <span class="ml-1" th:case="6">6 : 00</span>
-                                    <span class="ml-1" th:case="7">7 : 00</span>
-                                    <span class="ml-1" th:case="8">8 : 00</span>
-                                    <span class="ml-1" th:case="9">9 : 00</span>
-                                    <span class="ml-1" th:case="10">10 : 00</span>
-                                    <span class="ml-1" th:case="11">11 : 00</span>
-                                    <span class="ml-1" th:case="12">12 : 00</span>
-                                    <span class="ml-1" th:case="13">13 : 00</span>
-                                    <span class="ml-1" th:case="14">14 : 00</span>
-                                    <span class="ml-1" th:case="15">15 : 00</span>
-                                    <span class="ml-1" th:case="16">16 : 00</span>
-                                    <span class="ml-1" th:case="17">17 : 00</span>
-                                    <span class="ml-1" th:case="18">18 : 00</span>
-                                    <span class="ml-1" th:case="19">19 : 00</span>
-                                    <span class="ml-1" th:case="20">20 : 00</span>
-                                    <span class="ml-1" th:case="21">21 : 00</span>
-                                    <span class="ml-1" th:case="22">22 : 00</span>
-                                    <span class="ml-1" th:case="23">23 : 00</span>
-                                    <span class="ml-1" th:case="24">24 : 00</span>
-                              </span>
-                                <span th:if="${matching.startTime + matching.endTime == 0}" class="ml-1">시간 무관</span>
-
-
+                            <!--작성일자-->
+                            <div class="flex">
+                                <div class="text-xs" style="color: #888888;"
+                                     th:text="${#temporals.format(matching.getModifyDate(), 'yyyy/MM/dd hh:mm')}"></div>
                             </div>
                         </div>
 
-                        <!--작성일자-->
-                        <div class="flex">
-                            <div class="text-xs mr-2"
-                                 th:text="${#temporals.format(matching.getModifyDate(), 'yyyy/MM/dd hh:mm')}"></div>
+                    </div>
+
+
+                </div>
+                <!-- 작성자 부분 끝 -->
+
+
+                <!-- 매칭글 본문 -->
+                <div class="flex" style="margin-top: 20px;">
+                    <!-- 게임태그 및 장르태그 -->
+                    <div class="flex flex-col justify-center items-center"
+                         style="background-color: #404040; width: 263px; height: 320px; border-radius: 5px; padding: 0px 10px 0px 10px">
+                        <!--게임 태그-->
+                        <td>
+                            <img style="width: 236px; height: 201px; margin-bottom: 15px"
+                                 th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${matching.getGameTagId()} + '/header.jpg'}"
+                                 alt="게임 이미지" width="200" height="auto"/>
+                        </td>
+                        <div class="text-xs p-1 flex items-center justify-center text-center"
+                             th:text="${matching.gameTagName}"
+                             style="background-color: #00a3ff; width: 236px; min-height: 25px; border-radius: 5px; margin-bottom: 10px"></div>
+                        <!--장르 태그-->
+                        <div class="text-xs p-1 flex items-center justify-center" th:text="${matching.getGenre()}"
+                             style="background-color: #878787; width: 236px; min-height: 25px; border-radius: 5px"></div>
+
+                    </div>
+
+                    <!-- 제목 & 내용 -->
+                    <div style="margin: 15px 0px 15px 20px">
+                        <!-- 제목 -->
+                        <div class="title text-2xl" th:text="${matching.title}"
+                             style="margin-bottom: 5px;  word-break: break-all;"></div>
+
+                        <!-- 게시글 내용 -->
+                        <div id="contentBox"
+                             class="content flex justify-center items-center scroll"
+                             style="height:265px; max-height:265px; white-space: normal; overflow:auto; overflow-wrap: anywhere;  word-break: break-all;">
+                            <div id="content" th:text="${matching.content}"></div>
                         </div>
                     </div>
-                    <!--작성일자 끝-->
-
                 </div>
-                <!--작성자 왼쪽 부분 끝-->
 
-                <!--작성자 오른쪽 부분-->
-                <div class="flex items-center">
-
-                    <!--모집 인원-->
-                    <div class="flex items-center mr-3">
-                        <i class="fas fa-user-friends text-xl"></i>
-                        <div class="text-base ml-2" th:text="|${matching.participant} / ${matching.capacity}|"></div>
-                    </div>
-                    <!--모집 인원 끝-->
-
-                    <!-- 모집 마감 시간-->
-                    <div class="flex items-center">
-                        <i class="fas fa-hourglass-start"></i>
-                        <div class="text-base ml-2"
-                             th:text="${matching.getDeadlineDuration() != null ? matching.getDeadlineDuration() : '마감완료'}"></div>
-                    </div>
-                    <!-- 모집 마감 시간 끝-->
-
-                </div>
-                <!--작성자 왼쪽 부분-->
-
-            </div>
-            <!-- 작성자 부분 끝 -->
-
-            <!-- 제목 -->
-            <div class="title text-3xl m-5" th:text="${matching.title}"></div>
-
-            <!-- 게시글 내용 -->
-            <div id="contentBox" class="content m-4 p-4 shadow-xl flex justify-center items-center rounded-xl scroll"
-                 style="height:600px; max-height:600px; white-space: normal; overflow:auto; overflow-wrap: anywhere;">
-                <div id="content" th:text="${matching.content}"></div>
             </div>
 
             <!-- 수정/삭제 버튼 -->
-            <div class="button-group flex justify-end mt-6">
-
+            <div class="button-group flex justify-end mt-4">
 
                 <!--삭제 버튼-->
                 <form th:if="${@rq.isLogin()}" th:action="@{/match/detail/delete/{id}(id=${matching.id})}"
                       method="post">
                     <button type="submit"
-                            class="rounded-xl h-12 p-4 w-28 ml-4 mr-2 text-sm flex items-center justify-center"
-                            style="background-color: #1F2227;"
+                            class="flex items-center justify-center"
                             th:if="${matching.user.id == @rq.user.id}"
                             onclick="return confirm('해당 게시물을 삭제하시겠습니까?')">삭제
                     </button>
@@ -227,16 +258,14 @@
                 <!--수정 버튼-->
                 <form th:if="${@rq.isLogin()}" th:action="@{/match/modify/{id}(id=${matching.id})}">
                     <button type="submit"
-                            class="rounded-xl h-12 p-4 w-28 ml-4 mr-2 text-sm flex items-center justify-center"
-                            style="background-color: #1F2227;"
+                            class="flex items-center justify-center"
                             th:if="${matching.user.id == @rq.user.id}"
                             onclick="return confirm('해당 게시물을 수정하시겠습니까?')">수정
                     </button>
                 </form>
 
                 <!--참여 버튼-->
-                <a class="rounded-xl h-12 p-4 w-28 ml-4 mr-2 text-sm flex items-center justify-center"
-                   style="background-color: #1F2227;"
+                <a class="flex items-center justify-center"
                    th:if="${!alreadyWithPartner && matching.getDeadlineDuration() != null}"
                    th:href="@{|/match/detail/${matching.getId()}/addPartner|}"
                    th:classappend="${matching.participant >= matching.capacity} ? 'disabled' : ''">
@@ -244,13 +273,14 @@
                 </a>
 
                 <!-- 매칭 파트너인 경우에 채팅 참여하기 버튼 활성화됨 -> 미니 프로필도 보이게 하기 -->
-                <a class="rounded-xl h-12 p-4 w-32 ml-4 mr-2 text-sm flex items-center justify-center"
-                   style="background-color: #1F2227;" th:if="${alreadyWithPartner}"
-                   th:href="@{|/match/detail/${matching.getId()}/moveChatRoom|}">채팅 참여하기</a>
-
+                <a class="text-sm flex items-center justify-center"
+                   th:if="${alreadyWithPartner}"
+                   th:href="@{|/match/detail/${matching.getId()}/moveChatRoom|}">채팅 참여하기
+                </a>
 
             </div>
             <!-- 수정/삭제 버튼 끝-->
+
 
             <!--참여자 목록 시작-->
             <div class="mini-profile" th:if="${alreadyWithPartner}">
@@ -264,55 +294,64 @@
                 <div class="mt-6 mb-6 flex flex-wrap">
 
                     <!--1번 프로필-->
-                    <div class="w-1/5 rounded-xl flex-shrink-0 shadow-2xl" style="background-color: #202d3e;"
+                    <div class="flex-shrink-0"
+                         style="background-color: #2d2d2d; width: 210px; min-height: 210px; border: 1px solid #67686c; border-radius: 10px; margin: 10px"
                          th:each="matchingPartner : ${matching.matchingPartners}"
                          th:if="${matchingPartner.inChatRoomTrueFalse}">
 
                         <!--프로필 내용 시작-->
-                        <div class="flex flex-col justify-center min-h-full p-4" style="min-height: 18rem;">
-                            <a th:href="@{'/user/profile/' + ${matchingPartner.getUser().getId()}}" class="hover:underline">
-                            <div class="flex justify-start items-center ml-2 mb-2 border-b">
+                        <div class="flex flex-col justify-between min-h-full p-4"
+                             style="width: 195px; height: 100%; min-height: 210px;">
+                            <a th:href="@{'/user/profile/' + ${matchingPartner.getUser().getId()}}"
+                               class="hover:underline">
+                                <div class="flex justify-start items-center"
+                                     style="border-bottom: 1px solid #67686c; margin-bottom: 5px">
 
                                     <img th:src="${matchingPartner.getUser().getAvatar()}"
-                                         class="w-10 h-10 object-cover mr-3 mb-3 rounded-xl">
+                                         class="object-cover"
+                                         style="width: 35px; height: 35px; border-radius: 5px; margin: 5px 10px 10px 10px">
                                     <div>
                                         <div class="flex items-center">
-                                            <div class="text-xl mb-3" th:text="${matchingPartner.getUser().getUsername()}">
+                                            <div class="text-xl" style="margin-bottom: 10px; font-size: 12px;"
+                                                 th:text="${#strings.length(matchingPartner.getUser().getUsername()) > 10 ? #strings.substring(matchingPartner.getUser().getUsername(), 0, 10) + '...' : matchingPartner.getUser().getUsername()}">
                                                 참여자
                                             </div>
                                         </div>
                                     </div>
-                            </div>
+                                </div>
                             </a>
 
-                            <!--장르 태그-->
-                            <div class="flex flex-wrap">
-                                <div class="m-1 p-2 text-xs flex items-center justify-center rounded-xl"
-                                     th:each="genreTag: ${matchingPartner.getUser().getUserTag().getGenreTag()}"
-                                     th:text="${genreTag.getGenre()}"
-                                     style="min-width: 64px; background-color: #22C55E;"></div>
-                            </div>
-                            <!--장르 태그 끝-->
-
-                            <!--게임 태그-->
-                            <div class="flex flex-wrap">
-                                <div class="m-1 p-2 text-xs flex items-center justify-center rounded-xl"
-                                     th:each="gameTag: ${matchingPartner.getUser().getUserTag().getGameTag()}"
-                                     th:text="${gameTag.getName()}" style="min-width: 64px; background-color: #0EA5E9;">
-                                    게임 태그
+                            <div>
+                                <!--게임 태그-->
+                                <div class="flex flex-wrap">
+                                    <div class="m-1 p-1 text-xs flex items-center justify-center"
+                                         th:each="gameTag: ${matchingPartner.getUser().getUserTag().getGameTag()}"
+                                         th:text="${gameTag.getName()}"
+                                         style="min-width: 64px; background-color: #00a3ff; border-radius: 5px">
+                                        게임 태그
+                                    </div>
                                 </div>
+                                <!--게임 태그-->
+
+                                <!--장르 태그-->
+                                <div class="flex flex-wrap">
+                                    <div class="m-1 p-1 text-xs flex items-center justify-center"
+                                         th:each="genreTag: ${matchingPartner.getUser().getUserTag().getGenreTag()}"
+                                         th:text="${genreTag.getGenre()}"
+                                         style="min-width: 64px; background-color: #878787; border-radius: 5px"></div>
+                                </div>
+                                <!--장르 태그 끝-->
                             </div>
-                            <!--게임 태그-->
+
 
                             <!--매너온도-->
                             <div>
-                                <div class="flex items-center m-2 mt-2">
-                                    <i class="fas fa-thermometer-half text-2xl mr-2"></i>
-                                    <div class="text-base mr-2">매너온도 :</div>
-                                    <div class="text-base"
+                                <div class="flex items-center ml-1 mt-2">
+                                    <div class="text-xs mr-2">매너온도 :</div>
+                                    <div class="text-xs"
                                          th:text="${matchingPartner.getUser().getTemperature()}"></div>
                                 </div>
-                                <div class="ml-2">
+                                <div>
                                     <progress class="progress progress-accent progress-custom"
                                               th:value="${matchingPartner.getUser().getTemperature()}" max="100">
                                     </progress>
@@ -345,32 +384,7 @@
         };
     </script>
 </main>
-<footer layout:fragment="footer" class="footer items-center p-4 text-neutral-content">
-    <div class="items-center grid-flow-col">
-        <svg width="36" height="36" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd"
-             clip-rule="evenodd" class="fill-current">
-            <path d="M22.672 15.226l-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.15.325-2.148-.321-2.463-1.226l-.84-2.518-5.013 1.677.84 2.517c.391 1.203-.434 2.542-1.831 2.542-.88 0-1.601-.564-1.86-1.314l-.842-2.516-2.431.809c-1.135.328-2.145-.317-2.463-1.229-.329-1.018.211-2.127 1.231-2.456l2.432-.809-1.621-4.823-2.432.808c-1.355.384-2.558-.59-2.558-1.839 0-.817.509-1.582 1.327-1.846l2.433-.809-.842-2.515c-.33-1.02.211-2.129 1.232-2.458 1.02-.329 2.13.209 2.461 1.229l.842 2.515 5.011-1.677-.839-2.517c-.403-1.238.484-2.553 1.843-2.553.819 0 1.585.509 1.85 1.326l.841 2.517 2.431-.81c1.02-.33 2.131.211 2.461 1.229.332 1.018-.21 2.126-1.23 2.456l-2.433.809 1.622 4.823 2.433-.809c1.242-.401 2.557.484 2.557 1.838 0 .819-.51 1.583-1.328 1.847m-8.992-6.428l-5.01 1.675 1.619 4.828 5.011-1.674-1.62-4.829z"></path>
-        </svg>
-        <p>Copyright © TEAMSTEAM</p>
-    </div>
-    <div class="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
-        <a>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current">
-                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
-            </svg>
-        </a>
-        <a>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current">
-                <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
-            </svg>
-        </a>
-        <a>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current">
-                <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path>
-            </svg>
-        </a>
-    </div>
-</footer>
+
 
 </body>
 </html>
