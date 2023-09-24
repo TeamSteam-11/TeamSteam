@@ -77,10 +77,6 @@
             margin-left: 68px;
         }
 
-        li:active a {
-            background-color: #1F2227;
-        }
-
         .msger {
             display: flex;
             flex-flow: column wrap;
@@ -164,31 +160,35 @@
                 <div th:text="${chatRoom.name}" class="text-2xl"></div>
             </div>
             <div class="msger-header-options">
-                <div class="dropdown">
-                    <label tabindex="0" class="btn btn-ghost btn-circle">
-                        <i class="fas fa-ellipsis-v"></i></span>
+                <div class="dropdown dropdown-end">
+                    <label tabindex="0" class="btn btn-ghost rounded-btn" style="padding: 0px 16px 0px 16px;">
+                        <i class="fas fa-ellipsis-v"></i>
                     </label>
-                    <ul tabindex="0" class="menu menu-compact dropdown-content ml-2 mt-3 shadow bg-base-100 rounded w-64 shadow-2xl" style="background-color: #1D2939">
-                        <li class="hover:bg-[#1F2227]">
-                            <a th:href="@{|/chat/${chatRoom.id}/userList|}" th:if="${@rq.login} and ${@rq.getUser().username} == ${user.username}">
-                                <span>참여자 목록</span>
-                            </a>
+                    <ul tabindex="0"
+                        class="menu-dropdown dropdown-content" style="padding-right: 16px;">
+                        <li th:if="${@rq.login} and ${@rq.getUser().username} == ${user.username}">
+                            <button class="w-full h-full flex justify-center items-center"
+                                    th:onclick="|location.href='@{'/chat/' + ${chatRoom.id} + '/userList'}'|">
+                                <a style="width: 170px; text-align: center; display: block;">참여자 목록</a></button>
                         </li>
-                        <li class="hover:bg-[#1F2227]">
-                            <a th:href="@{|/chat/${chatRoom.id}/inviteList|}" th:if="${@rq.login} and ${@rq.getUser().username} == ${user.username}">
-                                <span>초대 목록</span>
-                            </a>
+                        <li th:if="${@rq.login} and ${@rq.getUser().username} == ${user.username}">
+                            <button class="w-full h-full flex justify-center items-center"
+                                    th:onclick="|location.href='@{'/chat/' + ${chatRoom.id} + '/inviteList'}'|">
+                                <a style="width: 170px; text-align: center; display: block;">초대 목록</a></button>
                         </li>
-                        <li class="hover:bg-[#1F2227]">
-                        <li th:if="${chatRoom.owner.id != #authentication.principal.id}" class="hover:bg-[#1F2227]">
+                        <li th:if="${chatRoom.owner.id != #authentication.principal.id}">
                             <form th:action="@{/chat/rooms/{id}(id=${chatRoom.id})}" method="post" onsubmit="if ( !confirm('방을 나가시겠습니까?') ) return false; disconnect()" class="p-0">
                                 <input type="hidden" name="_method" value="delete">
-                                <button>나가기</button>
+                                <button class="w-full h-full flex justify-center items-center">
+                                    <a style="width: 170px; text-align: center; display: block;">나가기</a>
+                                </button>
                             </form>
                         </li>
-                        <li th:if="${chatRoom.owner.id == #authentication.principal.id}" class="hover:bg-[#1F2227]">
+                        <li th:if="${chatRoom.owner.id == #authentication.principal.id}">
                             <form th:action="@{/chat/rooms/{id}(id=${chatRoom.id})}" method="post" onsubmit="return confirm('채팅방을 삭제하시겠습니까?\n채팅방을 삭제한다면 모임도 같이 삭제됩니다.')" class="p-0">
-                                <button type="submit">채팅방 삭제</button>
+                                <button class="w-full h-full flex justify-center items-center">
+                                    <a style="width: 170px; text-align: center; display: block;">채팅방 삭제</a>
+                                </button>
                             </form>
                         </li>
                     </ul>
