@@ -13,87 +13,19 @@
     <script th:src="@{/app.js}"></script>
 
     <style>
-        .container {
-            width: 100%;
-            margin: 0 auto;
-            border-radius: 8px;
-            color: #f1f1f1;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        html > body > main {
+            width: 1200px;
+            margin: auto;
+            height: calc(100vh - 64px);
         }
 
-        .container2 {
-            max-width: 95%;
-            max-height: 700px;
-            margin: 0 auto;
-            border-radius: 8px;
-            color: #f1f1f1;
-            height: 80%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .room-info {
-            flex: 0 0 auto;
-        }
-
-        .chat-messages {
-            flex: 1 1 auto;
-            overflow-y: auto;
-            border: 1px solid white;
-            border-radius: 5px;
-            height: calc(100vh - 300px);
-        }
-
-        .chat-input {
-            flex: 0 0 auto;
-            position: fixed;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 15px;
-            text-align: center;
-        }
-
-        .chat__write-message {
-            display: flex;
-            margin-top: 20px;
-            position: fixed;
-            bottom: 5%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 70%;
-            padding: 10px 0;
-            box-sizing: border-box;
-        }
-
-        .chat__write-message input[type="text"] {
-            flex: 1;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            color: black;
-        }
-
-        .chat__write-message input[type="submit"] {
-            margin-left: 10px;
-            padding: 10px 20px;
-            background-color: #4caf50;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .chat__message-ul {
-            list-style-type: none;
-            position: center;
-            padding: 0;
-            height: 80%;
-            word-break: break-all;
+        @media (max-width: 1200px){
+            html > body > main {
+                width: auto;
+                margin: auto;
+                height: calc(100vh - 64px);
+            }
         }
 
         .chat__message-ul li {
@@ -140,24 +72,88 @@
             text-align: left;
             margin-top: 5px;
         }
-        .scroll {
-            overflow: auto;
+
+        .chat-bubble.no-image {
+            margin-left: 68px;
         }
+
+        .chat-footer.no-image {
+            margin-left: 68px;
+        }
+
+        .sender > div > div > .chat-bubble {
+            color: white;
+            background-color: #5A5C61;
+        }
+
+        .chat-bubble {
+            color: white;
+            background-color: #404040;
+        }
+
+        .msger {
+            display: flex;
+            flex-flow: column wrap;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 100%;
+            margin: 35px 10px;
+            height: calc(100% - 150px);
+        }
+
+        .msger-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        .msger-chat {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            border: 2px solid #67686C;
+            border-radius: 4px;
+        }
+        .msger-inputarea {
+            margin-top: 20px;
+            display: flex;
+        }
+
+        .msger-inputarea * {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        .msger-input {
+            flex: 1;
+            background:  #404040;
+        }
+        .msger-send-btn {
+            background-color: #FF6B00 !important;
+            margin-left:10px;
+            width: 130px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .msger-send-btn:hover {
+            background-color: #dc5804 !important;
+        }
+
         .scroll::-webkit-scrollbar {
-            width: 10px;
-        }
-        .scroll::-webkit-scrollbar-thumb {
-            background-color: #2f3542;
-            border-radius: 15px;
+            width: 6px;
+            border-radius: 2px;
         }
         .scroll::-webkit-scrollbar-track {
-            background-color: grey;
-            border-radius: 15px;
-            box-shadow: inset 0px 0px 5px white;
+            background: #ddd;
+            border-radius: 2px;
         }
-        li:active a {
-            background-color: #1F2227;
+        .scroll::-webkit-scrollbar-thumb {
+            background: #878787;
+            border-radius: 2px;
         }
+
         footer {
             position: fixed;
             left: 0;
@@ -168,65 +164,64 @@
 </head>
 <body>
 
-<main layout:fragment="main">
+<main layout:fragment="main" class="flex justify-center">
 
-    <section class="container2 mt-5">
-        <div class="room-info flex items-center">
-            <table>
-                <tbody>
-                <tr class="flex">
-                    <td th:text="${chatRoom.name}" class="text-xl"></td>
-                    <div class="dropdown">
-                        <label tabindex="0" class="btn btn-ghost btn-circle">
-                            <i class="fa-solid fa-bars"></i>
-                        </label>
-                        <ul tabindex="0" class="menu menu-compact dropdown-content ml-2 mt-3 shadow bg-base-100 rounded w-64 shadow-2xl" style="background-color: #1D2939">
-                            <li class="hover:bg-[#1F2227]">
-                                <a th:href="@{|/chat/${chatRoom.id}/userList|}" th:if="${@rq.login} and ${@rq.getUser().username} == ${user.username}">
-                                    <span>참여자 목록</span>
-                                </a>
-                            </li>
-                            <li class="hover:bg-[#1F2227]">
-                                <a th:href="@{|/chat/${chatRoom.id}/inviteList|}" th:if="${@rq.login} and ${@rq.getUser().username} == ${user.username}">
-                                    <span>초대 목록</span>
-                                </a>
-                            </li>
-                            <li class="hover:bg-[#1F2227]">
-                            <li th:if="${chatRoom.owner.id != #authentication.principal.id}" class="hover:bg-[#1F2227]">
-                                <form th:action="@{/chat/rooms/{id}(id=${chatRoom.id})}" method="post" onsubmit="if ( !confirm('방을 나가시겠습니까?') ) return false; disconnect()" class="p-0">
-                                    <input type="hidden" name="_method" value="delete">
-                                    <button>나가기</button>
-                                </form>
-                            </li>
-                            <li th:if="${chatRoom.owner.id == #authentication.principal.id}" class="hover:bg-[#1F2227]">
-                                <form th:action="@{/chat/rooms/{id}(id=${chatRoom.id})}" method="post" onsubmit="return confirm('채팅방을 삭제하시겠습니까?\n채팅방을 삭제한다면 모임도 같이 삭제됩니다.')" class="p-0">
-                                    <button type="submit">채팅방 삭제</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
+    <section class="msger">
+        <header class="msger-header">
+            <div class="msger-header-title text-2xl flex items-center">
+                <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${gameImageId} + '/header.jpg'}"
+                     alt="게임 이미지" class="w-10 h-10 object-cover mr-5 rounded-sm">
+                <div th:text="${chatRoom.name}" class="text-2xl"></div>
+            </div>
+            <div class="msger-header-options">
+                <div class="dropdown dropdown-end">
+                    <label tabindex="0" class="btn btn-ghost rounded-btn" style="padding: 0px 16px 0px 16px;">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </label>
+                    <ul tabindex="0"
+                        class="menu-dropdown dropdown-content" style="padding-right: 16px;">
+                        <li th:if="${@rq.login} and ${@rq.getUser().username} == ${user.username}">
+                            <button class="w-full h-full flex justify-center items-center"
+                                    th:onclick="|location.href='@{'/chat/' + ${chatRoom.id} + '/userList'}'|">
+                                <a style="width: 170px; text-align: center; display: block;">참여자 목록</a></button>
+                        </li>
+                        <li th:if="${@rq.login} and ${@rq.getUser().username} == ${user.username}">
+                            <button class="w-full h-full flex justify-center items-center"
+                                    th:onclick="|location.href='@{'/chat/' + ${chatRoom.id} + '/inviteList'}'|">
+                                <a style="width: 170px; text-align: center; display: block;">초대 목록</a></button>
+                        </li>
+                        <li th:if="${chatRoom.owner.id != #authentication.principal.id}">
+                            <form th:action="@{/chat/rooms/{id}(id=${chatRoom.id})}" method="post" onsubmit="if ( !confirm('방을 나가시겠습니까?') ) return false; disconnect()" class="p-0">
+                                <input type="hidden" name="_method" value="delete">
+                                <button class="w-full h-full flex justify-center items-center">
+                                    <a style="width: 170px; text-align: center; display: block;">나가기</a>
+                                </button>
+                            </form>
+                        </li>
+                        <li th:if="${chatRoom.owner.id == #authentication.principal.id}">
+                            <form th:action="@{/chat/rooms/{id}(id=${chatRoom.id})}" method="post" onsubmit="return confirm('채팅방을 삭제하시겠습니까?\n채팅방을 삭제한다면 모임도 같이 삭제됩니다.')" class="p-0">
+                                <button class="w-full h-full flex justify-center items-center">
+                                    <a style="width: 170px; text-align: center; display: block;">채팅방 삭제</a>
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
 
-    <section class="container2">
-        <section class="chat-messages scroll">
-            <div>
+        <main class="msger-chat">
+            <div class="scroll">
                 <ul class="chat__message-ul px-5 py-5"></ul>
             </div>
-        </section>
+        </main>
+
+        <form class="msger-inputarea" onsubmit="ChatWriteMessage(this); return false;">
+            <input type="text" class="msger-input" placeholder="메세지를 입력하세요" name="content" autocomplete="off" maxlength="250">
+            <button type="submit" class="msger-send-btn">전송</button>
+        </form>
     </section>
 
-    <section class="container">
-        <section class="chat-input">
-            <form class="chat__write-message" onsubmit="ChatWriteMessage(this); return false;">
-                <input type="text" placeholder="내용을 입력해주세요." name="content" autocomplete="off">
-                <input type="submit" value="작성">
-            </form>
-        </section>
-    </section>
 </main>
 </body>
 </html>

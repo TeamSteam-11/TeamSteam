@@ -64,6 +64,7 @@ public class ChatRoomController {
 
         model.addAttribute("chatRoom", chatRoomDto);
         model.addAttribute("user", user);
+        model.addAttribute("gameImageId", matching.getGameTagId());
 
         return "chat/room";
     }

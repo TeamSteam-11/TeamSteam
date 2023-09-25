@@ -89,13 +89,14 @@ function drawMessages(messages) {
                 newItem.innerHTML = `
                 <div class="chat chat-start">
                     <div class="chat-image avatar">
-                        
+                        <a href="/user/profile/${message.senderId}" class="flex items-center">
+                            <div class="w-16 mr-1">
+                                <img src="${message.senderAvatar}" alt="${message.senderUsername}'s avatar" class="rounded-lg"/>
+                            </div>
+                        </a>
                     </div>
                     <div class="chat-header mb-1">
                         <a href="/user/profile/${message.senderId}" class="flex items-center">
-                            <div class="w-9 mr-1">
-                                <img src="${message.senderAvatar}" alt="${message.senderUsername}'s avatar" class="rounded-lg"/>
-                            </div>
                             ${message.senderUsername}
                         </a>
                     </div>
@@ -108,6 +109,8 @@ function drawMessages(messages) {
                 if ( lastChatMessageUser == message.senderId ) {
                     $(newItem).find('.chat-header').remove();
                     $(newItem).find('.chat-image').remove();
+                    $(newItem).find('.chat-bubble').addClass('no-image');
+                    $(newItem).find('.chat-footer').addClass('no-image');
                 }
             }
 
@@ -186,6 +189,6 @@ function disconnect() {
 }
 
 function scrollToBottom() {
-    const chatMessages = document.querySelector('.chat-messages');
+    const chatMessages = document.querySelector('.msger-chat');
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
