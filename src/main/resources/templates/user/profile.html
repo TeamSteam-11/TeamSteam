@@ -35,8 +35,11 @@
         }
 
         .progress-custom {
-            background-color: #222222; /* 배경 색상 */
+            background-color: transparent; /* 배경 색상 */
             height: 9px;
+        }
+        .progress-custom::-webkit-progress-bar {
+            background-color: transparent; /* 배경 색상 (WebKit 브라우저용) */
         }
 
         .progress-custom::-webkit-progress-bar {
@@ -225,7 +228,7 @@
                                             </div>
                                             <div class="flex flex-col justify-center">
                                                 <div class="font-bold pb-1" th:text="${friend.getFriend().getUsername()}"></div>
-                                                <progress class="progress progress-accent w-24 progress-custom" th:value="${friend.getFriend().getTemperature()}" max="100">
+                                                <progress class="progress progress-accent w-24 progress-custom" th:value="${friend.getFriend().getTemperature()}" max="100" style="background-color: transparent;">
                                                 </progress>
                                             </div>
                                         </a>
@@ -275,7 +278,7 @@
                                             </div>
                                             <div class="flex flex-col justify-center">
                                                 <div class="font-bold pb-1" th:text="${recentlyUser.getMatchingPartner().getUser().getUsername()}"></div>
-                                                <progress class="progress progress-accent w-24 progress-custom" th:value="${recentlyUser.getMatchingPartner().getUser().getTemperature()}" max="100">
+                                                <progress class="progress progress-accent w-24 progress-custom" th:value="${recentlyUser.getMatchingPartner().getUser().getTemperature()}" max="100" style="background-color: transparent;">
                                                 </progress>
                                             </div>
                                         </a>
