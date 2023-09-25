@@ -18,48 +18,58 @@
 </head>
 <body>
 <main layout:fragment="main">
-    <form id="gameTagForm" action="/user/createGameTag/save-gametag" method="post"
-          th:action="@{/user/createGameTag/save-gametag}">
-        <div class="m-auto container">
-            <div class="flex justify-center">
-                <p class="m-8 text-2xl">선호하는 게임을 선택해주세요!</p>
-            </div>
-            <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
-                <div th:each="game : ${gameList}" class="card card-compact w-96 bg-base-100 shadow-xl custom-card"
-                     style="max-width: 100%; max-height: 100%;">
-                    <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${game.appid} + '/header.jpg'}"
-                         alt="게임 이미지" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${game.name}" style="font-size: 14px;"></h5>
-                        <div class="card-actions justify-end">
-<!--                            <input type="checkbox" class="checkbox checkbox-success checkbox-lg " style="border-color: #878787; accent-color: purple; n" name="selectedGames" th:value="${game.appid}" />-->
-                            <input type="checkbox" class="checkbox checkbox-lg" style="border-color: #878787; --chkbg: 213, 14%, 69%; --chkfg: 0, 0%, 17%;" name="selectedGames" th:value="${game.appid}" />
-                            <input type="hidden" name="selectedGames" id="selectedGamesInput" />
+    <div th:if="${gameList.size()} != 0">
+        <form id="gameTagForm" action="/user/createGameTag/save-gametag" method="post"
+              th:action="@{/user/createGameTag/save-gametag}">
+            <div class="m-auto container">
+                <div class="flex justify-center">
+                    <p class="m-8 text-2xl">선호하는 게임을 선택해주세요!</p>
+                </div>
+                <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
+                    <div th:each="game : ${gameList}" class="card card-compact w-96 bg-base-100 shadow-xl custom-card"
+                         style="max-width: 100%; max-height: 100%;">
+                        <img th:src="@{'https://steamcdn-a.akamaihd.net/steam/apps/' + ${game.appid} + '/header.jpg'}"
+                             alt="게임 이미지" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${game.name}" style="font-size: 14px;"></h5>
+                            <div class="card-actions justify-end">
+                                <!--                            <input type="checkbox" class="checkbox checkbox-success checkbox-lg " style="border-color: #878787; accent-color: purple; n" name="selectedGames" th:value="${game.appid}" />-->
+                                <input type="checkbox" class="checkbox checkbox-lg"
+                                       style="border-color: #878787; --chkbg: 213, 14%, 69%; --chkfg: 0, 0%, 17%;"
+                                       name="selectedGames" th:value="${game.appid}"/>
+                                <input type="hidden" name="selectedGames" id="selectedGamesInput"/>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="m-8 flex justify-center">
-                <div class="pagination">
-                    <ul class="flex space-x-4 flex-row">
-                        <li th:if="${currentPage != 0}" th:class="${currentPage == 0 ? 'disabled' : ''}">
-                            <a th:href="@{/user/createGameTag(page=${currentPage - 1}, size=${size})}">&laquo; 이전 </a>
-                        </li>
-                        <li th:if="${currentPage != totalPages - 1}"
-                            th:class="${currentPage == totalPages - 2 ? 'disabled' : ''}">
-                            <a th:href="@{/user/createGameTag(page=${currentPage + 1}, size=${size})}">다음 &raquo;</a>
-                        </li>
-                    </ul>
+                <div class="m-8 flex justify-center">
+                    <div class="pagination">
+                        <ul class="flex space-x-4 flex-row">
+                            <li th:if="${currentPage != 0}" th:class="${currentPage == 0 ? 'disabled' : ''}">
+                                <a th:href="@{/user/createGameTag(page=${currentPage - 1}, size=${size})}">&laquo;
+                                    이전 </a>
+                            </li>
+                            <li th:if="${currentPage != totalPages - 1}"
+                                th:class="${currentPage == totalPages - 2 ? 'disabled' : ''}">
+                                <a th:href="@{/user/createGameTag(page=${currentPage + 1}, size=${size})}">다음
+                                    &raquo;</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="flex justify-end">
+                    <button id="saveButton" class="btn active-button bg-[#FF6B00]"
+                            style="border-color: #FF6B00; border-radius: 5px 5px 5px 5px;">저장
+                    </button>
                 </div>
             </div>
-            <div class="flex justify-end">
-                <button id="saveButton" class="btn active-button bg-[#FF6B00]"
-                        style="border-color: #FF6B00; border-radius: 5px 5px 5px 5px;">저장
-                </button>
-            </div>
-        </div>
-        </div>
-    </form>
+        </form>
+    </div>
+    <div th:if="${gameList.size()} == 0" class="flex flex-col justify-center items-center">
+        <div class="h-56"></div>
+        <a href="/explain" class="mt-50 hover:underline">👉 게임이 안보이시나요?</a>
+    </div>
+
     <script>
 
         // 선택한 게임들을 세션 스토리지에 저장하는 함수
