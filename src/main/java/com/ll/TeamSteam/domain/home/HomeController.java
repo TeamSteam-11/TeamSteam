@@ -33,4 +33,9 @@ public class HomeController {
 
         return "main/home";
     }
+
+    @GetMapping("/explain")
+    public String explainGameTagSetting() {
+        return "main/explain";
+    }
 }
