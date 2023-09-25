@@ -25,6 +25,16 @@
       border:0px;
       text-align: center;
     }
+
+    .dm-list {
+      background-color: #FF6B00 !important;
+      border: none;
+      border-radius: 5px;
+    }
+    .dm-list:hover {
+      background-color: #dc5804 !important;
+    }
+
   </style>
 </head>
 
@@ -60,7 +70,7 @@
         </td>
         <td th:text="${myChatRoom.getName()}"></td>
         <td>
-          <a th:href="@{/chat/rooms/{roomId}(roomId=${myChatRoom.getId()})}" class="btn btn-sm btn-outline border-white text-white hover:bg-[#1F2227] hover:border-white invite">입장</a>
+          <a th:href="@{/chat/rooms/{roomId}(roomId=${myChatRoom.getId()})}" class="btn btn-sm text-white dm-list" style="border-color: #FF6B00;">입장</a>
         </td>
       </tr>
       <tr th:if="${myChatRoomList.isEmpty()}">
