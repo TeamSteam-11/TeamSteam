@@ -324,19 +324,31 @@
                             <div>
                                 <!--게임 태그-->
                                 <div class="flex flex-wrap">
-                                    <div class="m-1 p-1 text-xs flex items-center justify-center"
-                                         th:each="gameTag, gameTagIndex : ${matchingPartner.getUser().getUserTag().getGameTag()}"
-                                         th:if="${gameTagIndex.size} != 0 and ${gameTagIndex.index} < 5" th:text="${gameTag.getName()}"
-                                         style="background-color: #00a3ff; border-radius: 5px"></div>
+                                    <th:block th:each="gameTag, gameTagIndex : ${matchingPartner.getUser().getUserTag().getGameTag()}">
+                                        <div class="m-1 p-1 text-xs flex items-center justify-center"
+                                             th:if="${gameTagIndex.size} != 0 and ${gameTagIndex.index} < 5"
+                                             th:text="${gameTag.getName()}"
+                                             style="background-color: #00a3ff; border-radius: 5px"></div>
+                                        <div class="m-1 p-1 text-xs flex items-center justify-center"
+                                             th:if="${gameTagIndex.size > 5 and gameTagIndex.index == #lists.size(matchingPartner.getUser().getUserTag().getGameTag()) - 1}"
+                                             style="min-width: 20px; background-color: #00a3ff; border-radius: 5px">...
+                                        </div>
+                                    </th:block>
                                 </div>
                                 <!--게임 태그-->
 
                                 <!--장르 태그-->
                                 <div class="flex flex-wrap">
-                                    <div class="m-1 p-1 text-xs flex items-center justify-center"
-                                         th:each="genreTag, genreTagIndex : ${matchingPartner.getUser().getUserTag().getGenreTag()}"
-                                         th:if="${genreTagIndex.size} != 0 and ${genreTagIndex.index} < 5" th:text="${genreTag.getGenre()}"
-                                         style="background-color: #878787; border-radius: 5px"></div>
+                                    <th:block th:each="genreTag, genreTagIndex : ${matchingPartner.getUser().getUserTag().getGenreTag()}">
+                                        <div class="m-1 p-1 text-xs flex items-center justify-center"
+                                             th:if="${genreTagIndex.size} != 0 and ${genreTagIndex.index} < 5"
+                                             th:text="${genreTag.getGenre()}"
+                                             style="background-color: #878787; border-radius: 5px"></div>
+                                        <div class="m-1 p-1 text-xs flex items-center justify-center"
+                                             th:if="${genreTagIndex.index > 5 and genreTagIndex.index == #lists.size(matchingPartner.getUser().getUserTag().getGenreTag()) - 1}"
+                                             style="min-width: 20px; background-color: #878787; border-radius: 5px">...
+                                        </div>
+                                    </th:block>
                                 </div>
                                 <!--장르 태그 끝-->
                             </div>
