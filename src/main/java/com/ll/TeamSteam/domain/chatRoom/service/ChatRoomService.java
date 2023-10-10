@@ -35,8 +35,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.EXIT;
-import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.KICKED;
+import static com.ll.TeamSteam.domain.chatUser.entity.ChatUserType.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -80,6 +79,7 @@ public class ChatRoomService {
         matchingPartnerService.validNotMatchingPartner(matching, user);
 
         List<ChatUser> chatUsers = chatRoom.getChatUsers().stream()
+                .filter(chatUser -> chatUser.getType().equals(ChatUserType.COMMON))
                 .toList();
 
         List<Long> chatUserConvertUserId = chatUsers.stream()
