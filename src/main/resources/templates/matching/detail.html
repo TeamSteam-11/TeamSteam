@@ -327,9 +327,7 @@
                                     <div class="m-1 p-1 text-xs flex items-center justify-center"
                                          th:each="gameTag, gameTagIndex : ${matchingPartner.getUser().getUserTag().getGameTag()}"
                                          th:if="${gameTagIndex.size} != 0 and ${gameTagIndex.index} < 5" th:text="${gameTag.getName()}"
-                                         style="background-color: #00a3ff; border-radius: 5px">
-                                        게임 태그
-                                    </div>
+                                         style="background-color: #00a3ff; border-radius: 5px"></div>
                                 </div>
                                 <!--게임 태그-->
 
