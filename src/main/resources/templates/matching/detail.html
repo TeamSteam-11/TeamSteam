@@ -325,9 +325,9 @@
                                 <!--게임 태그-->
                                 <div class="flex flex-wrap">
                                     <div class="m-1 p-1 text-xs flex items-center justify-center"
-                                         th:each="gameTag: ${matchingPartner.getUser().getUserTag().getGameTag()}"
-                                         th:text="${gameTag.getName()}"
-                                         style="min-width: 64px; background-color: #00a3ff; border-radius: 5px">
+                                         th:each="gameTag, gameTagIndex : ${matchingPartner.getUser().getUserTag().getGameTag()}"
+                                         th:if="${gameTagIndex.size} != 0 and ${gameTagIndex.index} < 5" th:text="${gameTag.getName()}"
+                                         style="background-color: #00a3ff; border-radius: 5px">
                                         게임 태그
                                     </div>
                                 </div>
@@ -336,9 +336,9 @@
                                 <!--장르 태그-->
                                 <div class="flex flex-wrap">
                                     <div class="m-1 p-1 text-xs flex items-center justify-center"
-                                         th:each="genreTag: ${matchingPartner.getUser().getUserTag().getGenreTag()}"
-                                         th:text="${genreTag.getGenre()}"
-                                         style="min-width: 64px; background-color: #878787; border-radius: 5px"></div>
+                                         th:each="genreTag, genreTagIndex : ${matchingPartner.getUser().getUserTag().getGenreTag()}"
+                                         th:if="${genreTagIndex.size} != 0 and ${genreTagIndex.index} < 5" th:text="${genreTag.getGenre()}"
+                                         style="background-color: #878787; border-radius: 5px"></div>
                                 </div>
                                 <!--장르 태그 끝-->
                             </div>
