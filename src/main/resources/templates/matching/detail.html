@@ -330,7 +330,7 @@
                                              th:text="${gameTag.getName()}"
                                              style="background-color: #00a3ff; border-radius: 5px"></div>
                                         <div class="m-1 p-1 text-xs flex items-center justify-center"
-                                             th:if="${gameTagIndex.size > 5 and gameTagIndex.index == #lists.size(matchingPartner.getUser().getUserTag().getGameTag()) - 1}"
+                                             th:if="${gameTagIndex.size} >= 5 and ${gameTagIndex.index == #lists.size(matchingPartner.getUser().getUserTag().getGameTag()) - 1}"
                                              style="min-width: 20px; background-color: #00a3ff; border-radius: 5px">...
                                         </div>
                                     </th:block>
@@ -345,7 +345,7 @@
                                              th:text="${genreTag.getGenre()}"
                                              style="background-color: #878787; border-radius: 5px"></div>
                                         <div class="m-1 p-1 text-xs flex items-center justify-center"
-                                             th:if="${genreTagIndex.index > 5 and genreTagIndex.index == #lists.size(matchingPartner.getUser().getUserTag().getGenreTag()) - 1}"
+                                             th:if="${genreTagIndex.index} >= 5 and ${genreTagIndex.index == #lists.size(matchingPartner.getUser().getUserTag().getGenreTag()) - 1}"
                                              style="min-width: 20px; background-color: #878787; border-radius: 5px">...
                                         </div>
                                     </th:block>
