@@ -315,7 +315,7 @@
                 <a th:href="@{/match/list(page=${pageNumber - 1})}" th:text="${pageNumber}" style="margin-right: 1em;"
                    th:classappend="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
             </li>
-            <li th:if="${currentPage != matchingList.totalPages - 1}">
+            <li th:if="${matchingList.totalPages > 1 and currentPage != matchingList.totalPages - 1}">
                 <a th:href="@{/match/list(page=${currentPage + 1})}" style="margin-right: 1em;">다음&gt;</a>
             </li>
         </ul>
@@ -331,7 +331,7 @@
                    th:text="${pageNumber}" style="margin-right: 1em;"
                    th:classappend="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
             </li>
-            <li th:if="${currentPage != matchingList.totalPages - 1}">
+            <li th:if="${matchingList.totalPages > 1 and currentPage != matchingList.totalPages - 1}">
                 <a th:href="@{/match/list/search(name=${searchOption}, keyword=${keyword}, page=${currentPage + 1})}"
                    style="margin-right: 1em;">다음&gt;</a>
             </li>
@@ -348,7 +348,7 @@
                    th:text="${pageNumber}" style="margin-right: 1em;"
                    th:classappend="${pageNumber == currentPage + 1 ? 'active' : ''}"></a>
             </li>
-            <li th:if="${currentPage != matchingList.totalPages - 1}">
+            <li th:if="${matchingList.totalPages > 1 and currentPage != matchingList.totalPages - 1}">
                 <a th:href="@{/match/list/filter(genretype=${genretype != null ? genretype : ''}, starttime=${starttime != null ? starttime : ''}, gender=${gender != null ? gender : ''}, page=${currentPage + 1})}"
                    style="margin-right: 1em;">다음&gt;</a>
             </li>
