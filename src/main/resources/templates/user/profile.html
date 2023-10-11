@@ -91,6 +91,10 @@
             height: 2px; /* divider의 높이를 조정할 수 있습니다. */
             margin: 10px 0; /* 위아래 여백을 추가할 수 있습니다. */
         }
+
+        .black-text {
+            color: black;
+        }
     </style>
 </head>
 <body>
@@ -266,7 +270,19 @@
                 <!--최근 매칭된 유저-->
                 <div id="recentUser" class="section" style="display: none;">
                     <div class="overflow-x-auto">
-                        <h2 class="text-xl font-semibold mb-4">최근 매칭된 유저</h2>
+                        <h2 class="text-xl font-semibold mb-4">최근 매칭된 유저
+                            <div class="dropdown dropdown-right">
+                                <label tabindex="0" class="btn btn-circle btn-ghost btn-xs text-info">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-4 h-4 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </label>
+                                <div tabindex="-10" class="card compact dropdown-content z-[1] shadow bg-base-100 rounded-box w-64">
+                                    <div class="card-body black-text">
+                                        <h2 class="card-title">매너를 평가해주세요</h2>
+                                        <p>1인 1투표!</p>
+                                    </div>
+                                </div>
+                            </div></h2>
+
                         <div class="mt-12 grid grid-cols-3 gap-4">
                             <th:block th:if="${!recentlyUserList.isEmpty()}">
                                 <div th:each="recentlyUser: ${recentlyUserList}" class="card custom-card w-full shadow-xl">
