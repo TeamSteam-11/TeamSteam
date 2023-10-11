@@ -10,6 +10,8 @@ import com.ll.TeamSteam.domain.chatRoom.entity.ChatRoom;
 import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
+import com.ll.TeamSteam.global.filter.CleanXss;
+import com.ll.TeamSteam.global.filter.RequestWrapper;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,10 +46,12 @@ public class ChatMessageService {
 
         ChatRoom chatRoom = chatRoomService.findByRoomId(chatRoomId);
 
+        String cleanContent = CleanXss.replaceXssAnsSqlInjection(content);
+
         User sender = userService.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저아님"));
 
-        ChatMessage chatMessage = ChatMessage.create(content, sender.getId(), sender.getUsername(), sender.getAvatar(), type, chatRoom.getId());
+        ChatMessage chatMessage = ChatMessage.create(cleanContent, sender.getId(), sender.getUsername(), sender.getAvatar(), type, chatRoom.getId());
         // 글자수 제한
         chatMessage.validateLength(chatMessage.getContent());
 
