@@ -8,5 +8,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface MatchingRepositoryCustom {
 
-    Page<Matching> filterByGenreAndStartTimeAndGender(GenreTagType genreType, Integer startTime, String gender, Pageable pageable);
+    Page<Matching> filterAndSearchByConditions(String name, String keyword, GenreTagType genreType, Integer startTime, String gender, Pageable pageable);
 }

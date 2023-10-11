@@ -22,39 +22,41 @@ public class MatchingRepositoryImpl implements MatchingRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Matching> filterByGenreAndStartTimeAndGender(GenreTagType genreType, Integer startTime, String gender, Pageable pageable) {
+    public Page<Matching> filterAndSearchByConditions(String name, String keyword, GenreTagType genreType, Integer startTime, String gender, Pageable pageable) {
         QMatching matching = QMatching.matching;
 
-        // 필터링 조건을 담을 Predicate 변수 선언
         BooleanBuilder predicate = new BooleanBuilder();
 
-        // 각각의 파라미터가 null이 아닌 경우에만 해당 필터를 추가
         if (genreType != null) {
             predicate.and(matching.genre.eq(genreType));
         }
-
         if (startTime != null) {
             predicate.and(matching.startTime.eq(startTime));
         }
-
         if (gender != null && !gender.isEmpty()) {
             predicate.and(matching.gender.eq(gender));
         }
 
-        // 정렬 조건 생성
-        OrderSpecifier<?> orderSpecifier = sortMatching(pageable);
+        // 검색 조건 추가
+        if (name != null && keyword != null) {
+            switch (name) {
+                case "title" -> predicate.and(matching.title.containsIgnoreCase(keyword));
+                case "content" -> predicate.and(matching.content.containsIgnoreCase(keyword));
+                case "writer" -> predicate.and(matching.user.username.containsIgnoreCase(keyword));
+            }
+        }
 
-        // fetch()와 select(Expressions.ONE).fetchOne()를 따로 사용
+        OrderSpecifier<?> orderSpecifier = sortMatching(pageable);
         List<Matching> results = queryFactory.selectFrom(matching)
-                .where(predicate)
-                .orderBy(orderSpecifier) // 외부에서 정렬 조건을 넘겨받음
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+            .where(predicate)
+            .orderBy(orderSpecifier)
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
 
         Long total = queryFactory.select(Expressions.ONE.count()).from(matching)
-                .where(predicate)
-                .fetchOne();
+            .where(predicate)
+            .fetchOne();
 
         return new PageImpl<>(results, pageable, total);
     }
