@@ -301,18 +301,30 @@
                                         </a>
                                         <div class="flex pt-1" style="display: flex; flex-direction: column">
                                             <div class="table-cell m-2">
+                                                <th:block th:each="targetUserGameTag, targetUserGameTagId : ${recentlyUser.getMatchingPartner().getUser().getUserTag().getGameTag()}">
                                                 <div class="flex flex-wrap">
-                                                    <div th:if="${!recentlyUser.getMatchingPartner().getUser().getUserTag().getGameTag().isEmpty()}" th:each="targetUserGameTag : ${recentlyUser.getMatchingPartner().getUser().getUserTag().getGameTag()}" class="badge" style="background-color: #00A3FF; color: #FFFFFF;">
+                                                    <div th:if="${targetUserGameTagId.size} != 0 and ${targetUserGameTagId.index < 5}" class="badge" style="background-color: #00A3FF; color: #FFFFFF;">
                                                         <span th:text="${targetUserGameTag.getName()}"></span>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="table-cell m-2">
-                                                <div class="flex flex-wrap">
-                                                    <div th:if="${!recentlyUser.getMatchingPartner().getUser().getUserTag().getGenreTag().isEmpty()}" th:each="targetUserGenreTag : ${recentlyUser.getMatchingPartner().getUser().getUserTag().getGenreTag()}"  class="badge" style="background-color: #878787; color: #FFFFFF;">
-                                                        <span th:text="${targetUserGenreTag.getGenre()}"></span>
+                                                    <div th:if="${targetUserGameTagId.index} >= 5 and ${targetUserGameTagId.index == #lists.size(recentlyUser.getMatchingPartner().getUser().getUserTag().getGameTag()) - 1}"
+                                                         class="badge" style="background-color: #00A3FF; color: #FFFFFF;">
+                                                        <span>...</span>
                                                     </div>
                                                 </div>
+                                                </th:block>
+                                            </div>
+                                            <div class="table-cell m-2">
+                                                <th:block th:each="targetUserGenreTag, targetUserGenreTagId : ${recentlyUser.getMatchingPartner().getUser().getUserTag().getGenreTag()}">
+                                                <div class="flex flex-wrap">
+                                                    <div th:if="${targetUserGenreTagId.size} != 0 and ${targetUserGenreTagId.index} < 5" class="badge" style="background-color: #878787; color: #FFFFFF;">
+                                                        <span th:text="${targetUserGenreTag.getGenre()}"></span>
+                                                    </div>
+                                                    <div th:if="${targetUserGenreTagId.size} >= 5 and ${targetUserGenreTagId.index == #lists.size(recentlyUser.getMatchingPartner().getUser().getUserTag().getGenreTag()) - 1}"
+                                                         class="badge" style="background-color: #878787; color: #FFFFFF;">
+                                                        <span>...</span>
+                                                    </div>
+                                                </div>
+                                                </th:block>
                                             </div>
                                         </div>
                                         <div class="card-actions justify-between p-4">
