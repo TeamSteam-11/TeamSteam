@@ -117,32 +117,6 @@ public class MatchingService {
         return (int) duration.toHours();
     }
 
-    public Page<Matching> searchMatching(String name, String keyword, Pageable pageable) {
-        SearchQuery searchQuery = new SearchQuery(keyword);
-        log.info("keyword = {}", keyword);
-
-        Page<Matching> matchingList;
-
-        Map<String, Function<String, Page<Matching>>> methodMap = new HashMap<>();
-        methodMap.put("title", value -> matchingRepository.findByTitleContainingIgnoreCase(value, pageable));
-        methodMap.put("content", value -> matchingRepository.findByContentContainingIgnoreCase(value, pageable));
-        methodMap.put("writer", value -> matchingRepository.findByUserUsernameContainingIgnoreCase(value, pageable));
-
-        Function<String, Page<Matching>> method = methodMap.get(name);
-        if (method != null) {
-            matchingList = method.apply(searchQuery.getValue());
-        } else {
-            throw new IllegalArgumentException("검색 쿼리가 잘 작성되지 않았음");
-        }
-
-        return matchingList;
-    }
-
-    // 쿼리 DSL
-    public Page<Matching> filterMatching(GenreTagType genreType, Integer startTime, String gender, Pageable pageable) {
-        return matchingRepository.filterByGenreAndStartTimeAndGender(genreType, startTime, gender, pageable);
-    }
-
     /**
      * 현재 사용 X
      * @return
@@ -210,5 +184,11 @@ public class MatchingService {
         }
 
         return matchingList;
+    }
+
+    public Page<Matching> combinedMatching(String name, String keyword, GenreTagType genreType, Integer startTime, String gender, Pageable pageable) {
+        SearchQuery searchQuery = new SearchQuery(keyword);
+        String safeKeyword = searchQuery.getValue();
+        return matchingRepository.filterAndSearchByConditions(name, safeKeyword, genreType, startTime, gender, pageable);
     }
 }
