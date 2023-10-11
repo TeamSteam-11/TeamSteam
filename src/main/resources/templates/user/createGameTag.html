@@ -94,10 +94,13 @@
         // 체크박스 변경 시 선택한 게임 목록 업데이트
         var checkboxes = document.querySelectorAll('input[type="checkbox"][name="selectedGames"]');
         checkboxes.forEach(function (checkbox) {
+            if (selectedGames.includes(checkbox.value)) {
+                checkbox.checked = true;
+            }
+
             checkbox.addEventListener('change', function () {
                 var gameId = this.value;
                 if (this.checked) {
-                    // 체크한 게임이 이미 선택된 게임 목록에 없을 경우에만 추가
                     if (!selectedGames.includes(gameId)) {
                         selectedGames.push(gameId);
                     }
