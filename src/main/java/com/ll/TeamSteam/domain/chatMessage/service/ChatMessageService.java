@@ -11,7 +11,6 @@ import com.ll.TeamSteam.domain.chatRoom.service.ChatRoomService;
 import com.ll.TeamSteam.domain.user.entity.User;
 import com.ll.TeamSteam.domain.user.service.UserService;
 import com.ll.TeamSteam.global.filter.CleanXss;
-import com.ll.TeamSteam.global.filter.RequestWrapper;
 import com.ll.TeamSteam.global.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,7 +82,7 @@ public class ChatMessageService {
         ChatRoom chatRoom = chatRoomService.findByRoomId(roomId);
 
         if (chatRoomDto.getType().equals(ROOMIN) || chatRoomDto.getType().equals(EXIT)){
-            String enterMessage = " < " + user.getUsername() + "님이 입장하셨습니다. >";
+            String enterMessage = user.getUsername() + "님이 입장하셨습니다.";
             createAndSave(enterMessage, user.getId(), roomId, ENTER);
 
             SignalResponse signalResponse = SignalResponse.builder()
