@@ -207,14 +207,14 @@ public class MatchingServiceTest {
 
         Page<Matching> expectedPage = new PageImpl<>(Collections.singletonList(new Matching()));
 
-        when(matchingRepository.findByTitleContainingIgnoreCase(eq(keyword), eq(pageable)))
+        when(matchingRepository.filterAndSearchByConditions(anyString(), eq(keyword), any(), any(), anyString(), eq(pageable)))
                 .thenReturn(expectedPage);
 
         // WHEN
-        Page<Matching> resultPage = matchingService.searchMatching("title", keyword, pageable);
+        Page<Matching> resultPage = matchingService.combinedMatching("title", keyword, null, null, "", pageable);
 
         // THEN
-        verify(matchingRepository, times(1)).findByTitleContainingIgnoreCase(eq(keyword), eq(pageable));
+        verify(matchingRepository, times(1)).filterAndSearchByConditions(anyString(), eq(keyword), any(), any(), anyString(), eq(pageable));
         assertEquals(expectedPage, resultPage);
     }
 
@@ -227,14 +227,14 @@ public class MatchingServiceTest {
 
         Page<Matching> expectedPage = new PageImpl<>(Collections.singletonList(new Matching()));
 
-        when(matchingRepository.findByContentContainingIgnoreCase(eq(keyword), eq(pageable)))
+        when(matchingRepository.filterAndSearchByConditions(anyString(), eq(keyword), any(), any(), anyString(), eq(pageable)))
                 .thenReturn(expectedPage);
 
         // WHEN
-        Page<Matching> resultPage = matchingService.searchMatching("content", keyword, pageable);
+        Page<Matching> resultPage = matchingService.combinedMatching("content", keyword, null, null, "", pageable);
 
         // THEN
-        verify(matchingRepository, times(1)).findByContentContainingIgnoreCase(eq(keyword), eq(pageable));
+        verify(matchingRepository, times(1)).filterAndSearchByConditions(anyString(), eq(keyword), any(), any(), anyString(), eq(pageable));
         assertEquals(expectedPage, resultPage);
     }
 
