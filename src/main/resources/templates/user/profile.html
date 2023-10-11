@@ -299,31 +299,27 @@
                                                 </progress>
                                             </div>
                                         </a>
-                                        <div class="flex pt-1" style="display: flex; flex-direction: column">
+                                        <div class="flex flex-wrap pt-1" style="display: flex; flex-direction: column">
                                             <div class="table-cell m-2">
                                                 <th:block th:each="targetUserGameTag, targetUserGameTagId : ${recentlyUser.getMatchingPartner().getUser().getUserTag().getGameTag()}">
-                                                <div class="flex flex-wrap">
-                                                    <div th:if="${targetUserGameTagId.size} != 0 and ${targetUserGameTagId.index < 5}" class="badge" style="background-color: #00A3FF; color: #FFFFFF;">
-                                                        <span th:text="${targetUserGameTag.getName()}"></span>
+                                                    <div th:if="${targetUserGameTagId.size} != 0 and ${targetUserGameTagId.index < 5}" th:text="${targetUserGameTag.getName()}" class="badge" style="background-color: #00A3FF; color: #FFFFFF;">
+<!--                                                        <span th:text="${targetUserGameTag.getName()}"></span>-->
                                                     </div>
                                                     <div th:if="${targetUserGameTagId.index} >= 5 and ${targetUserGameTagId.index == #lists.size(recentlyUser.getMatchingPartner().getUser().getUserTag().getGameTag()) - 1}"
                                                          class="badge" style="background-color: #00A3FF; color: #FFFFFF;">
                                                         <span>...</span>
                                                     </div>
-                                                </div>
                                                 </th:block>
                                             </div>
                                             <div class="table-cell m-2">
                                                 <th:block th:each="targetUserGenreTag, targetUserGenreTagId : ${recentlyUser.getMatchingPartner().getUser().getUserTag().getGenreTag()}">
-                                                <div class="flex flex-wrap">
-                                                    <div th:if="${targetUserGenreTagId.size} != 0 and ${targetUserGenreTagId.index} < 5" class="badge" style="background-color: #878787; color: #FFFFFF;">
-                                                        <span th:text="${targetUserGenreTag.getGenre()}"></span>
+                                                    <div th:if="${targetUserGenreTagId.size} != 0 and ${targetUserGenreTagId.index} < 5" th:text="${targetUserGenreTag.getGenre()}" class="badge" style="background-color: #878787; color: #FFFFFF;">
+<!--                                                        <span th:text="${targetUserGenreTag.getGenre()}"></span>-->
                                                     </div>
                                                     <div th:if="${targetUserGenreTagId.size} >= 5 and ${targetUserGenreTagId.index == #lists.size(recentlyUser.getMatchingPartner().getUser().getUserTag().getGenreTag()) - 1}"
                                                          class="badge" style="background-color: #878787; color: #FFFFFF;">
                                                         <span>...</span>
                                                     </div>
-                                                </div>
                                                 </th:block>
                                             </div>
                                         </div>
