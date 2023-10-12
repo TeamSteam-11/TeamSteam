@@ -287,41 +287,18 @@ public class MatchingController {
         return String.format("redirect:/chat/rooms/%d", matchingId);
     }
 
-    @GetMapping("/list/search")
-    public String searchMatching(@RequestParam String name, @RequestParam String keyword,
-                                 @RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "12") int size,
-                                 @RequestParam(defaultValue = "createDate") String sortCode,
-                                 @RequestParam(defaultValue = "DESC") String direction,
-                                 Model model){
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
-        Page<Matching> matchingList = matchingService.searchMatching(name, keyword, pageable);
-        // http://localhost:8080/match/list/search?name=title&keyword=ㅎㅇㅎㅇ&page=3
-
-        if(page != 0 && page > matchingList.getTotalPages() - 1) {
-            page = matchingList.getTotalPages() - 1;
-            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
-            matchingList = matchingService.searchMatching(name, keyword, pageable);
-        }
-
-        model.addAttribute("matchingList", matchingList);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("searchOption", name);  // 검색 옵션 추가
-
-        return "matching/list";
-    }
-
     @GetMapping("/list/filter")
-    public String filterMatching(@RequestParam(name = "genretype", required = false) String genreTypeStr,
-                                 @RequestParam(name = "starttime", required = false) Integer startTime,
-                                 @RequestParam(name = "gender", required = false) String gender,
-                                 @RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "12") int size,
-                                 @RequestParam(defaultValue = "createDate") String sortCode,
-                                 @RequestParam(defaultValue = "DESC") String direction,
-                                 Model model) {
+    public String combinedMatching(
+        @RequestParam(name = "name", required = false) String name,
+        @RequestParam(name = "keyword", required = false) String keyword,
+        @RequestParam(name = "genretype", required = false) String genreTypeStr,
+        @RequestParam(name = "starttime", required = false) Integer startTime,
+        @RequestParam(name = "gender", required = false) String gender,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "12") int size,
+        @RequestParam(defaultValue = "createDate") String sortCode,
+        @RequestParam(defaultValue = "DESC") String direction,
+        Model model) {
 
         GenreTagType genreType = null;
         if (genreTypeStr != null && !genreTypeStr.isEmpty()) {
@@ -329,17 +306,19 @@ public class MatchingController {
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
-        Page<Matching> matchingList = matchingService.filterMatching(genreType, startTime,gender, pageable);
+        Page<Matching> matchingList = matchingService.combinedMatching(name, keyword, genreType, startTime, gender, pageable);
 
         if(page != 0 && page > matchingList.getTotalPages() - 1) {
             page = matchingList.getTotalPages() - 1;
             pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortCode));
-            matchingList = matchingService.filterMatching(genreType, startTime,gender, pageable);
+            matchingList = matchingService.combinedMatching(name, keyword, genreType, startTime, gender, pageable);
         }
 
         model.addAttribute("matchingList", matchingList);
         model.addAttribute("currentPage", page);
-        model.addAttribute("genretype", genreTypeStr); // This line is changed
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("searchOption", name);
+        model.addAttribute("genretype", genreTypeStr);
         model.addAttribute("starttime", startTime);
         model.addAttribute("gender", gender);
 

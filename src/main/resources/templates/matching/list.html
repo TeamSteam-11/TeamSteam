@@ -85,10 +85,8 @@
 
 
     <!-- 세부 검색창 -->
-    <div class="flex justify-center items-center">
+    <form id="filter-form" th:action="@{/match/list/filter}" method="GET" class="flex justify-center items-center">
         <div class="filter-box flex justify-center items-center">
-            <form id="filter-form" th:action="@{/match/list/filter}" method="GET" class="relative">
-
                 <select id="genre-select" name="genretype" class="h-12 p-3 mr-3 scroll" onchange="submitForm()"
                         style="border: 1px solid #67686c; width: 175px; border-radius: 5px;">
                     <option value="" selected>장르 선택</option>
@@ -182,13 +180,11 @@
                     <option value="F" th:selected="${gender == 'F'}">여성</option>
                     <option value="M" th:selected="${gender == 'M'}">남성</option>
                 </select>
-
-            </form>
         </div>
 
         <!-- 검색창 -->
         <div class="search-box flex justify-center items-center mt-5 mb-5" style="height: 30px;">
-            <form th:action="@{/match/list/search}" method="GET" class="relative">
+            <div class="relative">
                 <div class="flex items-center" style="background-color: #555555; border-radius: 5px; width: 570px">
                     <select name="name" class="h-12 p-3"
                             style="color: white; background-color: #444444; border-radius: 5px; padding-left: 25px; padding-right: 5px;">
@@ -203,9 +199,9 @@
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
+    </form>
 
     <!-- 매칭글 -->
     <div style="display: flex; justify-content: center; flex-wrap: wrap; width: 100%; margin-top: 10px;">
