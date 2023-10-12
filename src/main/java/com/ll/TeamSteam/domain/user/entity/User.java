@@ -15,13 +15,12 @@ import lombok.experimental.SuperBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Entity
 @Getter
 @SuperBuilder
 @RequiredArgsConstructor
-@Table(name = "\"user\"")
-public class User extends BaseEntity {
+@Table(name = "\"user\"", uniqueConstraints = @UniqueConstraint(name = "steamId", columnNames = {"steamId"}))
+public class User extends BaseEntity{
 
 
 
