@@ -103,7 +103,8 @@
                 <td th:if="${index.index+1} == 3"><i class="fa-solid fa-crown" style="color: #ca8f58;"></i></td>
                 <td th:if="${index.index+1} > 3" th:text="${index.index+1}"></td>
                 <td>
-                    <a th:if="${!@rq.isLogin()}" href="/user/login">
+                    <a th:if="${!@rq.isLogin()}" href="/user/login"
+                       class="hover:underline">
                         <div class="flex items-center space-x-3 ">
                             <div class="avatar">
                                 <div class="mask mask-squirrel w-12 h-12">

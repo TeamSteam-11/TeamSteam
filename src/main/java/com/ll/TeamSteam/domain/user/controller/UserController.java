@@ -320,6 +320,8 @@ public class UserController {
         model.addAttribute("recentlyUserList",recentlyUserList);
         model.addAttribute("isFriend", isFriend);
         model.addAttribute("myRank", userRank);
+        model.addAttribute("dupFriendForm", notificationService.isDupNotification(userService.findByIdElseThrow(user.getId()), userService.findByIdElseThrow(userId)));
+
 
         return "user/profile";
 
@@ -354,9 +356,10 @@ public class UserController {
             && !notificationService.isDupNotification(invitingUser, invitedUser)){
             //이미 친구인지, 이미 친구신청을 보내놨는지 검증
             notificationService.makeFriend(invitingUser, invitedUser);
+            return rq.redirectWithMsg("/user/profile/" + userId, "친구 신청이 되었습니다.");
 
         }
-        return "redirect:/user/profile/" + userId;
+        return rq.redirectWithMsg("/user/profile/" + userId, "이미 친구 신청이 되었습니다.");
     }
 
     @GetMapping("/user/profile/{userId}/deleteFriend")
